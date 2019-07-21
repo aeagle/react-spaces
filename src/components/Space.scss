@@ -1,0 +1,15 @@
+.spaces-space {
+	position: absolute;
+	overflow: hidden;
+	z-index: 99999;
+
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	&.scrollable {
+		overflow: auto;
+	}
+}

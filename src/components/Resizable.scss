@@ -1,0 +1,37 @@
+.spaces-resize-handle {
+	position: absolute;
+	z-index: 9999;
+	opacity: 0;
+
+	&.resize-left {
+		top: 0;
+		bottom: 0;
+		left: 0;
+		width: 5px;
+		cursor: w-resize;
+	}
+
+	&.resize-right {
+		top: 0;
+		bottom: 0;
+		right: 0;
+		width: 5px;
+		cursor: e-resize;
+	}
+
+	&.resize-top {
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 5px;
+		cursor: n-resize;
+	}
+
+	&.resize-bottom {
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 5px;
+		cursor: s-resize;
+	}
+}
