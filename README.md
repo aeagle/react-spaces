@@ -6,9 +6,9 @@ React Spaces allows you to divide a page or container into spaces. These spaces 
 
 These are supposed to be used at the top level of all spaces.
 
-ViewPort - a top level space. This space will take over the full viewport of the browser window. Resizing the browser window will automatically adjust the size of this space and all the nested spaces.
+* **ViewPort** - a top level space. This space will take over the full viewport of the browser window. Resizing the browser window will automatically adjust the size of this space and all the nested spaces.
 
-Fixed - this space can be given a height and optionally a width (by default it will size to 100% of it's container). All nested spaces will be contained within this fixed size space.
+* **Fixed** - this space can be given a height and optionally a width (by default it will size to 100% of it's container). All nested spaces will be contained within this fixed size space.
 
 ## Inner spaces
 
