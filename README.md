@@ -1,6 +1,6 @@
 # React Spaces
 
-React Spaces allows you to divide a page or container into spaces. These spaces know how to behave in relation to each other and can also be divided into further nested spaces.
+React Spaces allows you to divide a page or container HTML element into spaces. These spaces know how to behave in relation to each other and can also be divided into further nested spaces.
 
 [View examples here](http://www.allaneagle.com/react-spaces/demo/)
 
@@ -14,7 +14,7 @@ Used at the top level of all other spaces.
 
 ### Inner spaces
 
-These can be used within the top-level spaces **ViewPort** and **Fixed** and within other inner spaces.
+These can be used within the top-level spaces **ViewPort** and **Fixed** or nested within other spaces.
 
 * **Left** - a space anchored to the left of the parent container/space. A size can be specified in pixels to determine its width.
 
@@ -28,7 +28,7 @@ These can be used within the top-level spaces **ViewPort** and **Fixed** and wit
 
 ## Getting started
 
-Spaces can be used by importing the spaces using the following:
+Spaces can be used by using the following:
 
 ```typescript
 npm i react-spaces
