@@ -4,17 +4,17 @@ React Spaces allows you to divide a page or container into spaces. These spaces 
 
 [View examples here](http://www.allaneagle.com/react-spaces/demo/)
 
-## Top level spaces
+### Top level spaces
 
-These are supposed to be used at the top level of all spaces.
+Used at the top level of all other spaces.
 
-* **ViewPort** - a top level space. This space will take over the full viewport of the browser window. Resizing the browser window will automatically adjust the size of this space and all the nested spaces.
+* **ViewPort** - this space will take over the full viewport of the browser window. Resizing the browser window will automatically adjust the size of this space and all the nested spaces.
 
 * **Fixed** - this space can be given a height and optionally a width (by default it will size to 100% of it's container). All nested spaces will be contained within this fixed size space.
 
-## Inner spaces
+### Inner spaces
 
-These can be used with the top-level spaces ViewPort and Fixed and within other inner spaces.
+These can be used within the top-level spaces **ViewPort** and **Fixed** and within other inner spaces.
 
 * **Left** - a space anchored to the left of the parent container/space. A size can be specified in pixels to determine its width.
 
@@ -101,7 +101,7 @@ Additional properties can be specified to constrain the resizing:
 * **minimumSize** - minimum size the space can be resized (default is 10px)
 * **maximumSize** - maximum size the space can be resized
 
-*** Resizable spaces with constrained minimum and maximum sizes
+### Resizable spaces with constrained minimum and maximum sizes
 
 ```typescript
 const App = () => (
@@ -112,11 +112,12 @@ const App = () => (
   </Space.Fixed>
 )
 ```
-** Nested spaces
+
+## Nested spaces
 
 Spaces can be nested within other spaces to create complex layouts.
 
-*** Left/right spaces nested within top/full/bottom spaces
+### Left/right spaces nested within top/full/bottom spaces
 
 ```typescript
 const App = () => (
