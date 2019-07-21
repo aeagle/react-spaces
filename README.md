@@ -153,14 +153,34 @@ const App = () => (
 
 Anchored spaces can be stacked to provide more than one space on each side. To guarantee ordering from the outside of the container / parent space, you should specify an order.
 
-### Stacked Left/right spaces
+### Stacked left spaces
 
 ```typescript
 const App = () => (
   <Space.Fixed height={400}>
-    <Space.LeftResizable size={125} />
-    <Space.LeftResizable size={125} />
+    <Space.LeftResizable size={125} order={1} />
+    <Space.LeftResizable size={125} order={2} />
     <Space.Fill />
+  </Space.Fixed>
+)
+```
+
+## Scrollable spaces
+
+By default, all spaces hide content that overflows the space. To make a particular space scrollable, set the **scrollable** property to **true**. The space will then be scrollable horizontally or vertically if the content overflows the space.
+
+## Getting size information for a space
+
+Using the **SpaceInfo** component, you can get size information on the containing space.
+
+```typescript
+const App = () => (
+  <Space.Fixed height={400}>
+    <Space.Fill>
+      <Space.SpaceInfo>
+        {info => <span>{info.width}px x {info.height}px</span>}
+      </Space.SpaceInfo>
+    </Space.Fill>
   </Space.Fixed>
 )
 ```
