@@ -16,7 +16,8 @@
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "react-syntax-highlighter": "^11.0.2",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "react-spaces": "file:../react-spaces"
   },
   "scripts": {
     "start": "react-scripts start",

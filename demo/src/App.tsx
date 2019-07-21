@@ -1,10 +1,7 @@
 import React, { CSSProperties } from 'react';
-import './App.css';
-import * as Space from './components/Space';
+import * as Space from 'react-spaces';
 import { Tabs, Menu, Button} from 'antd';
 import 'antd/dist/antd.css';
-import { Centered } from './components/Centered';
-import { Fixed } from './components/FixedSizeContainer';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import './App.scss';
 
@@ -12,10 +9,10 @@ const darkStyle: CSSProperties = { backgroundColor: '#333', color: 'white' };
 const darkStyleWithPadding: CSSProperties = { ...darkStyle, ...{ padding: 13 } };
 
 const Description = (props: string) => (
-  <Centered>
+  <Space.Centered>
     <strong>{props}</strong>
     <Space.Info>{info => <div>{info.width} x {info.height}</div> }</Space.Info>
-  </Centered>
+  </Space.Centered>
 )
 
 const App: React.FC = () => {
@@ -34,7 +31,7 @@ const App: React.FC = () => {
 
       <h2>Top level spaces</h2>
 
-      <p>There are supposed to be used at the top level of all spaces.</p>
+      <p>These are supposed to be used at the top level of all spaces.</p>
 
       <ul>
         <li>
@@ -111,7 +108,7 @@ const App: React.FC = () => {
         }
       </SyntaxHighlighter>
 
-      <Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
+      <Space.Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
         <Space.Left size={200} style={{ backgroundColor: '#eee' }}>
           {Description("Left")}
         </Space.Left>
@@ -121,7 +118,7 @@ const App: React.FC = () => {
         <Space.Right size={200} style={{ backgroundColor: '#eee' }}>
           {Description("Right")}
         </Space.Right>
-      </Fixed>
+      </Space.Fixed>
 
       <h3>Top and bottom spaces</h3>
 
@@ -137,7 +134,7 @@ const App: React.FC = () => {
         }
       </SyntaxHighlighter>
 
-      <Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
+      <Space.Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
         <Space.Top size={100} style={{ backgroundColor: '#eee' }}>
           {Description("Top")}
         </Space.Top>t5 cf
@@ -147,7 +144,7 @@ const App: React.FC = () => {
         <Space.Bottom size={100} style={{ backgroundColor: '#eee' }}>
           {Description("Bottom")}
         </Space.Bottom>
-      </Fixed>
+      </Space.Fixed>
 
       <h2>Resizable spaces</h2>
 
@@ -172,7 +169,7 @@ const App: React.FC = () => {
         }
       </SyntaxHighlighter>
 
-      <Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
+      <Space.Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
         <Space.LeftResizable size={200} style={{ backgroundColor: '#eee' }}>
           {Description("Left resizable")}
         </Space.LeftResizable>
@@ -182,7 +179,7 @@ const App: React.FC = () => {
         <Space.RightResizable size={200} style={{ backgroundColor: '#eee' }}>
           {Description("Right resizable")}
         </Space.RightResizable>
-      </Fixed>
+      </Space.Fixed>
 
       <h3>Top and bottom resizable spaces</h3>
 
@@ -198,7 +195,7 @@ const App: React.FC = () => {
         }
       </SyntaxHighlighter>
 
-      <Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
+      <Space.Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
         <Space.TopResizable size={100} style={{ backgroundColor: '#eee' }}>
           {Description("Top resizable")}
         </Space.TopResizable>
@@ -208,7 +205,7 @@ const App: React.FC = () => {
         <Space.BottomResizable size={100} style={{ backgroundColor: '#eee' }}>
           {Description("Bottom resizable")}
         </Space.BottomResizable>
-      </Fixed>
+      </Space.Fixed>
       
       <p>
         Additional properties can be specified to constrain the resizing:
@@ -233,7 +230,7 @@ const App: React.FC = () => {
         }
       </SyntaxHighlighter>
 
-      <Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
+      <Space.Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
         <Space.LeftResizable size={200} minimumSize={150} maximumSize={250} style={{ backgroundColor: '#eee' }}>
           {Description("Left resizable")}
         </Space.LeftResizable>
@@ -243,7 +240,7 @@ const App: React.FC = () => {
         <Space.RightResizable size={200} minimumSize={150} maximumSize={250} style={{ backgroundColor: '#eee' }}>
           {Description("Right resizable")}
         </Space.RightResizable>
-      </Fixed>
+      </Space.Fixed>
 
       <h2>Nested spaces</h2>
 
@@ -269,7 +266,7 @@ const App: React.FC = () => {
         }
       </SyntaxHighlighter>
 
-      <Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
+      <Space.Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
         <Space.TopResizable size={100} style={{ backgroundColor: '#eee' }}>
           {Description("Top resizable")}
         </Space.TopResizable>
@@ -287,7 +284,7 @@ const App: React.FC = () => {
         <Space.BottomResizable size={100} style={{ backgroundColor: '#eee' }}>
           {Description("Bottom resizable")}
         </Space.BottomResizable>
-      </Fixed>
+      </Space.Fixed>
 
       <h3>Top/bottom spaces nested within left/full/right spaces</h3>
 
@@ -307,7 +304,7 @@ const App: React.FC = () => {
         }
       </SyntaxHighlighter>
 
-      <Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
+      <Space.Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
         <Space.LeftResizable size={150} style={{ backgroundColor: '#e0eeee' }}>
           {Description("Left resizable")}
         </Space.LeftResizable>
@@ -325,7 +322,7 @@ const App: React.FC = () => {
         <Space.RightResizable size={150} style={{ backgroundColor: '#e0eeee' }}>
           {Description("Right resizable")}
         </Space.RightResizable>
-      </Fixed>
+      </Space.Fixed>
       
       <h2>Stacked spaces</h2>
 
@@ -349,7 +346,7 @@ const App: React.FC = () => {
         }
       </SyntaxHighlighter>
 
-      <Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
+      <Space.Fixed height={400} style={{ border: "1px solid navy", margin: 25 }}>
         <Space.LeftResizable size={125} order={1} style={{ backgroundColor: '#eee' }}>
           {Description("Left resizable 1")}
         </Space.LeftResizable>
@@ -365,7 +362,7 @@ const App: React.FC = () => {
         <Space.RightResizable size={125} order={2} style={{ backgroundColor: '#e0eeee' }}>
           {Description("Right resizable 2")}
         </Space.RightResizable>
-      </Fixed>
+      </Space.Fixed>
       
       <h2>UI</h2>
 
@@ -375,7 +372,7 @@ const App: React.FC = () => {
         example using some <strong>antd</strong> components.
       </p>
 
-      <Fixed height={400} style={{ margin: 25 }}>
+      <Space.Fixed height={400} style={{ margin: 25 }}>
 
           <Space.Left order={1} size={50} style={{ backgroundColor: 'maroon' }} />
 
@@ -383,15 +380,15 @@ const App: React.FC = () => {
               
             <Space.TopResizable size={65} minimumSize={65} maximumSize={120} style={darkStyleWithPadding}>
               
-              <Centered>
+              <Space.Centered>
                 <h1 style={{ color: 'white' }}>Header</h1>
-              </Centered>
+              </Space.Centered>
               
               <Space.Right size={160}>
 
-                <Centered>
+                <Space.Centered>
                   <Button onClick={() => setSecondBarVisible(!secondSideBarVisible)}>Toggle sidebar</Button>
-                </Centered>
+                </Space.Centered>
 
               </Space.Right>
                 
@@ -480,7 +477,7 @@ const App: React.FC = () => {
 
           </Space.Fill>
 
-      </Fixed>
+      </Space.Fixed>
 
       </div>
     </div>
