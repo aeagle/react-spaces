@@ -29,12 +29,18 @@ These can be used with the top-level spaces ViewPort and Fixed and within other 
 Spaces can be used by importing the spaces using the following:
 
 ```typescript
+npm i react-spaces
+```
+
+```typescript
 import * as Spaces from 'react-spaces';
 ```
 
 ## Non-resizable spaces
 
 Non-resizable spaces provide layout but can not be resized by user interaction.
+
+[Example on codesandbox.io](https://codesandbox.io/s/react-shapes-left-right-spaces-ml4kl?fontsize=14)
 
 ### Left and right spaces
 
@@ -68,11 +74,11 @@ Resizable spaces allow the space to be resized by dragging with the mouse. The s
 
 ```typescript
 const App = () => (
-  <Space.Fixed height={400}>
+  <Space.ViewPort>
     <Space.LeftResizable size={200} />
     <Space.Fill />
     <Space.RightResizable size={200} />
-  </Space.Fixed>
+  </Space.ViewPort>
 )
 ```
 
