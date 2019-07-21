@@ -171,15 +171,15 @@ By default, all spaces hide content that overflows the space. To make a particul
 
 ## Getting size information for a space
 
-Using the **SpaceInfo** component, you can get size information on the containing space.
+Using the **Info** component, you can get size information on the containing space.
 
 ```typescript
 const App = () => (
   <Space.Fixed height={400}>
     <Space.Fill>
-      <Space.SpaceInfo>
+      <Space.Info>
         {info => <span>{info.width}px x {info.height}px</span>}
-      </Space.SpaceInfo>
+      </Space.Info>
     </Space.Fill>
   </Space.Fixed>
 )
