@@ -16,13 +16,9 @@ Used at the top level of all other spaces.
 
 These can be used within the top-level spaces **ViewPort** and **Fixed** or nested within other spaces.
 
-* **Left** - a space anchored to the left of the parent container/space. A size can be specified in pixels to determine its width.
+* **Left** / **Right** - a space anchored to the left or right of the parent container/space. A size can be specified in pixels to determine its width.
 
-* **Right** - a space anchored to the right of the parent container/space. A size can be specified in pixels to determine its width.
-
-* **Top** - a space anchored to the top of the parent container/space. A size can be specified in pixels to determine its height.
-
-* **Bottom** - a space anchored to the bottom of the parent container/space. A size can be specified in pixels to determine its height.
+* **Top** / **Bottom** - a space anchored to the top or bottom of the parent container/space. A size can be specified in pixels to determine its height.
 
 * **Fill** - a space which consumes any available area left in the parent container/space taking into account any anchored spaces on every side.
 
@@ -41,8 +37,6 @@ import * as Spaces from 'react-spaces';
 ## Non-resizable spaces
 
 Non-resizable spaces provide layout but can not be resized by user interaction.
-
-[Example on codesandbox.io](https://codesandbox.io/s/react-shapes-left-right-spaces-ml4kl?fontsize=14)
 
 ### Left and right spaces
 
@@ -70,7 +64,7 @@ const App = () => (
 
 ## Resizable spaces
 
-Resizable spaces allow the space to be resized by dragging with the mouse. The size specified is the initial width/height of the space. There are resizable variations of the spaces above calledLeftResizable, RightResizable, TopResizable, and BottomResizable.
+Resizable spaces allow the space to be resized by dragging with the mouse. The size specified is the initial width/height of the space. There are resizable variations of the spaces above called **LeftResizable**, **RightResizable**, **TopResizable**, and **BottomResizable**.
 
 ### Left and right resizable spaces
 
