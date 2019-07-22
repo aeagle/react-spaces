@@ -1,6 +1,10 @@
-.spaces-centered {
-	text-align: center;
+.spaces-centered-vertically {
 	position: relative;
 	top: 50%;
 	transform: translateY(-50%);
+}
+
+.spaces-centered {
+	@extend .spaces-centered-vertically;
+	text-align: center;
 }

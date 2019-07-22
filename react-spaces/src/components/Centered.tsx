@@ -6,3 +6,9 @@ export const Centered : React.FC = (props) => (
 		{props.children}
 	</div>
 )
+
+export const CenteredVertically : React.FC = (props) => (
+	<div className='spaces-centered-vertically'>
+		{props.children}
+	</div>
+)
