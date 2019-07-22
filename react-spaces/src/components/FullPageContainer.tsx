@@ -3,6 +3,7 @@ import './FullPageContainer.scss';
 import * as Spaces from './Space';
 
 interface IProps {
+	className?: number,
 	left?: number,
 	top?: number,
 	right?: number,
@@ -11,7 +12,7 @@ interface IProps {
 
 export const ViewPort : React.FC<IProps> = (props) => (
 	<div 
-		className='spaces-fullpage-layout' 
+		className={`spaces-fullpage-layout${props.className ? ` ${props.className}` : ``}`}
 		style={{ 
 			left: props.left || 0, 
 			top: props.top || 0, 
