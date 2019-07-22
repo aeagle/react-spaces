@@ -10,7 +10,8 @@ interface IPublicProps {
 	id?: string,
 	className?: string,
 	style?: React.CSSProperties,
-	scrollable?: boolean
+	scrollable?: boolean,
+	trackSize?: boolean
 }
 
 interface IPrivateProps {
@@ -88,20 +89,24 @@ class Space extends React.Component<AllProps, IState> {
 
 	public componentDidMount() {
 		if (this.divElementRef.current) {
-			this.resizeSensor = new ResizeSensor(this.divElementRef.current, this.spaceResized);
+			if (this.props.trackSize) {
+				this.resizeSensor = new ResizeSensor(this.divElementRef.current, this.spaceResized);
+			}
 
 			const currentRect = this.divElementRef.current.getBoundingClientRect();
 			this.setState({
-				currentWidth: currentRect.width,
-				currentHeight: currentRect.height
+				currentWidth: parseInt(currentRect.width.toFixed(), 10),
+				currentHeight: parseInt(currentRect.height.toFixed(), 10)
 			});
 		}
 	}
 
 	public componentWillUnmount() {
-		if (this.resizeSensor) {
-			this.resizeSensor.detach();
-			this.resizeSensor = undefined;
+		if (this.props.trackSize) {
+			if (this.resizeSensor) {
+				this.resizeSensor.detach();
+				this.resizeSensor = undefined;
+			}
 		}
 
 		if (this.onRemove) {
@@ -232,7 +237,7 @@ class Space extends React.Component<AllProps, IState> {
 							style={{ ...style, ...this.props.style }}>
 		
 							<SpaceContext.Provider value={currentContext}>
-								<SpaceInfoContext.Provider value={{ width: this.state.currentWidth, height: this.state.currentHeight }}>
+								<SpaceInfoContext.Provider value={{ width: Math.floor(this.state.currentWidth), height: Math.floor(this.state.currentHeight) }}>
 								{ spaceRender }
 								</SpaceInfoContext.Provider>
 							</SpaceContext.Provider>
