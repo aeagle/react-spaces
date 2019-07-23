@@ -26,8 +26,8 @@ const App: React.FC = () => {
           <h1 style={{ color: 'white' }}>React Spaces</h1>
         </Space.CenteredVertically>
       </Space.Top>
-      <Space.Fill>
-        <Space.Left size={250} style={{ padding: 30, borderRight: '2px solid #ddd' }}>
+      <Space.Fill className="all-content">
+        <Space.Left className="sidebar" size={250} style={{ padding: 30, borderRight: '2px solid #ddd' }}>
 
           <h3 className="sidebar-header">GitHub</h3>
           <div style={{ marginBottom: 15 }}>
@@ -51,7 +51,7 @@ const App: React.FC = () => {
           <h2 className="sidebar-header"><a style={{ color: 'black', fontSize: 24 }} href="https://twitter.com/allaneagle">@allaneagle</a></h2>
 
         </Space.Left>
-        <Space.Fill scrollable={true} style={{ padding: 30, paddingTop: 0 }} className="examples">
+        <Space.Fill className="main" scrollable={true} style={{ padding: 30, paddingTop: 0 }}>
 
           <p id="intro" style={{ fontWeight: 400, paddingTop: 30, paddingBottom: 0, fontSize: 28, color: '#777' }}>
             React Spaces allow you to divide a page or container into spaces. These spaces know how
@@ -392,30 +392,30 @@ const App: React.FC = () => {
                 {
                   "const App = () => (\r\n" +
                   "  <Space.Fixed height={400}>\r\n" +
-                  "    <Space.LeftResizable size={100} order={1} />\r\n" +
-                  "    <Space.LeftResizable size={100} order={2} />\r\n" +
+                  "    <Space.LeftResizable size={75} order={1} />\r\n" +
+                  "    <Space.LeftResizable size={75} order={2} />\r\n" +
                   "    <Space.Fill />\r\n" +
-                  "    <Space.RightResizable size={100} order={2} />\r\n" +
-                  "    <Space.RightResizable size={100} order={1} />\r\n" +
+                  "    <Space.RightResizable size={75} order={2} />\r\n" +
+                  "    <Space.RightResizable size={75} order={1} />\r\n" +
                   "  </Space.Fixed>\r\n" +
                   ")"
                 }
               </SyntaxHighlighter>
 
               <Space.Fixed height={400}>
-                <Space.LeftResizable trackSize={true} size={100} order={1} style={{ backgroundColor: '#e0eee0' }}>
+                <Space.LeftResizable trackSize={true} size={75} order={1} style={{ backgroundColor: '#e0eee0' }}>
                   {Description("Left 1")}
                 </Space.LeftResizable>
-                <Space.LeftResizable trackSize={true} size={100} order={2} style={{ backgroundColor: '#e0eeee' }}>
+                <Space.LeftResizable trackSize={true} size={75} order={2} style={{ backgroundColor: '#e0eeee' }}>
                   {Description("Left 2")}
                 </Space.LeftResizable>
                 <Space.Fill trackSize={true} style={{ backgroundColor: '#eee0e0' }}>
                   {Description("Fill")}
                 </Space.Fill>
-                <Space.RightResizable trackSize={true} size={100} order={2} style={{ backgroundColor: '#e0eeee' }}>
+                <Space.RightResizable trackSize={true} size={75} order={2} style={{ backgroundColor: '#e0eeee' }}>
                   {Description("Right 2")}
                 </Space.RightResizable>
-                <Space.RightResizable trackSize={true} size={100} order={1} style={{ backgroundColor: '#e0eee0' }}>
+                <Space.RightResizable trackSize={true} size={75} order={1} style={{ backgroundColor: '#e0eee0' }}>
                   {Description("Right 1")}
                 </Space.RightResizable>
               </Space.Fixed>
@@ -454,9 +454,27 @@ const App: React.FC = () => {
 
           <h2 id="changes">Version history</h2>
 
-          <ul>
-            <li><strong>0.1.0 - 0.1.1</strong> Initial versions</li>
-          </ul>
+          <p>
+                <strong>0.1.3</strong> 
+                <ul>
+                  <li>Added readme</li>
+                  <li>Updated documentation</li>
+                </ul>
+          </p>
+          <p>
+                <strong>0.1.2</strong> 
+                <ul>
+                  <li>Removed ResizeSensor from spaces by default and now optionally allow live size updates with <strong>trackSize</strong> property</li>
+                  <li>Added <strong>VerticallyCentered</strong> component to vertically centre content within space</li>
+                  <li>Allow class names to be specified on top-level spaces <strong>ViewPort</strong> and <strong>Fixed</strong></li>
+                </ul>
+          </p>
+          <p>
+                <strong>0.1.0 - 0.1.1</strong>
+                <ul>
+                  <li>Initial version</li>
+                </ul>
+          </p>
 
         </Space.Fill>
 

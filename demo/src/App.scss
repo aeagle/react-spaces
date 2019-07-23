@@ -48,7 +48,7 @@ pre {
 	padding: 25px !important;
 }
 
-.examples {
+.main {
 	.spaces-fixedsize-layout {
 		margin: 0 25px;
 		font-size: 14px;
@@ -81,5 +81,27 @@ pre {
 		top: 60px;
 		right: -60px;
 		z-index: 100000;
+	}
+}
+
+@media (max-width: 800px)
+{
+	#forkongithub {
+		display: none;
+	}
+
+	.sidebar {
+		display: none;
+	}
+
+	.main {
+		position: fixed;
+		left: inherit !important;
+		right: inherit !important;
+		top: 80px !important;
+		bottom: inherit !important;
+		height: inherit !important;
+		width: 100% !important;
+		overflow: auto !important;
 	}
 }
