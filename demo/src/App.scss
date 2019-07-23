@@ -14,7 +14,7 @@ h2 {
 	border-bottom: 1px solid #ddd;
 
 	&.sidebar-header {
-		margin-top: -5px;
+		margin-top: 20px;
 		padding-top: 0;
 		border-bottom: none;
 	}
@@ -32,6 +32,16 @@ h3 {
 	}
 }
 
+ul {
+	li {
+		margin-bottom: 15px;
+	}
+
+	li:last-child {
+		margin-bottom: 0;
+	}
+}
+
 pre {
 	background-color: #f8f8f8 !important;
 	margin: 0 0 15px 0;
@@ -41,6 +51,7 @@ pre {
 .examples {
 	.spaces-fixedsize-layout {
 		margin: 0 25px;
+		font-size: 14px;
 	}
 }
 

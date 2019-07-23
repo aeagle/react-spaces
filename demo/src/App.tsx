@@ -1,9 +1,13 @@
 import React from 'react';
 import * as Space from 'react-spaces';
-import { Tabs, Anchor, Divider, Button, Icon } from 'antd';
+import { Tabs, Anchor, Button, Icon } from 'antd';
 import 'antd/dist/antd.css';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import './App.scss';
+import ReactGA from 'react-ga';
+
+ReactGA.initialize("UA-144490437-1");
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 const Description = (props: string) => (
   <Space.Centered>
@@ -30,13 +34,7 @@ const App: React.FC = () => {
             <Button type="primary" onClick={() => window.location.href = 'https://github.com/aeagle/react-spaces'}><Icon type="github" /> View on GitHub</Button>
           </div>
 
-          <h3 className="sidebar-header">NPM <img alt="NPM version" src="https://img.shields.io/npm/v/react-spaces.svg" /></h3>
-          <div style={{ marginBottom: 15 }}>
-            <Button type="primary" onClick={() => window.location.href = 'https://www.npmjs.com/package/react-spaces'}>View on NPM</Button>
-          </div>
-
-          Maintained by
-          <h2 className="sidebar-header"><a style={{ color: 'black', fontSize: 24 }} href="https://twitter.com/allaneagle">@allaneagle</a></h2>
+          <h3 className="sidebar-header">NPM <img style={{ position: 'relative', top: -2 }} alt="NPM version" src="https://img.shields.io/npm/v/react-spaces.svg" /></h3>
 
           <Anchor offsetTop={30}>
             <Anchor.Link href="#getting-started" title="Getting started" />
@@ -49,6 +47,8 @@ const App: React.FC = () => {
             <Anchor.Link href="#sizeinfo" title="Sizing information" />
             <Anchor.Link href="#changes" title="Version history" />
           </Anchor>
+
+          <h2 className="sidebar-header"><a style={{ color: 'black', fontSize: 24 }} href="https://twitter.com/allaneagle">@allaneagle</a></h2>
 
         </Space.Left>
         <Space.Fill scrollable={true} style={{ padding: 30, paddingTop: 0 }} className="examples">
@@ -78,12 +78,12 @@ const App: React.FC = () => {
 
               <ul>
                 <li>
-                  <strong>ViewPort</strong> - a top level space. This space will take over the 
+                  <strong>&lt;ViewPort /&gt;</strong> a top level space. This space will take over the 
                   full viewport of the browser window. Resizing the browser window will automatically
                   adjust the size of this space and all the nested spaces.
                 </li>
                 <li>
-                  <strong>Fixed</strong> - this space can be given a height and optionally
+                  <strong>&lt;Fixed /&gt;</strong> - this space can be given a height and optionally
                   a width (by default it will size to 100% of it's container). All nested spaces will be
                   contained within this fixed size space.
                 </li>
@@ -97,19 +97,19 @@ const App: React.FC = () => {
 
               <ul>
                 <li>
-                  <strong>Left</strong> - a space anchored to the left of the parent 
+                  <strong>&lt;Left /&gt;</strong> a space anchored to the left of the parent 
                   container/space. A size can be specified in pixels to determine its width.
                 </li>
                 <li>
-                  <strong>Right</strong> - a space anchored to the right of the parent 
+                  <strong>&lt;Right /&gt;</strong> a space anchored to the right of the parent 
                   container/space. A size can be specified in pixels to determine its width.
                 </li>
                 <li>
-                  <strong>Top</strong> - a space anchored to the top of the parent 
+                  <strong>&lt;Top /&gt;</strong> a space anchored to the top of the parent 
                   container/space. A size can be specified in pixels to determine its height.
                 </li>
                 <li>
-                  <strong>Bottom</strong> - a space anchored to the bottom of the parent 
+                  <strong>&lt;Bottom /&gt;</strong> a space anchored to the bottom of the parent 
                   container/space. A size can be specified in pixels to determine its height.
                 </li>
               </ul>
@@ -117,7 +117,7 @@ const App: React.FC = () => {
             <Tabs.TabPane tab="Other" key="3">
               <ul>
                 <li>
-                  <strong>Fill</strong> - a space which consumes any available area left in the 
+                  <strong>&lt;Fill /&gt;</strong> a space which consumes any available area left in the 
                   parent container/space taking into account any anchored spaces on every side.
                 </li>
               </ul>
@@ -146,7 +146,7 @@ const App: React.FC = () => {
               </SyntaxHighlighter>
 
               <Space.Fixed height={400}>
-                <Space.Left size={200} style={{ backgroundColor: '#e0eee0' }}>
+                <Space.Left size={100} style={{ backgroundColor: '#e0eae0' }}>
                   {Description("Left")}
                 </Space.Left>
                 <Space.Fill style={{ backgroundColor: '#eee0e0' }}>
@@ -392,31 +392,31 @@ const App: React.FC = () => {
                 {
                   "const App = () => (\r\n" +
                   "  <Space.Fixed height={400}>\r\n" +
-                  "    <Space.LeftResizable size={200} order={1} />\r\n" +
-                  "    <Space.LeftResizable size={125} order={2} />\r\n" +
+                  "    <Space.LeftResizable size={100} order={1} />\r\n" +
+                  "    <Space.LeftResizable size={100} order={2} />\r\n" +
                   "    <Space.Fill />\r\n" +
-                  "    <Space.RightResizable size={125} order={2} />\r\n" +
-                  "    <Space.RightResizable size={200} order={1} />\r\n" +
+                  "    <Space.RightResizable size={100} order={2} />\r\n" +
+                  "    <Space.RightResizable size={100} order={1} />\r\n" +
                   "  </Space.Fixed>\r\n" +
                   ")"
                 }
               </SyntaxHighlighter>
 
               <Space.Fixed height={400}>
-                <Space.LeftResizable trackSize={true} size={200} order={1} style={{ backgroundColor: '#e0eee0' }}>
-                  {Description("Left resizable 1")}
+                <Space.LeftResizable trackSize={true} size={100} order={1} style={{ backgroundColor: '#e0eee0' }}>
+                  {Description("Left 1")}
                 </Space.LeftResizable>
-                <Space.LeftResizable trackSize={true} size={125} order={2} style={{ backgroundColor: '#e0eeee' }}>
-                  {Description("Left resizable 2")}
+                <Space.LeftResizable trackSize={true} size={100} order={2} style={{ backgroundColor: '#e0eeee' }}>
+                  {Description("Left 2")}
                 </Space.LeftResizable>
                 <Space.Fill trackSize={true} style={{ backgroundColor: '#eee0e0' }}>
                   {Description("Fill")}
                 </Space.Fill>
-                <Space.RightResizable trackSize={true} size={125} order={2} style={{ backgroundColor: '#e0eeee' }}>
-                  {Description("Right resizable 2")}
+                <Space.RightResizable trackSize={true} size={100} order={2} style={{ backgroundColor: '#e0eeee' }}>
+                  {Description("Right 2")}
                 </Space.RightResizable>
-                <Space.RightResizable trackSize={true} size={200} order={1} style={{ backgroundColor: '#e0eee0' }}>
-                  {Description("Right resizable 1")}
+                <Space.RightResizable trackSize={true} size={100} order={1} style={{ backgroundColor: '#e0eee0' }}>
+                  {Description("Right 1")}
                 </Space.RightResizable>
               </Space.Fixed>
 
