@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Space from 'react-spaces';
-import { Tabs, Anchor, Divider, Button, Icon } from 'antd';
+import { Tabs, Anchor, Button, Icon } from 'antd';
 import 'antd/dist/antd.css';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import './App.scss';
@@ -22,21 +22,18 @@ const App: React.FC = () => {
           <h1 style={{ color: 'white' }}>React Spaces</h1>
         </Space.CenteredVertically>
       </Space.Top>
-      <Space.Fill>
-        <Space.Left size={250} style={{ padding: 30, borderRight: '2px solid #ddd' }}>
+      <Space.Fill className="all-content">
+        <Space.Left className="sidebar" size={250} style={{ padding: 30, borderRight: '2px solid #ddd' }}>
 
           <h3 className="sidebar-header">GitHub</h3>
           <div style={{ marginBottom: 15 }}>
             <Button type="primary" onClick={() => window.location.href = 'https://github.com/aeagle/react-spaces'}><Icon type="github" /> View on GitHub</Button>
           </div>
 
-          <h3 className="sidebar-header">NPM <img alt="NPM version" src="https://img.shields.io/npm/v/react-spaces.svg" /></h3>
-          <div style={{ marginBottom: 15 }}>
-            <Button type="primary" onClick={() => window.location.href = 'https://www.npmjs.com/package/react-spaces'}>View on NPM</Button>
-          </div>
+          <h3 className="sidebar-header">NPM <img style={{ position: 'relative', top: -2 }} alt="NPM version" src="https://img.shields.io/npm/v/react-spaces.svg" /></h3>
 
           Maintained by
-          <h2 className="sidebar-header"><a style={{ color: 'black', fontSize: 24 }} href="https://twitter.com/allaneagle">@allaneagle</a></h2>
+          <h2 className="sidebar-header"><a style={{ color: 'black', fontSize: 20 }} href="https://twitter.com/allaneagle">@allaneagle</a></h2>
 
           <Anchor offsetTop={30}>
             <Anchor.Link href="#getting-started" title="Getting started" />
@@ -51,7 +48,7 @@ const App: React.FC = () => {
           </Anchor>
 
         </Space.Left>
-        <Space.Fill scrollable={true} style={{ padding: 30, paddingTop: 0 }} className="examples">
+        <Space.Fill className="main" scrollable={true} style={{ padding: 30, paddingTop: 0 }}>
 
           <p id="intro" style={{ fontWeight: 400, paddingTop: 30, paddingBottom: 0, fontSize: 28, color: '#777' }}>
             React Spaces allow you to divide a page or container into spaces. These spaces know how
@@ -392,31 +389,31 @@ const App: React.FC = () => {
                 {
                   "const App = () => (\r\n" +
                   "  <Space.Fixed height={400}>\r\n" +
-                  "    <Space.LeftResizable size={200} order={1} />\r\n" +
-                  "    <Space.LeftResizable size={125} order={2} />\r\n" +
+                  "    <Space.LeftResizable size={75} order={1} />\r\n" +
+                  "    <Space.LeftResizable size={75} order={2} />\r\n" +
                   "    <Space.Fill />\r\n" +
-                  "    <Space.RightResizable size={125} order={2} />\r\n" +
-                  "    <Space.RightResizable size={200} order={1} />\r\n" +
+                  "    <Space.RightResizable size={75} order={2} />\r\n" +
+                  "    <Space.RightResizable size={75} order={1} />\r\n" +
                   "  </Space.Fixed>\r\n" +
                   ")"
                 }
               </SyntaxHighlighter>
 
               <Space.Fixed height={400}>
-                <Space.LeftResizable trackSize={true} size={200} order={1} style={{ backgroundColor: '#e0eee0' }}>
-                  {Description("Left resizable 1")}
+                <Space.LeftResizable trackSize={true} size={75} order={1} style={{ backgroundColor: '#e0eee0' }}>
+                  {Description("Left 1")}
                 </Space.LeftResizable>
-                <Space.LeftResizable trackSize={true} size={125} order={2} style={{ backgroundColor: '#e0eeee' }}>
-                  {Description("Left resizable 2")}
+                <Space.LeftResizable trackSize={true} size={75} order={2} style={{ backgroundColor: '#e0eeee' }}>
+                  {Description("Left 2")}
                 </Space.LeftResizable>
                 <Space.Fill trackSize={true} style={{ backgroundColor: '#eee0e0' }}>
                   {Description("Fill")}
                 </Space.Fill>
-                <Space.RightResizable trackSize={true} size={125} order={2} style={{ backgroundColor: '#e0eeee' }}>
-                  {Description("Right resizable 2")}
+                <Space.RightResizable trackSize={true} size={75} order={2} style={{ backgroundColor: '#e0eeee' }}>
+                  {Description("Right 2")}
                 </Space.RightResizable>
-                <Space.RightResizable trackSize={true} size={200} order={1} style={{ backgroundColor: '#e0eee0' }}>
-                  {Description("Right resizable 1")}
+                <Space.RightResizable trackSize={true} size={75} order={1} style={{ backgroundColor: '#e0eee0' }}>
+                  {Description("Right 1")}
                 </Space.RightResizable>
               </Space.Fixed>
 
@@ -454,9 +451,20 @@ const App: React.FC = () => {
 
           <h2 id="changes">Version history</h2>
 
-          <ul>
-            <li><strong>0.1.0 - 0.1.1</strong> Initial versions</li>
-          </ul>
+          <p>
+                <strong>0.1.2</strong> 
+                <ul>
+                  <li>Removed ResizeSensor from spaces by default and now optionally allow live size updates with <strong>trackSize</strong> property</li>
+                  <li>Added <strong>VerticallyCentered</strong> component to vertically centre content within space</li>
+                  <li>Allow class names to be specified on top-level spaces <strong>ViewPort</strong> and <strong>Fixed</strong></li>
+                </ul>
+          </p>
+          <p>
+                <strong>0.1.0 - 0.1.1</strong>
+                <ul>
+                  <li>Initial version</li>
+                </ul>
+          </p>
 
         </Space.Fill>
 
