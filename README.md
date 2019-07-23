@@ -1,5 +1,7 @@
 # React Spaces
 
+![NPM](https://img.shields.io/npm/v/react-spaces.svg)
+
 React Spaces allow you to divide a page or container HTML element into spaces. These spaces know how to behave in relation to each other and can also be divided into further nested spaces.
 
 ### Top level spaces
@@ -35,7 +37,7 @@ A space which consumes any available area left in the parent container/space tak
 To get started with React Spaces you need:
 
 ```typescript
-npm i react-spaces
+npm install react-spaces --save
 ```
 
 ```typescript
