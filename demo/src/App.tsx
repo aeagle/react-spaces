@@ -452,6 +452,13 @@ const App: React.FC = () => {
           <h2 id="changes">Version history</h2>
 
           <p>
+                <strong>0.1.3</strong> 
+                <ul>
+                  <li>Added readme</li>
+                  <li>Updated documentation</li>
+                </ul>
+          </p>
+          <p>
                 <strong>0.1.2</strong> 
                 <ul>
                   <li>Removed ResizeSensor from spaces by default and now optionally allow live size updates with <strong>trackSize</strong> property</li>
