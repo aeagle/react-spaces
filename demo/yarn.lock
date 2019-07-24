@@ -9184,7 +9184,7 @@ react-slick@~0.24.0:
     resize-observer-polyfill "^1.5.0"
 
 "react-spaces@file:../react-spaces":
-  version "0.1.2"
+  version "0.1.3"
   dependencies:
     css-element-queries "^1.2.1"
     guid-typescript "^1.0.9"

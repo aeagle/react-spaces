@@ -146,7 +146,7 @@ const App: React.FC = () => {
               </SyntaxHighlighter>
 
               <Space.Fixed height={400}>
-                <Space.Left size={100} style={{ backgroundColor: '#e0eae0' }}>
+                <Space.Left size={200} style={{ backgroundColor: '#e0eae0' }}>
                   {Description("Left")}
                 </Space.Left>
                 <Space.Fill style={{ backgroundColor: '#eee0e0' }}>

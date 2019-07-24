@@ -20,7 +20,7 @@ interface IPrivateProps {
 }
 
 interface IAnchoredProps {
-	size?: number,
+	size?: number | string,
 	order?: number
 }
 
@@ -36,12 +36,13 @@ interface IState {
 	adjustedSize: number,
 	spaceTakers: ISpaceTaker[],
 
+	parsedSize?: number;
 	left?: number;
 	top?: number;
 	right?: number;
 	bottom?: number;
-	width?: number;
-	height?: number;
+	width?: number | string;
+	height?: number | string;
 }
 
 export const Fill : React.FC<IPublicProps> = (props) => <Space {...props} />
@@ -78,6 +79,7 @@ class Space extends React.Component<AllProps, IState> {
 			adjustedSize: 0,
 			spaceTakers: [],
 
+			parsedSize: typeof props.size === "string" ? 0 : props.size as number | undefined,
 			left: props.anchor !== AnchorType.Right ? 0 : undefined,
 			top: props.anchor !== AnchorType.Bottom ? 0 : undefined,
 			right: props.anchor !== AnchorType.Left ? 0 : undefined,
@@ -95,8 +97,9 @@ class Space extends React.Component<AllProps, IState> {
 
 			const currentRect = this.divElementRef.current.getBoundingClientRect();
 			this.setState({
-				currentWidth: parseInt(currentRect.width.toFixed(), 10),
-				currentHeight: parseInt(currentRect.height.toFixed(), 10)
+				parsedSize: !this.state.parsedSize ? currentRect.width : this.state.parsedSize,
+				currentWidth: currentRect.width,
+				currentHeight: currentRect.height
 			});
 		}
 	}
@@ -124,8 +127,8 @@ class Space extends React.Component<AllProps, IState> {
 							top: this.state.top,
 							right: this.state.right,
 							bottom: this.state.bottom,
-							width: this.isHorizontalSpace() && this.state.adjustedSize !== 0 ? (this.state.width || 0) + this.state.adjustedSize : this.state.width,
-							height: this.isVerticalSpace() && this.state.adjustedSize !== 0 ? (this.state.height || 0) + this.state.adjustedSize : this.state.height
+							width: this.isHorizontalSpace() ? (this.state.parsedSize || 0) + this.state.adjustedSize : undefined,
+							height: this.isVerticalSpace() ? (this.state.parsedSize || 0) + this.state.adjustedSize : undefined
 						};
 
 						if (parentContext) {
@@ -182,7 +185,7 @@ class Space extends React.Component<AllProps, IState> {
 									id: this.state.id,
 									order: this.props.order || 1,
 									anchorType: this.props.anchor,
-									size: this.props.size || (this.isVerticalSpace() ? this.state.currentHeight : this.state.currentWidth),
+									size: (this.state.parsedSize || 0),
 									adjustedSize: 0
 								});
 							}
@@ -217,7 +220,7 @@ class Space extends React.Component<AllProps, IState> {
 									<Resizable 
 										type={resizeType} 
 										minimumAdjust={ -(this.props.size || 0) + (this.props.minimumSize || 20) }
-										maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.props.size || 0)) : undefined}
+										maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.state.parsedSize || 0)) : undefined}
 										onResize={(adjustedSize) => { 
 											this.setState(
 												{ adjustedSize: adjustedSize },
