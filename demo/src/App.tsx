@@ -79,7 +79,7 @@ const App: React.FC = () => {
 
               <ul>
                 <li>
-                  <strong>&lt;ViewPort /&gt;</strong> a top level space. This space will take over the 
+                  <strong>&lt;ViewPort /&gt;</strong> - this space will take over the 
                   full viewport of the browser window. Resizing the browser window will automatically
                   adjust the size of this space and all the nested spaces.
                 </li>
@@ -147,13 +147,13 @@ const App: React.FC = () => {
               </SyntaxHighlighter>
 
               <Space.Fixed height={400}>
-                <Space.Left size="20%" style={{ backgroundColor: '#e0eae0' }}>
+                <Space.Left size={200} style={{ backgroundColor: '#e0eae0' }}>
                   {Description("Left")}
                 </Space.Left>
                 <Space.Fill style={{ backgroundColor: '#eee0e0' }}>
                   {Description("Fill")}
                 </Space.Fill>
-                <Space.Right size="20%" style={{ backgroundColor: '#e0eee0' }}>
+                <Space.Right size={200} style={{ backgroundColor: '#e0eee0' }}>
                   {Description("Right")}
                 </Space.Right>
               </Space.Fixed>
