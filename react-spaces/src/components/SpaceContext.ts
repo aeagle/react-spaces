@@ -15,8 +15,8 @@ export interface ISpaceContext {
 export interface ISpaceTaker {
 	id: Guid,
 	order: number,
-	anchorType: AnchorType
-	size: number,
+	anchorType: AnchorType,
+	size: number | string,
 	adjustedSize: number
 }
 

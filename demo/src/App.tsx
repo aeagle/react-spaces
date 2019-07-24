@@ -42,8 +42,9 @@ const App: React.FC = () => {
             <Anchor.Link href="#non-resizable" title="Non-resizable" />
             <Anchor.Link href="#resizable" title="Resizable" />
             <Anchor.Link href="#nested" title="Nested" />
-            <Anchor.Link href="#stacked" title="Stacked" />
             <Anchor.Link href="#scrollable" title="Scrollable" />
+            <Anchor.Link href="#percent" title="Percent sizing" />
+            <Anchor.Link href="#stacked" title="Stacked" />
             <Anchor.Link href="#sizeinfo" title="Sizing information" />
             <Anchor.Link href="#changes" title="Version history" />
           </Anchor>
@@ -146,13 +147,13 @@ const App: React.FC = () => {
               </SyntaxHighlighter>
 
               <Space.Fixed height={400}>
-                <Space.Left size={200} style={{ backgroundColor: '#e0eae0' }}>
+                <Space.Left size="20%" style={{ backgroundColor: '#e0eae0' }}>
                   {Description("Left")}
                 </Space.Left>
                 <Space.Fill style={{ backgroundColor: '#eee0e0' }}>
                   {Description("Fill")}
                 </Space.Fill>
-                <Space.Right size={200} style={{ backgroundColor: '#e0eee0' }}>
+                <Space.Right size="20%" style={{ backgroundColor: '#e0eee0' }}>
                   {Description("Right")}
                 </Space.Right>
               </Space.Fixed>
@@ -186,7 +187,7 @@ const App: React.FC = () => {
 
             </Tabs.TabPane>
           </Tabs>
-
+ 
           <h2 id="resizable">Resizable spaces</h2>
 
           <p>
@@ -376,6 +377,75 @@ const App: React.FC = () => {
 
             </Tabs.TabPane>
           </Tabs>
+
+          <h2 id="scrollable">Scrollable spaces</h2>
+
+          <p>
+              By default, all spaces hide content that overflows the space. To make a particular space scrollable, 
+              set the scrollable property to true. The space will then be scrollable horizontally or vertically if 
+              the content overflows the space.
+          </p>
+
+          <h2 id="percent">Percentage sizing</h2>
+
+          <p>
+              Anchored spaces support sizes as percentages. The specified percentage will be used as the initial size
+              of the space. Resizing a space will still adjust the space size.
+          </p>
+
+          <Tabs defaultActiveKey="1">
+            <Tabs.TabPane tab="Percentage left" key="1">
+
+              <SyntaxHighlighter language="html">
+                {
+                  "const App = () => (\r\n" +
+                  "  <Space.Fixed height={400}>\r\n" +
+                  "    <Space.LeftResizable size=\"50%\" />\r\n" +
+                  "    <Space.Fill />\r\n" +
+                  "  </Space.Fixed>\r\n" +
+                  ")"
+                }
+              </SyntaxHighlighter>
+
+              <Space.Fixed height={400}>
+                <Space.LeftResizable trackSize={true} size="50%" style={{ backgroundColor: '#e0eee0' }}>
+                  {Description("Left 50%")}
+                </Space.LeftResizable>
+                <Space.Fill trackSize={true} style={{ backgroundColor: '#eee0e0' }}>
+                  {Description("Fill")}
+                </Space.Fill>
+              </Space.Fixed>
+
+            </Tabs.TabPane>
+
+            <Tabs.TabPane tab="Percentage left / right" key="2">
+
+              <SyntaxHighlighter language="html">
+                {
+                  "const App = () => (\r\n" +
+                  "  <Space.Fixed height={400}>\r\n" +
+                  "    <Space.LeftResizable size=\"25%\" />\r\n" +
+                  "    <Space.Fill />\r\n" +
+                  "    <Space.RightResizable size=\"25%\" />\r\n" +
+                  "  </Space.Fixed>\r\n" +
+                  ")"
+                }
+              </SyntaxHighlighter>
+
+              <Space.Fixed height={400}>
+                <Space.LeftResizable trackSize={true} size="25%" style={{ backgroundColor: '#e0eee0' }}>
+                  {Description("Left 25%")}
+                </Space.LeftResizable>
+                <Space.Fill trackSize={true} style={{ backgroundColor: '#eee0e0' }}>
+                  {Description("Fill")}
+                </Space.Fill>
+                <Space.RightResizable trackSize={true} size="25%" style={{ backgroundColor: '#e0eee0' }}>
+                  {Description("Right 25%")}
+                </Space.RightResizable>
+              </Space.Fixed>
+
+              </Tabs.TabPane>
+          </Tabs>
           
           <h2 id="stacked">Stacked spaces</h2>
 
@@ -392,44 +462,36 @@ const App: React.FC = () => {
                 {
                   "const App = () => (\r\n" +
                   "  <Space.Fixed height={400}>\r\n" +
-                  "    <Space.LeftResizable size={75} order={1} />\r\n" +
-                  "    <Space.LeftResizable size={75} order={2} />\r\n" +
+                  "    <Space.LeftResizable size=\"10%\" order={1} />\r\n" +
+                  "    <Space.LeftResizable size=\"10%\" order={2} />\r\n" +
                   "    <Space.Fill />\r\n" +
-                  "    <Space.RightResizable size={75} order={2} />\r\n" +
-                  "    <Space.RightResizable size={75} order={1} />\r\n" +
+                  "    <Space.RightResizable size=\"10%\" order={2} />\r\n" +
+                  "    <Space.RightResizable size=\"10%\" order={1} />\r\n" +
                   "  </Space.Fixed>\r\n" +
                   ")"
                 }
               </SyntaxHighlighter>
 
               <Space.Fixed height={400}>
-                <Space.LeftResizable trackSize={true} size={75} order={1} style={{ backgroundColor: '#e0eee0' }}>
+                <Space.LeftResizable trackSize={true} size="10%" order={1} style={{ backgroundColor: '#e0eee0' }}>
                   {Description("Left 1")}
                 </Space.LeftResizable>
-                <Space.LeftResizable trackSize={true} size={75} order={2} style={{ backgroundColor: '#e0eeee' }}>
+                <Space.LeftResizable trackSize={true} size="10%" order={2} style={{ backgroundColor: '#e0eeee' }}>
                   {Description("Left 2")}
                 </Space.LeftResizable>
                 <Space.Fill trackSize={true} style={{ backgroundColor: '#eee0e0' }}>
                   {Description("Fill")}
                 </Space.Fill>
-                <Space.RightResizable trackSize={true} size={75} order={2} style={{ backgroundColor: '#e0eeee' }}>
+                <Space.RightResizable trackSize={true} size="10%" order={2} style={{ backgroundColor: '#e0eeee' }}>
                   {Description("Right 2")}
                 </Space.RightResizable>
-                <Space.RightResizable trackSize={true} size={75} order={1} style={{ backgroundColor: '#e0eee0' }}>
+                <Space.RightResizable trackSize={true} size="10%" order={1} style={{ backgroundColor: '#e0eee0' }}>
                   {Description("Right 1")}
                 </Space.RightResizable>
               </Space.Fixed>
 
             </Tabs.TabPane>
           </Tabs>
-
-          <h2 id="scrollable">Scrollable spaces</h2>
-
-          <p>
-              By default, all spaces hide content that overflows the space. To make a particular space scrollable, 
-              set the scrollable property to true. The space will then be scrollable horizontally or vertically if 
-              the content overflows the space.
-          </p>
 
           <h2 id="sizeinfo">Getting size information for a space</h2>
           
@@ -454,27 +516,33 @@ const App: React.FC = () => {
 
           <h2 id="changes">Version history</h2>
 
-          <p>
+          <div>
+                <strong>0.1.4</strong> 
+                <ul>
+                  <li>Add support for percentage sizing on anchored spaces</li>
+                </ul>
+          </div>
+          <div>
                 <strong>0.1.3</strong> 
                 <ul>
                   <li>Added readme</li>
                   <li>Updated documentation</li>
                 </ul>
-          </p>
-          <p>
+          </div>
+          <div>
                 <strong>0.1.2</strong> 
                 <ul>
                   <li>Removed ResizeSensor from spaces by default and now optionally allow live size updates with <strong>trackSize</strong> property</li>
                   <li>Added <strong>VerticallyCentered</strong> component to vertically centre content within space</li>
                   <li>Allow class names to be specified on top-level spaces <strong>ViewPort</strong> and <strong>Fixed</strong></li>
                 </ul>
-          </p>
-          <p>
+          </div>
+          <div>
                 <strong>0.1.0 - 0.1.1</strong>
                 <ul>
                   <li>Initial version</li>
                 </ul>
-          </p>
+          </div>
 
         </Space.Fill>
 
