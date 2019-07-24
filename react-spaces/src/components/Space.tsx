@@ -20,7 +20,7 @@ interface IPrivateProps {
 }
 
 interface IAnchoredProps {
-	size?: number,
+	size?: number | string,
 	order?: number
 }
 
@@ -36,12 +36,13 @@ interface IState {
 	adjustedSize: number,
 	spaceTakers: ISpaceTaker[],
 
+	parsedSize?: number;
 	left?: number;
 	top?: number;
 	right?: number;
 	bottom?: number;
-	width?: number;
-	height?: number;
+	width?: number | string;
+	height?: number | string;
 }
 
 export const Fill : React.FC<IPublicProps> = (props) => <Space {...props} />
@@ -63,6 +64,9 @@ interface ISpaceInfo {
 
 const SpaceInfoContext = React.createContext<ISpaceInfo | null>(null);
 
+const getSizeString = (size: string | number) =>
+	typeof(size) === "string" ? size : `${size}px`;
+
 class Space extends React.Component<AllProps, IState> {
 	private divElementRef = React.createRef<HTMLDivElement>();
 	private resizeSensor?: ResizeSensor;
@@ -78,6 +82,7 @@ class Space extends React.Component<AllProps, IState> {
 			adjustedSize: 0,
 			spaceTakers: [],
 
+			parsedSize: typeof props.size === "string" ? 0 : props.size as number | undefined,
 			left: props.anchor !== AnchorType.Right ? 0 : undefined,
 			top: props.anchor !== AnchorType.Bottom ? 0 : undefined,
 			right: props.anchor !== AnchorType.Left ? 0 : undefined,
@@ -95,8 +100,9 @@ class Space extends React.Component<AllProps, IState> {
 
 			const currentRect = this.divElementRef.current.getBoundingClientRect();
 			this.setState({
-				currentWidth: parseInt(currentRect.width.toFixed(), 10),
-				currentHeight: parseInt(currentRect.height.toFixed(), 10)
+				parsedSize: !this.state.parsedSize ? currentRect.width : this.state.parsedSize,
+				currentWidth: currentRect.width,
+				currentHeight: currentRect.height
 			});
 		}
 	}
@@ -120,19 +126,30 @@ class Space extends React.Component<AllProps, IState> {
 				{
 					parentContext => {
 						const style = {
-							left: this.state.left,
-							top: this.state.top,
-							right: this.state.right,
-							bottom: this.state.bottom,
-							width: this.isHorizontalSpace() && this.state.adjustedSize !== 0 ? (this.state.width || 0) + this.state.adjustedSize : this.state.width,
-							height: this.isVerticalSpace() && this.state.adjustedSize !== 0 ? (this.state.height || 0) + this.state.adjustedSize : this.state.height
+							left: (this.state.left !== undefined ? `calc(${this.state.left}px)` : undefined) as string | number | undefined,
+							top: (this.state.top !== undefined ? `calc(${this.state.top}px)` : undefined) as string | number,
+							right: (this.state.right !== undefined ? `calc(${this.state.right}px)` : undefined) as string | number,
+							bottom: (this.state.bottom !== undefined ? `calc(${this.state.bottom}px)` : undefined) as string | number,
+							width: 
+								this.isHorizontalSpace() ? 
+									`calc(${getSizeString(this.props.size || 0)} + ${this.state.adjustedSize}px)`
+									: undefined,
+							height: 
+								this.isVerticalSpace() ? 
+									`calc(${getSizeString(this.props.size || 0)} + ${this.state.adjustedSize}px)`
+									: undefined,
 						};
 
 						if (parentContext) {
 							this.onRemove = () => {
 								parentContext.removeSpaceTaker(this.state.id);
 							}
-							
+
+							let adjustedTop: string[] = [];
+							let adjustedLeft: string[] = [];
+							let adjustedRight: string[] = [];
+							let adjustedBottom: string[] = [];
+
 							[ AnchorType.Left, 
 							  AnchorType.Right, 
 							  AnchorType.Bottom, 
@@ -150,25 +167,33 @@ class Space extends React.Component<AllProps, IState> {
 											if (this.isFilledSpace())
 											{
 												if (t.anchorType === AnchorType.Top) {
-													style.top! += t.size + t.adjustedSize;
+													adjustedTop.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													//style.top! += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Left) {
-													style.left! += t.size + t.adjustedSize;
+													adjustedLeft.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													//style.left! += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Bottom) {
-													style.bottom! += t.size + t.adjustedSize;
+													adjustedBottom.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													//style.bottom! += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Right) {
-													style.right! += t.size + t.adjustedSize;
+													adjustedRight.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													//style.right! += t.size + t.adjustedSize;
 												}
 											}
 											else
 											{
 												if (t.anchorType === AnchorType.Top && style.top !== undefined) {
-													style.top += t.size + t.adjustedSize;
+													adjustedTop.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													//style.top += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Left && style.left !== undefined) {
-													style.left += t.size + t.adjustedSize;
+													adjustedLeft.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													//style.left += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Bottom && style.bottom !== undefined) {
-													style.bottom += t.size + t.adjustedSize;
+													adjustedBottom.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													//style.bottom += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Right && style.right !== undefined) {
-													style.right += t.size + t.adjustedSize;
+													adjustedRight.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													//style.right += t.size + t.adjustedSize;
 												}
 											}
 										} else {
@@ -176,13 +201,26 @@ class Space extends React.Component<AllProps, IState> {
 										}
 									}
 								});
+
+							if (adjustedTop.length > 0) {
+								style.top = `calc(${adjustedTop.join(" + ")})`;
+							}
+							if (adjustedLeft.length > 0) {
+								style.left = `calc(${adjustedLeft.join(" + ")})`;
+							}
+							if (adjustedRight.length > 0) {
+								style.right = `calc(${adjustedRight.join(" + ")})`;
+							}
+							if (adjustedBottom.length > 0) {
+								style.bottom = `calc(${adjustedBottom.join(" + ")})`;
+							}
 							
 							if (this.props.anchor) {
 								parentContext.registerSpaceTaker({
 									id: this.state.id,
 									order: this.props.order || 1,
 									anchorType: this.props.anchor,
-									size: this.props.size || (this.isVerticalSpace() ? this.state.currentHeight : this.state.currentWidth),
+									size: this.props.size || 0,
 									adjustedSize: 0
 								});
 							}
@@ -217,7 +255,7 @@ class Space extends React.Component<AllProps, IState> {
 									<Resizable 
 										type={resizeType} 
 										minimumAdjust={ -(this.props.size || 0) + (this.props.minimumSize || 20) }
-										maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.props.size || 0)) : undefined}
+										maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.state.parsedSize || 0)) : undefined}
 										onResize={(adjustedSize) => { 
 											this.setState(
 												{ adjustedSize: adjustedSize },
