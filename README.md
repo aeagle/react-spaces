@@ -8,7 +8,7 @@ React Spaces allow you to divide a page or container HTML element into spaces. T
 
 Used at the top level of all other spaces.
 
-**<ViewPort />**
+**\<ViewPort \/>**
 
 This space will take over the full viewport of the browser window. Resizing the browser window will automatically adjust the size of this space and all the nested spaces.
 
