@@ -55,6 +55,10 @@ pre {
 	}
 }
 
+.mobileDesc {
+	display: none;
+}
+
 .ant-anchor-link {
 	line-height: 1.5;
 }
@@ -86,8 +90,24 @@ pre {
 
 @media (max-width: 800px)
 {
+	pre {
+		font-size: 80%;
+	}
+
 	#forkongithub {
 		display: none;
+	}
+
+	.description {
+		font-size: 80%;
+
+		.desc {
+			display: none;
+		}
+
+		.mobileDesc {
+			display: inline;
+		}
 	}
 
 	.sidebar {
