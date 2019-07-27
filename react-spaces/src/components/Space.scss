@@ -1,7 +1,7 @@
 .spaces-space {
 	position: absolute;
 	overflow: hidden;
-	z-index: 99999;
+	z-index: 1;
 
 	&:after {
 		content: "";
