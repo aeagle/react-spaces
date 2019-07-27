@@ -4,6 +4,8 @@
 
 React Spaces allow you to divide a page or container HTML element into spaces. These spaces know how to behave in relation to each other and can also be divided into further nested spaces.
 
+<img src="http://www.allaneagle.com/react-spaces/react-spaces-demo.gif" width="100%" />
+
 ### Top level spaces
 
 Used at the top level of all other spaces.
