@@ -168,32 +168,24 @@ class Space extends React.Component<AllProps, IState> {
 											{
 												if (t.anchorType === AnchorType.Top) {
 													adjustedTop.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
-													//style.top! += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Left) {
 													adjustedLeft.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
-													//style.left! += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Bottom) {
 													adjustedBottom.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
-													//style.bottom! += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Right) {
 													adjustedRight.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
-													//style.right! += t.size + t.adjustedSize;
 												}
 											}
 											else
 											{
 												if (t.anchorType === AnchorType.Top && style.top !== undefined) {
 													adjustedTop.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
-													//style.top += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Left && style.left !== undefined) {
 													adjustedLeft.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
-													//style.left += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Bottom && style.bottom !== undefined) {
 													adjustedBottom.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
-													//style.bottom += t.size + t.adjustedSize;
 												} else if (t.anchorType === AnchorType.Right && style.right !== undefined) {
 													adjustedRight.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
-													//style.right += t.size + t.adjustedSize;
 												}
 											}
 										} else {
