@@ -22,17 +22,21 @@ This space can be given a height and optionally a width (by default it will size
 
 These can be used within the top-level spaces **\<ViewPort /\>** and **\<Fixed /\>** or nested within other spaces.
 
-**\<Left /\>** / **\<Right /\>** 
+**\<Left /\>** and **\<Right /\>** 
 
 A space anchored to the left or right of the parent container/space. A size can be specified in pixels or as a percentage to determine its width.
 
-**\<Top /\>** / **\<Bottom /\>** 
+**\<Top /\>** and **\<Bottom /\>** 
 
 A space anchored to the top or bottom of the parent container/space. A size can be specified in pixels or as a percentage to determine its height.
 
 ### Other
 
 **\<Fill /\>** 
+
+A space which consumes any available area left in the parent container/space taking into account any anchored spaces on every side.
+
+**\<Centered /\>** 
 
 A space which consumes any available area left in the parent container/space taking into account any anchored spaces on every side.
 
