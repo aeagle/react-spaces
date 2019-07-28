@@ -3,7 +3,7 @@
 	font-size: 12px;
 	color: #c5c5c5;
 
-	.main {
+	.editor-main {
 		padding: 5px 5px 5px 10px;
 		font-size: 16px;
 		font-family: 'Courier New', Courier, monospace;
@@ -11,17 +11,18 @@
 
 	.sidebar-pane {
 		.title {
+			font-size: 11px;
 			padding-left: 5px;
 			font-weight: 700;
 			text-transform: uppercase;
 		}
 	}
 
-	.bottom-pane {
+	.bottom-pane-container {
 		.spaces-resize-handle {
-			height: 2px;
-			background-color: #333;
-			opacity: 1;
+			opacity: 1 !important;
+			height: 2px !important;
+			background-color: #333 !important;
 		}
 	}
 }
