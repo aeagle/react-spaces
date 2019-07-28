@@ -55,7 +55,7 @@ pre {
 	}
 }
 
-.mobileDesc {
+.mobileDesc, .mobile {
 	display: none;
 }
 
@@ -102,6 +102,10 @@ pre {
 
 	#forkongithub {
 		display: none;
+	}
+
+	.mobile {
+		display: block;
 	}
 
 	.description {
