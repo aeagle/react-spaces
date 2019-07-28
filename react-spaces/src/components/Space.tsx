@@ -100,7 +100,10 @@ class Space extends React.Component<AllProps, IState> {
 
 			const currentRect = this.divElementRef.current.getBoundingClientRect();
 			this.setState({
-				parsedSize: !this.state.parsedSize ? currentRect.width : this.state.parsedSize,
+				parsedSize: 
+					!this.state.parsedSize ? 
+						this.isHorizontalSpace() ? currentRect.width : currentRect.height : 
+						this.state.parsedSize,
 				currentWidth: currentRect.width,
 				currentHeight: currentRect.height
 			});
@@ -246,7 +249,7 @@ class Space extends React.Component<AllProps, IState> {
 								<>
 									<Resizable 
 										type={resizeType} 
-										minimumAdjust={ -(this.props.size || 0) + (this.props.minimumSize || 20) }
+										minimumAdjust={ -(this.state.parsedSize || 0) + (this.props.minimumSize || 20) }
 										maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.state.parsedSize || 0)) : undefined}
 										onResize={(adjustedSize) => { 
 											this.setState(

@@ -1,11 +1,11 @@
 {
   "name": "react-spaces",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "dist/index.js",
   "author": {
     "name": "Allan Eagle"
   },
-  "license": "ISC",
+  "license": "MIT",
   "description": "React Layout Components",
   "dependencies": {
     "css-element-queries": "^1.2.1",
