@@ -3,13 +3,24 @@
 	overflow: hidden;
 	z-index: 1;
 
-	&:after {
-		content: "";
-		display: table;
-		clear: both;
+	.spaces-space-inner {
+		z-index: 2;
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+
+		&:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
 	}
 
 	&.scrollable {
-		overflow: auto;
+		.spaces-space-inner {
+			overflow: auto;
+		}
 	}
 }

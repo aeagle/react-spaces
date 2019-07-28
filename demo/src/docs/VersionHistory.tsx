@@ -6,6 +6,12 @@ export const VersionHistory = () => {
 			<h2 id="changes">Version history</h2>
 
 			<div>
+				<h3>0.1.7</h3> 
+				<ul>
+					<li>Fixed positioning of resize handles within scrollable divs</li>
+				</ul>
+			</div>
+			<div>
 				<h3>0.1.6</h3> 
 				<ul>
 					<li>Fixed resize minimum and maximum constraints</li>

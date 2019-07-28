@@ -226,6 +226,7 @@ class Space extends React.Component<AllProps, IState> {
 						const currentContext = this.getContext(parentContext);
 
 						let spaceRender = this.props.children;
+						let resizeRender = null;
 
 						if (parentContext && this.props.anchor && this.props.resizable) {
 							let resizeType : ResizeType = ResizeType.Left;
@@ -245,21 +246,18 @@ class Space extends React.Component<AllProps, IState> {
 									break;
 							}
 							
-							spaceRender = 
-								<>
-									<Resizable 
-										type={resizeType} 
-										minimumAdjust={ -(this.state.parsedSize || 0) + (this.props.minimumSize || 20) }
-										maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.state.parsedSize || 0)) : undefined}
-										onResize={(adjustedSize) => { 
-											this.setState(
-												{ adjustedSize: adjustedSize },
-												() => {
-													parentContext.updateSpaceTakerAdjustedSize(this.state.id, adjustedSize); 
-												}); 
-										}} />
-									{spaceRender}
-								</>;
+							resizeRender = 
+								<Resizable 
+									type={resizeType} 
+									minimumAdjust={ -(this.state.parsedSize || 0) + (this.props.minimumSize || 20) }
+									maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.state.parsedSize || 0)) : undefined}
+									onResize={(adjustedSize) => { 
+										this.setState(
+											{ adjustedSize: adjustedSize },
+											() => {
+												parentContext.updateSpaceTakerAdjustedSize(this.state.id, adjustedSize); 
+											}); 
+									}} />;
 						}
 						
 						return (
@@ -267,14 +265,15 @@ class Space extends React.Component<AllProps, IState> {
 							id={id}
 							ref={this.divElementRef}
 							className={`spaces-space${this.props.anchor || ''}${this.props.scrollable ? ' scrollable' : ''}${className ? ` ${className}` : ``}`}
-							style={{ ...style, ...this.props.style }}>
-		
-							<SpaceContext.Provider value={currentContext}>
-								<SpaceInfoContext.Provider value={{ width: Math.floor(this.state.currentWidth), height: Math.floor(this.state.currentHeight) }}>
-								{ spaceRender }
-								</SpaceInfoContext.Provider>
-							</SpaceContext.Provider>
-		
+							style={style}>
+							{ resizeRender }
+							<div className="spaces-space-inner" style={this.props.style}>
+								<SpaceContext.Provider value={currentContext}>
+									<SpaceInfoContext.Provider value={{ width: Math.floor(this.state.currentWidth), height: Math.floor(this.state.currentHeight) }}>
+									{ spaceRender }
+									</SpaceInfoContext.Provider>
+								</SpaceContext.Provider>
+							</div>
 						</div>
 						)
 					}
