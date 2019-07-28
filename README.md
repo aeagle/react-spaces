@@ -1,6 +1,6 @@
 # React Spaces
 
-![NPM](https://img.shields.io/npm/v/react-spaces.svg)
+![NPM](https://img.shields.io/npm/v/react-spaces.svg) ![Azure Pipelines](https://allan-eagle.visualstudio.com/All%20projects/_apis/build/status/React-Spaces)
 
 React Spaces allow you to divide a page or container HTML element into spaces. These spaces know how to behave in relation to each other and can also be divided into further nested spaces.
 
