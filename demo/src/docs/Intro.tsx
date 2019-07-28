@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Button, Icon } from 'antd';
 
 export const Intro = () => {
 	return (
@@ -6,6 +7,12 @@ export const Intro = () => {
   			<p id="intro" style={{ fontWeight: 400, paddingTop: 30, paddingBottom: 0, fontSize: 28, color: '#777' }}>
               React Spaces allow you to divide a page or container into nestable, anchored, scrollable and resizable spaces.
             </p>
+
+			<div className="mobile" style={{ marginBottom: 15 }}>
+              <Button type="primary" onClick={() => window.location.href = 'https://github.com/aeagle/react-spaces'}><Icon type="github" /> View on GitHub</Button>
+            &nbsp; &nbsp;
+				<img style={{ position: 'relative', top: -2 }} alt="NPM version" src="https://img.shields.io/npm/v/react-spaces.svg" />
+			</div>
 
             <p>
               <h2>Features</h2>
