@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Space from 'react-spaces';
 import 'antd/dist/antd.css';
 import './UI.scss';
+import MonacoEditor from 'react-monaco-editor';
 
 export const UI = () => {
 	return (
@@ -43,11 +44,14 @@ const Editor: React.FC = (props) => {
 	return  (
 		<Space.Fill>
 			<Space.Fill>
-				<Space.Top className="tabs" size={40}>
+				<Space.Top className="editor-tabs" size={40}>
 
 				</Space.Top>
-				<Space.Fill className="main" scrollable={true}>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae soluta, repudiandae provident, maiores fugiat deleniti qui quidem quia perferendis aperiam vel itaque nostrum unde illo odit, molestiae consequatur quod culpa! Quo aut molestias, et officia inventore labore excepturi explicabo quis, dolore, reprehenderit dignissimos voluptates eligendi pariatur cupiditate expedita nihil quia doloremque praesentium nostrum eos. Exercitationem, natus quisquam delectus et, laboriosam voluptas perferendis culpa incidunt, cum blanditiis sint suscipit reprehenderit? Dolore laudantium pariatur quod maxime similique tempora recusandae voluptate aut veniam aliquam debitis magnam provident, vero repellendus perferendis labore esse quos animi enim porro quam nobis. Tenetur voluptas voluptates ut dolorum beatae dolore pariatur nesciunt quisquam dolor error! Aspernatur, adipisci! Vero consequatur aspernatur, odit modi fugit placeat? Quam, hic necessitatibus natus aut aperiam officiis error eligendi provident, perspiciatis deleniti placeat repellendus obcaecati nulla at fugit molestiae dicta optio neque officia laboriosam, temporibus itaque quae. Optio tenetur molestiae laborum iste quasi nesciunt minus voluptatum eveniet voluptates neque nobis pariatur at ipsa rem deleniti, qui necessitatibus praesentium itaque. Explicabo incidunt id eligendi quod alias consectetur repellat! Nisi est veniam minus vel perferendis natus totam, doloribus quidem repudiandae! Corporis, sint non eligendi neque vero at, dolores reiciendis officia voluptas eaque saepe nostrum sapiente obcaecati delectus voluptates pariatur nemo sed quis quo, eum perferendis illum? Non repudiandae culpa at voluptatibus corrupti qui, quae consequuntur itaque, minus deserunt maxime sed. Voluptates culpa vel delectus. 
+				<Space.Fill className="editor-main" scrollable={true}>
+					<MonacoEditor
+						language="javascript"
+						theme="vs-dark"
+					/>
 				</Space.Fill>
 			</Space.Fill>
 			<BottomPane />
@@ -109,7 +113,7 @@ const SideBarPaneInner: React.FC<{ title: string }> = (props) => {
 
 const BottomPane: React.FC = (props) => {
 	return (
-		<Space.BottomResizable className="bottom-pane" size={300}>
+		<Space.BottomResizable className="bottom-pane" size="25%">
 		</Space.BottomResizable>
 	)
 }
