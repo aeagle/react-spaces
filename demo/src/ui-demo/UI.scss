@@ -1,0 +1,27 @@
+.ui-demo {
+	font-family: 'Roboto', sans-serif;
+	font-size: 12px;
+	color: #c5c5c5;
+
+	.main {
+		padding: 5px 5px 5px 10px;
+		font-size: 16px;
+		font-family: 'Courier New', Courier, monospace;
+	}
+
+	.sidebar-pane {
+		.title {
+			padding-left: 5px;
+			font-weight: 700;
+			text-transform: uppercase;
+		}
+	}
+
+	.bottom-pane {
+		.spaces-resize-handle {
+			height: 2px;
+			background-color: #333;
+			opacity: 1;
+		}
+	}
+}
