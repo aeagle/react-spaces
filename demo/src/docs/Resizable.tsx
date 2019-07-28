@@ -87,23 +87,31 @@ export const Resizable = () => {
 			  {
 				"const App = () => (\r\n" +
 				"  <Space.Fixed height={400}>\r\n" +
-				"    <Space.LeftResizable size={100} minimumSize={50} maximumSize={150} />\r\n" +
+				"    <Space.LeftResizable size=\"20%\" minimumSize={50} maximumSize={150} />\r\n" +
 				"    <Space.Fill />\r\n" +
-				"    <Space.RightResizable size={100} minimumSize={50} maximumSize={150} />\r\n" +
+				"    <Space.RightResizable size=\"20%\" minimumSize={50} maximumSize={150} />\r\n" +
 				"  </Space.Fixed>\r\n" +
 				")"
 			  }
 			</SyntaxHighlighter>
 
 			<Space.Fixed height={400}>
-			  <Space.LeftResizable trackSize={true} size={100} minimumSize={50} maximumSize={150} style={{ backgroundColor: '#e0eee0' }}>
-				{Description("Left", "L")}
+			  <Space.LeftResizable trackSize={true} size="20%" minimumSize={50} maximumSize={150} style={{ backgroundColor: '#e0eee0' }}>
+					{Description("Left", "L")}
 			  </Space.LeftResizable>
-			  <Space.Fill trackSize={true} style={{ backgroundColor: '#eee0e0' }}>
-				{Description("Fill", "F")}
-			  </Space.Fill>
-			  <Space.RightResizable trackSize={true} size={100} minimumSize={50} maximumSize={150} style={{ backgroundColor: '#e0eee0' }}>
-				{Description("Right", "R")}
+				<Space.Fill>
+					<Space.TopResizable trackSize={true} size="20%" minimumSize={50} maximumSize={150} style={{ backgroundColor: '#e0eeee' }}>
+						{Description("Top", "T")}
+					</Space.TopResizable>
+					<Space.Fill trackSize={true} style={{ backgroundColor: '#eee0e0' }}>
+						{Description("Fill", "F")}
+					</Space.Fill>
+					<Space.BottomResizable trackSize={true} size="20%" minimumSize={50} maximumSize={150} style={{ backgroundColor: '#e0eeee' }}>
+						{Description("Bottom", "B")}
+					</Space.BottomResizable>
+				</Space.Fill>
+			  <Space.RightResizable trackSize={true} size="20%" minimumSize={50} maximumSize={150} style={{ backgroundColor: '#e0eee0' }}>
+					{Description("Right", "R")}
 			  </Space.RightResizable>
 			</Space.Fixed>
 
