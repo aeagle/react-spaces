@@ -7,7 +7,7 @@ export const GettingStarted = () => {
 			<h2 id="getting-started">Getting started</h2>
 
 			<p>
-			Spaces can be used by importing the spaces using the following:
+			To get started with React Spaces you need:
 			</p>
 
 			<SyntaxHighlighter language="html">
