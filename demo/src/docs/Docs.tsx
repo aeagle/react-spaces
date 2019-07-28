@@ -4,7 +4,7 @@ import { Button, Icon, Menu } from 'antd';
 import 'antd/dist/antd.css';
 import { GettingStarted } from './GettingStarted';
 import { Types } from './Types';
-import { Anchored } from '../ui-demo/Anchored';
+import { Anchored } from './Anchored';
 import { Resizable } from './Resizable';
 import { Nested } from './Nested';
 import { Scrollable } from './Scrollable';
