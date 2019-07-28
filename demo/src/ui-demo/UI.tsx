@@ -41,17 +41,25 @@ const Main: React.FC = (props) => {
 }
 
 const Editor: React.FC = (props) => {
+	const [ code, setCode ] = React.useState('import * as React from \'react\';\r\nimport * as Space from \'react-spaces\';\r\n\r\nexport const App = () => {\r\n    <Space.ViewPort>\r\n        <Space.Top size={30}>\r\n            Hello!\r\n        </Space.Top>\r\n        <Space.Fill>\r\n            World!\r\n        </Space.Fill>\r\n    </Space.ViewPort>\r\n}');
+
+    const options = {
+		selectOnLineNumbers: true
+	};
+
 	return  (
 		<Space.Fill>
 			<Space.Fill>
 				<Space.Top className="editor-tabs" size={40}>
 
 				</Space.Top>
-				<Space.Fill className="editor-main" scrollable={true}>
+				<Space.Fill className="editor-main">
 					<MonacoEditor
-						language="javascript"
-						theme="vs-dark"
-					/>
+						value={code} 
+						onChange={(newValue: string) => setCode(newValue)} 
+						options={options}
+						language="javascript" 
+						theme="vs-dark" />
 				</Space.Fill>
 			</Space.Fill>
 			<BottomPane />

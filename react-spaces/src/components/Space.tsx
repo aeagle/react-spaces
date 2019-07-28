@@ -264,7 +264,7 @@ class Space extends React.Component<AllProps, IState> {
 						<div 
 							id={id}
 							ref={this.divElementRef}
-							className={`spaces-space${this.props.anchor || ''}${this.props.scrollable ? ' scrollable' : ''}`}
+							className={`spaces-space${this.props.anchor || ''}${this.props.scrollable ? ' scrollable' : ''}${className ? ` ${className}-container` : ``}`}
 							style={style}>
 							{ resizeRender }
 							<div className={`spaces-space-inner${className ? ` ${className}` : ``}`} style={this.props.style}>

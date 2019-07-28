@@ -7,15 +7,22 @@
 		padding: 5px 5px 5px 10px;
 		font-size: 16px;
 		font-family: 'Courier New', Courier, monospace;
-
-		border-bottom: 2px solid #333;
 	}
 
 	.sidebar-pane {
 		.title {
+			font-size: 11px;
 			padding-left: 5px;
 			font-weight: 700;
 			text-transform: uppercase;
+		}
+	}
+
+	.bottom-pane-container {
+		.spaces-resize-handle {
+			opacity: 1 !important;
+			height: 2px !important;
+			background-color: #333 !important;
 		}
 	}
 }
