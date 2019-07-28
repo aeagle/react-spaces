@@ -31,7 +31,7 @@ export const Intro = () => {
             </p>
 
             <p>
-              <img src="http://www.allaneagle.com/react-spaces/react-spaces-demo.gif" alt="Screen demo" width="100%" style={{ maxWidth: 1000 }} />
+              <img src="/react-spaces/react-spaces-demo.gif" alt="Screen demo" width="100%" style={{ maxWidth: 1000 }} />
             </p>
 		</>
 	)
