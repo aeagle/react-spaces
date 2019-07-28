@@ -122,22 +122,16 @@ pre {
 		}
 	}
 
-	.sidebar {
-		display: none;
+	.sidebar-container {
+		display: none !important;
+	}
+
+	.docs-main-container {
+		left: 0 !important;
+		top: 0 !important;
 	}
 
 	.all-content {
 		top: 0px !important;
-	}
-
-	.main {
-		position: fixed;
-		left: inherit !important;
-		right: inherit !important;
-		top: 80px !important;
-		bottom: inherit !important;
-		height: inherit !important;
-		width: 100% !important;
-		overflow: auto !important;
 	}
 }

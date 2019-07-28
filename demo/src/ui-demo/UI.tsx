@@ -44,7 +44,8 @@ const Editor: React.FC = (props) => {
 	const [ code, setCode ] = React.useState('import * as React from \'react\';\r\nimport * as Space from \'react-spaces\';\r\n\r\nexport const App = () => {\r\n    <Space.ViewPort>\r\n        <Space.Top size={30}>\r\n            Hello!\r\n        </Space.Top>\r\n        <Space.Fill>\r\n            World!\r\n        </Space.Fill>\r\n    </Space.ViewPort>\r\n}');
 
     const options = {
-		selectOnLineNumbers: true
+		selectOnLineNumbers: true,
+		automaticLayout: true
 	};
 
 	return  (

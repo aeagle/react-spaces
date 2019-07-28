@@ -50,7 +50,7 @@ export const Docs = () => {
             </div>
 
           </Space.Left>
-          <Space.Fill className="main" scrollable={true} style={{ padding: 30, paddingTop: 0 }}>
+          <Space.Fill className="docs-main" scrollable={true} style={{ padding: 30, paddingTop: 0 }}>
 
             <Intro />
             <GettingStarted />
