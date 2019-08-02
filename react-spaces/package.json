@@ -2,6 +2,7 @@
   "name": "react-spaces",
   "version": "0.1.8",
   "main": "dist/index.js",
+  "repository": "github:aeagle/react-spaces"
   "author": {
     "name": "Allan Eagle"
   },
