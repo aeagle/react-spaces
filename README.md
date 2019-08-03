@@ -4,7 +4,9 @@
 
 React Spaces allow you to divide a page or container HTML element into spaces. These spaces know how to behave in relation to each other and can also be divided into further nested spaces.
 
-<img src="http://www.allaneagle.com/react-spaces/react-spaces-demo.gif" width="100%" />
+View full documentation [here](https://www.allaneagle.com/react-spaces/demo/).
+
+<img src="https://www.allaneagle.com/react-spaces/react-spaces-demo.gif" width="100%" />
 
 ### Top level spaces
 
@@ -38,7 +40,11 @@ A space which consumes any available area left in the parent container/space tak
 
 **\<Centered /\>** 
 
-A space which consumes any available area left in the parent container/space taking into account any anchored spaces on every side.
+Centres the content of a space horizontally and vertically.
+
+**\<VerticallyCentered /\>**
+
+Centres the content of a space vertically.
 
 ## Getting started
 
@@ -52,4 +58,4 @@ npm install react-spaces --save
 import * as Spaces from 'react-spaces';
 ```
 
-View full documentation [here](http://www.allaneagle.com/react-spaces/demo/).
+View full documentation [here](https://www.allaneagle.com/react-spaces/demo/).
