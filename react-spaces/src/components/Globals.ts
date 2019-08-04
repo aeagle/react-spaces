@@ -4,3 +4,9 @@ export enum AnchorType {
 	Top = " anchor-top",
 	Bottom = " anchor-bottom"
 }
+
+export enum CenterType {
+	None,
+	Vertical,
+	HorizontalVertical
+}

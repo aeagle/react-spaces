@@ -1,10 +1,11 @@
 import * as React from 'react';
 import './Space.scss';
-import { AnchorType } from './Globals';
+import { AnchorType, CenterType } from './Globals';
 import { ResizeSensor, ResizeSensorCallback } from 'css-element-queries';
 import { SpaceContext, ISpaceContext, ISpaceTaker } from './SpaceContext';
 import { Guid } from "guid-typescript";
 import { Resizable, ResizeType } from './Resizable';
+import { CenteredVertically, Centered } from './Centered';
 
 interface IPublicProps {
 	id?: string,
@@ -12,6 +13,7 @@ interface IPublicProps {
 	style?: React.CSSProperties,
 	scrollable?: boolean,
 	trackSize?: boolean,
+	centerContent?: CenterType,
 	as?: string
 }
 
@@ -258,6 +260,11 @@ class Space extends React.Component<AllProps, IState> {
 												parentContext.updateSpaceTakerAdjustedSize(this.state.id, adjustedSize); 
 											}); 
 									}} />;
+
+						if (this.props.centerContent === CenterType.Vertical) {
+							children = <CenteredVertically>{children}</CenteredVertically>;
+						} else if (this.props.centerContent === CenterType.HorizontalVertical) {
+							children = <Centered>{children}</Centered>;
 						}
 						
 						const adjustedStyle = 
