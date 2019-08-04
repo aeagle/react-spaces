@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { AnchorType } from './Globals';
-import { Guid } from 'guid-typescript';
 
 export interface ISpaceContext {
 	level: number,
@@ -8,12 +7,12 @@ export interface ISpaceContext {
 	height: number,
 	spaceTakers: ISpaceTaker[],
 	registerSpaceTaker: (spaceTaker: ISpaceTaker) => void,
-	removeSpaceTaker: (id: Guid) => void,
-	updateSpaceTakerAdjustedSize: (id: Guid, adjustedSize: number) => void
+	removeSpaceTaker: (id: string) => void,
+	updateSpaceTakerAdjustedSize: (id: string, adjustedSize: number) => void
 }
 
 export interface ISpaceTaker {
-	id: Guid,
+	id: string,
 	order: number,
 	anchorType: AnchorType,
 	size: number | string,

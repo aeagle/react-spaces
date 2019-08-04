@@ -11,7 +11,8 @@ interface IPublicProps {
 	className?: string,
 	style?: React.CSSProperties,
 	scrollable?: boolean,
-	trackSize?: boolean
+	trackSize?: boolean,
+	as?: string
 }
 
 interface IPrivateProps {
@@ -30,7 +31,7 @@ interface IResizableProps {
 }
 
 interface IState {
-	id: Guid,
+	id: string,
 	currentWidth: number,
 	currentHeight: number,
 	adjustedSize: number,
@@ -76,7 +77,7 @@ class Space extends React.Component<AllProps, IState> {
 		super(props);
 
 		this.state = {
-			id: Guid.create(),
+			id: Guid.create().toString(),
 			currentWidth: 0,
 			currentHeight: 0,
 			adjustedSize: 0,
@@ -129,10 +130,10 @@ class Space extends React.Component<AllProps, IState> {
 				{
 					parentContext => {
 						const style = {
-							left: (this.state.left !== undefined ? `calc(${this.state.left}px)` : undefined) as string | number | undefined,
-							top: (this.state.top !== undefined ? `calc(${this.state.top}px)` : undefined) as string | number,
-							right: (this.state.right !== undefined ? `calc(${this.state.right}px)` : undefined) as string | number,
-							bottom: (this.state.bottom !== undefined ? `calc(${this.state.bottom}px)` : undefined) as string | number,
+							left: (this.state.left !== undefined ? `calc(${this.state.left}px)` : undefined) as string | undefined,
+							top: (this.state.top !== undefined ? `calc(${this.state.top}px)` : undefined) as string,
+							right: (this.state.right !== undefined ? `calc(${this.state.right}px)` : undefined) as string,
+							bottom: (this.state.bottom !== undefined ? `calc(${this.state.bottom}px)` : undefined) as string,
 							width: 
 								this.isHorizontalSpace() ? 
 									`calc(${getSizeString(this.props.size || 0)} + ${this.state.adjustedSize}px)`
@@ -166,29 +167,30 @@ class Space extends React.Component<AllProps, IState> {
 									for (let i = 0; i < spaceTakers.length; i ++)
 									{
 										const t = spaceTakers[i];
-										if (!t.id.equals(this.state.id)) {
+										if (t.id !== this.state.id) {
+											const adjustedSize = t.adjustedSize !== 0 ?` + ${t.adjustedSize}px` : ``;
 											if (this.isFilledSpace())
 											{
 												if (t.anchorType === AnchorType.Top) {
-													adjustedTop.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Left) {
-													adjustedLeft.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Bottom) {
-													adjustedBottom.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Right) {
-													adjustedRight.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
 												}
 											}
 											else
 											{
 												if (t.anchorType === AnchorType.Top && style.top !== undefined) {
-													adjustedTop.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Left && style.left !== undefined) {
-													adjustedLeft.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Bottom && style.bottom !== undefined) {
-													adjustedBottom.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Right && style.right !== undefined) {
-													adjustedRight.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
 												}
 											}
 										} else {
@@ -197,18 +199,16 @@ class Space extends React.Component<AllProps, IState> {
 									}
 								});
 
-							if (adjustedTop.length > 0) {
-								style.top = `calc(${adjustedTop.join(" + ")})`;
-							}
-							if (adjustedLeft.length > 0) {
-								style.left = `calc(${adjustedLeft.join(" + ")})`;
-							}
-							if (adjustedRight.length > 0) {
-								style.right = `calc(${adjustedRight.join(" + ")})`;
-							}
-							if (adjustedBottom.length > 0) {
-								style.bottom = `calc(${adjustedBottom.join(" + ")})`;
-							}
+							[
+								{ adjusted: adjustedTop, setter: (value: string) => style.top = value },
+								{ adjusted: adjustedBottom, setter: (value: string) => style.bottom = value },
+								{ adjusted: adjustedLeft, setter: (value: string) => style.left = value },
+								{ adjusted: adjustedRight, setter: (value: string) => style.right = value }
+							].map(x => {
+								if (x.adjusted.length > 0) {
+									x.setter(`calc(${x.adjusted.join(" + ")})`)
+								}
+							});
 							
 							if (this.props.anchor) {
 								parentContext.registerSpaceTaker({
@@ -260,21 +260,39 @@ class Space extends React.Component<AllProps, IState> {
 									}} />;
 						}
 						
+						const adjustedStyle = 
+							{
+								...this.props.style, 
+								...{ 
+									left: resizeType === ResizeType.Left && !overlayHandle ? handleSize : undefined,
+									top: resizeType === ResizeType.Top && !overlayHandle ? handleSize : undefined,
+									right: resizeType === ResizeType.Right && !overlayHandle ? handleSize : undefined,
+									bottom: resizeType === ResizeType.Bottom && !overlayHandle ? handleSize : undefined
+								}
+							};
+						
 						return (
-						<div 
-							id={id}
-							ref={this.divElementRef}
-							className={`spaces-space${this.props.anchor || ''}${this.props.scrollable ? ' scrollable' : ''}${className ? ` ${className}-container` : ``}`}
-							style={style}>
-							{ resizeRender }
-							<div className={`spaces-space-inner${className ? ` ${className}` : ``}`} style={this.props.style}>
-								<SpaceContext.Provider value={currentContext}>
-									<SpaceInfoContext.Provider value={{ width: Math.floor(this.state.currentWidth), height: Math.floor(this.state.currentHeight) }}>
-									{ spaceRender }
-									</SpaceInfoContext.Provider>
-								</SpaceContext.Provider>
-							</div>
-						</div>
+							<SpaceContext.Provider value={currentContext}>
+								<SpaceInfoContext.Provider value={{ width: Math.floor(this.state.currentWidth), height: Math.floor(this.state.currentHeight) }}>
+									{
+										React.createElement(
+											this.props.as || 'div',
+											{
+												id: this.props.id,
+												ref: this.divElementRef,
+												className: `spaces-space${this.props.anchor || ''}${resizeType || ''}${this.props.scrollable ? ' scrollable' : ''}${this.props.className ? ` ${this.props.className}-container` : ``}`,
+												style: style
+											},
+											<>
+												{ resizeRender }
+												<div className={`spaces-space-inner${this.props.className ? ` ${this.props.className}` : ``}`} style={adjustedStyle}>
+													{ children }
+												</div>
+											</>
+										)
+									}
+								</SpaceInfoContext.Provider>
+							</SpaceContext.Provider>
 						)
 					}
 				}
@@ -302,24 +320,24 @@ class Space extends React.Component<AllProps, IState> {
 			spaceTakers: this.state.spaceTakers,
 			registerSpaceTaker: 
 				(spaceTaker: ISpaceTaker) => {
-					if (!this.state.spaceTakers.find(t => t.id.equals(spaceTaker.id))) {
+					if (!this.state.spaceTakers.find(t => t.id === spaceTaker.id)) {
 						this.setState({
 							spaceTakers: [ ...this.state.spaceTakers, spaceTaker ]
 						})
 					}
 				},
 			removeSpaceTaker:
-				(id: Guid) => {
+				(id: string) => {
 					this.setState({
-						spaceTakers: this.state.spaceTakers.filter(t => !t.id.equals(id))
+						spaceTakers: this.state.spaceTakers.filter(t => t.id !== id)
 					})
 				},
 			updateSpaceTakerAdjustedSize:
-				(id: Guid, adjustedSize: number) => {
+				(id: string, adjustedSize: number) => {
 					this.setState({
 						spaceTakers: 
 							this.state.spaceTakers.map(t =>
-								t.id.equals(id) ?
+								t.id === id ?
 									{...t, ...{ adjustedSize: adjustedSize }} :
 									t
 						)
