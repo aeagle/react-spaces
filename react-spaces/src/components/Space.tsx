@@ -28,6 +28,8 @@ interface IAnchoredProps {
 }
 
 interface IResizableProps {
+	handleSize?: number,
+	overlayHandle?: boolean,
 	minimumSize?: number,
 	maximumSize?: number
 }
@@ -223,43 +225,12 @@ class Space extends React.Component<AllProps, IState> {
 							}
 						}
 				
-						const { id, className } = this.props;
-
 						const currentContext = this.getContext(parentContext);
+						const handleSize = this.props.handleSize || 5;
+						const overlayHandle = this.props.overlayHandle !== undefined ? this.props.overlayHandle : true;
+						let children = this.props.children;
 
-						let spaceRender = this.props.children;
-						let resizeRender = null;
-
-						if (parentContext && this.props.anchor && this.props.resizable) {
-							let resizeType : ResizeType = ResizeType.Left;
-
-							switch (this.props.anchor) {
-								case AnchorType.Left:
-									resizeType = ResizeType.Right;
-									break;
-								case AnchorType.Right:
-									resizeType = ResizeType.Left;
-									break;
-								case AnchorType.Top:
-									resizeType = ResizeType.Bottom;
-									break;
-								case AnchorType.Bottom:
-									resizeType = ResizeType.Top;
-									break;
-							}
-							
-							resizeRender = 
-								<Resizable 
-									type={resizeType} 
-									minimumAdjust={ -(this.state.parsedSize || 0) + (this.props.minimumSize || 20) }
-									maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.state.parsedSize || 0)) : undefined}
-									onResize={(adjustedSize) => { 
-										this.setState(
-											{ adjustedSize: adjustedSize },
-											() => {
-												parentContext.updateSpaceTakerAdjustedSize(this.state.id, adjustedSize); 
-											}); 
-									}} />;
+						const [ resizeRender, resizeType ] = this.applyResize(parentContext, handleSize);
 
 						if (this.props.centerContent === CenterType.Vertical) {
 							children = <CenteredVertically>{children}</CenteredVertically>;
@@ -351,6 +322,52 @@ class Space extends React.Component<AllProps, IState> {
 					})
 				}
 		}
+	}
+
+	private applyResize = (parentContext: ISpaceContext | null, handleSize: number) => {
+		let resizeType : ResizeType = ResizeType.Left;
+		let resizeHandleWidth : number | undefined;
+		let resizeHandleHeight : number | undefined;
+
+		if (parentContext && this.props.anchor && this.props.resizable) {
+			switch (this.props.anchor) {
+				case AnchorType.Left:
+					resizeType = ResizeType.Right;
+					resizeHandleWidth = handleSize;
+					break;
+				case AnchorType.Right:
+					resizeType = ResizeType.Left;
+					resizeHandleWidth = this.props.handleSize || 5;
+					break;
+				case AnchorType.Top:
+					resizeType = ResizeType.Bottom;
+					resizeHandleHeight = this.props.handleSize || 5;
+					break;
+				case AnchorType.Bottom:
+					resizeType = ResizeType.Top;
+					resizeHandleHeight = this.props.handleSize || 5;
+					break;
+			}
+			
+			return [
+				<Resizable 
+					type={resizeType} 
+					width={resizeHandleWidth}
+					height={resizeHandleHeight}
+					minimumAdjust={ -(this.state.parsedSize || 0) + (this.props.minimumSize || 20) }
+					maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.state.parsedSize || 0)) : undefined }
+					onResize={(adjustedSize) => { 
+						this.setState(
+							{ adjustedSize: adjustedSize },
+							() => {
+								parentContext.updateSpaceTakerAdjustedSize(this.state.id, adjustedSize); 
+							}); 
+					}} />,
+				resizeType
+			]
+		}
+
+		return [ null, null ];
 	}
 
 	private spaceResized : ResizeSensorCallback = (size) => {
