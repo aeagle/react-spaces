@@ -13,6 +13,7 @@ import { SizingInfo } from './SizingInfo';
 import { VersionHistory } from './VersionHistory';
 import { Intro } from './Intro';
 import { Try } from './Try';
+import { KnownIssues } from './KnownIssues';
 
 export const Docs = () => {
 	return (
@@ -35,6 +36,7 @@ export const Docs = () => {
               <Menu.Item><a href="#stacked">Stacked</a></Menu.Item>
               <Menu.Item><a href="#sizeinfo">Sizing information</a></Menu.Item>
               <Menu.Item><a href="#try">Try</a></Menu.Item>
+              <Menu.Item><a href="#issues">Known issues</a></Menu.Item>
               <Menu.Item><a href="#changes">Version history</a></Menu.Item>
             </Menu>
 
@@ -62,6 +64,7 @@ export const Docs = () => {
             <Stacked />
             <SizingInfo />
             <Try />
+            <KnownIssues />
             <VersionHistory />
 
           </Space.Fill>
