@@ -74,9 +74,9 @@ export const Docs = () => {
 export const Description = (desc: string, mobileDesc: string) => (
 	<Space.Centered>
 	  <span className="description">
-		<strong className="desc">{desc}</strong>
-		<strong className="mobileDesc">{mobileDesc}</strong>
-		<Space.Info>{info => <div>{info.width.toFixed()} x {info.height.toFixed()}</div> }</Space.Info>
+      <strong className="desc">{desc}</strong>
+      <strong className="mobileDesc">{mobileDesc}</strong><br />
+      <Space.Info>{info => <span>{info.width.toFixed()} x {info.height.toFixed()}</span> }</Space.Info>
 	  </span>
 	</Space.Centered>
 )
