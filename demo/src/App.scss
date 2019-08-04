@@ -1,4 +1,4 @@
-body {
+body, li, p, table, pre {
 	font-size: 18px;
 }
 
@@ -52,6 +52,45 @@ pre {
 	.spaces-fixedsize-layout {
 		margin: 0 25px;
 		font-size: 14px;
+	}
+}
+
+.docs-main-container {
+	h3 {
+		font-weight: 400;
+		font-size: 20px;
+		color: #193549;
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	table {
+		width: 100%;
+		margin-bottom: 20px;
+
+		tr {
+			td, th {
+				border-bottom: 1px solid #eee;
+				padding: 5px 10px
+			}
+
+			th {
+				strong {
+					font-weight: 400;
+				}
+			}
+
+			th:first-child, td:first-child {
+				width: 25%;
+			}
+		}
+
+		tbody {
+			strong {
+				font-weight: 500;
+				color: maroon;
+			}
+		}
 	}
 }
 

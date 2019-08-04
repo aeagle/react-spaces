@@ -20,8 +20,12 @@
 
 	.bottom-pane-container {
 		.spaces-resize-handle {
-			opacity: 1 !important;
-			height: 2px !important;
+			background-color: #333 !important;
+		}
+	}
+
+	.side-bar-container {
+		.resize-right {
 			background-color: #333 !important;
 		}
 	}

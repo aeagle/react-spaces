@@ -10,6 +10,8 @@ export enum ResizeType {
 
 interface IProps {
 	type: ResizeType,
+	width?: number,
+	height?: number,
 	minimumAdjust: number,
 	maximumAdjust?: number,
 	onResize: (adjustedSize: number) => void
@@ -36,6 +38,7 @@ export class Resizable extends React.Component<IProps, IState> {
 		return (
 			<div 
 				ref={this.divElementRef}
+				style={{ width: this.props.width, height: this.props.height }}
 				className={`spaces-resize-handle${this.props.type}`} 
 				onMouseDown={this.startResize} />
 		)

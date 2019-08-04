@@ -3,6 +3,7 @@ import * as Space from 'react-spaces';
 import 'antd/dist/antd.css';
 import './UI.scss';
 import MonacoEditor from 'react-monaco-editor';
+import { CenterType } from 'react-spaces';
 
 export const UI = () => {
 	return (
@@ -15,20 +16,18 @@ export const UI = () => {
 	)
 }
 
-const Header: React.FC = (props) => {
+const Header = () => {
 	return (
-		<Space.Top className="title-bar" size={30} style={{ backgroundColor: '#333', color: '#c5c5c5' }}>
-			<Space.Centered>
-				<Space.Left className="menu-bar">
+		<Space.Top className="title-bar" centerContent={CenterType.HorizontalVertical} size={30} style={{ backgroundColor: '#333', color: '#c5c5c5' }}>
+			<Space.Left className="menu-bar">
 
-				</Space.Left>
-				UI Demo - Example UI interface
-			</Space.Centered>
+			</Space.Left>
+			UI Demo - Example UI interface
 		</Space.Top>
 	)
 }
 
-const Main: React.FC = (props) => {
+const Main = () => {
 	return (
 		<Space.Fill style={{ backgroundColor: '#1E1E1E' }}>
 			<Space.Fill>
@@ -40,7 +39,7 @@ const Main: React.FC = (props) => {
 	)
 }
 
-const Editor: React.FC = (props) => {
+const Editor = () => {
 	const [ code, setCode ] = React.useState('import * as React from \'react\';\r\nimport * as Space from \'react-spaces\';\r\n\r\nexport const App = () => {\r\n    <Space.ViewPort>\r\n        <Space.Top size={30}>\r\n            Hello!\r\n        </Space.Top>\r\n        <Space.Fill>\r\n            World!\r\n        </Space.Fill>\r\n    </Space.ViewPort>\r\n}');
 
     const options = {
@@ -52,7 +51,6 @@ const Editor: React.FC = (props) => {
 		<Space.Fill>
 			<Space.Fill>
 				<Space.Top className="editor-tabs" size={40}>
-
 				</Space.Top>
 				<Space.Fill className="editor-main">
 					<MonacoEditor
@@ -68,17 +66,16 @@ const Editor: React.FC = (props) => {
 	)
 }
 
-const IconPane: React.FC = (props) => {
+const IconPane = () => {
 	return (
 		<Space.Left order={1} className="side-bar-icons" size={50} style={{ backgroundColor: '#333' }}>
-
 		</Space.Left>
 	)
 }
 
-const SideBar: React.FC = (props) => {
+const SideBar = () => {
 	return (
-		<Space.LeftResizable order={2} className="side-bar" size={300} style={{ backgroundColor: '#252526' }}>
+		<Space.LeftResizable order={2} className="side-bar" size={300} handleSize={2} overlayHandle={false} style={{ backgroundColor: '#252526' }}>
 			<SideBarPane order={1} title="Open editors" height={200}>
 
 			</SideBarPane>
@@ -120,9 +117,9 @@ const SideBarPaneInner: React.FC<{ title: string }> = (props) => {
 	)
 }
 
-const BottomPane: React.FC = (props) => {
+const BottomPane = () => {
 	return (
-		<Space.BottomResizable className="bottom-pane" size="25%">
+		<Space.BottomResizable className="bottom-pane" size="25%" handleSize={2}>
 		</Space.BottomResizable>
 	)
 }

@@ -117,6 +117,40 @@ export const Resizable = () => {
 
 		  </Tabs.TabPane>
 		</Tabs>	
+
+		<h3>Extra properties</h3>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Property</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><strong>minimumSize</strong></td>
+					<td>
+			  			Optionally sets the minimum size the space can be resized to in pixels. 
+					</td>
+				</tr>
+				<tr>
+					<td><strong>maximumSize</strong></td>
+					<td>
+			  			Optionally sets the mazimum size the space can be resized to in pixels. 
+					</td>
+				</tr>
+				<tr>
+					<td><strong>overlayHandle</strong></td>
+					<td>
+			  			By default, the resize handle is overlayed on top of the spaces content. This might cause issues if a clickable element
+						sits underneath the resize handle. You can optionally set this to <strong>false</strong> to make the resize handle sit
+						next to the space content.
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
 		</>	
 	)
 }

@@ -65,6 +65,48 @@ export const Types = () => {
 				</ul>
 			</Tabs.TabPane>
 			</Tabs>
+			
+		<h3>Properties</h3>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Property</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><strong>as</strong></td>
+					<td>
+						By default React Spaces will render a div to the DOM. You can override the element rendered by setting this property
+						with the element name, i.e. <strong>as="article"</strong> or <strong>as="aside"</strong>.
+					</td>
+				</tr>
+				<tr>
+					<td><strong>centerContent</strong></td>
+					<td>
+						Instead of using the <strong>&lt;Centered /&gt;</strong> or <strong>&lt;CenteredVertically /&gt;</strong> components inside space
+						you can specify the centering type here. Possible values are <strong>"Vertical"</strong> or <strong>"HorizontalVertical"</strong>.
+					</td>
+				</tr>
+				<tr>
+					<td><strong>scrollable</strong></td>
+					<td>
+						Makes the space scrollable. By default content that overflows the space will be hidden. This will allow the space to add a scroll bar if
+						the content overflows.
+					</td>
+				</tr>
+				<tr>
+					<td><strong>trackSize</strong></td>
+					<td>
+						Tells the space to report it's size when it changes size to the <strong>&lt;Info /&gt;</strong> component. With this turned off
+						the space will only report the initial size.
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
 		</>
 	)
 }

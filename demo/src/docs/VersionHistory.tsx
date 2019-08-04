@@ -6,6 +6,41 @@ export const VersionHistory = () => {
 			<h2 id="changes">Version history</h2>
 
 			<div>
+				<h3>0.1.10</h3> 
+				<ul>
+					<li>
+						Added 'as' property to allow rendered DOM element to be specified (thanks to{" "}
+						<a href="https://www.reddit.com/user/MahNonAnon/" target="_blank">u/MahNonAnon</a> and{" "}
+						<a href="https://www.reddit.com/user/trevoreyre/" target="_blank">u/trevoreyre</a> on Reddit
+						for suggestion of this).
+					</li>
+					<li>
+						Added 'centerContent' property as short-hand for centering space content instead of having
+						to introduce the extra &lt;Centered /&gt; or &lt;CenteredVertically /&gt; components.
+					</li>
+					<li>
+						Allow resize handle width to be specified and also it's placement within space controlled
+						with the 'overlayHandle' property.
+					</li>
+					<li>
+						Fixed issue with dynamically added/removed anchored spaces where an anchored space would
+						see itself as a space taking space.
+					</li>
+				</ul>
+			</div>
+			<div>
+				<h3>0.1.9</h3> 
+				<ul>
+					<li>Added repository field to package.json</li>
+				</ul>
+			</div>
+			<div>
+				<h3>0.1.8</h3> 
+				<ul>
+					<li>Removed clear fix from space</li>
+				</ul>
+			</div>
+			<div>
 				<h3>0.1.7</h3> 
 				<ul>
 					<li>Fixed positioning of resize handles within scrollable divs</li>

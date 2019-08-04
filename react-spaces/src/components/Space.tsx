@@ -1,17 +1,20 @@
 import * as React from 'react';
 import './Space.scss';
-import { AnchorType } from './Globals';
+import { AnchorType, CenterType } from './Globals';
 import { ResizeSensor, ResizeSensorCallback } from 'css-element-queries';
 import { SpaceContext, ISpaceContext, ISpaceTaker } from './SpaceContext';
 import { Guid } from "guid-typescript";
 import { Resizable, ResizeType } from './Resizable';
+import { CenteredVertically, Centered } from './Centered';
 
 interface IPublicProps {
 	id?: string,
 	className?: string,
 	style?: React.CSSProperties,
 	scrollable?: boolean,
-	trackSize?: boolean
+	trackSize?: boolean,
+	centerContent?: CenterType,
+	as?: string
 }
 
 interface IPrivateProps {
@@ -25,12 +28,14 @@ interface IAnchoredProps {
 }
 
 interface IResizableProps {
+	handleSize?: number,
+	overlayHandle?: boolean,
 	minimumSize?: number,
 	maximumSize?: number
 }
 
 interface IState {
-	id: Guid,
+	id: string,
 	currentWidth: number,
 	currentHeight: number,
 	adjustedSize: number,
@@ -76,7 +81,7 @@ class Space extends React.Component<AllProps, IState> {
 		super(props);
 
 		this.state = {
-			id: Guid.create(),
+			id: Guid.create().toString(),
 			currentWidth: 0,
 			currentHeight: 0,
 			adjustedSize: 0,
@@ -129,10 +134,10 @@ class Space extends React.Component<AllProps, IState> {
 				{
 					parentContext => {
 						const style = {
-							left: (this.state.left !== undefined ? `calc(${this.state.left}px)` : undefined) as string | number | undefined,
-							top: (this.state.top !== undefined ? `calc(${this.state.top}px)` : undefined) as string | number,
-							right: (this.state.right !== undefined ? `calc(${this.state.right}px)` : undefined) as string | number,
-							bottom: (this.state.bottom !== undefined ? `calc(${this.state.bottom}px)` : undefined) as string | number,
+							left: (this.state.left !== undefined ? `calc(${this.state.left}px)` : undefined) as string | undefined,
+							top: (this.state.top !== undefined ? `calc(${this.state.top}px)` : undefined) as string,
+							right: (this.state.right !== undefined ? `calc(${this.state.right}px)` : undefined) as string,
+							bottom: (this.state.bottom !== undefined ? `calc(${this.state.bottom}px)` : undefined) as string,
 							width: 
 								this.isHorizontalSpace() ? 
 									`calc(${getSizeString(this.props.size || 0)} + ${this.state.adjustedSize}px)`
@@ -166,29 +171,30 @@ class Space extends React.Component<AllProps, IState> {
 									for (let i = 0; i < spaceTakers.length; i ++)
 									{
 										const t = spaceTakers[i];
-										if (!t.id.equals(this.state.id)) {
+										if (t.id !== this.state.id) {
+											const adjustedSize = t.adjustedSize !== 0 ?` + ${t.adjustedSize}px` : ``;
 											if (this.isFilledSpace())
 											{
 												if (t.anchorType === AnchorType.Top) {
-													adjustedTop.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Left) {
-													adjustedLeft.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Bottom) {
-													adjustedBottom.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Right) {
-													adjustedRight.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
 												}
 											}
 											else
 											{
 												if (t.anchorType === AnchorType.Top && style.top !== undefined) {
-													adjustedTop.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Left && style.left !== undefined) {
-													adjustedLeft.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Bottom && style.bottom !== undefined) {
-													adjustedBottom.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
 												} else if (t.anchorType === AnchorType.Right && style.right !== undefined) {
-													adjustedRight.push(`${getSizeString(t.size)} + ${t.adjustedSize}px`);
+													adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
 												}
 											}
 										} else {
@@ -197,18 +203,16 @@ class Space extends React.Component<AllProps, IState> {
 									}
 								});
 
-							if (adjustedTop.length > 0) {
-								style.top = `calc(${adjustedTop.join(" + ")})`;
-							}
-							if (adjustedLeft.length > 0) {
-								style.left = `calc(${adjustedLeft.join(" + ")})`;
-							}
-							if (adjustedRight.length > 0) {
-								style.right = `calc(${adjustedRight.join(" + ")})`;
-							}
-							if (adjustedBottom.length > 0) {
-								style.bottom = `calc(${adjustedBottom.join(" + ")})`;
-							}
+							[
+								{ adjusted: adjustedTop, setter: (value: string) => style.top = value },
+								{ adjusted: adjustedBottom, setter: (value: string) => style.bottom = value },
+								{ adjusted: adjustedLeft, setter: (value: string) => style.left = value },
+								{ adjusted: adjustedRight, setter: (value: string) => style.right = value }
+							].map(x => {
+								if (x.adjusted.length > 0) {
+									x.setter(`calc(${x.adjusted.join(" + ")})`)
+								}
+							});
 							
 							if (this.props.anchor) {
 								parentContext.registerSpaceTaker({
@@ -221,60 +225,52 @@ class Space extends React.Component<AllProps, IState> {
 							}
 						}
 				
-						const { id, className } = this.props;
-
 						const currentContext = this.getContext(parentContext);
+						const handleSize = this.props.handleSize || 5;
+						const overlayHandle = this.props.overlayHandle !== undefined ? this.props.overlayHandle : true;
+						let children = this.props.children;
 
-						let spaceRender = this.props.children;
-						let resizeRender = null;
+						const [ resizeRender, resizeType ] = this.applyResize(parentContext, handleSize);
 
-						if (parentContext && this.props.anchor && this.props.resizable) {
-							let resizeType : ResizeType = ResizeType.Left;
-
-							switch (this.props.anchor) {
-								case AnchorType.Left:
-									resizeType = ResizeType.Right;
-									break;
-								case AnchorType.Right:
-									resizeType = ResizeType.Left;
-									break;
-								case AnchorType.Top:
-									resizeType = ResizeType.Bottom;
-									break;
-								case AnchorType.Bottom:
-									resizeType = ResizeType.Top;
-									break;
-							}
-							
-							resizeRender = 
-								<Resizable 
-									type={resizeType} 
-									minimumAdjust={ -(this.state.parsedSize || 0) + (this.props.minimumSize || 20) }
-									maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.state.parsedSize || 0)) : undefined}
-									onResize={(adjustedSize) => { 
-										this.setState(
-											{ adjustedSize: adjustedSize },
-											() => {
-												parentContext.updateSpaceTakerAdjustedSize(this.state.id, adjustedSize); 
-											}); 
-									}} />;
+						if (this.props.centerContent === CenterType.Vertical) {
+							children = <CenteredVertically>{children}</CenteredVertically>;
+						} else if (this.props.centerContent === CenterType.HorizontalVertical) {
+							children = <Centered>{children}</Centered>;
 						}
 						
+						const adjustedStyle = 
+							{
+								...this.props.style, 
+								...{ 
+									left: resizeType === ResizeType.Left && !overlayHandle ? handleSize : undefined,
+									top: resizeType === ResizeType.Top && !overlayHandle ? handleSize : undefined,
+									right: resizeType === ResizeType.Right && !overlayHandle ? handleSize : undefined,
+									bottom: resizeType === ResizeType.Bottom && !overlayHandle ? handleSize : undefined
+								}
+							};
+						
 						return (
-						<div 
-							id={id}
-							ref={this.divElementRef}
-							className={`spaces-space${this.props.anchor || ''}${this.props.scrollable ? ' scrollable' : ''}${className ? ` ${className}-container` : ``}`}
-							style={style}>
-							{ resizeRender }
-							<div className={`spaces-space-inner${className ? ` ${className}` : ``}`} style={this.props.style}>
-								<SpaceContext.Provider value={currentContext}>
-									<SpaceInfoContext.Provider value={{ width: Math.floor(this.state.currentWidth), height: Math.floor(this.state.currentHeight) }}>
-									{ spaceRender }
-									</SpaceInfoContext.Provider>
-								</SpaceContext.Provider>
-							</div>
-						</div>
+							<SpaceContext.Provider value={currentContext}>
+								<SpaceInfoContext.Provider value={{ width: Math.floor(this.state.currentWidth), height: Math.floor(this.state.currentHeight) }}>
+									{
+										React.createElement(
+											this.props.as || 'div',
+											{
+												id: this.props.id,
+												ref: this.divElementRef,
+												className: `spaces-space${this.props.anchor || ''}${resizeType || ''}${this.props.scrollable ? ' scrollable' : ''}${this.props.className ? ` ${this.props.className}-container` : ``}`,
+												style: style
+											},
+											<>
+												{ resizeRender }
+												<div className={`spaces-space-inner${this.props.className ? ` ${this.props.className}` : ``}`} style={adjustedStyle}>
+													{ children }
+												</div>
+											</>
+										)
+									}
+								</SpaceInfoContext.Provider>
+							</SpaceContext.Provider>
 						)
 					}
 				}
@@ -302,30 +298,76 @@ class Space extends React.Component<AllProps, IState> {
 			spaceTakers: this.state.spaceTakers,
 			registerSpaceTaker: 
 				(spaceTaker: ISpaceTaker) => {
-					if (!this.state.spaceTakers.find(t => t.id.equals(spaceTaker.id))) {
+					if (!this.state.spaceTakers.find(t => t.id === spaceTaker.id)) {
 						this.setState({
 							spaceTakers: [ ...this.state.spaceTakers, spaceTaker ]
 						})
 					}
 				},
 			removeSpaceTaker:
-				(id: Guid) => {
+				(id: string) => {
 					this.setState({
-						spaceTakers: this.state.spaceTakers.filter(t => !t.id.equals(id))
+						spaceTakers: this.state.spaceTakers.filter(t => t.id !== id)
 					})
 				},
 			updateSpaceTakerAdjustedSize:
-				(id: Guid, adjustedSize: number) => {
+				(id: string, adjustedSize: number) => {
 					this.setState({
 						spaceTakers: 
 							this.state.spaceTakers.map(t =>
-								t.id.equals(id) ?
+								t.id === id ?
 									{...t, ...{ adjustedSize: adjustedSize }} :
 									t
 						)
 					})
 				}
 		}
+	}
+
+	private applyResize = (parentContext: ISpaceContext | null, handleSize: number) => {
+		let resizeType : ResizeType = ResizeType.Left;
+		let resizeHandleWidth : number | undefined;
+		let resizeHandleHeight : number | undefined;
+
+		if (parentContext && this.props.anchor && this.props.resizable) {
+			switch (this.props.anchor) {
+				case AnchorType.Left:
+					resizeType = ResizeType.Right;
+					resizeHandleWidth = handleSize;
+					break;
+				case AnchorType.Right:
+					resizeType = ResizeType.Left;
+					resizeHandleWidth = this.props.handleSize || 5;
+					break;
+				case AnchorType.Top:
+					resizeType = ResizeType.Bottom;
+					resizeHandleHeight = this.props.handleSize || 5;
+					break;
+				case AnchorType.Bottom:
+					resizeType = ResizeType.Top;
+					resizeHandleHeight = this.props.handleSize || 5;
+					break;
+			}
+			
+			return [
+				<Resizable 
+					type={resizeType} 
+					width={resizeHandleWidth}
+					height={resizeHandleHeight}
+					minimumAdjust={ -(this.state.parsedSize || 0) + (this.props.minimumSize || 20) }
+					maximumAdjust={ this.props.maximumSize ? (this.props.maximumSize - (this.state.parsedSize || 0)) : undefined }
+					onResize={(adjustedSize) => { 
+						this.setState(
+							{ adjustedSize: adjustedSize },
+							() => {
+								parentContext.updateSpaceTakerAdjustedSize(this.state.id, adjustedSize); 
+							}); 
+					}} />,
+				resizeType
+			]
+		}
+
+		return [ null, null ];
 	}
 
 	private spaceResized : ResizeSensorCallback = (size) => {
