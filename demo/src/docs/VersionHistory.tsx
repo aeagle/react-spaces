@@ -6,7 +6,7 @@ export const VersionHistory = () => {
 			<h2 id="changes">Version history</h2>
 
 			<div>
-				<h3>0.1.11</h3> 
+				<h3>0.1.11 - 0.1.12</h3> 
 				<ul>
 					<li>
 						Fix to deal with changes to size and anchor properties on anchored
