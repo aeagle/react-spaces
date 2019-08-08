@@ -115,6 +115,21 @@ class Space extends React.Component<AllProps, IState> {
 		}
 	}
 
+	public componentWillReceiveProps(nextProps: AllProps) {
+		if (this.props.size !== nextProps.size ||
+			this.props.anchor !== nextProps.anchor) {
+			this.setState({
+				parsedSize: typeof nextProps.size === "string" ? 0 : nextProps.size as number | undefined,
+				left: nextProps.anchor !== AnchorType.Right ? 0 : undefined,
+				top: nextProps.anchor !== AnchorType.Bottom ? 0 : undefined,
+				right: nextProps.anchor !== AnchorType.Left ? 0 : undefined,
+				bottom: nextProps.anchor !== AnchorType.Top ? 0 : undefined,
+				width: this.isHorizontalSpace() ? nextProps.size || 0 : undefined,
+				height: this.isVerticalSpace() ? nextProps.size || 0 : undefined
+			})
+		}
+	}
+
 	public componentWillUnmount() {
 		if (this.props.trackSize) {
 			if (this.resizeSensor) {
@@ -298,10 +313,17 @@ class Space extends React.Component<AllProps, IState> {
 			spaceTakers: this.state.spaceTakers,
 			registerSpaceTaker: 
 				(spaceTaker: ISpaceTaker) => {
-					if (!this.state.spaceTakers.find(t => t.id === spaceTaker.id)) {
+					const existing = this.state.spaceTakers.find(t => t.id === spaceTaker.id);
+
+					if (!existing) {
 						this.setState({
 							spaceTakers: [ ...this.state.spaceTakers, spaceTaker ]
 						})
+					} else {
+						existing.adjustedSize = 0;
+						existing.order = spaceTaker.order;
+						existing.anchorType = spaceTaker.anchorType;
+						existing.size = spaceTaker.size;
 					}
 				},
 			removeSpaceTaker:

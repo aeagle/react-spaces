@@ -6,6 +6,15 @@ export const VersionHistory = () => {
 			<h2 id="changes">Version history</h2>
 
 			<div>
+				<h3>0.1.11</h3> 
+				<ul>
+					<li>
+						Fix to deal with changes to size and anchor properties on anchored
+						spaces and adjusted spaces accordingly.
+					</li>
+				</ul>
+			</div>
+			<div>
 				<h3>0.1.10</h3> 
 				<ul>
 					<li>
