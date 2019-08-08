@@ -320,7 +320,6 @@ class Space extends React.Component<AllProps, IState> {
 							spaceTakers: [ ...this.state.spaceTakers, spaceTaker ]
 						})
 					} else {
-						// existing.adjustedSize = 0;
 						existing.order = spaceTaker.order;
 						existing.anchorType = spaceTaker.anchorType;
 						existing.size = spaceTaker.size;
