@@ -6,6 +6,17 @@ export const VersionHistory = () => {
 			<h2 id="changes">Version history</h2>
 
 			<div>
+				<h3>0.1.13</h3> 
+				<ul>
+					<li>
+						Refactored spaces as functional component using hooks.
+					</li>
+					<li>
+						Fixed className type on &lt;ViewPort /&gt; component.
+					</li>
+				</ul>
+			</div>
+			<div>
 				<h3>0.1.11 - 0.1.12</h3> 
 				<ul>
 					<li>
@@ -19,8 +30,8 @@ export const VersionHistory = () => {
 				<ul>
 					<li>
 						Added 'as' property to allow rendered DOM element to be specified (thanks to{" "}
-						<a href="https://www.reddit.com/user/MahNonAnon/" target="_blank">u/MahNonAnon</a> and{" "}
-						<a href="https://www.reddit.com/user/trevoreyre/" target="_blank">u/trevoreyre</a> on Reddit
+						<a href="https://www.reddit.com/user/MahNonAnon/" rel="noopener noreferrer" target="_blank">u/MahNonAnon</a> and{" "}
+						<a href="https://www.reddit.com/user/trevoreyre/" rel="noopener noreferrer" target="_blank">u/trevoreyre</a> on Reddit
 						for suggestion of this).
 					</li>
 					<li>
