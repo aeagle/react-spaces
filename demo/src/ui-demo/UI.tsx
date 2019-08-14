@@ -7,12 +7,10 @@ import { CenterType } from 'react-spaces';
 
 export const UI = () => {
 	return (
-		<div className="ui-demo">
-			<Space.ViewPort>
+			<Space.ViewPort className="ui-demo">
 				<Header />
 				<Main />
 			</Space.ViewPort>
-		</div>
 	)
 }
 
