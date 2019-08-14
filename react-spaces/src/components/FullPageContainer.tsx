@@ -3,7 +3,7 @@ import './FullPageContainer.scss';
 import * as Spaces from './Space';
 
 interface IProps {
-	className?: number,
+	className?: string,
 	left?: number,
 	top?: number,
 	right?: number,
