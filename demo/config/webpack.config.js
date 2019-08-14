@@ -27,6 +27,8 @@ const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpack
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -272,7 +274,7 @@ module.exports = function(webpackEnv) {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
-        react: path.resolve( '__dirname', '..',  'node_modules', 'react')
+        'react': path.resolve('./node_modules/react')
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -476,6 +478,8 @@ module.exports = function(webpackEnv) {
       ],
     },
     plugins: [
+      new DuplicatePackageCheckerPlugin(),
+      process.env.ANALYSE_BUNDLE === 'true' && new BundleAnalyzerPlugin(),
       new MonacoWebpackPlugin({
         // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
         languages: ['typescript']

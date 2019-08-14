@@ -6,6 +6,17 @@ export const VersionHistory = () => {
 			<h2 id="changes">Version history</h2>
 
 			<div>
+				<h3>0.1.13</h3> 
+				<ul>
+					<li>
+						Refactored spaces as functional component using hooks.
+					</li>
+					<li>
+						Fixed className type on &lt;ViewPort /&gt; component.
+					</li>
+				</ul>
+			</div>
+			<div>
 				<h3>0.1.11 - 0.1.12</h3> 
 				<ul>
 					<li>
