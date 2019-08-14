@@ -28,18 +28,21 @@ const Header = () => {
 }
 
 const Main = () => {
+	const [ sidebarVisible, setSidebarVisible ] = React.useState(true);
+	const [ sidebarWide, setSidebarWide ] = React.useState(false);
+
 	return (
 		<Space.Fill style={{ backgroundColor: '#1E1E1E' }}>
 			<Space.Fill>
 				<IconPane />
-				<SideBar />
-				<Editor />
+				<SideBar wide={sidebarWide} visible={sidebarVisible} />
+				<Editor toggleSize={() => setSidebarWide(!sidebarWide)} toggleVisibility={() => setSidebarVisible(!sidebarVisible)} />
 			</Space.Fill>
 		</Space.Fill>
 	)
 }
 
-const Editor = () => {
+const Editor : React.FC<{ toggleVisibility: () => void, toggleSize: () => void }> = (props) => {
 	const [ code, setCode ] = React.useState('import * as React from \'react\';\r\nimport * as Space from \'react-spaces\';\r\n\r\nexport const App = () => {\r\n    <Space.ViewPort>\r\n        <Space.Top size={30}>\r\n            Hello!\r\n        </Space.Top>\r\n        <Space.Fill>\r\n            World!\r\n        </Space.Fill>\r\n    </Space.ViewPort>\r\n}');
 
     const options = {
@@ -61,7 +64,7 @@ const Editor = () => {
 						theme="vs-dark" />
 				</Space.Fill>
 			</Space.Fill>
-			<BottomPane />
+			<BottomPane toggleSize={props.toggleSize} toggleVisibility={props.toggleVisibility} />
 		</Space.Fill>
 	)
 }
@@ -73,9 +76,10 @@ const IconPane = () => {
 	)
 }
 
-const SideBar = () => {
+const SideBar : React.FC<{ wide: boolean, visible: boolean }> = (props) => {
 	return (
-		<Space.LeftResizable order={2} className="side-bar" size={300} handleSize={2} overlayHandle={false} style={{ backgroundColor: '#252526' }}>
+		props.visible ?
+		<Space.LeftResizable order={2} className="side-bar" size={props.wide ? 500 : 300} handleSize={2} overlayHandle={false} style={{ backgroundColor: '#252526' }}>
 			<SideBarPane order={1} title="Open editors" height={200}>
 
 			</SideBarPane>
@@ -85,7 +89,8 @@ const SideBar = () => {
 			<SideBarPane fill={true} title="Outline">
 				
 			</SideBarPane>
-		</Space.LeftResizable>
+		</Space.LeftResizable> :
+		null
 	)
 }
 
@@ -117,9 +122,11 @@ const SideBarPaneInner: React.FC<{ title: string }> = (props) => {
 	)
 }
 
-const BottomPane = () => {
+const BottomPane : React.FC<{ toggleVisibility: () => void, toggleSize: () => void }> = (props) => {
 	return (
-		<Space.BottomResizable className="bottom-pane" size="25%" handleSize={2}>
+		<Space.BottomResizable className="bottom-pane" size="25%" handleSize={2} centerContent={Space.CenterType.HorizontalVertical}>
+			<button onClick={props.toggleVisibility}>Toggle sidebar visibility</button>
+			<button onClick={props.toggleSize}>Toggle sidebar size</button>
 		</Space.BottomResizable>
 	)
 }

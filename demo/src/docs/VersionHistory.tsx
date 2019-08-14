@@ -19,8 +19,8 @@ export const VersionHistory = () => {
 				<ul>
 					<li>
 						Added 'as' property to allow rendered DOM element to be specified (thanks to{" "}
-						<a href="https://www.reddit.com/user/MahNonAnon/" target="_blank">u/MahNonAnon</a> and{" "}
-						<a href="https://www.reddit.com/user/trevoreyre/" target="_blank">u/trevoreyre</a> on Reddit
+						<a href="https://www.reddit.com/user/MahNonAnon/" rel="noopener noreferrer" target="_blank">u/MahNonAnon</a> and{" "}
+						<a href="https://www.reddit.com/user/trevoreyre/" rel="noopener noreferrer" target="_blank">u/trevoreyre</a> on Reddit
 						for suggestion of this).
 					</li>
 					<li>
