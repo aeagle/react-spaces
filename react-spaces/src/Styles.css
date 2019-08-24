@@ -75,6 +75,6 @@
 	bottom: 0;
 }
 
-.spaces-resize-handle.scrollable .spaces-space-inner {
+.spaces-space.scrollable .spaces-space-inner {
 	overflow: auto;
 }
