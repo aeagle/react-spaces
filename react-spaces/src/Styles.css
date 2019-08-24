@@ -1,0 +1,80 @@
+.spaces-centered-vertically {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.spaces-centered {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	text-align: center;
+}
+
+.spaces-clearfix:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.spaces-fixedsize-layout {
+	overflow: hidden;
+	position: relative;
+}
+
+.spaces-fullpage-layout {
+	position: fixed;
+	overflow: hidden;
+}
+
+.spaces-resize-handle {
+	position: absolute;
+	z-index: 9999;
+}
+
+.spaces-resize-handle.resize-left {
+	top: 0;
+	bottom: 0;
+	left: 0;
+	cursor: w-resize;
+}
+
+.spaces-resize-handle.resize-right {
+	top: 0;
+	bottom: 0;
+	right: 0;
+	cursor: e-resize;
+}
+
+.spaces-resize-handle.resize-top {
+	top: 0;
+	left: 0;
+	right: 0;
+	cursor: n-resize;
+}
+
+.spaces-resize-handle.resize-bottom {
+	bottom: 0;
+	left: 0;
+	right: 0;
+	cursor: s-resize;
+}
+
+.spaces-space {
+	position: absolute;
+	overflow: hidden;
+	z-index: 1;
+}
+
+.spaces-space .spaces-space-inner {
+	z-index: 1;
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.spaces-resize-handle.scrollable .spaces-space-inner {
+	overflow: auto;
+}
