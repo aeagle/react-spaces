@@ -1,12 +1,12 @@
-export * from './components/Centered';
-export * from './components/ClearFix';
-export * from './components/FixedSizeContainer';
-export * from './components/FullPageContainer';
-export * from './components/Space';
-export * from './components/SpaceInfo';
+export * from './Centered';
+export * from './ClearFix';
+export * from './FixedSizeContainer';
+export * from './FullPageContainer';
+export * from './Space';
+export * from './SpaceInfo';
 
 export {
 	CenterType,
 	AnchorType,
 	ISpaceInfo
-} from './components/Globals/Types';
+} from './Globals/Types';

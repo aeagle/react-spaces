@@ -1,8 +1,8 @@
 export enum AnchorType {
-	Left = " anchor-left",
-	Right = " anchor-right",
-	Top = " anchor-top",
-	Bottom = " anchor-bottom"
+	Left = "anchor-left",
+	Right = "anchor-right",
+	Top = "anchor-top",
+	Bottom = "anchor-bottom"
 }
 
 export enum CenterType {
@@ -19,16 +19,19 @@ export interface IPublicProps {
 	trackSize?: boolean,
 	centerContent?: CenterType,
 	as?: string,
-	children?: React.ReactNode
+	children?: React.ReactNode,
+	debug?: boolean
 }
 
 export interface IPrivateProps {
+	anchorSize?: string | number,
 	anchor?: AnchorType,
-	resizable?: boolean
+	resizable?: boolean,
+	order?: number
 }
 
 export interface IAnchoredProps {
-	size?: number | string,
+	size: number | string,
 	order?: number
 }
 
@@ -38,6 +41,8 @@ export interface IResizableProps {
 	minimumSize?: number,
 	maximumSize?: number
 }
+
+export type AllProps = IPublicProps & IPrivateProps & IResizableProps;
 
 export interface IState {
 	id: string,
@@ -53,16 +58,19 @@ export interface IState {
 	bottom?: number;
 	width?: number | string;
 	height?: number | string;
+	debug: boolean;
 }
 
 export interface ISpaceContext {
+	debug: boolean,
 	level: number,
 	width: number,
 	height: number,
 	spaceTakers: ISpaceTaker[],
 	registerSpaceTaker: (spaceTaker: ISpaceTaker) => void,
 	removeSpaceTaker: (id: string) => void,
-	updateSpaceTakerAdjustedSize: (id: string, adjustedSize: number) => void
+	updateSpaceTakerAdjustedSize: (id: string, adjustedSize: number) => void,
+	updateDebug: (id: string, debug: boolean) => void
 }
 
 export interface ISpaceTaker {
@@ -77,5 +85,3 @@ export interface ISpaceInfo {
 	width: number,
 	height: number
 }
-
-export type AllProps = IPublicProps & IPrivateProps & IAnchoredProps & IResizableProps;

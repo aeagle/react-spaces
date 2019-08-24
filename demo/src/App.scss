@@ -116,12 +116,8 @@ pre {
 	font-size: 18px !important;
 }
 
-::-webkit-scrollbar{
-	width: 5px;
-}
-
 ::-webkit-scrollbar-track-piece{
-	background-color: #FFF;
+	background-color: none;
 }
 
 ::-webkit-scrollbar-thumb{

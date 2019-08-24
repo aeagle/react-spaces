@@ -1,7 +1,10 @@
 {
   "name": "react-spaces",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "main": "dist/index.js",
+  "module": "dist/es/index.js",
+  "types": "dist/index.d.ts",
+  "files": [ "dist/**/*.*" ],
   "repository": "github:aeagle/react-spaces",
   "author": {
     "name": "Allan Eagle"
@@ -13,30 +16,33 @@
     "guid-typescript": "^1.0.9"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
     "@types/jest": "^24.0.15",
     "@types/node": "^12.6.8",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
-    "css-loader": "^3.1.0",
-    "lodash.template": "4.5.0",
-    "node-sass": "^4.12.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "sass-loader": "^7.1.0",
-    "source-map-loader": "^0.2.4",
-    "style-loader": "^0.23.1",
-    "ts-loader": "^6.0.4",
-    "typescript": "^3.5.3",
-    "webpack": "^4.36.1",
-    "webpack-cli": "^3.3.6"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "rollup": "^1.19.4",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-postcss": "^2.0.3",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.22.1",
+    "rollup-watch": "^4.3.1",
+    "tslib": "^1.10.0",
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "scripts": {
-    "start": "webpack --watch",
-    "build": "webpack"
+    "start": "rollup -c -w",
+    "build": "npm run build:prod",
+    "build:prod": "rollup -c"
   },
   "eslintConfig": {
     "extends": "react-app"
