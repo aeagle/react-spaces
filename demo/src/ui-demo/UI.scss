@@ -3,38 +3,75 @@
 	font-size: 12px;
 	color: #c5c5c5;
 
-	.editor-main {
-		padding: 5px 5px 5px 10px;
-		font-size: 16px;
-		font-family: 'Courier New', Courier, monospace;
-	}
-
-	.sidebar-pane {
-		.title {
-			font-size: 11px;
-			padding-left: 5px;
-			font-weight: 700;
-			text-transform: uppercase;
-		}
-	}
-
-	.bottom-pane-container {
-		.spaces-resize-handle {
-			background-color: #333 !important;
-		}
-
-		button {
-			margin-right: 10px;
+	.examples-sidebar {
+		h2 {
+			color: #c5c5c5;
+			font-size: 100%;
+			margin: 0;
+			padding: 0;
 			border: none;
-			background-color: #555;
-			color: white;
-			padding: 5px 15px;
 		}
 	}
 
-	.side-bar-container {
-		.resize-right {
-			background-color: #333 !important;
+	.ui-list {
+		ul {
+			list-style: none;
+			padding: 0;
+			font-size: 100%;
+
+			li {
+				padding: 0;
+				margin: 0;
+
+				a {
+					padding: 10px 15px;
+					display: block;
+					font-size: 100%;
+
+					&:hover {
+						background-color: lighten(#193549, 5%);
+					}
+
+					span {
+						color: #c5c5c5;
+						display: block;
+						font-size: 80%;
+					}
+
+					&.highlight {
+						background-color: lighten(#193549, 10%);
+					}
+				}
+
+				&.active {
+					a {
+						background-color: lighten(#193549, 10%);
+					}
+				}
+			}
+		}
+	}
+
+	.tools {
+		font-size: 160%;
+		color: white;
+		background-color: lighten(#193549, 5%);
+		a {
+			width: 70px;
+			padding-top: 20px;
+			padding-bottom: 20px;
+			color: white;
+			display: inline-block;
+			text-align: center;
+
+			&:hover {
+				background-color: lighten(#193549, 10%);
+			}
+
+			span {
+				display: block;
+				font-size: 60%;
+			}
 		}
 	}
 }

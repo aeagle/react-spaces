@@ -1,8 +1,8 @@
 import * as React from 'react';
-import './ClearFix.scss';
+import './Styles.css';
 
 export const ClearFix : React.FC = (props) => (
-	<div className='spaces-clearfix'>
+	<div className={`spaces-clearfix`}>
 		{props.children}
 	</div>
 )

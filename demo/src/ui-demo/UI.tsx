@@ -2,129 +2,104 @@ import * as React from 'react';
 import * as Space from 'react-spaces';
 import 'antd/dist/antd.css';
 import './UI.scss';
-import MonacoEditor from 'react-monaco-editor';
-import { CenterType } from 'react-spaces';
+import { CodeEditor } from './CodeEditor';
+import { Resizable } from './Resizable';
+import { ScrollableDemo } from './Scrollable';
 
 export const UI = () => {
+	const [ selectedDemo, setSelectedDemo ] = React.useState(1);
+	const [ showSpaces, setShowSpaces ] = React.useState(false);
+	const [ sidebarVisible, setSidebarVisible ] = React.useState(true);
+
 	return (
 			<Space.ViewPort className="ui-demo">
-				<Header />
-				<Main />
+				<DemoSelection 
+					sidebarVisible={sidebarVisible}
+					setSidebarVisible={setSidebarVisible}
+					selectedDemo={selectedDemo} 
+					setSelectedDemo={setSelectedDemo}
+					showSpaces={showSpaces}
+					setShowSpaces={setShowSpaces} />
+				<Main selectedDemo={selectedDemo} showSpaces={showSpaces} />
 			</Space.ViewPort>
 	)
 }
 
-const Header = () => {
-	return (
-		<Space.Top className="title-bar" centerContent={CenterType.HorizontalVertical} size={30} style={{ backgroundColor: '#333', color: '#c5c5c5' }}>
-			<Space.Left className="menu-bar">
-
-			</Space.Left>
-			UI Demo - Example UI interface
-		</Space.Top>
-	)
-}
-
-const Main = () => {
-	const [ sidebarVisible, setSidebarVisible ] = React.useState(true);
-	const [ sidebarWide, setSidebarWide ] = React.useState(false);
+const DemoSelection = (props: { 
+	sidebarVisible: boolean,
+	setSidebarVisible: (state: boolean) => void,
+	selectedDemo: number, 
+	setSelectedDemo: (demo: number) => void,
+	showSpaces: boolean,
+	setShowSpaces: (state: boolean) => void }) => {
 
 	return (
-		<Space.Fill style={{ backgroundColor: '#1E1E1E' }}>
-			<Space.Fill>
-				<IconPane />
-				<SideBar wide={sidebarWide} visible={sidebarVisible} />
-				<Editor toggleSize={() => setSidebarWide(!sidebarWide)} toggleVisibility={() => setSidebarVisible(!sidebarVisible)} />
-			</Space.Fill>
-		</Space.Fill>
-	)
-}
-
-const Editor : React.FC<{ toggleVisibility: () => void, toggleSize: () => void }> = (props) => {
-	const [ code, setCode ] = React.useState('import * as React from \'react\';\r\nimport * as Space from \'react-spaces\';\r\n\r\nexport const App = () => {\r\n    <Space.ViewPort>\r\n        <Space.Top size={30}>\r\n            Hello!\r\n        </Space.Top>\r\n        <Space.Fill>\r\n            World!\r\n        </Space.Fill>\r\n    </Space.ViewPort>\r\n}');
-
-    const options = {
-		selectOnLineNumbers: true,
-		automaticLayout: true
-	};
-
-	return  (
-		<Space.Fill>
-			<Space.Fill>
-				<Space.Top className="editor-tabs" size={40}>
-				</Space.Top>
-				<Space.Fill className="editor-main">
-					<MonacoEditor
-						value={code} 
-						onChange={(newValue: string) => setCode(newValue)} 
-						options={options}
-						language="javascript" 
-						theme="vs-dark" />
+		props.sidebarVisible ?
+			<Space.LeftResizable className="ui-list" size={300} minimumSize={150} style={{ backgroundColor: '#193549' }}>
+				<Space.Fill scrollable={true}>
+					<ul>
+						<li className={props.selectedDemo === 1 ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo(1)}>
+								Nested / resizable spaces
+								<span>
+									Example with nested and resizable spaces
+								</span>
+							</a>
+						</li>
+						<li className={props.selectedDemo === 2 ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo(2)}>
+								Sidebar / header layout
+								<span>
+									antd components with a header, sidebar and scrollable main layout
+								</span>
+							</a>
+						</li>
+						<li className={props.selectedDemo === 3 ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo(3)}>
+								Code editor
+								<span>
+									A code editor interface with docked panels, menu bars and tabs
+								</span>
+							</a>
+						</li>
+					</ul>
 				</Space.Fill>
-			</Space.Fill>
-			<BottomPane toggleSize={props.toggleSize} toggleVisibility={props.toggleVisibility} />
+				<Space.Bottom size={60} className="tools">
+					<Space.Fill centerContent={Space.CenterType.Vertical}>
+						{
+							props.showSpaces ?
+								<a title="Show space borders" onClick={() => props.setShowSpaces(!props.showSpaces)}>
+									<i className="fa fa-eye-slash" />
+									<span>Hide</span>
+								</a> :
+								<a title="Hide space borders" onClick={() => props.setShowSpaces(!props.showSpaces)}>
+									<i className="fa fa-eye" />
+									<span>Highlight</span>
+								</a>
+						}
+						<a title="View code">
+							<i className="fa fa-code" />
+							<span>Code</span>
+						</a>
+					</Space.Fill>
+					<Space.Right size={70} centerContent={Space.CenterType.Vertical}>
+						<a title="View code" className="highlight" onClick={() => props.setSidebarVisible(!props.sidebarVisible)}>
+							<i className="fa fa-arrow-left" />
+							<span>Hide</span>
+						</a>
+					</Space.Right>
+				</Space.Bottom>
+			</Space.LeftResizable> :
+			null
+	)
+}
+
+const Main = (props: { selectedDemo: number, showSpaces: boolean }) => {
+	return (
+		<Space.Fill debug={props.showSpaces}>
+			{ props.selectedDemo === 1 ? <Resizable /> : null }
+			{ props.selectedDemo === 2 ? <ScrollableDemo /> : null }
+			{ props.selectedDemo === 3 ? <CodeEditor /> : null }
 		</Space.Fill>
-	)
-}
-
-const IconPane = () => {
-	return (
-		<Space.Left order={1} className="side-bar-icons" size={50} style={{ backgroundColor: '#333' }}>
-		</Space.Left>
-	)
-}
-
-const SideBar : React.FC<{ wide: boolean, visible: boolean }> = (props) => {
-	return (
-		props.visible ?
-		<Space.LeftResizable order={2} className="side-bar" size={props.wide ? 500 : 300} handleSize={2} overlayHandle={false} style={{ backgroundColor: '#252526' }}>
-			<SideBarPane order={1} title="Open editors" height={200}>
-
-			</SideBarPane>
-			<SideBarPane order={2} title="Demo" height={300}>
-				
-			</SideBarPane>
-			<SideBarPane fill={true} title="Outline">
-				
-			</SideBarPane>
-		</Space.LeftResizable> :
-		null
-	)
-}
-
-const SideBarPane: React.FC<{ order?: number, title: string, height?: number, fill?: boolean }> = (props) => {
-	return (
-		props.fill ?
-			<Space.Fill className="sidebar-pane">
-				<SideBarPaneInner title={props.title}>{props.children}</SideBarPaneInner>
-			</Space.Fill>
-			:
-			<Space.TopResizable className="sidebar-pane" order={props.order} size={props.height}>
-				<SideBarPaneInner title={props.title}>{props.children}</SideBarPaneInner>
-			</Space.TopResizable>
-	)
-}
-
-const SideBarPaneInner: React.FC<{ title: string }> = (props) => {
-	return (
-		<>
-			<Space.Top className="title" size={28} style={{ backgroundColor: '#383838', color: '#c5c5c5' }}>
-				<Space.CenteredVertically>
-					{props.title}
-				</Space.CenteredVertically>
-			</Space.Top>
-			<Space.Fill className="content">
-				{props.children}
-			</Space.Fill>
-		</>
-	)
-}
-
-const BottomPane : React.FC<{ toggleVisibility: () => void, toggleSize: () => void }> = (props) => {
-	return (
-		<Space.BottomResizable className="bottom-pane" size="25%" handleSize={2} centerContent={Space.CenterType.HorizontalVertical}>
-			<button onClick={props.toggleVisibility}>Toggle sidebar visibility</button>
-			<button onClick={props.toggleSize}>Toggle sidebar size</button>
-		</Space.BottomResizable>
 	)
 }

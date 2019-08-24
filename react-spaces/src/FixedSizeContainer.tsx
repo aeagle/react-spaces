@@ -1,6 +1,6 @@
 import * as React from 'react';
-import './FixedSizeContainer.scss';
 import * as Spaces from './Space';
+import './Styles.css';
 
 interface IProps {
 	className?: string,
@@ -26,7 +26,6 @@ export const Fixed : React.FC<IProps> = (props) => {
 		<Spaces.Fill>
 			{props.children}
 		</Spaces.Fill>
-
 	</div>
 	)
 }

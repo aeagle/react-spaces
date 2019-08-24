@@ -23,17 +23,19 @@ export const initialState = (props: AllProps) => ({
 	adjustedSize: 0,
 	spaceTakers: [],
 
-	parsedSize: typeof props.size === "string" ? 0 : props.size as number | undefined,
+	parsedSize: typeof props.anchorSize === "string" ? 0 : props.anchorSize as number | undefined,
 	left: props.anchor !== AnchorType.Right ? 0 : undefined,
 	top: props.anchor !== AnchorType.Bottom ? 0 : undefined,
 	right: props.anchor !== AnchorType.Left ? 0 : undefined,
 	bottom: props.anchor !== AnchorType.Top ? 0 : undefined,
-	width: isHorizontalSpace(props) ? props.size || 0 : undefined,
-	height: isVerticalSpace(props) ? props.size || 0 : undefined,
+	width: isHorizontalSpace(props) ? props.anchorSize || 0 : undefined,
+	height: isVerticalSpace(props) ? props.anchorSize || 0 : undefined,
+	debug: props.debug !== undefined ? props.debug : false,
 })
 
 const createContext = (state: IState, setState: (stateDelta: Partial<IState>) => void, parent: ISpaceContext | null) => {
 	return {
+		debug: parent ? (parent.debug ? true : state.debug) : state.debug,
 		level: parent ? parent.level + 1 : 0,
 		width: state.currentWidth,
 		height: state.currentHeight,
@@ -65,6 +67,17 @@ const createContext = (state: IState, setState: (stateDelta: Partial<IState>) =>
 						state.spaceTakers.map(t =>
 							t.id === id ?
 								{...t, ...{ adjustedSize: adjustedSize }} :
+								t
+					)
+				})
+			},
+		updateDebug:
+			(id: string, debug: boolean) => {
+				setState({
+					spaceTakers: 
+						state.spaceTakers.map(t =>
+							t.id === id ?
+								{...t, ...{ debug: debug }} :
 								t
 					)
 				})
@@ -126,13 +139,13 @@ export const calculateSpace = (props: AllProps, state: IState, setState: (stateD
 		right: (state.right !== undefined ? `calc(${state.right}px)` : undefined) as string,
 		bottom: (state.bottom !== undefined ? `calc(${state.bottom}px)` : undefined) as string,
 		width: 
-		isHorizontalSpace(props) ? 
-				`calc(${getSizeString(props.size || 0)} + ${state.adjustedSize}px)`
-				: undefined,
+			isHorizontalSpace(props) ? 
+					`calc(${getSizeString(props.anchorSize || 0)} + ${state.adjustedSize}px)`
+					: undefined,
 		height: 
-		isVerticalSpace(props) ? 
-				`calc(${getSizeString(props.size || 0)} + ${state.adjustedSize}px)`
-				: undefined,
+			isVerticalSpace(props) ? 
+					`calc(${getSizeString(props.anchorSize || 0)} + ${state.adjustedSize}px)`
+					: undefined,
 	};
 
 	if (parentContext) {
@@ -202,7 +215,7 @@ export const calculateSpace = (props: AllProps, state: IState, setState: (stateD
 				id: state.id,
 				order: props.order || 1,
 				anchorType: props.anchor,
-				size: props.size || 0,
+				size: props.anchorSize || 0,
 				adjustedSize: 0
 			});
 		}

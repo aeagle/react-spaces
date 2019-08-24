@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './Resizable.scss';
+import './Styles.css';
 
 export enum ResizeType {
 	Left = " resize-left",
@@ -36,11 +36,18 @@ export class Resizable extends React.Component<IProps, IState> {
 
 	public render() {
 		return (
-			<div 
-				ref={this.divElementRef}
-				style={{ width: this.props.width, height: this.props.height }}
-				className={`spaces-resize-handle${this.props.type}`} 
-				onMouseDown={this.startResize} />
+			<>
+				<div 
+					ref={this.divElementRef}
+					style={{ 
+						width: this.props.width, 
+						height: this.props.height,
+						position: 'absolute',
+						zIndex: 9999 
+					}}
+					className={`spaces-resize-handle${this.props.type}`} 
+					onMouseDown={this.startResize} />
+			</>
 		)
 	}
 

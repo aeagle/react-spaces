@@ -1,6 +1,6 @@
 import * as React from 'react';
-import './FullPageContainer.scss';
 import * as Spaces from './Space';
+import './Styles.css';
 
 interface IProps {
 	className?: string,
@@ -17,12 +17,11 @@ export const ViewPort : React.FC<IProps> = (props) => (
 			left: props.left || 0, 
 			top: props.top || 0, 
 			right: props.right || 0, 
-			bottom: props.bottom || 0 
+			bottom: props.bottom || 0
 		}}>
 
 		<Spaces.Fill>
 			{props.children}
 		</Spaces.Fill>
-
 	</div>
 )
