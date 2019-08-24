@@ -6,6 +6,26 @@ export const VersionHistory = () => {
 			<h2 id="changes">Version history</h2>
 
 			<div>
+				<h3>0.1.14</h3> 
+				<ul>
+					<li>
+						Migrated from Webpack to Rollup for building component library
+					</li>
+					<li>
+						Created ES module bundles in /dist/es
+					</li>
+					<li>
+						Fixed window undefined error when rendering spaces via Next.js
+					</li>
+					<li>
+						Created server bundle (/dist/server) for using with Node.js server 
+						side apps when utilising SSR, e.g. Next.js and seperated
+						styling from server bundle (/dist/server.css). This is currently
+						experimental.
+					</li>
+				</ul>
+			</div>
+			<div>
 				<h3>0.1.13</h3> 
 				<ul>
 					<li>
