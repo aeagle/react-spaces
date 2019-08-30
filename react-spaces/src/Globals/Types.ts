@@ -20,7 +20,9 @@ export interface IPublicProps {
 	centerContent?: CenterType,
 	as?: string,
 	children?: React.ReactNode,
-	debug?: boolean
+	debug?: boolean,
+	onMouseEnter?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
+	onMouseLeave?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export interface IPrivateProps {
@@ -63,6 +65,7 @@ export interface IState {
 
 export interface ISpaceContext {
 	debug: boolean,
+	zIndex: number,
 	level: number,
 	width: number,
 	height: number,
@@ -76,6 +79,7 @@ export interface ISpaceContext {
 export interface ISpaceTaker {
 	id: string,
 	order: number,
+	zIndex: number,
 	anchorType: AnchorType,
 	size: number | string,
 	adjustedSize: number

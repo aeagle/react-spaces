@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ResizeSensor } from 'css-element-queries';
 import { IPublicProps, IAnchoredProps, AnchorType, IResizableProps, AllProps, IState } from './Globals/Types';
-import { isHorizontalSpace, isVerticalSpace, calculateSpace, initialState } from './Globals/Helpers';
+import { isHorizontalSpace, isVerticalSpace, initialState, useSpace } from './Globals/Helpers';
 import { SpaceContext, SpaceInfoContext } from './Globals/Contexts';
 import './Styles.css';
 
@@ -16,7 +16,6 @@ export const BottomResizable : React.FC<IPublicProps & IAnchoredProps & IResizab
 export const RightResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <Space {...props} anchor={AnchorType.Right} anchorSize={props.size} resizable={true} />
  
 const Space : React.FC<AllProps> = (props) => {
-	const parentContext = React.useContext(SpaceContext);
 	const [ state, changeState ] = React.useState<IState>(initialState(props));
 	const divElementRef = React.useRef<HTMLDivElement>();
 	const resizeSensor = React.useRef<ResizeSensor | undefined>(undefined);
@@ -74,12 +73,8 @@ const Space : React.FC<AllProps> = (props) => {
 		return cleanup;
 	}, [])
 
-	const debug =
-		parentContext ? parentContext.debug : false ||
-		props.debug !== undefined ? props.debug : false;
-
-	const { currentContext, outerStyle, innerStyle, resizeType, resizeHandle, children } = 
-		calculateSpace(props, state, setState, (handler) => { onRemove.current = handler; }, parentContext);
+	const { currentContext, outerStyle, innerStyle, resizeType, resizeHandle, children, debug } = 
+		useSpace(props, state, setState, (handler) => { onRemove.current = handler; });
 
 	const outerClasses = [
 		"spaces-space",
@@ -106,7 +101,9 @@ const Space : React.FC<AllProps> = (props) => {
 								id: props.id,
 								ref: divElementRef,
 								className: outerClasses.join(' '),
-								style: outerStyle
+								style: outerStyle,
+								onMouseEnter: props.onMouseEnter,
+								onMouseLeave: props.onMouseLeave
 							},
 							<>
 								{ resizeHandle }

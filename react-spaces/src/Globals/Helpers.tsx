@@ -3,6 +3,7 @@ import { Resizable, ResizeType } from '../Resizable';
 import { Guid } from 'guid-typescript';
 import { CenteredVertically, Centered } from '../Centered';
 import { AnchorType, AllProps, IState, ISpaceContext, ISpaceTaker, CenterType } from './Types';
+import { SpaceContext, SpaceLayerContext } from './Contexts';
 
 const getSizeString = 
 	(size: string | number) => typeof(size) === "string" ? size : `${size}px`;
@@ -33,10 +34,16 @@ export const initialState = (props: AllProps) => ({
 	debug: props.debug !== undefined ? props.debug : false,
 })
 
-const createContext = (state: IState, setState: (stateDelta: Partial<IState>) => void, parent: ISpaceContext | null) => {
+const createContext = (
+	state: IState, 
+	setState: (stateDelta: Partial<IState>) => void, 
+	parent: ISpaceContext | null,
+	zIndex: number) => {
+
 	return {
 		debug: parent ? (parent.debug ? true : state.debug) : state.debug,
 		level: parent ? parent.level + 1 : 0,
+		zIndex: zIndex,
 		width: state.currentWidth,
 		height: state.currentHeight,
 		spaceTakers: state.spaceTakers,
@@ -83,6 +90,7 @@ const createContext = (state: IState, setState: (stateDelta: Partial<IState>) =>
 				})
 			}
 	}
+
 }
 
 const applyResize = (props: AllProps, state: IState, setState: (stateDelta: Partial<IState>) => void, parentContext: ISpaceContext | null, handleSize: number) => {
@@ -131,13 +139,24 @@ const applyResize = (props: AllProps, state: IState, setState: (stateDelta: Part
 	return { resizeHandle: null, resizeType: null };
 }
 
-export const calculateSpace = (props: AllProps, state: IState, setState: (stateDelta: Partial<IState>) => void, registerOnRemove: (handler: () => void) => void, parentContext: ISpaceContext | null) => {
+const anchorTypes = [ 
+	AnchorType.Left, 
+	AnchorType.Right, 
+	AnchorType.Bottom, 
+	AnchorType.Top 
+];
+
+export const useSpace = (props: AllProps, state: IState, setState: (stateDelta: Partial<IState>) => void, registerOnRemove: (handler: () => void) => void) => {
+
+	const parentContext = React.useContext(SpaceContext);
+	const currentZIndex = React.useContext(SpaceLayerContext) || 0;
 
 	const outerStyle = {
 		left: (state.left !== undefined ? `calc(${state.left}px)` : undefined) as string | undefined,
 		top: (state.top !== undefined ? `calc(${state.top}px)` : undefined) as string,
 		right: (state.right !== undefined ? `calc(${state.right}px)` : undefined) as string,
 		bottom: (state.bottom !== undefined ? `calc(${state.bottom}px)` : undefined) as string,
+		zIndex: currentZIndex,
 		width: 
 			isHorizontalSpace(props) ? 
 					`calc(${getSizeString(props.anchorSize || 0)} + ${state.adjustedSize}px)`
@@ -158,50 +177,47 @@ export const calculateSpace = (props: AllProps, state: IState, setState: (stateD
 		let adjustedRight: string[] = [];
 		let adjustedBottom: string[] = [];
 
-		[ AnchorType.Left, 
-		  AnchorType.Right, 
-		  AnchorType.Bottom, 
-		  AnchorType.Top ]
-			.forEach(a => {
-				const spaceTakers = 
-					parentContext.spaceTakers
-						.filter(t => t.anchorType === a)
-						.sort((a, b) => a.order - b.order);
+		for (let at = 0; at < anchorTypes.length; at ++)
+		{
+			const spaceTakers = 
+				parentContext.spaceTakers
+					.filter(t => t.zIndex === currentZIndex && t.anchorType === anchorTypes[at])
+					.sort((a, b) => a.order - b.order);
 
-				for (let i = 0; i < spaceTakers.length; i ++)
-				{
-					const t = spaceTakers[i];
-					if (t.id !== state.id) {
-						const adjustedSize = t.adjustedSize !== 0 ?` + ${t.adjustedSize}px` : ``;
-						if (isFilledSpace(props))
-						{
-							if (t.anchorType === AnchorType.Top) {
-								adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
-							} else if (t.anchorType === AnchorType.Left) {
-								adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
-							} else if (t.anchorType === AnchorType.Bottom) {
-								adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
-							} else if (t.anchorType === AnchorType.Right) {
-								adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
-							}
+			for (let i = 0; i < spaceTakers.length; i ++)
+			{
+				const t = spaceTakers[i];
+				if (t.id !== state.id) {
+					const adjustedSize = t.adjustedSize !== 0 ?` + ${t.adjustedSize}px` : ``;
+					if (isFilledSpace(props))
+					{
+						if (t.anchorType === AnchorType.Top) {
+							adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Left) {
+							adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Bottom) {
+							adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Right) {
+							adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
 						}
-						else
-						{
-							if (t.anchorType === AnchorType.Top && outerStyle.top !== undefined) {
-								adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
-							} else if (t.anchorType === AnchorType.Left && outerStyle.left !== undefined) {
-								adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
-							} else if (t.anchorType === AnchorType.Bottom && outerStyle.bottom !== undefined) {
-								adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
-							} else if (t.anchorType === AnchorType.Right && outerStyle.right !== undefined) {
-								adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
-							}
-						}
-					} else {
-						break;
 					}
+					else
+					{
+						if (t.anchorType === AnchorType.Top && outerStyle.top !== undefined) {
+							adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Left && outerStyle.left !== undefined) {
+							adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Bottom && outerStyle.bottom !== undefined) {
+							adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Right && outerStyle.right !== undefined) {
+							adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
+						}
+					}
+				} else {
+					break;
 				}
-			});
+			}
+		}
 
 		[
 			{ adjusted: adjustedTop, setter: (value: string) => outerStyle.top = value },
@@ -213,6 +229,7 @@ export const calculateSpace = (props: AllProps, state: IState, setState: (stateD
 		if (props.anchor) {
 			parentContext.registerSpaceTaker({
 				id: state.id,
+				zIndex: currentZIndex,
 				order: props.order || 1,
 				anchorType: props.anchor,
 				size: props.anchorSize || 0,
@@ -221,7 +238,7 @@ export const calculateSpace = (props: AllProps, state: IState, setState: (stateD
 		}
 	}
 
-	const currentContext = createContext(state, setState, parentContext);
+	const currentContext = createContext(state, setState, parentContext, currentZIndex);
 	const handleSize = props.handleSize || 5;
 	const overlayHandle = props.overlayHandle !== undefined ? props.overlayHandle : true;
 	let children = props.children;
@@ -245,12 +262,17 @@ export const calculateSpace = (props: AllProps, state: IState, setState: (stateD
 			}
 		};
 
+	const debug =
+		parentContext ? parentContext.debug : false ||
+		props.debug !== undefined ? props.debug : false;
+
 	return {
 		currentContext,
 		resizeHandle: resize.resizeHandle,
 		resizeType: resize.resizeType,
 		outerStyle,
 		innerStyle,
-		children
+		children,
+		debug
 	} 
 }

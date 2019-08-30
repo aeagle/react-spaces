@@ -5,6 +5,7 @@ import './UI.scss';
 import { CodeEditor } from './CodeEditor';
 import { Resizable } from './Resizable';
 import { ScrollableDemo } from './Scrollable';
+import { LayersDemo } from './Layers';
 
 export const UI = () => {
 	const [ selectedDemo, setSelectedDemo ] = React.useState(1);
@@ -56,6 +57,14 @@ const DemoSelection = (props: {
 						</li>
 						<li className={props.selectedDemo === 3 ? "active" : undefined}>
 							<a onClick={() => props.setSelectedDemo(3)}>
+								Layers
+								<span>
+									Layered spaces
+								</span>
+							</a>
+						</li>
+						<li className={props.selectedDemo === 4 ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo(4)}>
 								Code editor
 								<span>
 									A code editor interface with docked panels, menu bars and tabs
@@ -99,7 +108,8 @@ const Main = (props: { selectedDemo: number, showSpaces: boolean }) => {
 		<Space.Fill debug={props.showSpaces}>
 			{ props.selectedDemo === 1 ? <Resizable /> : null }
 			{ props.selectedDemo === 2 ? <ScrollableDemo /> : null }
-			{ props.selectedDemo === 3 ? <CodeEditor /> : null }
+			{ props.selectedDemo === 3 ? <LayersDemo /> : null }
+			{ props.selectedDemo === 4 ? <CodeEditor /> : null }
 		</Space.Fill>
 	)
 }
