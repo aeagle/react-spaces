@@ -6,7 +6,7 @@ export const LayersDemo = () => {
 	const [ fixedSideBarHovered, setFixedSideBarHovered ] = React.useState(false);
 	const [ floatingSideBarHovered, setFloatingSideBarHovered ] = React.useState(false);
 	const [ showLayer1, setShowLayer1 ] = React.useState(true);
-	const [ showLayer2, setShowLayer2 ] = React.useState(true);
+	const [ showLayer2, setShowLayer2 ] = React.useState(false);
 
 	return (
 		<Space.Fill className="layers-demo">
@@ -20,6 +20,7 @@ export const LayersDemo = () => {
 					<Space.Layer zIndex={0}>
 
 						<Space.Left
+							id="layer_1_left"
 							size={fixedSideBarHovered ? "75%" : "60%" } 
 							onMouseEnter={() => setFixedSideBarHovered(true)} 
 							onMouseLeave={() => setFixedSideBarHovered(false)} 
@@ -27,7 +28,7 @@ export const LayersDemo = () => {
 							{Description("Left fixed (zIndex = 0)")}
 						</Space.Left>
 
-						<Space.Fill as="main">
+						<Space.Fill as="main" id="layer_1_main">
 							{Description("Fill space not affected by floated left space in different layer but is affected by left space in same layer (zIndex = 0)")}
 						</Space.Fill>
 
@@ -38,6 +39,7 @@ export const LayersDemo = () => {
 					<Space.Layer zIndex={1}>
 
 						<Space.Left 
+							id="layer_2_left"
 							order={1}
 							size={floatingSideBarHovered ? "30%" : "15%" } 
 							onMouseEnter={() => setFloatingSideBarHovered(true)} 
@@ -46,6 +48,7 @@ export const LayersDemo = () => {
 							{Description("Left floated (zIndex = 1)")}
 						</Space.Left>
 						<Space.Left 
+							id="layer_2_left1"
 							order={2}
 							size="15%" 
 							as="section">

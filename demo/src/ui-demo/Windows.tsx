@@ -47,18 +47,18 @@ const Window : React.FC<IWindowProps> = (props) => {
             width={"50%"} 
             height={"50%"}>
 
-            <WindowInner />
+            <WindowInner onClick={() => props.onClick && props.onClick(props.window)} />
 
         </Space.Positioned>
     )
 }
 
-const WindowInner : React.FC = (props) => {
+const WindowInner : React.FC<{ onClick?: () => void }> = (props) => {
     const parentSpace = Space.useParentSpace();
 
     return (
         <>
-            <Space.Top className="title-bar" onMouseDown={parentSpace.startDrag} size={40}>
+            <Space.Top className="title-bar" onMouseDown={e => { props.onClick && props.onClick(); parentSpace.startDrag(e); }} size={40}>
                 {Description(`Window title`)}
             </Space.Top>
             <Space.Fill className="content" centerContent={Space.CenterType.HorizontalVertical}>

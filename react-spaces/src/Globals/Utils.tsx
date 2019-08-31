@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Resizable, ResizeType } from '../Resizable';
-import { Guid } from 'guid-typescript';
 import { AnchorType, AllProps, IState, ISpaceContext, ISpaceTaker, AnchorToResizeTypeMap } from './Types';
 
 export const getSizeString = 
@@ -15,8 +14,15 @@ export const isHorizontalSpace = (props: AllProps) =>
 export const isVerticalSpace = (props: AllProps) => 
 	props.anchor && (props.anchor === AnchorType.Top || props.anchor === AnchorType.Bottom)
 
+const uuid = () =>
+	"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (char) => {
+		  let random = Math.random() * 16 | 0;
+		  let value = char === "x" ? random : (random % 4 + 8);
+		  return value.toString(16);
+	});
+
 export const initialState = (props: AllProps) => ({
-	id: Guid.create().toString(),
+	id: props.id || uuid(),
 	currentWidth: 0,
 	currentHeight: 0,
 	adjustedSize: 0,

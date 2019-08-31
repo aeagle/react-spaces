@@ -14,8 +14,7 @@
   "license": "MIT",
   "description": "React Layout Components",
   "dependencies": {
-    "css-element-queries": "^1.2.1",
-    "guid-typescript": "^1.0.9"
+    "css-element-queries": "^1.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

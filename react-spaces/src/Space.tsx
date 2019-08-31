@@ -18,6 +18,7 @@ export const Positioned : React.FC<IPublicProps & IResizableProps & IPositionedP
 
 const SpaceInternal : React.FC<AllProps> = (props) => {
 
+	console.log(props.id);
 	const divElementRef = React.useRef<HTMLDivElement>();
 
 	const { 

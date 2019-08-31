@@ -26,7 +26,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 			height: isVerticalSpace(props) ? props.anchorSize || 0 : props.height,
 			debug: props.debug !== undefined ? props.debug : false,
 		})
-	}, [ props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor, props.anchorSize, props.debug ]);
+	}, [ props.zIndex, props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor, props.anchorSize, props.debug ]);
 
 	// Setup / cleanup
 	React.useEffect(() => {
@@ -72,7 +72,10 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	};
 
 	if (parentContext) {
-		onRemove.current = () => parentContext.removeSpaceTaker(state.id);
+		onRemove.current = () => {
+			console.log(`Removing ${state.id}`);
+			parentContext.removeSpaceTaker(state.id);
+		}
 
 		let adjustedTop: string[] = [];
 		let adjustedLeft: string[] = [];
