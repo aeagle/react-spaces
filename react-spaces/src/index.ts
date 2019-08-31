@@ -6,6 +6,10 @@ export * from './Space';
 export * from './Layer';
 export * from './SpaceInfo';
 
+export { 
+	useParentSpace 
+} from './Globals/Hooks';
+
 export {
 	CenterType,
 	AnchorType,

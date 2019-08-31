@@ -2,10 +2,30 @@
 	aside {
 		opacity: 0.7;
 		background-color: #e0eeee;
+
+		.description {
+			position: relative;
+			top: -200px;
+		}
+	}
+
+	section {
+		opacity: 0.7;
+		background-color: #e0e0ee;
+
+		.description {
+			position: relative;
+			top: -200px;
+		}
 	}
 
 	nav {
 		background-color: #eee0e0;
+
+		.description {
+			position: relative;
+			top: 200px;
+		}
 	}
 
 	main {
@@ -15,5 +35,6 @@
 	.description {
 		color: black;
 		font-size: 120%;
+		padding: 30px;
 	}
 }
