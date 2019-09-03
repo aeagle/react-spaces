@@ -59,3 +59,11 @@ import * as Spaces from 'react-spaces';
 ```
 
 View full documentation [here](https://www.allaneagle.com/react-spaces/demo/).
+
+## Give back
+If you find this library useful, consider making a small donation:
+
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AAYPWGUQBUDAA" 
+    title="Find this library useful? Consider making a small donation." alt="Make Donation" style="text-decoration: none;">
+	<img src="https://www.allaneagle.com/donation.png" />
+</a>
