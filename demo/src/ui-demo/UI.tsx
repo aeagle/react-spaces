@@ -6,9 +6,10 @@ import { CodeEditor } from './CodeEditor';
 import { Resizable } from './Resizable';
 import { ScrollableDemo } from './Scrollable';
 import { LayersDemo } from './Layers';
+import { WindowsDemo } from './Windows';
 
 export const UI = () => {
-	const [ selectedDemo, setSelectedDemo ] = React.useState(1);
+	const [ selectedDemo, setSelectedDemo ] = React.useState("resizable");
 	const [ showSpaces, setShowSpaces ] = React.useState(false);
 	const [ sidebarVisible, setSidebarVisible ] = React.useState(true);
 
@@ -29,8 +30,8 @@ export const UI = () => {
 const DemoSelection = (props: { 
 	sidebarVisible: boolean,
 	setSidebarVisible: (state: boolean) => void,
-	selectedDemo: number, 
-	setSelectedDemo: (demo: number) => void,
+	selectedDemo: string, 
+	setSelectedDemo: (demo: string) => void,
 	showSpaces: boolean,
 	setShowSpaces: (state: boolean) => void }) => {
 
@@ -39,32 +40,41 @@ const DemoSelection = (props: {
 			<Space.LeftResizable className="ui-list" size={300} minimumSize={150} style={{ backgroundColor: '#193549' }}>
 				<Space.Fill scrollable={true}>
 					<ul>
-						<li className={props.selectedDemo === 1 ? "active" : undefined}>
-							<a onClick={() => props.setSelectedDemo(1)}>
+						<li className={props.selectedDemo === "resizable" ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo("resizable")}>
 								Nested / resizable spaces
 								<span>
 									Example with nested and resizable spaces
 								</span>
 							</a>
 						</li>
-						<li className={props.selectedDemo === 2 ? "active" : undefined}>
-							<a onClick={() => props.setSelectedDemo(2)}>
+						<li className={props.selectedDemo === "scrollable" ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo("scrollable")}>
 								Sidebar / header layout
 								<span>
 									antd components with a header, sidebar and scrollable main layout
 								</span>
 							</a>
 						</li>
-						<li className={props.selectedDemo === 3 ? "active" : undefined}>
-							<a onClick={() => props.setSelectedDemo(3)}>
+						<li className={props.selectedDemo === "layers" ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo("layers")}>
 								Layers
 								<span>
-									Layered spaces
+									Layered spaces demonstrating hover interaction to create drawer like
+									elements
 								</span>
 							</a>
 						</li>
-						<li className={props.selectedDemo === 4 ? "active" : undefined}>
-							<a onClick={() => props.setSelectedDemo(4)}>
+						<li className={props.selectedDemo === "windows" ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo("windows")}>
+								Windows
+								<span>
+									Positioned spaces used to create resizable / draggable floating windows
+								</span>
+							</a>
+						</li>
+						<li className={props.selectedDemo === "codeeditor" ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo("codeeditor" )}>
 								Code editor
 								<span>
 									A code editor interface with docked panels, menu bars and tabs
@@ -103,13 +113,14 @@ const DemoSelection = (props: {
 	)
 }
 
-const Main = (props: { selectedDemo: number, showSpaces: boolean }) => {
+const Main = (props: { selectedDemo: string, showSpaces: boolean }) => {
 	return (
 		<Space.Fill debug={props.showSpaces}>
-			{ props.selectedDemo === 1 ? <Resizable /> : null }
-			{ props.selectedDemo === 2 ? <ScrollableDemo /> : null }
-			{ props.selectedDemo === 3 ? <LayersDemo /> : null }
-			{ props.selectedDemo === 4 ? <CodeEditor /> : null }
+			{ props.selectedDemo === "resizable" ? <Resizable /> : null }
+			{ props.selectedDemo === "scrollable" ? <ScrollableDemo /> : null }
+			{ props.selectedDemo === "layers" ? <LayersDemo /> : null }
+			{ props.selectedDemo === "windows" ? <WindowsDemo /> : null }
+			{ props.selectedDemo === "codeeditor" ? <CodeEditor /> : null }
 		</Space.Fill>
 	)
 }
