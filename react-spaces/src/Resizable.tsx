@@ -2,10 +2,10 @@ import * as React from 'react';
 import './Styles.css';
 
 export enum ResizeType {
-	Left = " resize-left",
-	Right = " resize-right",
-	Top = " resize-top",
-	Bottom = " resize-bottom"
+	Left = "resize-left",
+	Right = "resize-right",
+	Top = "resize-top",
+	Bottom = "resize-bottom"
 }
 
 interface IProps {
@@ -17,90 +17,43 @@ interface IProps {
 	onResize: (adjustedSize: number) => void
 }
 
-interface IState {
-	adjustedSize: number
-}
+export const Resizable : React.FC<IProps> = (props) => {
+	const [ adjustedSize, setAdjustedSize ] = React.useState(0);
 
-export class Resizable extends React.Component<IProps, IState> {
-	private divElementRef = React.createRef<HTMLDivElement>();
-	private originalMouseX: number = 0;
-	private originalMouseY: number = 0;
+	const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		const originalMouseX = props.type === ResizeType.Left ? e.pageX + adjustedSize : e.pageX - adjustedSize;
+		const originalMouseY = props.type === ResizeType.Top ? e.pageY + adjustedSize : e.pageY - adjustedSize;
 
-	constructor(props: IProps) {
-		super(props);
-
-		this.state = {
-			adjustedSize: 0
+		const resize = (e: MouseEvent) => {
+			const adjustmentX = 
+				Math.min(
+					Math.max(props.type === ResizeType.Left ? originalMouseX - e.pageX : e.pageX - originalMouseX, props.minimumAdjust),
+					props.maximumAdjust || 999999
+				);
+			const adjustmentY = 
+				Math.min(
+					Math.max(props.type === ResizeType.Top ? originalMouseY - e.pageY : e.pageY - originalMouseY, props.minimumAdjust),
+					props.maximumAdjust || 999999
+				);
+			const adjustment = props.type === ResizeType.Left || props.type === ResizeType.Right ?  adjustmentX : adjustmentY;
+	
+			if (adjustment !== adjustedSize) {
+				setAdjustedSize(adjustment);
+				props.onResize(adjustment);
+			}
 		}
-	}
 
-	public render() {
-		return (
-			<>
-				<div 
-					ref={this.divElementRef}
-					style={{ 
-						width: this.props.width, 
-						height: this.props.height,
-						position: 'absolute',
-						zIndex: 9999 
-					}}
-					className={`spaces-resize-handle${this.props.type}`} 
-					onMouseDown={this.startResize} />
-			</>
-		)
-	}
-
-	private startResize = (e: React.MouseEvent<HTMLDivElement>) => {
-		e.preventDefault()
+		const stopResize = () => window.removeEventListener('mousemove', resize);
 		
-		if (this.props.type === ResizeType.Right) {
-			this.originalMouseX = e.pageX - this.state.adjustedSize;
-		}
-		else if (this.props.type === ResizeType.Left) {
-			this.originalMouseX = e.pageX + this.state.adjustedSize;
-		}
-		else if (this.props.type === ResizeType.Top) {
-			this.originalMouseY = e.pageY + this.state.adjustedSize;
-		}
-		else if (this.props.type === ResizeType.Bottom) {
-			this.originalMouseY = e.pageY - this.state.adjustedSize;
-		}
-		
-		window.addEventListener('mousemove', this.resize)
-		window.addEventListener('mouseup', this.stopResize)
+		e.preventDefault();
+		window.addEventListener('mousemove', resize);
+		window.addEventListener('mouseup', stopResize);
 	}
-  
-	private resize = (e: MouseEvent) => {
-		let adjustment = 0;
-		if (this.props.type === ResizeType.Right) {
-			adjustment = e.pageX - this.originalMouseX;
-		}
-		else if (this.props.type === ResizeType.Left) {
-			adjustment = this.originalMouseX - e.pageX;
-		}
-		else if (this.props.type === ResizeType.Top) {
-			adjustment = this.originalMouseY - e.pageY;
-		}
-		else if (this.props.type === ResizeType.Bottom) {
-			adjustment = e.pageY - this.originalMouseY;
-		}
 
-		if (adjustment < this.props.minimumAdjust) {
-			adjustment = this.props.minimumAdjust;
-		}
-
-		if (this.props.maximumAdjust && adjustment > this.props.maximumAdjust) {
-			adjustment = this.props.maximumAdjust;
-		}
-
-		if (adjustment !== this.state.adjustedSize) {
-			this.setState({ adjustedSize: adjustment });
-			this.props.onResize(adjustment);
-		}
-	}
-	  
-	private stopResize = () => {
-		window.removeEventListener('mousemove', this.resize)
-	}
+	return (
+		<div 
+			style={{ width: props.width, height: props.height }}
+			className={`spaces-resize-handle ${props.type}`} 
+			onMouseDown={startResize} />
+	)
 }
