@@ -1,6 +1,6 @@
 {
   "name": "react-spaces",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",
@@ -9,10 +9,22 @@
   ],
   "repository": "github:aeagle/react-spaces",
   "author": {
-    "name": "Allan Eagle"
+    "name": "Allan Eagle",
+    "url": "https://www.allaneagle.com"
   },
+  "bugs": "https://github.com/aeagle/react-spaces/issues",
+  "keywords": [
+    "react",
+    "reactjs",
+    "reactjs components",
+    "component library",
+    "components",
+    "web",
+    "web ui",
+    "javascript library"
+  ],
   "license": "MIT",
-  "description": "React Layout Components",
+  "description": "An easy to understand and nestable layout system, React Spaces allow you to divide a page or container into anchored, scrollable and resizable spaces enabling you to build desktop type user interfaces in the browser.",
   "dependencies": {
     "css-element-queries": "^1.2.1"
   },
