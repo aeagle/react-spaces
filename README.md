@@ -32,11 +32,31 @@ A space anchored to the left or right of the parent container/space. A size can 
 
 A space anchored to the top or bottom of the parent container/space. A size can be specified in pixels or as a percentage to determine its height.
 
+There are resizable versions of these components called **\<LeftResizable /\>**, **\<RightResizable /\>**, **\<TopResizable /\>** and **\<BottomResizable /\>** which allow the spaces to be resized from the outer edge by dragging with the mouse.
+
 ### Other
 
 **\<Fill /\>** 
 
 A space which consumes any available area left in the parent container/space taking into account any anchored spaces on every side.
+
+**\<Layer /\>**
+
+Layers allow you to create layers within a parent space, for example:
+
+```html
+<ViewPort>
+  
+  <Layer zIndex={0}>
+  	<LeftResizable size="20%" /> // floating sidebar
+  </Layer>
+  
+  <Layer zIndex={1}>
+  	<Fill />
+  </Layer>
+
+</ViewPort>
+```
 
 **\<Centered /\>** 
 
@@ -61,9 +81,9 @@ import * as Spaces from 'react-spaces';
 View full documentation [here](https://www.allaneagle.com/react-spaces/demo/).
 
 ## Donation
-If you find this library useful, consider making a small donation to fund a cup of coffee or more:
+If you find this library useful, consider making a small donation to fund a cup of coffee:
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AAYPWGUQBUDAA" 
-    title="If you find this library useful, consider making a small donation to fund a cup of coffee or more ..." alt="Make Donation" style="text-decoration: none;">
+    title="If you find this library useful, consider making a small donation to fund a cup of coffee" alt="Make Donation" style="text-decoration: none;">
 	<img src="https://www.allaneagle.com/donation.png" />
 </a>
