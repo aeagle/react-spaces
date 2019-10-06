@@ -14,6 +14,7 @@ export const LayersDemo = () => {
 					onMouseEnter={() => setFixedSideBarHovered(true)} 
 					onMouseLeave={() => setFixedSideBarHovered(false)} 
 					as="nav">
+					{Description("Layer 1 left")}
 				</Space.Left>
 
 				<Space.Fill as="main">
@@ -27,7 +28,7 @@ export const LayersDemo = () => {
 					onMouseEnter={() => setFloatingSideBarHovered(true)} 
 					onMouseLeave={() => setFloatingSideBarHovered(false)} 
 					as="aside">
-					{Description("Left floated")}
+					{Description("Layer 2 left")}
 				</Space.Left>
 			</Space.Layer>
 		</Space.Fill>

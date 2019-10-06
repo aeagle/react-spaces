@@ -2,14 +2,27 @@
 	aside {
 		opacity: 0.7;
 		background-color: #e0eeee;
+		transition: width 0.5s;
+
+		.description {
+			position: relative;
+			top: -30px;
+		}
 	}
 
 	nav {
 		background-color: #eee0e0;
+		transition: width 0.5s;
+
+		.description {
+			position: relative;
+			top: 30px;
+		}
 	}
 
 	main {
 		background-color: #eee;
+		transition: left 0.5s;
 	}
 
 	.description {
