@@ -52,12 +52,12 @@ const AnchoredExample : React.FC<{ spaceSize: number,resizingSpaces: boolean, se
 
 	return (
 		<>
-			<Space.LeftResizable size={`${props.spaceSize}%`} trackSize={trackSize} className={props.children ? "blue" : "gray"}>
+			<Space.LeftResizable size={`${props.spaceSize}%`} handleSize={30} trackSize={trackSize} className={props.children ? "blue" : "gray"}>
 				{Description("Left")}
 			</Space.LeftResizable>
 
 			<Space.Fill>
-			<Space.TopResizable size={`${props.spaceSize}%`} trackSize={trackSize} className={props.children ? "red" : "blue"}>
+			<Space.TopResizable size={`${props.spaceSize}%`} handleSize={30} trackSize={trackSize} className={props.children ? "red" : "blue"}>
 				{Description("Top")}
 			</Space.TopResizable>
 			<Space.Fill trackSize={trackSize} className="white">
@@ -74,12 +74,12 @@ const AnchoredExample : React.FC<{ spaceSize: number,resizingSpaces: boolean, se
 					</Space.Centered>
 				}
 			</Space.Fill>
-			<Space.BottomResizable size={`${props.spaceSize}%`} trackSize={trackSize} className={props.children ? "red" : "blue"}>
+			<Space.BottomResizable size={`${props.spaceSize}%`} handleSize={30} trackSize={trackSize} className={props.children ? "red" : "blue"}>
 				{Description("Bottom")}
 			</Space.BottomResizable>
 			</Space.Fill>
 
-			<Space.RightResizable size={`${props.spaceSize}%`} trackSize={trackSize} className={props.children ? "blue" : "gray"}>
+			<Space.RightResizable size={`${props.spaceSize}%`} handleSize={30} trackSize={trackSize} className={props.children ? "blue" : "gray"}>
 			{Description("Right")}
 			</Space.RightResizable>
 		</>
