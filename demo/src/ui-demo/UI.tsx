@@ -37,7 +37,7 @@ const DemoSelection = (props: {
 
 	return (
 		props.sidebarVisible ?
-			<Space.LeftResizable className="ui-list" size={300} minimumSize={150} style={{ backgroundColor: '#193549' }}>
+			<Space.LeftResizable className="ui-list" size={300} minimumSize={150} style={{ backgroundColor: '#193549' }} handleSize={30}>
 				<Space.Fill scrollable={true}>
 					<ul>
 						<li className={props.selectedDemo === "resizable" ? "active" : undefined}>

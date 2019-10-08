@@ -23,7 +23,7 @@ export const ScrollableDemo = () => {
 			Header
 		</Space.Top>
 		<Space.Fill>
-			<Space.LeftResizable as="aside" size="20%">
+			<Space.LeftResizable as="aside" size="20%" handleSize={30}>
 				<Menu defaultSelectedKeys={[ selectedKey ]} onSelect={e => setSelectedKey(e.key)}>
 					<Menu.Item key="1">Menu item 1</Menu.Item>
 					<Menu.Item key="2">Menu item 2</Menu.Item>
