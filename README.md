@@ -62,7 +62,7 @@ Layers allow you to create layers within a parent space, for example:
 
 Centres the content of a space horizontally and vertically.
 
-**\<VerticallyCentered /\>**
+**\<CenteredVertically /\>**
 
 Centres the content of a space vertically.
 
