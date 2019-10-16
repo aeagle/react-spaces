@@ -98,8 +98,9 @@ export const applyResize = (props: AllProps, state: IState, setState: (stateDelt
 		
 		return {
 			resizeHandle:
-				<Resizable 
-					type={resizeType} 
+				<Resizable
+					type={resizeType}
+					adjustedSize={state.adjustedSize} 
 					width={resizeHandleWidth}
 					height={resizeHandleHeight}
 					minimumAdjust={ (props.minimumSize || 20) - (state.parsedSize || 0) }

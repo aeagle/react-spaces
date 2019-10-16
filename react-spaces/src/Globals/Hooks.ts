@@ -14,6 +14,9 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	
 	const setState = (stateDelta: Partial<IState>) => changeState(prev => ({...prev, ...stateDelta}));
 
+	const parentContext = React.useContext(SpaceContext);
+	const currentZIndex = props.zIndex || React.useContext(SpaceLayerContext) || 0;
+
 	// Deal with property changes to size / anchoring 
 	React.useEffect(() => {
 		setState({
@@ -25,7 +28,11 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 			width: isHorizontalSpace(props) ? props.anchorSize || 0 : props.width,
 			height: isVerticalSpace(props) ? props.anchorSize || 0 : props.height,
 			debug: props.debug !== undefined ? props.debug : false,
+			adjustedSize: 0
 		})
+		if (parentContext) {
+			parentContext.updateSpaceTakerAdjustedSize(state.id, 0);
+		}
 	}, [ props.zIndex, props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor, props.anchorSize, props.debug ]);
 
 	// Setup / cleanup
@@ -57,9 +64,6 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 			});
 		}
 	})
-
-	const parentContext = React.useContext(SpaceContext);
-	const currentZIndex = props.zIndex || React.useContext(SpaceLayerContext) || 0;
 
 	const outerStyle = {
 		left: (state.left !== undefined ? `calc(${getSizeString(state.left || 0)}${state.adjustedLeft ? ` + ${state.adjustedLeft}px` : ``})` : undefined),
