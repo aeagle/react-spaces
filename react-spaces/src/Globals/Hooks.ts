@@ -77,7 +77,6 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 
 	if (parentContext) {
 		onRemove.current = () => {
-			console.log(`Removing ${state.id}`);
 			parentContext.removeSpaceTaker(state.id);
 		}
 
