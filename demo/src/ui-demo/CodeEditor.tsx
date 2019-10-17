@@ -6,7 +6,7 @@ import './CodeEditor.scss';
 
 export const CodeEditor = () => {
 	return (
-		<Space.Fill className="code-editor">
+		<Space.Fill className="code-editor code-editor-1">
 			<Header />
 			<Main />
 		</Space.Fill>

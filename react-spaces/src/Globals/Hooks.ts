@@ -161,20 +161,29 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	const debug =
 		parentContext ? parentContext.debug : false ||
 		props.debug !== undefined ? props.debug : false;
-		
-	const outerClasses = [
-		"spaces-space",
-		props.anchor || '',
-		resize.resizeType || '',
-		props.scrollable ? "scrollable" : '',
-		props.className ? `${props.className}-container` : '',
-		debug ? 'debug' : ''
-	]
 
-	const innerClasses = [
-		"spaces-space-inner",
-		props.className ? props.className : ''
-	]
+	const userClasses = 
+		props.className ? 
+			props.className.split(' ').map(c => c.trim()) : 
+			[];
+		
+	const outerClasses = 
+		[
+			...[
+				"spaces-space",
+				props.anchor || undefined,
+				resize.resizeType || undefined,
+				props.scrollable ? "scrollable" : undefined,
+				debug ? 'debug' : undefined
+			],
+			...userClasses.map(c => `${c}-container`)
+		].filter(c => c);
+
+	const innerClasses =
+		[
+			"spaces-space-inner", 
+			...userClasses
+		].filter(c => c);
 
 	return {
 		currentContext,
