@@ -6,6 +6,7 @@ import * as PropTypes from 'prop-types';
 
 interface IProps {
 	type: ResizeType,
+	adjustedSize: number,
 	width?: number,
 	height?: number,
 	minimumAdjust: number,
@@ -14,8 +15,6 @@ interface IProps {
 }
 
 export const Resizable : React.FC<IProps> = (props) => {
-	const [ adjustedSize, setAdjustedSize ] = React.useState(0);
-
 	const resize = (originalX: number, originalY: number, x: number, y: number) => {
 		const adjustmentX = 
 		Math.min(
@@ -29,15 +28,14 @@ export const Resizable : React.FC<IProps> = (props) => {
 			);
 		const adjustment = props.type === ResizeType.Left || props.type === ResizeType.Right ?  adjustmentX : adjustmentY;
 
-		if (adjustment !== adjustedSize) {
-			setAdjustedSize(adjustment);
+		if (adjustment !== props.adjustedSize) {
 			props.onResize(adjustment);
 		}
 	}
 
 	const startTouchResize = (e: React.TouchEvent<HTMLDivElement>) => {
-		const originalTouchX = props.type === ResizeType.Left ? e.touches[0].pageX + adjustedSize : e.touches[0].pageX - adjustedSize;
-		const originalTouchY = props.type === ResizeType.Top ? e.touches[0].pageY + adjustedSize : e.touches[0].pageY - adjustedSize;
+		const originalTouchX = props.type === ResizeType.Left ? e.touches[0].pageX + props.adjustedSize : e.touches[0].pageX - props.adjustedSize;
+		const originalTouchY = props.type === ResizeType.Top ? e.touches[0].pageY + props.adjustedSize : e.touches[0].pageY - props.adjustedSize;
 
 		const touchResize = (e: TouchEvent) => resize(originalTouchX, originalTouchY, e.touches[0].pageX, e.touches[0].pageY);
 		const debouncedTouchResize = debounce<typeof touchResize>(touchResize, 10);
@@ -49,8 +47,8 @@ export const Resizable : React.FC<IProps> = (props) => {
 	}
 
 	const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-		const originalMouseX = props.type === ResizeType.Left ? e.pageX + adjustedSize : e.pageX - adjustedSize;
-		const originalMouseY = props.type === ResizeType.Top ? e.pageY + adjustedSize : e.pageY - adjustedSize;
+		const originalMouseX = props.type === ResizeType.Left ? e.pageX + props.adjustedSize : e.pageX - props.adjustedSize;
+		const originalMouseY = props.type === ResizeType.Top ? e.pageY + props.adjustedSize : e.pageY - props.adjustedSize;
 
 		const mouseResize = (e: MouseEvent) => resize(originalMouseX, originalMouseY, e.pageX, e.pageY);
 		const debouncedMouseResize = debounce<typeof mouseResize>(mouseResize, 10);
