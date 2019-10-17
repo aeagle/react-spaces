@@ -33,6 +33,7 @@
     "@babel/core": "^7.5.5",
     "@types/jest": "^24.0.15",
     "@types/node": "^12.6.8",
+    "@types/prop-types": "^15.7.3",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
     "react": "^16.9.0",
@@ -51,7 +52,8 @@
   },
   "peerDependencies": {
     "react": "^16.8.0",
-    "react-dom": "^16.8.0"
+    "react-dom": "^16.8.0",
+    "prop-types": "^15.7.2"
   },
   "scripts": {
     "start": "rollup -c -w",

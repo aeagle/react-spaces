@@ -1,4 +1,11 @@
-import { ResizeType } from 'src/Resizable';
+import * as PropTypes from "prop-types";
+
+export enum ResizeType {
+	Left = "resize-left",
+	Right = "resize-right",
+	Top = "resize-top",
+	Bottom = "resize-bottom"
+}
 
 export enum AnchorType {
 	Left = "anchor-left",
@@ -22,9 +29,9 @@ export const AnchorToResizeTypeMap = {
 }
 
 export enum CenterType {
-	None,
-	Vertical,
-	HorizontalVertical
+	None = "none",
+	Vertical = "vertical",
+	HorizontalVertical = "horizontalVertical"
 }
 
 export interface IPublicProps {
@@ -44,6 +51,22 @@ export interface IPublicProps {
 	onMouseLeave?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
+export const publicProps = {
+	id: PropTypes.string,
+	className: PropTypes.string,
+	style: PropTypes.oneOfType([ PropTypes.object, PropTypes.array ]),
+	scrollable: PropTypes.bool,
+	trackSize: PropTypes.bool,
+	centerContent: PropTypes.oneOf([ CenterType.None, CenterType.Vertical, CenterType.HorizontalVertical ]),
+	as: PropTypes.string,
+	debug: PropTypes.bool,
+	zIndex: PropTypes.number,
+	onClick: PropTypes.func,
+	onMouseDown: PropTypes.func,
+	onMouseEnter: PropTypes.func,
+	onMouseLeave: PropTypes.func
+}
+
 export interface IPrivateProps {
 	anchorSize?: string | number,
 	anchor?: AnchorType,
@@ -51,9 +74,21 @@ export interface IPrivateProps {
 	order?: number
 }
 
+export const privateProps = {
+	anchorSize: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+	anchor: PropTypes.oneOf([ AnchorType.Bottom, AnchorType.Left, AnchorType.Right, AnchorType.Top ]),
+	resizable: PropTypes.bool,
+	order: PropTypes.number
+}
+
 export interface IAnchoredProps {
 	size: number | string,
 	order?: number
+}
+
+export const anchoredProps = {
+	size: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]).isRequired,
+	order: PropTypes.number
 }
 
 export interface IResizableProps {
@@ -61,6 +96,13 @@ export interface IResizableProps {
 	overlayHandle?: boolean,
 	minimumSize?: number,
 	maximumSize?: number
+}
+
+export const resizableProps = {
+	handleSize: PropTypes.number,
+	overlayHandle: PropTypes.bool,
+	minimumSize: PropTypes.number,
+	maximumSize: PropTypes.number
 }
 
 export interface IPositionedProps {
@@ -73,7 +115,19 @@ export interface IPositionedProps {
 	resizable?: boolean
 }
 
+export const positionedProps = {
+	left: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+	top: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+	right: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+	bottom: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+	width: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+	height: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+	resizable: PropTypes.bool
+}
+
 export type AllProps = IPublicProps & IPrivateProps & IResizableProps & IPositionedProps;
+
+export const allProps = { ...publicProps, ...privateProps, ...resizableProps, ...positionedProps };
 
 export interface IState {
 	id: string,
