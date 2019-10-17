@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Resizable, ResizeType } from '../Resizable';
-import { AnchorType, AllProps, IState, ISpaceContext, ISpaceTaker, AnchorToResizeTypeMap } from './Types';
+import { Resizable } from '../Resizable';
+import { AnchorType, AllProps, IState, ISpaceContext, ISpaceTaker, AnchorToResizeTypeMap, ResizeType } from './Types';
 
 export const getSizeString = 
 	(size: string | number) => typeof(size) === "string" ? size : `${size}px`;
@@ -114,15 +114,4 @@ export const applyResize = (props: AllProps, state: IState, setState: (stateDelt
 	}
 
 	return { resizeHandle: null, resizeType: null };
-}
-
-export const debounce = <F extends ((...args: any) => any)>(func: F, waitFor: number) => {
-    let timeout: number = 0
-
-    const debounced = (...args: any) => {
-        window.clearTimeout(timeout)
-        timeout = window.setTimeout(() => func(...args), waitFor)
-    }
-    
-    return debounced as (...args: Parameters<F>) => ReturnType<F>
 }

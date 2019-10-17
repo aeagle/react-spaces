@@ -1,13 +1,8 @@
 import * as React from 'react';
 import './Styles.css';
-import { debounce } from './Globals/Utils';
-
-export enum ResizeType {
-	Left = "resize-left",
-	Right = "resize-right",
-	Top = "resize-top",
-	Bottom = "resize-bottom"
-}
+import { debounce } from './Globals/Debounce';
+import { ResizeType } from './Globals/Types';
+import * as PropTypes from 'prop-types';
 
 interface IProps {
 	type: ResizeType,
@@ -73,4 +68,13 @@ export const Resizable : React.FC<IProps> = (props) => {
 			onMouseDown={startResize}
 			onTouchStart={startTouchResize} />
 	)
+}
+
+Resizable.propTypes = {
+	type: PropTypes.oneOf([ ResizeType.Bottom, ResizeType.Left, ResizeType.Right, ResizeType.Top ]).isRequired,
+	width: PropTypes.number,
+	height: PropTypes.number,
+	minimumAdjust: PropTypes.number.isRequired,
+	maximumAdjust: PropTypes.number,
+	onResize: PropTypes.any
 }

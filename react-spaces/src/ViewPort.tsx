@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Spaces from './Space';
 import './Styles.css';
+import * as PropTypes from "prop-types";
 
 interface IProps {
 	className?: string,
@@ -25,3 +26,11 @@ export const ViewPort : React.FC<IProps> = (props) => (
 		</Spaces.Fill>
 	</div>
 )
+
+ViewPort.propTypes = {
+	className: PropTypes.string,
+	left: PropTypes.number,
+	top: PropTypes.number,
+	right: PropTypes.number,
+	bottom: PropTypes.number
+}

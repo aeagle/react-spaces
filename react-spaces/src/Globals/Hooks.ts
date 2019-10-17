@@ -1,10 +1,9 @@
-import { AllProps, IState, AnchorTypes } from './Types';
+import { AllProps, IState, AnchorTypes, ResizeType } from './Types';
 import * as React from 'react';
 import { initialState, isHorizontalSpace, isVerticalSpace, getSizeString, isFilledSpace, applyResize, createContext } from './Utils';
 import { ResizeSensor } from 'css-element-queries';
 import { AnchorType } from './Types';
 import { SpaceContext, SpaceLayerContext } from './Contexts';
-import { ResizeType } from '../Resizable';
 
 export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<HTMLElement | undefined>) => {
 
