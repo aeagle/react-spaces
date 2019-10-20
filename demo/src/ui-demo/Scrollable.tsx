@@ -7,6 +7,7 @@ export const ScrollableDemo = () => {
 	const [ selectedKey, setSelectedKey ] = React.useState('1');
 	const [ html, setHtml ] = React.useState('');
 	const [ loading, setLoading ] = React.useState(true);
+	const [ sidebarSize, setSidebarSize] = React.useState(250);
 
 	React.useEffect(() => {
 		(async () => {
@@ -23,7 +24,7 @@ export const ScrollableDemo = () => {
 			Header
 		</Space.Top>
 		<Space.Fill>
-			<Space.LeftResizable as="aside" size="20%" handleSize={30}>
+			<Space.LeftResizable as="aside" size={sidebarSize} onResizeEnd={(newSize) => { setSidebarSize(newSize);}} handleSize={30}>
 				<Menu defaultSelectedKeys={[ selectedKey ]} onSelect={e => setSelectedKey(e.key)}>
 					<Menu.Item key="1">Menu item 1</Menu.Item>
 					<Menu.Item key="2">Menu item 2</Menu.Item>

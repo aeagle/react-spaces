@@ -14,7 +14,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	const setState = (stateDelta: Partial<IState>) => changeState(prev => ({...prev, ...stateDelta}));
 
 	const parentContext = React.useContext(SpaceContext);
-	const currentZIndex = props.zIndex || React.useContext(SpaceLayerContext) || 0;
+	const currentZIndex = props.zIndex || parentContext || 0;
 
 	// Deal with property changes to size / anchoring 
 	React.useEffect(() => {
@@ -147,7 +147,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	const handleSize = props.handleSize || 5;
 	const overlayHandle = props.overlayHandle !== undefined ? props.overlayHandle : true;
 
-	const resize = applyResize(props, state, setState, parentContext, handleSize);
+	const resize = applyResize(props, state, setState, parentContext, handleSize, divElementRef);
 	
 	const innerStyle = 
 		{
