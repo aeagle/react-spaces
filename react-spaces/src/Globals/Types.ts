@@ -95,14 +95,18 @@ export interface IResizableProps {
 	handleSize?: number,
 	overlayHandle?: boolean,
 	minimumSize?: number,
-	maximumSize?: number
+	maximumSize?: number,
+	onResizeStart?: () => void,
+	onResizeEnd?: (newSize: number) => void
 }
 
 export const resizableProps = {
 	handleSize: PropTypes.number,
 	overlayHandle: PropTypes.bool,
 	minimumSize: PropTypes.number,
-	maximumSize: PropTypes.number
+	maximumSize: PropTypes.number,
+	onResizeStart: PropTypes.func,
+	onResizeEnd: PropTypes.func
 }
 
 export interface IPositionedProps {

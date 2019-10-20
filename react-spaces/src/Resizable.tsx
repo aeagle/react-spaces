@@ -11,16 +11,18 @@ interface IProps {
 	height?: number,
 	minimumAdjust: number,
 	maximumAdjust?: number,
-	onResize: (adjustedSize: number) => void
+	onResize: (adjustedSize: number) => void,
+	onResizeStart?: () => void,
+	onResizeEnd?: () => void
 }
 
 export const Resizable : React.FC<IProps> = (props) => {
 	const resize = (originalX: number, originalY: number, x: number, y: number) => {
 		const adjustmentX = 
-		Math.min(
-			Math.max(props.type === ResizeType.Left ? originalX - x : x - originalX, props.minimumAdjust),
-			props.maximumAdjust || 999999
-		);
+			Math.min(
+				Math.max(props.type === ResizeType.Left ? originalX - x : x - originalX, props.minimumAdjust),
+				props.maximumAdjust || 999999
+			);
 		const adjustmentY = 
 			Math.min(
 				Math.max(props.type === ResizeType.Top ? originalY - y : y - originalY, props.minimumAdjust),
@@ -36,27 +38,45 @@ export const Resizable : React.FC<IProps> = (props) => {
 	const startTouchResize = (e: React.TouchEvent<HTMLDivElement>) => {
 		const originalTouchX = props.type === ResizeType.Left ? e.touches[0].pageX + props.adjustedSize : e.touches[0].pageX - props.adjustedSize;
 		const originalTouchY = props.type === ResizeType.Top ? e.touches[0].pageY + props.adjustedSize : e.touches[0].pageY - props.adjustedSize;
+		let resizing = true;
+		let moved = false;
 
-		const touchResize = (e: TouchEvent) => resize(originalTouchX, originalTouchY, e.touches[0].pageX, e.touches[0].pageY);
+		const touchResize = (e: TouchEvent) => resizing && resize(originalTouchX, originalTouchY, e.touches[0].pageX, e.touches[0].pageY);
 		const debouncedTouchResize = debounce<typeof touchResize>(touchResize, 10);
-		const withPreventDefault = (e: TouchEvent) => { e.preventDefault(); e.stopImmediatePropagation(); debouncedTouchResize(e); };
+		const withPreventDefault = (e: TouchEvent) => { moved = true; e.preventDefault(); e.stopImmediatePropagation(); debouncedTouchResize(e); };
+		const removeListener = () => {
+			resizing = false;
+			window.removeEventListener('touchmove', withPreventDefault);
+			window.removeEventListener('touchend', removeListener);
+			moved && props.onResizeEnd && props.onResizeEnd();
+		};
 		window.addEventListener('touchmove', withPreventDefault);
-		window.addEventListener('touchend', () => window.removeEventListener('touchmove', withPreventDefault));
+		window.addEventListener('touchend', removeListener);
 		e.preventDefault();
 		e.stopPropagation();
+		props.onResizeStart && props.onResizeStart();
 	}
 
 	const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		const originalMouseX = props.type === ResizeType.Left ? e.pageX + props.adjustedSize : e.pageX - props.adjustedSize;
 		const originalMouseY = props.type === ResizeType.Top ? e.pageY + props.adjustedSize : e.pageY - props.adjustedSize;
+		let resizing = true;
+		let moved = false;
 
-		const mouseResize = (e: MouseEvent) => resize(originalMouseX, originalMouseY, e.pageX, e.pageY);
+		const mouseResize = (e: MouseEvent) => resizing && resize(originalMouseX, originalMouseY, e.pageX, e.pageY);
 		const debouncedMouseResize = debounce<typeof mouseResize>(mouseResize, 10);
-		const withPreventDefault = (e: MouseEvent) => { e.preventDefault(); e.stopImmediatePropagation(); debouncedMouseResize(e); };
+		const withPreventDefault = (e: MouseEvent) => { moved = true; e.preventDefault(); e.stopImmediatePropagation(); debouncedMouseResize(e); };
+		const removeListener = () => {
+			resizing = false;
+			window.removeEventListener('mousemove', withPreventDefault);
+			window.removeEventListener('mouseup', removeListener);
+			moved && props.onResizeEnd && props.onResizeEnd();
+		};
 		window.addEventListener('mousemove', withPreventDefault);
-		window.addEventListener('mouseup', () => window.removeEventListener('mousemove', withPreventDefault));
+		window.addEventListener('mouseup', removeListener);
 		e.preventDefault();
 		e.stopPropagation();
+		props.onResizeStart && props.onResizeStart();
 	}
 
 	return (

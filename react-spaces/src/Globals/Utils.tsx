@@ -89,7 +89,13 @@ export const createContext = (
 	return context;
 }
 
-export const applyResize = (props: AllProps, state: IState, setState: (stateDelta: Partial<IState>) => void, parentContext: ISpaceContext | null, handleSize: number) => {
+export const applyResize = (
+	props: AllProps, 
+	state: IState, 
+	setState: (stateDelta: Partial<IState>) => void, 
+	parentContext: ISpaceContext | null, 
+	handleSize: number,
+	divElementRef: React.MutableRefObject<HTMLElement | undefined>) => {
 
 	if (parentContext && props.anchor && props.resizable) {
 		const resizeType = AnchorToResizeTypeMap[props.anchor];
@@ -108,6 +114,16 @@ export const applyResize = (props: AllProps, state: IState, setState: (stateDelt
 					onResize={(adjustedSize) => { 
 						setState({ adjustedSize: adjustedSize });
 						parentContext.updateSpaceTakerAdjustedSize(state.id, adjustedSize);
+					}}
+					onResizeStart={() => props.onResizeStart && props.onResizeStart()}
+					onResizeEnd={() => {
+						if (divElementRef.current)
+						{
+							const currentRect = divElementRef.current.getBoundingClientRect();
+							props.onResizeEnd && props.onResizeEnd(
+								resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height
+							);
+						}
 					}} />,
 			resizeType: 
 				resizeType

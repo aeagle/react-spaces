@@ -81,8 +81,7 @@ const IconPane = () => {
 
 const SideBar : React.FC<{ wide: boolean, visible: boolean }> = (props) => {
 	return (
-		props.visible ?
-		<Space.LeftResizable order={2} className="side-bar" size={props.wide ? 500 : 300} handleSize={2} overlayHandle={false} style={{ backgroundColor: '#252526' }}>
+		<Space.LeftResizable order={2} className="side-bar" size={props.visible ? (props.wide ? 500 : 300) : 0} handleSize={2} overlayHandle={false} style={{ backgroundColor: '#252526' }}>
 			<SideBarPane order={1} title="Open editors" height={200}>
 
 			</SideBarPane>
@@ -92,8 +91,7 @@ const SideBar : React.FC<{ wide: boolean, visible: boolean }> = (props) => {
 			<SideBarPane fill={true} title="Outline">
 				
 			</SideBarPane>
-		</Space.LeftResizable> :
-		null
+		</Space.LeftResizable>
 	)
 }
 
