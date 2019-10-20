@@ -14,7 +14,8 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	const setState = (stateDelta: Partial<IState>) => changeState(prev => ({...prev, ...stateDelta}));
 
 	const parentContext = React.useContext(SpaceContext);
-	const currentZIndex = props.zIndex || parentContext || 0;
+	const layerContext = React.useContext(SpaceLayerContext);
+	const currentZIndex = props.zIndex || layerContext || 0;
 
 	// Deal with property changes to size / anchoring 
 	React.useEffect(() => {
