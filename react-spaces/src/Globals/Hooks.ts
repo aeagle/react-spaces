@@ -16,6 +16,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	const parentContext = React.useContext(SpaceContext);
 	const layerContext = React.useContext(SpaceLayerContext);
 	const currentZIndex = props.zIndex || layerContext || 0;
+	const previouszIndex = usePrevious(currentZIndex);
 
 	// Deal with property changes to size / anchoring 
 	React.useEffect(() => {
@@ -32,8 +33,11 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		})
 		if (parentContext) {
 			parentContext.updateSpaceTakerAdjustedSize(state.id, 0);
+			if (currentZIndex !== previouszIndex) {
+				parentContext.updateSpaceTakerLayer(state.id, currentZIndex);
+			}
 		}
-	}, [ props.zIndex, props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor, props.anchorSize, props.debug ]);
+	}, [ currentZIndex, props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor, props.anchorSize, props.debug ]);
 
 	// Setup / cleanup
 	React.useEffect(() => {
@@ -198,6 +202,20 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		currentWidth: state.currentWidth,
 		currentHeight: state.currentHeight
 	} 
+}
+
+function usePrevious<T>(value: T) {
+	// The ref object is a generic container whose current property is mutable ...
+	// ... and can hold any value, similar to an instance property on a class
+	const ref = React.useRef<T>();
+	
+	// Store current value in ref
+	React.useEffect(() => {
+	  ref.current = value;
+	}, [value]); // Only re-run if value changes
+	
+	// Return previous value (happens before update in useEffect above)
+	return ref.current;
 }
 
 export const useParentSpace = () => {

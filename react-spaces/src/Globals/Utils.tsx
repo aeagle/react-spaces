@@ -71,6 +71,9 @@ export const createContext = (
 		updateSpaceTakerAdjustedSize:
 			(id: string, adjustedSize: number) =>
 				setState({ spaceTakers: state.spaceTakers.map(t => t.id === id ? {...t, ...{ adjustedSize: adjustedSize }} : t) }),
+		updateSpaceTakerLayer:
+			(id: string, zIndex: number) =>
+				setState({ spaceTakers: state.spaceTakers.map(t => t.id === id ? {...t, ...{ zIndex: zIndex }} : t) }),
 		updateDebug:
 			(id: string, debug: boolean) =>
 				setState({ spaceTakers: state.spaceTakers.map(t => t.id === id ? {...t, ...{ debug: debug }} : t) }),

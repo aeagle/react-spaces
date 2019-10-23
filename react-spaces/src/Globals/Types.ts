@@ -162,6 +162,7 @@ export interface ISpaceContext {
 	registerSpaceTaker: (spaceTaker: ISpaceTaker) => void,
 	removeSpaceTaker: (id: string) => void,
 	updateSpaceTakerAdjustedSize: (id: string, adjustedSize: number) => void,
+	updateSpaceTakerLayer: (id: string, zIndex: number) => void,
 	updateDebug: (id: string, debug: boolean) => void,
 	startDrag: (e: React.MouseEvent) => void
 }
