@@ -26,7 +26,7 @@ RightResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps}
 export const Positioned : React.FC<IPublicProps & IResizableProps & IPositionedProps> = (props) => <SpaceInternal {...props} />
 RightResizable.propTypes = {...publicProps, ...resizableProps, ...positionedProps};
 
-const SpaceInternal : React.FC<AllProps> = (props) => {
+export const SpaceInternal : React.FC<AllProps> = (props) => {
 
 	const divElementRef = React.useRef<HTMLDivElement>();
 
@@ -38,7 +38,8 @@ const SpaceInternal : React.FC<AllProps> = (props) => {
 		innerClasses,
 		resizeHandle,
 		currentWidth,
-		currentHeight
+		currentHeight,
+		state
 	} = useSpace(props, divElementRef);
 	
 	let children = props.children;
@@ -53,25 +54,27 @@ const SpaceInternal : React.FC<AllProps> = (props) => {
 		<SpaceContext.Provider value={currentContext}>
 			<SpaceInfoContext.Provider value={{ width: Math.floor(currentWidth), height: Math.floor(currentHeight) }}>
 				{
-					React.createElement(
-						props.as || 'div',
-						{
-							id: props.id,
-							ref: divElementRef,
-							className: outerClasses.join(' '),
-							style: outerStyle,
-							onClick: props.onClick,
-							onMouseDown: props.onMouseDown,
-							onMouseEnter: props.onMouseEnter,
-							onMouseLeave: props.onMouseLeave
-						},
-						<>
-							{ resizeHandle }
-							<div className={innerClasses.join(' ')} style={innerStyle}>
-								{ children }
-							</div>
-						</>
-					)
+					props.topMost ?
+						children :
+						React.createElement(
+							props.as || 'div',
+							{
+								id: state.id,
+								ref: divElementRef,
+								className: outerClasses.join(' '),
+								style: outerStyle,
+								onClick: props.onClick,
+								onMouseDown: props.onMouseDown,
+								onMouseEnter: props.onMouseEnter,
+								onMouseLeave: props.onMouseLeave
+							},
+							<>
+								{ resizeHandle }
+								<div className={innerClasses.join(' ')} style={innerStyle}>
+									{ children }
+								</div>
+							</>
+						)
 				}
 			</SpaceInfoContext.Provider>
 		</SpaceContext.Provider>

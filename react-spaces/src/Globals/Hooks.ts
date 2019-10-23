@@ -200,7 +200,8 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		innerStyle,
 		innerClasses,
 		currentWidth: state.currentWidth,
-		currentHeight: state.currentHeight
+		currentHeight: state.currentHeight,
+		state
 	} 
 }
 

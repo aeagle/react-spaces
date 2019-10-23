@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as Spaces from './Space';
 import './Styles.css';
 import * as PropTypes from "prop-types";
+import { SpaceInternal } from './Space';
 
 interface IProps {
 	className?: string,
@@ -20,10 +20,9 @@ export const ViewPort : React.FC<IProps> = (props) => (
 			right: props.right || 0, 
 			bottom: props.bottom || 0
 		}}>
-
-		<Spaces.Fill>
+		<SpaceInternal topMost={true}>
 			{props.children}
-		</Spaces.Fill>
+		</SpaceInternal>
 	</div>
 )
 

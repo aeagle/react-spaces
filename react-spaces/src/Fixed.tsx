@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as Spaces from './Space';
 import './Styles.css';
 import * as PropTypes from "prop-types";
+import { SpaceInternal } from './Space';
 
 interface IProps {
 	className?: string,
@@ -23,10 +23,9 @@ export const Fixed : React.FC<IProps> = (props) => {
 	<div 
 		className={`spaces-fixedsize-layout${props.className ? ` ${props.className}` : ``}`}
 		style={style}>
-
-		<Spaces.Fill>
+		<SpaceInternal topMost={true}>
 			{props.children}
-		</Spaces.Fill>
+		</SpaceInternal>
 	</div>
 	)
 }

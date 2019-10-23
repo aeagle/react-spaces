@@ -71,14 +71,16 @@ export interface IPrivateProps {
 	anchorSize?: string | number,
 	anchor?: AnchorType,
 	resizable?: boolean,
-	order?: number
+	order?: number,
+	topMost?: boolean
 }
 
 export const privateProps = {
 	anchorSize: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
 	anchor: PropTypes.oneOf([ AnchorType.Bottom, AnchorType.Left, AnchorType.Right, AnchorType.Top ]),
 	resizable: PropTypes.bool,
-	order: PropTypes.number
+	order: PropTypes.number,
+	topMost: PropTypes.bool
 }
 
 export interface IAnchoredProps {
