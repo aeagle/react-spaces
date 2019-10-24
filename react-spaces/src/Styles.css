@@ -63,11 +63,9 @@
 .spaces-space {
 	position: absolute;
 	overflow: hidden;
-	z-index: 1;
 }
 
 .spaces-space .spaces-space-inner {
-	z-index: 1;
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -75,6 +73,7 @@
 	bottom: 0;
 }
 
-.spaces-space.scrollable .spaces-space-inner {
+.spaces-space.scrollable .spaces-space-inner, 
+.spaces-space.scrollable-a {
 	overflow: auto;
 }

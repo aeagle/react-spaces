@@ -14,7 +14,7 @@
 		}
 	}
 
-	.bottom-pane-container {
+	.bottom-pane {
 		.spaces-resize-handle {
 			background-color: #333 !important;
 		}
@@ -28,9 +28,7 @@
 		}
 	}
 
-	.side-bar-container {
-		.resize-right {
-			background-color: #333 !important;
-		}
+	.side-bar {
+		background-color: #333 !important;
 	}
 }

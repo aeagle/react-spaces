@@ -4,6 +4,7 @@ import { SpaceContext, SpaceInfoContext } from './Globals/Contexts';
 import { useSpace } from './Globals/Hooks';
 import './Styles.css';
 import { CenteredVertically, Centered } from './Centered';
+import * as ReactDOM from 'react-dom';
 
 export const Fill : React.FC<IPublicProps> = (props) => <SpaceInternal {...props} />
 Fill.propTypes = publicProps;
@@ -55,29 +56,61 @@ export const SpaceInternal : React.FC<AllProps> = (props) => {
 			<SpaceInfoContext.Provider value={{ width: Math.floor(currentWidth), height: Math.floor(currentHeight) }}>
 				{
 					props.topMost ?
-						children :
-						React.createElement(
-							props.as || 'div',
-							{
-								id: state.id,
-								ref: divElementRef,
-								className: outerClasses.join(' '),
-								style: outerStyle,
-								onClick: props.onClick,
-								onMouseDown: props.onMouseDown,
-								onMouseEnter: props.onMouseEnter,
-								onMouseLeave: props.onMouseLeave
-							},
-							<>
-								{ resizeHandle }
-								<div className={innerClasses.join(' ')} style={innerStyle}>
+						<>
+							{ children }
+						</> :
+						resizeHandle && props.scrollable ?
+							React.createElement(
+								props.as || 'div',
+								{
+									id: state.id,
+									ref: divElementRef,
+									className: outerClasses.join(' '),
+									onClick: props.onClick,
+									onMouseDown: props.onMouseDown,
+									onMouseEnter: props.onMouseEnter,
+									onMouseLeave: props.onMouseLeave
+								},
+								<>
+									<HeadStyles id={state.id} style={outerStyle} />
+									{ resizeHandle }
+									<div 
+										className={innerClasses.join(' ')} 
+										style={innerStyle}>
+										{ children }
+									</div>
+								</>
+							) :
+							React.createElement(
+								props.as || 'div',
+								{
+									id: state.id,
+									ref: divElementRef,
+									className: outerClasses.join(' '),
+									style: innerStyle,
+									onClick: props.onClick,
+									onMouseDown: props.onMouseDown,
+									onMouseEnter: props.onMouseEnter,
+									onMouseLeave: props.onMouseLeave
+								},
+								<>
+									<HeadStyles id={state.id} style={outerStyle} />
+									{ resizeHandle }
 									{ children }
-								</div>
-							</>
-						)
+								</>
+							)
 				}
 			</SpaceInfoContext.Provider>
 		</SpaceContext.Provider>
 	)
 }
+
+const HeadStyles : React.FC<{ id: string, style: React.CSSProperties }> = (props) => {
+	const { style } = props;
+	return ReactDOM.createPortal(
+		<style key={props.id}>{ `#${props.id} {` } { style.left ? `left: ${style.left};` : "" } { style.top ? `top: ${style.top};` : "" } { style.right ? `right: ${style.right};` : "" } { style.bottom ? `bottom: ${style.bottom};` : "" } { style.width ? `width: ${style.width};` : "" } { style.height ? `height: ${style.height};` : "" } { style.zIndex ? `z-index: ${style.zIndex};` : "" } { `}`}</style>,
+		window.document.head
+	);
+}
+
 SpaceInternal.propTypes = allProps;

@@ -1,6 +1,6 @@
 import { AllProps, IState, AnchorTypes, ResizeType } from './Types';
 import * as React from 'react';
-import { initialState, isHorizontalSpace, isVerticalSpace, getSizeString, isFilledSpace, applyResize, createContext } from './Utils';
+import { initialState, isHorizontalSpace, isVerticalSpace, getSizeString, isFilledSpace, applyResize, createContext, cssValue } from './Utils';
 import { ResizeSensor } from 'css-element-queries';
 import { AnchorType } from './Types';
 import { SpaceContext, SpaceLayerContext } from './Contexts';
@@ -70,12 +70,12 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	})
 
 	const outerStyle = {
-		left: (state.left !== undefined ? `calc(${getSizeString(state.left || 0)}${state.adjustedLeft ? ` + ${state.adjustedLeft}px` : ``})` : undefined),
-		top: (state.top !== undefined ? `calc(${getSizeString(state.top || 0)}${state.adjustedTop ? ` + ${state.adjustedTop}px` : ``})` : undefined),
-		right: (state.right !== undefined ? `calc(${getSizeString(state.right || 0)}${state.adjustedLeft ? ` - ${state.adjustedLeft}px` : ``})` : undefined),
-		bottom: (state.bottom !== undefined ? `calc(${getSizeString(state.bottom || 0)}${state.adjustedTop ? ` - ${state.adjustedTop}px` : ``})` : undefined),
-		width: isHorizontalSpace(props) ? `calc(${getSizeString(props.anchorSize || 0)} + ${state.adjustedSize}px)` : state.width,
-		height: isVerticalSpace(props) ? `calc(${getSizeString(props.anchorSize || 0)} + ${state.adjustedSize}px)` : state.height,
+		left: (state.left !== undefined ? cssValue(state.left, state.adjustedLeft) : undefined),
+		top: (state.top !== undefined ? cssValue(state.top, state.adjustedTop) : undefined),
+		right: (state.right !== undefined ? cssValue(state.right, state.adjustedLeft) : undefined),
+		bottom: (state.bottom !== undefined ? cssValue(state.bottom, state.adjustedTop) : undefined),
+		width: isHorizontalSpace(props) ? cssValue(props.anchorSize, state.adjustedSize) : state.width,
+		height: isVerticalSpace(props) ? cssValue(props.anchorSize, state.adjustedSize) : state.height,
 		zIndex: currentZIndex,
 	};
 
@@ -100,7 +100,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 			{
 				const t = spaceTakers[i];
 				if (t.id !== state.id) {
-					const adjustedSize = t.adjustedSize !== 0 ?` + ${t.adjustedSize}px` : ``;
+					const adjustedSize = t.adjustedSize !== 0 ? ` + ${getSizeString(t.adjustedSize)}` : ``;
 					if (isFilledSpace(props))
 					{
 						if (t.anchorType === AnchorType.Top) {
@@ -178,12 +178,11 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		[
 			...[
 				"spaces-space",
-				props.anchor || undefined,
 				resize.resizeType || undefined,
-				props.scrollable ? "scrollable" : undefined,
+				props.scrollable ? (resize.resizeHandle ? "scrollable" : "scrollable-a") : undefined,
 				debug ? 'debug' : undefined
 			],
-			...userClasses.map(c => `${c}-container`)
+			...(resize.resizeHandle && props.scrollable ? userClasses.map(c => `${c}-container`) : userClasses)
 		].filter(c => c);
 
 	const innerClasses =
