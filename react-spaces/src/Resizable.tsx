@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './Styles.css';
-import { debounce } from './Globals/Debounce';
+import { throttle } from './Globals/Throttle';
 import { ResizeType } from './Globals/Types';
 import * as PropTypes from 'prop-types';
 
@@ -15,6 +15,8 @@ interface IProps {
 	onResizeStart?: () => void,
 	onResizeEnd?: () => void
 }
+
+const RESIZE_THROTTLE = 10;
 
 export const Resizable : React.FC<IProps> = (props) => {
 	const resize = (originalX: number, originalY: number, x: number, y: number) => {
@@ -42,8 +44,8 @@ export const Resizable : React.FC<IProps> = (props) => {
 		let moved = false;
 
 		const touchResize = (e: TouchEvent) => resizing && resize(originalTouchX, originalTouchY, e.touches[0].pageX, e.touches[0].pageY);
-		const debouncedTouchResize = debounce<typeof touchResize>(touchResize, 10);
-		const withPreventDefault = (e: TouchEvent) => { moved = true; e.preventDefault(); e.stopImmediatePropagation(); debouncedTouchResize(e); };
+		const throttledTouchResize = throttle<typeof touchResize>(touchResize, RESIZE_THROTTLE);
+		const withPreventDefault = (e: TouchEvent) => { moved = true; e.preventDefault(); e.stopImmediatePropagation(); throttledTouchResize(e); };
 		const removeListener = () => {
 			resizing = false;
 			window.removeEventListener('touchmove', withPreventDefault);
@@ -64,8 +66,8 @@ export const Resizable : React.FC<IProps> = (props) => {
 		let moved = false;
 
 		const mouseResize = (e: MouseEvent) => resizing && resize(originalMouseX, originalMouseY, e.pageX, e.pageY);
-		const debouncedMouseResize = debounce<typeof mouseResize>(mouseResize, 10);
-		const withPreventDefault = (e: MouseEvent) => { moved = true; e.preventDefault(); e.stopImmediatePropagation(); debouncedMouseResize(e); };
+		const throttledMouseResize = throttle<typeof mouseResize>(mouseResize, RESIZE_THROTTLE);
+		const withPreventDefault = (e: MouseEvent) => { moved = true; e.preventDefault(); e.stopImmediatePropagation(); throttledMouseResize(e); };
 		const removeListener = () => {
 			resizing = false;
 			window.removeEventListener('mousemove', withPreventDefault);
