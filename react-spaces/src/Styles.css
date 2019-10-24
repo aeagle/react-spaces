@@ -30,6 +30,7 @@
 .spaces-resize-handle {
 	position: absolute;
 	z-index: 9999;
+	touch-action: none;
 }
 
 .spaces-resize-handle.resize-left {
@@ -63,6 +64,7 @@
 .spaces-space {
 	position: absolute;
 	overflow: hidden;
+	touch-action: none;
 }
 
 .spaces-space .spaces-space-inner {
@@ -76,4 +78,5 @@
 .spaces-space.scrollable .spaces-space-inner, 
 .spaces-space.scrollable-a {
 	overflow: auto;
+	touch-action: auto;
 }
