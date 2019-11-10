@@ -23,14 +23,15 @@ export const Resizable : React.FC<IProps> = (props) => {
 		const adjustmentX = 
 			Math.min(
 				Math.max(props.type === ResizeType.Left ? originalX - x : x - originalX, props.minimumAdjust),
-				props.maximumAdjust || 999999
+				props.maximumAdjust === undefined ? 999999 : props.maximumAdjust
 			);
 		const adjustmentY = 
 			Math.min(
 				Math.max(props.type === ResizeType.Top ? originalY - y : y - originalY, props.minimumAdjust),
-				props.maximumAdjust || 999999
+				props.maximumAdjust === undefined ? 999999 : props.maximumAdjust
 			);
-		const adjustment = props.type === ResizeType.Left || props.type === ResizeType.Right ?  adjustmentX : adjustmentY;
+
+		const adjustment = props.type === ResizeType.Left || props.type === ResizeType.Right ? adjustmentX : adjustmentY;
 
 		if (adjustment !== props.adjustedSize) {
 			props.onResize(adjustment);
@@ -96,5 +97,7 @@ Resizable.propTypes = {
 	height: PropTypes.number,
 	minimumAdjust: PropTypes.number.isRequired,
 	maximumAdjust: PropTypes.number,
-	onResize: PropTypes.any
+	onResize: PropTypes.any,
+	onResizeStart: PropTypes.func,
+	onResizeEnd: PropTypes.func
 }

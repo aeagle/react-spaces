@@ -141,7 +141,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		props.anchor && parentContext.registerSpaceTaker({
 			id: state.id,
 			zIndex: currentZIndex,
-			order: props.order || 1,
+			order: props.order === undefined ? 1 : props.order,
 			anchorType: props.anchor,
 			size: props.anchorSize || 0,
 			adjustedSize: 0
@@ -149,7 +149,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	}
 
 	const currentContext = createContext(state, setState, parentContext, currentZIndex);
-	const handleSize = props.handleSize || 5;
+	const handleSize = props.handleSize === undefined ? 5 : props.handleSize;
 	const overlayHandle = props.overlayHandle !== undefined ? props.overlayHandle : true;
 
 	const resize = applyResize(props, state, setState, parentContext, handleSize, divElementRef);

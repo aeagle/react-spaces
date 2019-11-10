@@ -106,8 +106,8 @@ export const applyResize = (
 
 	if (parentContext && props.anchor && props.resizable) {
 		const resizeType = AnchorToResizeTypeMap[props.anchor];
-		const resizeHandleWidth = resizeType === ResizeType.Left || resizeType === ResizeType.Right ? props.handleSize || 5 : undefined;
-		const resizeHandleHeight = resizeType === ResizeType.Top || resizeType === ResizeType.Bottom ? props.handleSize || 5 : undefined;
+		const resizeHandleWidth = resizeType === ResizeType.Left || resizeType === ResizeType.Right ? handleSize : undefined;
+		const resizeHandleHeight = resizeType === ResizeType.Top || resizeType === ResizeType.Bottom ? handleSize : undefined;
 		
 		return {
 			resizeHandle:
@@ -116,7 +116,7 @@ export const applyResize = (
 					adjustedSize={state.adjustedSize} 
 					width={resizeHandleWidth}
 					height={resizeHandleHeight}
-					minimumAdjust={ (props.minimumSize || 20) - (state.parsedSize || 0) }
+					minimumAdjust={ (props.minimumSize === undefined ? 20 : props.minimumSize) - (state.parsedSize || 0) }
 					maximumAdjust={ props.maximumSize ? (props.maximumSize - (state.parsedSize || 0)) : undefined }
 					onResize={(adjustedSize) => { 
 						setState({ adjustedSize: adjustedSize });
@@ -128,7 +128,7 @@ export const applyResize = (
 						{
 							const currentRect = divElementRef.current.getBoundingClientRect();
 							props.onResizeEnd && props.onResizeEnd(
-								resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height
+								Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height)
 							);
 						}
 					}} />,
