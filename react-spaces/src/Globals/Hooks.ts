@@ -14,11 +14,20 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	const setState = (stateDelta: Partial<IState>) => changeState(prev => ({...prev, ...stateDelta}));
 
 	const parentContext = React.useContext(SpaceContext);
-	const layerContext = React.useContext(SpaceLayerContext);
+	const layerContext = React.useContext(SpaceLayerContext); 
 	const currentZIndex = props.zIndex || layerContext || 0;
-	const previouszIndex = usePrevious(currentZIndex);
 
 	// Deal with property changes to size / anchoring 
+	React.useEffect(() => {
+		setState({
+			parsedSize: typeof props.anchorSize === "string" ? 0 : props.anchorSize as number | undefined,
+			width: isHorizontalSpace(props) ? props.anchorSize || 0 : props.width,
+			height: isVerticalSpace(props) ? props.anchorSize || 0 : props.height,
+			adjustedSize: 0
+		});
+		parentContext && parentContext.updateSpaceTakerAdjustedSize(state.id, 0);
+	}, [ props.anchorSize ]);
+
 	React.useEffect(() => {
 		setState({
 			parsedSize: typeof props.anchorSize === "string" ? 0 : props.anchorSize as number | undefined,
@@ -27,18 +36,14 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 			right: props.anchor !== AnchorType.Left ? props.right || 0 : undefined,
 			bottom: props.anchor !== AnchorType.Top ? props.bottom || 0 : undefined,
 			width: isHorizontalSpace(props) ? props.anchorSize || 0 : props.width,
-			height: isVerticalSpace(props) ? props.anchorSize || 0 : props.height,
-			debug: props.debug !== undefined ? props.debug : false,
-			adjustedSize: 0
-		})
-		if (parentContext) {
-			parentContext.updateSpaceTakerAdjustedSize(state.id, 0);
-			if (currentZIndex !== previouszIndex) {
-				parentContext.updateSpaceTakerLayer(state.id, currentZIndex);
-			}
-		}
-	}, [ currentZIndex, props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor, props.anchorSize, props.debug ]);
+			height: isVerticalSpace(props) ? props.anchorSize || 0 : props.height
+		});
+	}, [ props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor ]);
 
+	React.useEffect(() => {
+		parentContext && parentContext.updateSpaceTakerLayer(state.id, currentZIndex);
+	}, [ currentZIndex ]);
+	
 	// Setup / cleanup
 	React.useEffect(() => {
 		if (divElementRef.current) {
@@ -103,25 +108,25 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 					const adjustedSize = t.adjustedSize !== 0 ? ` + ${getSizeString(t.adjustedSize)}` : ``;
 					if (isFilledSpace(props))
 					{
-						if (t.anchorType === AnchorType.Top) {
+						if (t.anchorType === AnchorType.Top && t.size) {
 							adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Left) {
+						} else if (t.anchorType === AnchorType.Left && t.size) {
 							adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Bottom) {
+						} else if (t.anchorType === AnchorType.Bottom && t.size) {
 							adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Right) {
+						} else if (t.anchorType === AnchorType.Right && t.size) {
 							adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
 						}
 					}
 					else
 					{
-						if (t.anchorType === AnchorType.Top && outerStyle.top !== undefined) {
+						if (t.anchorType === AnchorType.Top && t.size && outerStyle.top !== undefined) {
 							adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Left && outerStyle.left !== undefined) {
+						} else if (t.anchorType === AnchorType.Left && t.size && outerStyle.left !== undefined) {
 							adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Bottom && outerStyle.bottom !== undefined) {
+						} else if (t.anchorType === AnchorType.Bottom && t.size && outerStyle.bottom !== undefined) {
 							adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Right && outerStyle.right !== undefined) {
+						} else if (t.anchorType === AnchorType.Right && t.size && outerStyle.right !== undefined) {
 							adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
 						}
 					}
@@ -178,7 +183,6 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		[
 			...[
 				"spaces-space",
-				resize.resizeType || undefined,
 				props.scrollable ? (resize.resizeHandle ? "scrollable" : "scrollable-a") : undefined,
 				debug ? 'debug' : undefined
 			],
@@ -202,20 +206,6 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		currentHeight: state.currentHeight,
 		state
 	} 
-}
-
-function usePrevious<T>(value: T) {
-	// The ref object is a generic container whose current property is mutable ...
-	// ... and can hold any value, similar to an instance property on a class
-	const ref = React.useRef<T>();
-	
-	// Store current value in ref
-	React.useEffect(() => {
-	  ref.current = value;
-	}, [value]); // Only re-run if value changes
-	
-	// Return previous value (happens before update in useEffect above)
-	return ref.current;
 }
 
 export const useParentSpace = () => {
