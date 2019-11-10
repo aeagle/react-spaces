@@ -41,13 +41,23 @@ export const Resizable : React.FC<IProps> = (props) => {
 	const startTouchResize = (e: React.TouchEvent<HTMLDivElement>) => {
 		const originalTouchX = props.type === ResizeType.Left ? e.touches[0].pageX + props.adjustedSize : e.touches[0].pageX - props.adjustedSize;
 		const originalTouchY = props.type === ResizeType.Top ? e.touches[0].pageY + props.adjustedSize : e.touches[0].pageY - props.adjustedSize;
+		let lastX = 0;
+		let lastY = 0;
 		let resizing = true;
 		let moved = false;
 
-		const touchResize = (e: TouchEvent) => resizing && resize(originalTouchX, originalTouchY, e.touches[0].pageX, e.touches[0].pageY);
+		const touchResize = (x: number, y: number) => resizing && resize(originalTouchX, originalTouchY, x, y);
 		const throttledTouchResize = throttle<typeof touchResize>(touchResize, RESIZE_THROTTLE);
-		const withPreventDefault = (e: TouchEvent) => { moved = true; e.preventDefault(); e.stopImmediatePropagation(); throttledTouchResize(e); };
+		const withPreventDefault = (e: TouchEvent) => { 
+			moved = true; 
+			lastX = e.touches[0].pageX; 
+			lastY = e.touches[0].pageY; 
+			e.preventDefault(); 
+			e.stopImmediatePropagation(); 
+			throttledTouchResize(lastX, lastY); 
+	};
 		const removeListener = () => {
+			touchResize(lastX, lastY);
 			resizing = false;
 			window.removeEventListener('touchmove', withPreventDefault);
 			window.removeEventListener('touchend', removeListener);
@@ -63,13 +73,23 @@ export const Resizable : React.FC<IProps> = (props) => {
 	const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		const originalMouseX = props.type === ResizeType.Left ? e.pageX + props.adjustedSize : e.pageX - props.adjustedSize;
 		const originalMouseY = props.type === ResizeType.Top ? e.pageY + props.adjustedSize : e.pageY - props.adjustedSize;
+		let lastX = 0;
+		let lastY = 0;
 		let resizing = true;
 		let moved = false;
 
-		const mouseResize = (e: MouseEvent) => resizing && resize(originalMouseX, originalMouseY, e.pageX, e.pageY);
+		const mouseResize = (x: number, y: number) => resizing && resize(originalMouseX, originalMouseY, x, y);
 		const throttledMouseResize = throttle<typeof mouseResize>(mouseResize, RESIZE_THROTTLE);
-		const withPreventDefault = (e: MouseEvent) => { moved = true; e.preventDefault(); e.stopImmediatePropagation(); throttledMouseResize(e); };
+		const withPreventDefault = (e: MouseEvent) => { 
+			moved = true; 
+			lastX = e.pageX;
+			lastY = e.pageY;
+			e.preventDefault(); 
+			e.stopImmediatePropagation(); 
+			throttledMouseResize(lastX, lastY); 
+		};
 		const removeListener = () => {
+			mouseResize(lastX, lastY);
 			resizing = false;
 			window.removeEventListener('mousemove', withPreventDefault);
 			window.removeEventListener('mouseup', removeListener);
