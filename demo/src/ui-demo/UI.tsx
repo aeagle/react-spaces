@@ -7,6 +7,7 @@ import { Resizable } from './Resizable';
 import { ScrollableDemo } from './Scrollable';
 import { LayersDemo } from './Layers';
 import { WindowsDemo } from './Windows';
+import { Pinnable } from './Pinnable';
 
 export const UI = () => {
 	const [ selectedDemo, setSelectedDemo ] = React.useState("resizable");
@@ -81,6 +82,15 @@ const DemoSelection = (props: {
 								</span>
 							</a>
 						</li>
+						<li className={props.selectedDemo === "pinnable" ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo("pinnable" )}>
+								Pinnable
+								<span>
+									Pinnable anchored spaces using a combination of layers and
+									anchored spaces.
+								</span>
+							</a>
+						</li>
 					</ul>
 				</Space.Fill>
 				<Space.Bottom size={60} className="tools">
@@ -121,6 +131,7 @@ const Main = (props: { selectedDemo: string, showSpaces: boolean }) => {
 			{ props.selectedDemo === "layers" ? <LayersDemo /> : null }
 			{ props.selectedDemo === "windows" ? <WindowsDemo /> : null }
 			{ props.selectedDemo === "codeeditor" ? <CodeEditor /> : null }
+			{ props.selectedDemo === "pinnable" ? <Pinnable /> : null }
 		</Space.Fill>
 	)
 }
