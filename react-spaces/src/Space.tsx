@@ -37,10 +37,9 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
 	const { 
 		space,
+		currentSize,
 		parentContext,
-		currentContext,
-		currentWidth,
-		currentHeight
+		currentContext
 	} = useSpace(props, divElementRef);
 	
 	const outerStyle = {
@@ -55,7 +54,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
 	const handleSize = props.handleSize === undefined ? 5 : props.handleSize;
 	const overlayHandle = props.overlayHandle !== undefined ? props.overlayHandle : true;
-	const resize = applyResize(props, space, parentContext, handleSize, divElementRef);
+	const resize = applyResize(props, space, currentSize.parsedSize, parentContext, handleSize, divElementRef);
 	
 	const innerStyle = 
 		{
@@ -101,7 +100,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 			<>
 				{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
 				<SpaceContext.Provider value={currentContext}>
-					<SpaceInfoContext.Provider value={{ width: Math.floor(currentWidth), height: Math.floor(currentHeight) }}>
+					<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
 						{ children }
 					</SpaceInfoContext.Provider>
 				</SpaceContext.Provider>
@@ -126,7 +125,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 							className={innerClasses.join(' ')} 
 							style={innerStyle}>
 							<SpaceContext.Provider value={currentContext}>
-								<SpaceInfoContext.Provider value={{ width: Math.floor(currentWidth), height: Math.floor(currentHeight) }}>
+								<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
 									{ children }
 								</SpaceInfoContext.Provider>
 							</SpaceContext.Provider>
@@ -149,7 +148,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 						{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
 						{ resize.resizeHandle }
 						<SpaceContext.Provider value={currentContext}>
-							<SpaceInfoContext.Provider value={{ width: Math.floor(currentWidth), height: Math.floor(currentHeight) }}>
+							<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
 							{ children }
 							</SpaceInfoContext.Provider>
 						</SpaceContext.Provider>

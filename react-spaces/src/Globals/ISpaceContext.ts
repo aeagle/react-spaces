@@ -2,10 +2,7 @@ import { ISpace, AnchorType, AnchorTypes } from './Types';
 import { getSizeString } from './Utils';
 
 export interface ISpaceContext {
-	zIndex: number,
 	level: number,
-	width: number,
-	height: number,
 	children: ISpace[],
 	updateChildren: (children: ISpace[]) => void
 }
@@ -122,9 +119,6 @@ export const createSpaceContext = (
 
 	const context : ISpaceContext = {
 		level: parent ? parent.level + 1 : 0,
-		zIndex: zIndex || 0,
-		width: currentSpace ? currentSpace.currentWidth : 0,
-		height: currentSpace ? currentSpace.currentHeight : 0,
 		children: children,
 		updateChildren: updateChildren
 	}

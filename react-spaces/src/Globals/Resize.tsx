@@ -6,6 +6,7 @@ import { Resizable } from 'src/Resizable';
 export const applyResize = (
 	props: AllProps,
 	currentSpace: ISpace,
+	parsedSize: number | undefined,
 	parentContext: ISpaceContext | null, 
 	handleSize: number,
 	divElementRef: React.MutableRefObject<HTMLElement | undefined>) => {
@@ -22,8 +23,8 @@ export const applyResize = (
 					adjustedSize={currentSpace.adjustedSize} 
 					width={resizeHandleWidth}
 					height={resizeHandleHeight}
-					minimumAdjust={ (props.minimumSize === undefined ? 20 : props.minimumSize) - (currentSpace.parsedSize || 0) }
-					maximumAdjust={ props.maximumSize ? (props.maximumSize - (currentSpace.parsedSize || 0)) : undefined }
+					minimumAdjust={ (props.minimumSize === undefined ? 20 : props.minimumSize) - (parsedSize || 0) }
+					maximumAdjust={ props.maximumSize ? (props.maximumSize - (parsedSize || 0)) : undefined }
 					onResize={(adjustedSize: number) => updateSpace(parentContext, currentSpace.id, { adjustedSize: adjustedSize })}
 					onResizeStart={() => props.onResizeStart && props.onResizeStart()}
 					onResizeEnd={() => {

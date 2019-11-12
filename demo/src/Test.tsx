@@ -27,6 +27,7 @@ export const Test : React.FC = () => {
                 minimumSize={100}
                 onResizeStart={onResizeStart}
                 onResizeEnd={onResizeEnd}
+                trackSize={true}
                 order={1}>
                 <Space.Info>
                     {(info) => <span>Hello<br />{info.width} x {info.height}</span>}
@@ -36,6 +37,7 @@ export const Test : React.FC = () => {
             <Space.LeftResizable
                 style={{ backgroundColor: 'navy', color: 'white', padding: 10 }}
                 size={200}
+                trackSize={true}
                 order={2}>
                 <Space.Info>
                     {(info) => <span>Something<br />{info.width} x {info.height}</span>}
@@ -43,7 +45,8 @@ export const Test : React.FC = () => {
             </Space.LeftResizable>
 
             <Space.Fill 
-                style={{ backgroundColor: 'red', padding: 10 }}>
+                style={{ backgroundColor: 'red', padding: 10 }}
+                trackSize={true}>
                 <Space.Info>
                     {(info) => <span>World<br />{info.width} x {info.height}</span>}
                 </Space.Info>

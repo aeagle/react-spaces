@@ -138,10 +138,14 @@ export interface IState {
 	children: ISpace[]
 }
 
+export interface ISize {
+	parsedSize: number | undefined,
+	width: number,
+	height: number
+}
+
 export interface ISpace {
 	id: string,
-	currentWidth: number,
-	currentHeight: number,
 	adjustedLeft: number,
 	adjustedTop: number,
 	order: number,
@@ -149,7 +153,6 @@ export interface ISpace {
 	anchorType: AnchorType | undefined,
 	size: number | string,
 	adjustedSize: number,
-	parsedSize?: number,
 	left?: number | string,
 	top?: number | string,
 	right?: number | string,
