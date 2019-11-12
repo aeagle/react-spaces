@@ -57,7 +57,9 @@ export const Resizable : React.FC<IProps> = (props) => {
 			throttledTouchResize(lastX, lastY); 
 	};
 		const removeListener = () => {
-			touchResize(lastX, lastY);
+			if (moved) {
+				touchResize(lastX, lastY);
+			}
 			resizing = false;
 			window.removeEventListener('touchmove', withPreventDefault);
 			window.removeEventListener('touchend', removeListener);
@@ -89,7 +91,9 @@ export const Resizable : React.FC<IProps> = (props) => {
 			throttledMouseResize(lastX, lastY); 
 		};
 		const removeListener = () => {
-			mouseResize(lastX, lastY);
+			if (moved) {
+				mouseResize(lastX, lastY);
+			}
 			resizing = false;
 			window.removeEventListener('mousemove', withPreventDefault);
 			window.removeEventListener('mouseup', removeListener);
