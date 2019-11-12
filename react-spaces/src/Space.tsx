@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { IPublicProps, IAnchoredProps, AnchorType, IResizableProps, AllProps, IPositionedProps, CenterType, publicProps, anchoredProps, resizableProps, positionedProps, allProps, ResizeType, ISpace } from './Globals/Types';
+import { IPublicProps, IAnchoredProps, AnchorType, IResizableProps, AllProps, IPositionedProps, CenterType, publicProps, anchoredProps, resizableProps, positionedProps, allProps, ResizeType } from './Globals/Types';
 import { SpaceContext, SpaceInfoContext } from './Globals/Contexts';
 import './Styles.css';
 import { CenteredVertically, Centered } from './Centered';
-import * as ReactDOM from 'react-dom';
 import { useSpace } from './Hooks/useSpace';
 import { cssValue, isHorizontalSpace, isVerticalSpace } from './Globals/Utils';
 import { applyResize } from './Globals/Resize';
+import { HeadStyles } from './HeadStyles';
+
+const USE_INLINESTYLES = false;
 
 export const Fill : React.FC<IPublicProps> = (props) => <SpaceInternal {...props} />
 Fill.propTypes = publicProps;
@@ -28,8 +30,6 @@ export const RightResizable : React.FC<IPublicProps & IAnchoredProps & IResizabl
 RightResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps};
 export const Positioned : React.FC<IPublicProps & IResizableProps & IPositionedProps> = (props) => <SpaceInternal {...props} />
 RightResizable.propTypes = {...publicProps, ...resizableProps, ...positionedProps};
-
-const USE_INLINESTYLES = false;
 
 export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
@@ -97,91 +97,65 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 	}
 
 	return (
-		<SpaceContext.Provider value={currentContext}>
-			<SpaceInfoContext.Provider value={{ width: Math.floor(currentWidth), height: Math.floor(currentHeight) }}>
-				{
-					props.topMost ?
-						<>
-							{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-							{ children }
-						</> :
-						resize.resizeHandle && props.scrollable ?
-							React.createElement(
-								props.as || 'div',
-								{
-									id: space.id,
-									ref: divElementRef,
-									className: outerClasses.join(' '),
-									style: USE_INLINESTYLES ? {...outerStyle, ...innerStyle} : undefined,
-									onClick: props.onClick,
-									onMouseDown: props.onMouseDown,
-									onMouseEnter: props.onMouseEnter,
-									onMouseLeave: props.onMouseLeave
-								},
-								<>
-									{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-									{ resize.resizeHandle }
-									<div 
-										className={innerClasses.join(' ')} 
-										style={innerStyle}>
-										{ children }
-									</div>
-								</>
-							) :
-							React.createElement(
-								props.as || 'div',
-								{
-									id: space.id,
-									ref: divElementRef,
-									className: outerClasses.join(' '),
-									style: USE_INLINESTYLES ? {...innerStyle, ...outerStyle} : innerStyle,
-									onClick: props.onClick,
-									onMouseDown: props.onMouseDown,
-									onMouseEnter: props.onMouseEnter,
-									onMouseLeave: props.onMouseLeave
-								},
-								<>
-									{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-									{ resize.resizeHandle }
+		props.topMost ?
+			<>
+				{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
+				<SpaceContext.Provider value={currentContext}>
+					<SpaceInfoContext.Provider value={{ width: Math.floor(currentWidth), height: Math.floor(currentHeight) }}>
+						{ children }
+					</SpaceInfoContext.Provider>
+				</SpaceContext.Provider>
+			</> :
+			resize.resizeHandle && props.scrollable ?
+				React.createElement(
+					props.as || 'div',
+					{
+						id: space.id,
+						ref: divElementRef,
+						className: outerClasses.join(' '),
+						style: USE_INLINESTYLES ? {...outerStyle, ...innerStyle} : undefined,
+						onClick: props.onClick,
+						onMouseDown: props.onMouseDown,
+						onMouseEnter: props.onMouseEnter,
+						onMouseLeave: props.onMouseLeave
+					},
+					<>
+						{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
+						{ resize.resizeHandle }
+						<div 
+							className={innerClasses.join(' ')} 
+							style={innerStyle}>
+							<SpaceContext.Provider value={currentContext}>
+								<SpaceInfoContext.Provider value={{ width: Math.floor(currentWidth), height: Math.floor(currentHeight) }}>
 									{ children }
-								</>
-							)
-				}
-			</SpaceInfoContext.Provider>
-		</SpaceContext.Provider>
+								</SpaceInfoContext.Provider>
+							</SpaceContext.Provider>
+						</div>
+					</>
+				) :
+				React.createElement(
+					props.as || 'div',
+					{
+						id: space.id,
+						ref: divElementRef,
+						className: outerClasses.join(' '),
+						style: USE_INLINESTYLES ? {...innerStyle, ...outerStyle} : innerStyle,
+						onClick: props.onClick,
+						onMouseDown: props.onMouseDown,
+						onMouseEnter: props.onMouseEnter,
+						onMouseLeave: props.onMouseLeave
+					},
+					<>
+						{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
+						{ resize.resizeHandle }
+						<SpaceContext.Provider value={currentContext}>
+							<SpaceInfoContext.Provider value={{ width: Math.floor(currentWidth), height: Math.floor(currentHeight) }}>
+							{ children }
+							</SpaceInfoContext.Provider>
+						</SpaceContext.Provider>
+					</>
+				)
 	)
 })
-
-const HeadStyles : React.FC<{ spaces: ISpace[] }> = (props) => {
-	const { spaces } = props;
-
-	if (spaces.length > 0)
-	{
-		return ReactDOM.createPortal(
-			<style>
-			{
-				spaces.map(space => {
-					const style = {
-						left: (space.left !== undefined ? cssValue(space.left, space.adjustedLeft) : undefined),
-						top: (space.top !== undefined ? cssValue(space.top, space.adjustedTop) : undefined),
-						right: (space.right !== undefined ? cssValue(space.right, space.adjustedLeft) : undefined),
-						bottom: (space.bottom !== undefined ? cssValue(space.bottom, space.adjustedTop) : undefined),
-						width: isHorizontalSpace(space.anchorType) ? cssValue(space.size, space.adjustedSize) : space.width,
-						height: isVerticalSpace(space.anchorType) ? cssValue(space.size, space.adjustedSize) : space.height,
-						zIndex: space.zIndex
-					};
-					return (
-						<>{ `#${space.id} {` } { style.left ? `left: ${style.left};` : "" } { style.top ? `top: ${style.top};` : "" } { style.right ? `right: ${style.right};` : "" } { style.bottom ? `bottom: ${style.bottom};` : "" } { style.width ? `width: ${style.width};` : "" } { style.height ? `height: ${style.height};` : "" } { style.zIndex ? `z-index: ${style.zIndex};` : "" } { `}`}</>
-					)
-				})
-			}
-			</style>
-			,
-			window.document.head
-		);
-	}
-
-	return null;
-}
 
 SpaceInternal.propTypes = allProps;
