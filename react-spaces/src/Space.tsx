@@ -27,7 +27,9 @@ RightResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps}
 export const Positioned : React.FC<IPublicProps & IResizableProps & IPositionedProps> = (props) => <SpaceInternal {...props} />
 RightResizable.propTypes = {...publicProps, ...resizableProps, ...positionedProps};
 
-export const SpaceInternal : React.FC<AllProps> = (props) => {
+const USE_INLINESTYLES = false;
+
+export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
 	const divElementRef = React.useRef<HTMLDivElement>();
 
@@ -66,13 +68,14 @@ export const SpaceInternal : React.FC<AllProps> = (props) => {
 									id: state.id,
 									ref: divElementRef,
 									className: outerClasses.join(' '),
+									style: USE_INLINESTYLES ? {...outerStyle, ...innerStyle} : undefined,
 									onClick: props.onClick,
 									onMouseDown: props.onMouseDown,
 									onMouseEnter: props.onMouseEnter,
 									onMouseLeave: props.onMouseLeave
 								},
 								<>
-									<HeadStyles id={state.id} style={outerStyle} />
+									{ !USE_INLINESTYLES && <HeadStyles id={state.id} style={outerStyle} /> }
 									{ resizeHandle }
 									<div 
 										className={innerClasses.join(' ')} 
@@ -87,14 +90,14 @@ export const SpaceInternal : React.FC<AllProps> = (props) => {
 									id: state.id,
 									ref: divElementRef,
 									className: outerClasses.join(' '),
-									style: innerStyle,
+									style: USE_INLINESTYLES ? {...innerStyle, ...outerStyle} : innerStyle,
 									onClick: props.onClick,
 									onMouseDown: props.onMouseDown,
 									onMouseEnter: props.onMouseEnter,
 									onMouseLeave: props.onMouseLeave
 								},
 								<>
-									<HeadStyles id={state.id} style={outerStyle} />
+								{ !USE_INLINESTYLES && <HeadStyles id={state.id} style={outerStyle} /> }
 									{ resizeHandle }
 									{ children }
 								</>
@@ -103,7 +106,7 @@ export const SpaceInternal : React.FC<AllProps> = (props) => {
 			</SpaceInfoContext.Provider>
 		</SpaceContext.Provider>
 	)
-}
+})
 
 const HeadStyles : React.FC<{ id: string, style: React.CSSProperties }> = (props) => {
 	const { style } = props;
