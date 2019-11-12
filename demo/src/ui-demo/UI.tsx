@@ -125,7 +125,7 @@ const DemoSelection = (props: {
 
 const Main = (props: { selectedDemo: string, showSpaces: boolean }) => {
 	return (
-		<Space.Fill debug={props.showSpaces}>
+		<Space.Fill>
 			{ props.selectedDemo === "resizable" ? <Resizable /> : null }
 			{ props.selectedDemo === "scrollable" ? <ScrollableDemo /> : null }
 			{ props.selectedDemo === "layers" ? <LayersDemo /> : null }

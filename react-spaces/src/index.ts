@@ -19,7 +19,7 @@ export {
 
 export { 
 	useParentSpace 
-} from './Globals/Hooks';
+} from './Hooks/useParentSpace';
 
 export {
 	CenterType,

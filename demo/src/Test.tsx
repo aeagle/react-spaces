@@ -1,6 +1,7 @@
 import React from "react";
 import * as Space from "react-spaces";
 import './Test.scss';
+import { Info } from "react-spaces";
 
 const COLLAPSED_SIZE = 20;
 const MINIMUM_SIZE = 200;
@@ -27,19 +28,25 @@ export const Test : React.FC = () => {
                 onResizeStart={onResizeStart}
                 onResizeEnd={onResizeEnd}
                 order={1}>
-                    Hello
+                <Space.Info>
+                    {(info) => <span>Hello<br />{info.width} x {info.height}</span>}
+                </Space.Info>
             </Space.LeftResizable>
 
-            <Space.Left
+            <Space.LeftResizable
                 style={{ backgroundColor: 'navy', color: 'white', padding: 10 }}
                 size={200}
                 order={2}>
-                    Something
-            </Space.Left>
+                <Space.Info>
+                    {(info) => <span>Something<br />{info.width} x {info.height}</span>}
+                </Space.Info>
+            </Space.LeftResizable>
 
             <Space.Fill 
                 style={{ backgroundColor: 'red', padding: 10 }}>
-                    World
+                <Space.Info>
+                    {(info) => <span>World<br />{info.width} x {info.height}</span>}
+                </Space.Info>
             </Space.Fill>
 
         </Space.ViewPort>

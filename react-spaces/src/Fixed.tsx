@@ -2,6 +2,9 @@ import * as React from 'react';
 import './Styles.css';
 import * as PropTypes from "prop-types";
 import { SpaceInternal } from './Space';
+import { SpaceContext } from './Globals/Contexts';
+import { ISpace } from './Globals/Types';
+import { createSpaceContext } from './Globals/ISpaceContext';
 
 interface IProps {
 	className?: string,
@@ -11,6 +14,8 @@ interface IProps {
 }
 
 export const Fixed : React.FC<IProps> = (props) => {
+	const [ children, setChildren ] = React.useState<ISpace[]>([]);
+
 	const style = {
 		...props.style,
 		...{ 
@@ -23,9 +28,11 @@ export const Fixed : React.FC<IProps> = (props) => {
 	<div 
 		className={`spaces-fixedsize-layout${props.className ? ` ${props.className}` : ``}`}
 		style={style}>
-		<SpaceInternal topMost={true}>
-			{props.children}
-		</SpaceInternal>
+		<SpaceContext.Provider value={createSpaceContext(children, setChildren)}>
+			<SpaceInternal topMost={true}>
+				{props.children}
+			</SpaceInternal>
+		</SpaceContext.Provider>
 	</div>
 	)
 }
