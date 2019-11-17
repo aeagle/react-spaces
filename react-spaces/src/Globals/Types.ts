@@ -138,7 +138,6 @@ export interface IState {
 }
 
 export interface ISize {
-	parsedSize: number | undefined,
 	width: number,
 	height: number
 }
@@ -150,7 +149,7 @@ export interface ISpace {
 	order: number,
 	zIndex: number,
 	anchorType: AnchorType | undefined,
-	size: number | string,
+	anchorSize: number | string,
 	adjustedSize: number,
 	left?: number | string,
 	top?: number | string,

@@ -4,16 +4,8 @@ import { initialState, isHorizontalSpace, isVerticalSpace } from 'src/Globals/Ut
 import { ISpaceContext, updateSpace, removeSpace, registerSpace, createSpaceContext } from 'src/Globals/ISpaceContext';
 import { SpaceLayerContext, SpaceContext } from 'src/Globals/Contexts';
 import { ResizeSensor } from 'css-element-queries';
-import { throttle } from 'src/Globals/Throttle';
 
 export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<HTMLElement | undefined>) => {
-
-	const [ state, changeState ] = React.useState<IState>(initialState(props));
-	const [ currentSize, setCurrentSize ] = React.useState<ISize | null>(null);
-	const resizeSensor = React.useRef<ResizeSensor>();
-	const onRemove = React.useRef<(() => void)>();
-	
-	const setState = (stateDelta: Partial<IState>) => changeState(prev => ({...prev, ...stateDelta}));
 
 	const parentContext = React.useContext(SpaceContext) as ISpaceContext;
 
@@ -21,16 +13,47 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		throw new Error("No top-level space: There must be a <ViewPort /> or <Fixed /> ancestor space");
 	}
 
+	const [ state, changeState ] = React.useState<IState>(initialState(props));
+	const [ currentSize, setCurrentSize ] = React.useState<ISize | null>(null);
+	const resizeSensor = React.useRef<ResizeSensor>();
+	const onRemove = React.useRef<(() => void)>();
+	const setState = (stateDelta: Partial<IState>) => changeState(prev => ({...prev, ...stateDelta}));
 	const layerContext = React.useContext(SpaceLayerContext); 
 	const currentZIndex = props.zIndex || layerContext || 0;
 
+	const updateCurrentSize = React.useCallback(() => {
+		if (divElementRef.current) {
+			const rect = divElementRef.current.getBoundingClientRect();
+			setCurrentSize({
+				width: rect.width, 
+				height: rect.height 
+			});
+		}
+	}, []);
+
+	const space = 
+		registerSpace(
+			parentContext,
+			{
+				id: state.id,
+				zIndex: currentZIndex,
+				order: props.order === undefined ? 1 : props.order,
+				anchorType: props.anchor,
+				anchorSize: props.anchorSize || 0,
+				adjustedSize: 0,
+				adjustedLeft: 0,
+				adjustedTop: 0,
+				width: props.anchor && isHorizontalSpace(props.anchor) ? props.anchorSize || 0 : props.width,
+				height: props.anchor && isVerticalSpace(props.anchor) ? props.anchorSize || 0 : props.height
+			}
+		);
+
+	React.useEffect(() => {
+		setCurrentSize(null);
+	}, [ parentContext.children.length ]);
+
 	// Deal with property changes to size / zIndex / anchoring 
 	React.useEffect(() => {
-		setCurrentSize(prev => ({ 
-			parsedSize: typeof props.anchorSize === "string" ? 0 : props.anchorSize as number | undefined,
-			width: prev ? prev.width : 0,
-			height: prev ? prev.height : 0
-		}));
 		updateSpace(
 			parentContext,
 			state.id, 
@@ -43,11 +66,6 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	}, [ props.anchorSize ]);
 
 	React.useEffect(() => {
-		setCurrentSize(prev => ({ 
-			parsedSize: typeof props.anchorSize === "string" ? 0 : props.anchorSize as number | undefined,
-			width: prev ? prev.width : 0,
-			height: prev ? prev.height : 0
-		}));
 		updateSpace(
 			parentContext,
 			state.id, 
@@ -71,50 +89,23 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 			}
 		);
 	}, [ currentZIndex ]);
-
-	const space = 
-		registerSpace(
-			parentContext,
-			{
-				id: state.id,
-				zIndex: currentZIndex,
-				order: props.order === undefined ? 1 : props.order,
-				anchorType: props.anchor,
-				size: props.anchorSize || 0,
-				adjustedSize: 0,
-				adjustedLeft: 0,
-				adjustedTop: 0,
-				width: props.anchor && isHorizontalSpace(props.anchor) ? props.anchorSize || 0 : props.width,
-				height: props.anchor && isVerticalSpace(props.anchor) ? props.anchorSize || 0 : props.height
-			}
-		);
 	
 	// Setup / cleanup
-	const determineCurrentSize = React.useCallback(throttle(() => {
-		if (divElementRef.current) {
-			const currentRect = divElementRef.current.getBoundingClientRect();
-			setCurrentSize({
-				parsedSize: (isHorizontalSpace(props.anchor) ? currentRect.width : currentRect.height),
-				width: currentRect.width,
-				height: currentRect.height
-			});
-		}
-	}, 200), []);
 
 	React.useEffect(() => {
 		if (divElementRef.current) {
 			if (props.trackSize) {
 				resizeSensor.current = new ResizeSensor(
 					divElementRef.current, 
-					(size) => setCurrentSize({ 
-						parsedSize: (isHorizontalSpace(props.anchor) ? size.width : size.height),
+					(size) => setCurrentSize({
 						width: size.width, 
 						height: size.height 
 					})
 				);
 			}
-			determineCurrentSize();
 		}
+
+		updateCurrentSize();
 
 		const cleanup = () => {
 			resizeSensor.current && resizeSensor.current.detach();
@@ -124,9 +115,16 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		return cleanup;
 	}, []);
 
-	onRemove.current = () => {
+	React.useEffect(() => {
+		if (!currentSize)
+		{
+			updateCurrentSize();
+		}
+	})
+
+	onRemove.current = React.useCallback(() => {
 		removeSpace(parentContext, state.id);
-	}
+	}, []);
 
 	const currentContext = 
 		createSpaceContext(
@@ -138,8 +136,8 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 
 	return {
 		space,
-		currentSize,
 		parentContext,
-		currentContext
+		currentContext,
+		currentSize: currentSize || { width: 0, height: 0 }
 	} 
 }

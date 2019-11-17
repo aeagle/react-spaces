@@ -1,14 +1,17 @@
 import * as React from 'react';
-import { IPublicProps, IAnchoredProps, AnchorType, IResizableProps, AllProps, IPositionedProps, CenterType, publicProps, anchoredProps, resizableProps, positionedProps, allProps, ResizeType } from './Globals/Types';
+import { IPublicProps, IAnchoredProps, AnchorType, IResizableProps, AllProps, IPositionedProps, CenterType, publicProps, anchoredProps, resizableProps, positionedProps, allProps, ResizeType, AnchorToResizeTypeMap } from './Globals/Types';
 import { SpaceContext, SpaceInfoContext } from './Globals/Contexts';
 import './Styles.css';
 import { CenteredVertically, Centered } from './Centered';
 import { useSpace } from './Hooks/useSpace';
 import { cssValue, isHorizontalSpace, isVerticalSpace } from './Globals/Utils';
-import { applyResize } from './Globals/Resize';
 import { HeadStyles } from './HeadStyles';
+import { ResizeHandle } from './ResizeHandle';
+import { updateSpace } from './Globals/ISpaceContext';
+import { throttle } from './Globals/Throttle';
 
 const USE_INLINESTYLES = false;
+const RESIZE_THROTTLE = 5;
 
 export const Fill : React.FC<IPublicProps> = (props) => <SpaceInternal {...props} />
 Fill.propTypes = publicProps;
@@ -37,10 +40,149 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
 	const { 
 		space,
-		currentSize,
 		parentContext,
-		currentContext
+		currentContext,
+		currentSize
 	} = useSpace(props, divElementRef);
+
+	const handleSize = props.handleSize === undefined ? 5 : props.handleSize;
+	const overlayHandle = props.overlayHandle !== undefined ? props.overlayHandle : true;
+	let resizeType: ResizeType | undefined = undefined;
+	let resizeHandle: React.ReactNode | undefined = undefined;
+
+	if (parentContext && props.anchor && props.resizable) {
+		resizeType = AnchorToResizeTypeMap[props.anchor];
+
+		const resizeHandleWidth = resizeType === ResizeType.Left || resizeType === ResizeType.Right ? handleSize : undefined;
+		const resizeHandleHeight = resizeType === ResizeType.Top || resizeType === ResizeType.Bottom ? handleSize : undefined;
+
+		const onResizeEnd = React.useCallback(() => {
+			if (divElementRef.current)
+			{
+				const currentRect = divElementRef.current.getBoundingClientRect();
+				props.onResizeEnd && props.onResizeEnd(
+					Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height)
+				);
+			}
+		}, []);
+	
+		const onResize = (
+			originalX: number, 
+			originalY: number, 
+			x: number, 
+			y: number,
+			minimumAdjust: number,
+			maximumAdjust: number | undefined) => {
+
+			const adjustmentX = 
+				Math.min(
+					Math.max(resizeType === ResizeType.Left ? originalX - x : x - originalX, minimumAdjust),
+					maximumAdjust === undefined ? 999999 : maximumAdjust
+				);
+			const adjustmentY = 
+				Math.min(
+					Math.max(resizeType === ResizeType.Top ? originalY - y : y - originalY, minimumAdjust),
+					maximumAdjust === undefined ? 999999 : maximumAdjust
+				);
+	
+			const adjustment = isHorizontalSpace(props.anchor) ? adjustmentX : adjustmentY;
+	
+			if (adjustment !== space.adjustedSize) {
+				updateSpace(parentContext, space.id, { adjustedSize: adjustment });
+			}
+		};
+	
+		const startTouchResize = (e: React.TouchEvent<HTMLDivElement>) => {
+			if (!divElementRef.current) {
+				return;
+			}
+
+			var rect = divElementRef.current.getBoundingClientRect();
+			var size = isHorizontalSpace(props.anchor) ? rect.width : rect.height;
+
+			const originalTouchX = resizeType === ResizeType.Left ? e.touches[0].pageX + space.adjustedSize : e.touches[0].pageX - space.adjustedSize;
+			const originalTouchY = resizeType === ResizeType.Top ? e.touches[0].pageY + space.adjustedSize : e.touches[0].pageY - space.adjustedSize;
+			const minimumAdjust = (props.minimumSize === undefined ? 20 : props.minimumSize) - size + space.adjustedSize;
+			const maximumAdjust = props.maximumSize ? (props.maximumSize - size + space.adjustedSize) : undefined;
+			let lastX = 0;
+			let lastY = 0;
+			let moved = false;
+	
+			const touchResize = (x: number, y: number) => onResize(originalTouchX, originalTouchY, x, y, minimumAdjust, maximumAdjust);
+			const throttledTouchResize = throttle<typeof touchResize>(touchResize, RESIZE_THROTTLE);
+			const withPreventDefault = (e: TouchEvent) => { 
+				moved = true; 
+				lastX = e.touches[0].pageX; 
+				lastY = e.touches[0].pageY; 
+				e.preventDefault(); 
+				e.stopImmediatePropagation(); 
+				throttledTouchResize(lastX, lastY); 
+			};
+			const removeListener = () => {
+				if (moved) {
+					touchResize(lastX, lastY);
+				}
+				window.removeEventListener('touchmove', withPreventDefault);
+				window.removeEventListener('touchend', removeListener);
+				moved && onResizeEnd();
+			};
+			window.addEventListener('touchmove', withPreventDefault);
+			window.addEventListener('touchend', removeListener);
+			e.preventDefault();
+			e.stopPropagation();
+			props.onResizeStart && props.onResizeStart();
+		};
+	
+		const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+			if (!divElementRef.current) {
+				return;
+			}
+
+			var rect = divElementRef.current.getBoundingClientRect();
+			var size = isHorizontalSpace(props.anchor) ? rect.width : rect.height;
+
+			const originalMouseX = resizeType === ResizeType.Left ? e.pageX + space.adjustedSize : e.pageX - space.adjustedSize;
+			const originalMouseY = resizeType === ResizeType.Top ? e.pageY + space.adjustedSize : e.pageY - space.adjustedSize;
+			const minimumAdjust = (props.minimumSize === undefined ? 20 : props.minimumSize) - size + space.adjustedSize;
+			const maximumAdjust = props.maximumSize ? (props.maximumSize - size + space.adjustedSize) : undefined;
+			let lastX = 0;
+			let lastY = 0;
+			let moved = false;
+
+			const mouseResize = (x: number, y: number) => onResize(originalMouseX, originalMouseY, x, y, minimumAdjust, maximumAdjust);
+			const throttledMouseResize = throttle<typeof mouseResize>(mouseResize, RESIZE_THROTTLE);
+			const withPreventDefault = (e: MouseEvent) => { 
+				moved = true; 
+				lastX = e.pageX;
+				lastY = e.pageY;
+				e.preventDefault(); 
+				e.stopImmediatePropagation(); 
+				throttledMouseResize(lastX, lastY); 
+			};
+			const removeListener = () => {
+				if (moved) {
+					mouseResize(lastX, lastY);
+				}
+				window.removeEventListener('mousemove', withPreventDefault);
+				window.removeEventListener('mouseup', removeListener);
+				moved && onResizeEnd();
+			};
+			window.addEventListener('mousemove', withPreventDefault);
+			window.addEventListener('mouseup', removeListener);
+			e.preventDefault();
+			e.stopPropagation();
+			props.onResizeStart && props.onResizeStart();
+		};
+
+		resizeHandle =
+			<ResizeHandle
+				type={resizeType}
+				adjustedSize={space.adjustedSize} 
+				width={resizeHandleWidth}
+				height={resizeHandleHeight}
+				onMouseDown={e => startResize(e)}
+				onTouchStart={e => startTouchResize(e)} />;
+	}
 	
 	const outerStyle = {
 		left: (space.left !== undefined ? cssValue(space.left, space.adjustedLeft) : undefined),
@@ -51,19 +193,15 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 		height: isVerticalSpace(props.anchor) ? cssValue(props.anchorSize, space.adjustedSize) : space.height,
 		zIndex: space.zIndex
 	};
-
-	const handleSize = props.handleSize === undefined ? 5 : props.handleSize;
-	const overlayHandle = props.overlayHandle !== undefined ? props.overlayHandle : true;
-	const resize = applyResize(props, space, currentSize ? currentSize.parsedSize : 0, parentContext, handleSize, divElementRef);
 	
 	const innerStyle = 
 		{
 			...props.style, 
 			...{ 
-				left: resize.resizeType === ResizeType.Left && !overlayHandle ? handleSize : undefined,
-				top: resize.resizeType === ResizeType.Top && !overlayHandle ? handleSize : undefined,
-				right: resize.resizeType === ResizeType.Right && !overlayHandle ? handleSize : undefined,
-				bottom: resize.resizeType === ResizeType.Bottom && !overlayHandle ? handleSize : undefined
+				left: resizeType === ResizeType.Left && !overlayHandle ? handleSize : undefined,
+				top: resizeType === ResizeType.Top && !overlayHandle ? handleSize : undefined,
+				right: resizeType === ResizeType.Right && !overlayHandle ? handleSize : undefined,
+				bottom: resizeType === ResizeType.Bottom && !overlayHandle ? handleSize : undefined
 			}
 		};
 
@@ -76,9 +214,9 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 		[
 			...[
 				"spaces-space",
-				props.scrollable ? (resize.resizeHandle ? "scrollable" : "scrollable-a") : undefined
+				props.scrollable ? (resizeHandle ? "scrollable" : "scrollable-a") : undefined
 			],
-			...(resize.resizeHandle && props.scrollable ? userClasses.map(c => `${c}-container`) : userClasses)
+			...(resizeHandle && props.scrollable ? userClasses.map(c => `${c}-container`) : userClasses)
 		].filter(c => c);
 
 	const innerClasses =
@@ -96,7 +234,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 	}
 
 	return (
-		resize.resizeHandle && props.scrollable ?
+		resizeHandle && props.scrollable ?
 			React.createElement(
 				props.as || 'div',
 				{
@@ -111,12 +249,12 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 				},
 				<>
 					{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-					{ resize.resizeHandle }
+					{ resizeHandle }
 					<div 
 						className={innerClasses.join(' ')} 
 						style={innerStyle}>
 						<SpaceContext.Provider value={currentContext}>
-							<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize ? currentSize.width : 0), height: Math.floor(currentSize ? currentSize.height : 0) }}>
+							<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
 								{ children }
 							</SpaceInfoContext.Provider>
 						</SpaceContext.Provider>
@@ -137,9 +275,9 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 				},
 				<>
 					{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-					{ resize.resizeHandle }
+					{ resizeHandle }
 					<SpaceContext.Provider value={currentContext}>
-					<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize ? currentSize.width : 0), height: Math.floor(currentSize ? currentSize.height : 0) }}>
+					<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
 						{ children }
 						</SpaceInfoContext.Provider>
 					</SpaceContext.Provider>

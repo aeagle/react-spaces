@@ -44,26 +44,26 @@ const recalcSpaces = (spaces: ISpace[]) => {
 					const adjustedSize = t.adjustedSize !== 0 ? ` + ${getSizeString(t.adjustedSize)}` : ``;
 					if (space.anchorType === undefined)
 					{
-						if (t.anchorType === AnchorType.Top && t.size) {
-							adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Left && t.size) {
-							adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Bottom && t.size) {
-							adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Right && t.size) {
-							adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
+						if (t.anchorType === AnchorType.Top && t.anchorSize) {
+							adjustedTop.push(`${getSizeString(t.anchorSize)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Left && t.anchorSize) {
+							adjustedLeft.push(`${getSizeString(t.anchorSize)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Bottom && t.anchorSize) {
+							adjustedBottom.push(`${getSizeString(t.anchorSize)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Right && t.anchorSize) {
+							adjustedRight.push(`${getSizeString(t.anchorSize)}${adjustedSize}`);
 						}
 					}
 					else
 					{
-						if (t.anchorType === AnchorType.Top && t.size && space.top !== undefined) {
-							adjustedTop.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Left && t.size && space.left !== undefined) {
-							adjustedLeft.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Bottom && t.size && space.bottom !== undefined) {
-							adjustedBottom.push(`${getSizeString(t.size)}${adjustedSize}`);
-						} else if (t.anchorType === AnchorType.Right && t.size && space.right !== undefined) {
-							adjustedRight.push(`${getSizeString(t.size)}${adjustedSize}`);
+						if (t.anchorType === AnchorType.Top && t.anchorSize && space.top !== undefined) {
+							adjustedTop.push(`${getSizeString(t.anchorSize)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Left && t.anchorSize && space.left !== undefined) {
+							adjustedLeft.push(`${getSizeString(t.anchorSize)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Bottom && t.anchorSize && space.bottom !== undefined) {
+							adjustedBottom.push(`${getSizeString(t.anchorSize)}${adjustedSize}`);
+						} else if (t.anchorType === AnchorType.Right && t.anchorSize && space.right !== undefined) {
+							adjustedRight.push(`${getSizeString(t.anchorSize)}${adjustedSize}`);
 						}
 					}
 				} else {
@@ -94,10 +94,12 @@ export const registerSpace = (context: ISpaceContext, space: ISpace) => {
 	if (!existing) {
 		context.updateChildren(recalcSpaces([ ...context.children, space ]));
 		return space;
-	} else {
+	} 
+	else
+	{
 		existing.order = space.order;
 		existing.anchorType = space.anchorType;
-		existing.size = space.size;
+		existing.anchorSize = space.anchorSize;
 		return existing;
 	}
 }

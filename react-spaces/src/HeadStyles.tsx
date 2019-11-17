@@ -17,8 +17,8 @@ export const HeadStyles : React.FC<{ spaces: ISpace[] }> = (props) => {
 						top: (space.top !== undefined ? cssValue(space.top, space.adjustedTop) : undefined),
 						right: (space.right !== undefined ? cssValue(space.right, space.adjustedLeft) : undefined),
 						bottom: (space.bottom !== undefined ? cssValue(space.bottom, space.adjustedTop) : undefined),
-						width: isHorizontalSpace(space.anchorType) ? cssValue(space.size, space.adjustedSize) : space.width,
-						height: isVerticalSpace(space.anchorType) ? cssValue(space.size, space.adjustedSize) : space.height,
+						width: isHorizontalSpace(space.anchorType) ? cssValue(space.anchorSize, space.adjustedSize) : space.width,
+						height: isVerticalSpace(space.anchorType) ? cssValue(space.anchorSize, space.adjustedSize) : space.height,
 						zIndex: space.zIndex
 					};
 					return (

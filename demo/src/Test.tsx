@@ -7,46 +7,42 @@ const COLLAPSED_SIZE = 20;
 const MINIMUM_SIZE = 200;
 
 export const Test : React.FC = () => {
-    const [ size, setSize ] = React.useState(300);
+    const [ size, setSize ] = React.useState("25%");
 
     const onResizeStart = () => {
     };
   
     const onResizeEnd = (width: number) => {
-        setSize(width);
+        // setSize(width);
     }
   
     return (
         <Space.ViewPort className="test">
 
-            <Space.LeftResizable 
+            <Space.Left
                 style={{ backgroundColor: 'yellow', padding: 10 }} 
                 size={size}
-                handleSize={60}
-                maximumSize={600}
-                minimumSize={100}
-                onResizeStart={onResizeStart}
-                onResizeEnd={onResizeEnd}
-                trackSize={true}
+                trackSize={false}
                 order={1}>
                 <Space.Info>
                     {(info) => <span>Hello<br />{info.width} x {info.height}</span>}
                 </Space.Info>
-            </Space.LeftResizable>
+                <div>Something else</div>
+            </Space.Left>
 
-            <Space.LeftResizable
+            <Space.Left
                 style={{ backgroundColor: 'navy', color: 'white', padding: 10 }}
                 size={200}
-                trackSize={true}
+                trackSize={false}
                 order={2}>
                 <Space.Info>
                     {(info) => <span>Something<br />{info.width} x {info.height}</span>}
                 </Space.Info>
-            </Space.LeftResizable>
+            </Space.Left>
 
             <Space.Fill 
                 style={{ backgroundColor: 'red', padding: 10 }}
-                trackSize={true}>
+                trackSize={false}>
                 <Space.Info>
                     {(info) => <span>World<br />{info.width} x {info.height}</span>}
                 </Space.Info>
