@@ -54,7 +54,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
 	const handleSize = props.handleSize === undefined ? 5 : props.handleSize;
 	const overlayHandle = props.overlayHandle !== undefined ? props.overlayHandle : true;
-	const resize = applyResize(props, space, currentSize.parsedSize, parentContext, handleSize, divElementRef);
+	const resize = applyResize(props, space, currentSize ? currentSize.parsedSize : 0, parentContext, handleSize, divElementRef);
 	
 	const innerStyle = 
 		{
@@ -96,64 +96,55 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 	}
 
 	return (
-		props.topMost ?
-			<>
-				{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-				<SpaceContext.Provider value={currentContext}>
-					<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
-						{ children }
-					</SpaceInfoContext.Provider>
-				</SpaceContext.Provider>
-			</> :
-			resize.resizeHandle && props.scrollable ?
-				React.createElement(
-					props.as || 'div',
-					{
-						id: space.id,
-						ref: divElementRef,
-						className: outerClasses.join(' '),
-						style: USE_INLINESTYLES ? {...outerStyle, ...innerStyle} : undefined,
-						onClick: props.onClick,
-						onMouseDown: props.onMouseDown,
-						onMouseEnter: props.onMouseEnter,
-						onMouseLeave: props.onMouseLeave
-					},
-					<>
-						{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-						{ resize.resizeHandle }
-						<div 
-							className={innerClasses.join(' ')} 
-							style={innerStyle}>
-							<SpaceContext.Provider value={currentContext}>
-								<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
-									{ children }
-								</SpaceInfoContext.Provider>
-							</SpaceContext.Provider>
-						</div>
-					</>
-				) :
-				React.createElement(
-					props.as || 'div',
-					{
-						id: space.id,
-						ref: divElementRef,
-						className: outerClasses.join(' '),
-						style: USE_INLINESTYLES ? {...innerStyle, ...outerStyle} : innerStyle,
-						onClick: props.onClick,
-						onMouseDown: props.onMouseDown,
-						onMouseEnter: props.onMouseEnter,
-						onMouseLeave: props.onMouseLeave
-					},
-					<>
-						{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-						{ resize.resizeHandle }
+		resize.resizeHandle && props.scrollable ?
+			React.createElement(
+				props.as || 'div',
+				{
+					id: space.id,
+					ref: divElementRef,
+					className: outerClasses.join(' '),
+					style: USE_INLINESTYLES ? {...outerStyle, ...innerStyle} : undefined,
+					onClick: props.onClick,
+					onMouseDown: props.onMouseDown,
+					onMouseEnter: props.onMouseEnter,
+					onMouseLeave: props.onMouseLeave
+				},
+				<>
+					{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
+					{ resize.resizeHandle }
+					<div 
+						className={innerClasses.join(' ')} 
+						style={innerStyle}>
 						<SpaceContext.Provider value={currentContext}>
-							<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
-							{ children }
+							<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize ? currentSize.width : 0), height: Math.floor(currentSize ? currentSize.height : 0) }}>
+								{ children }
 							</SpaceInfoContext.Provider>
 						</SpaceContext.Provider>
-					</>
-				)
+					</div>
+				</>
+			) :
+			React.createElement(
+				props.as || 'div',
+				{
+					id: space.id,
+					ref: divElementRef,
+					className: outerClasses.join(' '),
+					style: USE_INLINESTYLES ? {...innerStyle, ...outerStyle} : innerStyle,
+					onClick: props.onClick,
+					onMouseDown: props.onMouseDown,
+					onMouseEnter: props.onMouseEnter,
+					onMouseLeave: props.onMouseLeave
+				},
+				<>
+					{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
+					{ resize.resizeHandle }
+					<SpaceContext.Provider value={currentContext}>
+					<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize ? currentSize.width : 0), height: Math.floor(currentSize ? currentSize.height : 0) }}>
+						{ children }
+						</SpaceInfoContext.Provider>
+					</SpaceContext.Provider>
+				</>
+			)
 	)
 })
 

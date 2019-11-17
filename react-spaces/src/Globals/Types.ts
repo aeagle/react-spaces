@@ -69,8 +69,7 @@ export interface IPrivateProps {
 	anchorSize?: string | number,
 	anchor?: AnchorType,
 	resizable?: boolean,
-	order?: number,
-	topMost?: boolean
+	order?: number
 }
 
 export const privateProps = {

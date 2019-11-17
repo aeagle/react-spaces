@@ -1,10 +1,10 @@
 import * as React from 'react';
 import './Styles.css';
 import * as PropTypes from "prop-types";
-import { SpaceInternal } from './Space';
 import { SpaceContext } from './Globals/Contexts';
 import { ISpace } from './Globals/Types';
 import { createSpaceContext } from './Globals/ISpaceContext';
+import { HeadStyles } from './HeadStyles';
 
 interface IProps {
 	className?: string,
@@ -26,10 +26,9 @@ export const ViewPort : React.FC<IProps> = (props) => {
 				right: props.right || 0, 
 				bottom: props.bottom || 0
 			}}>
+			<HeadStyles spaces={children} />
 			<SpaceContext.Provider value={createSpaceContext(children, setChildren)}>
-				<SpaceInternal topMost={true}>
-					{props.children}
-				</SpaceInternal>
+				{props.children}
 			</SpaceContext.Provider>
 		</div>
 	)

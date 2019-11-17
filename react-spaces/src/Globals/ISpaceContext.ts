@@ -114,8 +114,7 @@ export const createSpaceContext = (
 	children: ISpace[],
 	updateChildren: (children: ISpace[]) => void,
 	currentSpace?: ISpace,
-	parent?: ISpaceContext | null,
-	zIndex?: number) => {
+	parent?: ISpaceContext | null) => {
 
 	const context : ISpaceContext = {
 		level: parent ? parent.level + 1 : 0,
