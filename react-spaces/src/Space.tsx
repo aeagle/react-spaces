@@ -49,6 +49,15 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 	const overlayHandle = props.overlayHandle !== undefined ? props.overlayHandle : true;
 	let resizeType: ResizeType | undefined = undefined;
 	let resizeHandle: React.ReactNode | undefined = undefined;
+	const onResizeEnd = React.useCallback(() => {
+		if (divElementRef.current)
+		{
+			const currentRect = divElementRef.current.getBoundingClientRect();
+			props.onResizeEnd && props.onResizeEnd(
+				Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height)
+			);
+		}
+	}, []);
 
 	if (parentContext && props.anchor && props.resizable) {
 		resizeType = AnchorToResizeTypeMap[props.anchor];
@@ -56,16 +65,6 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 		const resizeHandleWidth = resizeType === ResizeType.Left || resizeType === ResizeType.Right ? handleSize : undefined;
 		const resizeHandleHeight = resizeType === ResizeType.Top || resizeType === ResizeType.Bottom ? handleSize : undefined;
 
-		const onResizeEnd = React.useCallback(() => {
-			if (divElementRef.current)
-			{
-				const currentRect = divElementRef.current.getBoundingClientRect();
-				props.onResizeEnd && props.onResizeEnd(
-					Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height)
-				);
-			}
-		}, []);
-	
 		const onResize = (
 			originalX: number, 
 			originalY: number, 
@@ -124,7 +123,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 				}
 				window.removeEventListener('touchmove', withPreventDefault);
 				window.removeEventListener('touchend', removeListener);
-				moved && onResizeEnd();
+				onResizeEnd();
 			};
 			window.addEventListener('touchmove', withPreventDefault);
 			window.addEventListener('touchend', removeListener);
@@ -165,7 +164,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 				}
 				window.removeEventListener('mousemove', withPreventDefault);
 				window.removeEventListener('mouseup', removeListener);
-				moved && onResizeEnd();
+				onResizeEnd();
 			};
 			window.addEventListener('mousemove', withPreventDefault);
 			window.addEventListener('mouseup', removeListener);
