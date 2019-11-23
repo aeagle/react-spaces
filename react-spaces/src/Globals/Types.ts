@@ -47,7 +47,11 @@ export interface IPublicProps {
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
 	onMouseDown?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
 	onMouseEnter?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
-	onMouseLeave?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+	onMouseLeave?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
+	onMouseMove?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
+	onTouchStart?: (event: React.TouchEvent<HTMLElement>) => void,
+	onTouchMove?: (event: React.TouchEvent<HTMLElement>) => void,
+	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void
 }
 
 export const publicProps = {
@@ -62,7 +66,11 @@ export const publicProps = {
 	onClick: PropTypes.func,
 	onMouseDown: PropTypes.func,
 	onMouseEnter: PropTypes.func,
-	onMouseLeave: PropTypes.func
+	onMouseLeave: PropTypes.func,
+	onMouseMove: PropTypes.func,
+	onTouchStart: PropTypes.func,
+	onTouchMove: PropTypes.func,
+	onTouchEnd: PropTypes.func
 }
 
 export interface IPrivateProps {
