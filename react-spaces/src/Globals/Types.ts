@@ -43,7 +43,6 @@ export interface IPublicProps {
 	centerContent?: CenterType,
 	as?: string,
 	children?: React.ReactNode,
-	debug?: boolean,
 	zIndex?: number,
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
 	onMouseDown?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
@@ -59,7 +58,6 @@ export const publicProps = {
 	trackSize: PropTypes.bool,
 	centerContent: PropTypes.oneOf([ CenterType.None, CenterType.Vertical, CenterType.HorizontalVertical ]),
 	as: PropTypes.string,
-	debug: PropTypes.bool,
 	zIndex: PropTypes.number,
 	onClick: PropTypes.func,
 	onMouseDown: PropTypes.func,
@@ -78,7 +76,8 @@ export const privateProps = {
 	anchorSize: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
 	anchor: PropTypes.oneOf([ AnchorType.Bottom, AnchorType.Left, AnchorType.Right, AnchorType.Top ]),
 	resizable: PropTypes.bool,
-	order: PropTypes.number
+	order: PropTypes.number,
+	topMost: PropTypes.bool
 }
 
 export interface IAnchoredProps {
@@ -135,45 +134,29 @@ export const allProps = { ...publicProps, ...privateProps, ...resizableProps, ..
 
 export interface IState {
 	id: string,
-	currentWidth: number,
-	currentHeight: number,
-	adjustedSize: number,
+	children: ISpace[]
+}
+
+export interface ISize {
+	width: number,
+	height: number
+}
+
+export interface ISpace {
+	id: string,
 	adjustedLeft: number,
 	adjustedTop: number,
-	spaceTakers: ISpaceTaker[],
-
-	parsedSize?: number;
-	left?: number | string;
-	top?: number | string;
-	right?: number | string;
-	bottom?: number | string;
-	width?: number | string;
-	height?: number | string;
-	debug: boolean;
-}
-
-export interface ISpaceContext {
-	debug: boolean,
-	zIndex: number,
-	level: number,
-	width: number,
-	height: number,
-	spaceTakers: ISpaceTaker[],
-	registerSpaceTaker: (spaceTaker: ISpaceTaker) => void,
-	removeSpaceTaker: (id: string) => void,
-	updateSpaceTakerAdjustedSize: (id: string, adjustedSize: number) => void,
-	updateSpaceTakerLayer: (id: string, zIndex: number) => void,
-	updateDebug: (id: string, debug: boolean) => void,
-	startDrag: (e: React.MouseEvent) => void
-}
-
-export interface ISpaceTaker {
-	id: string,
 	order: number,
 	zIndex: number,
-	anchorType: AnchorType,
-	size: number | string,
-	adjustedSize: number
+	anchorType: AnchorType | undefined,
+	anchorSize: number | string,
+	adjustedSize: number,
+	left?: number | string,
+	top?: number | string,
+	right?: number | string,
+	bottom?: number | string,
+	width?: number | string,
+	height?: number | string,
 }
 
 export interface ISpaceInfo {

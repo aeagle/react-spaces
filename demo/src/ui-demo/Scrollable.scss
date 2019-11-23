@@ -1,5 +1,5 @@
 .scrollable-demo {
-	header > .spaces-space-inner {
+	header {
 		background-color: black;
 		color: white;
 		font-size: 140%;
@@ -7,7 +7,7 @@
 		padding: 15px;
 	}
 
-	main > .spaces-space-inner {
+	article {
 		padding: 0 25px 25px 25px;
 		font-size: 130%;
 		color: black;

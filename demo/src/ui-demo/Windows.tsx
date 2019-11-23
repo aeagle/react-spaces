@@ -58,7 +58,7 @@ const WindowInner : React.FC<{ onClick?: () => void }> = (props) => {
 
     return (
         <>
-            <Space.Top className="title-bar" onMouseDown={e => { props.onClick && props.onClick(); parentSpace.startDrag(e); }} size={40}>
+            <Space.Top className="title-bar" onMouseDown={e => { props.onClick && props.onClick(); parentSpace.startDrag(); }} size={40}>
                 {Description(`Window title`)}
             </Space.Top>
             <Space.Fill className="content" centerContent={Space.CenterType.HorizontalVertical}>

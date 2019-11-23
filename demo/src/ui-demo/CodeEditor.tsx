@@ -81,7 +81,7 @@ const IconPane = () => {
 
 const SideBar : React.FC<{ wide: boolean, visible: boolean }> = (props) => {
 	return (
-		<Space.LeftResizable order={2} className="side-bar" size={props.visible ? (props.wide ? 500 : 300) : 0} handleSize={2} overlayHandle={false} style={{ backgroundColor: '#252526' }}>
+		<Space.LeftResizable order={2} className="side-bar" size={props.visible ? (props.wide ? 500 : 300) : 0} handleSize={20} overlayHandle={true} style={{ backgroundColor: '#252526' }}>
 			<SideBarPane order={1} title="Open editors" height={200}>
 
 			</SideBarPane>
@@ -116,7 +116,7 @@ const SideBarPaneInner: React.FC<{ title: string }> = (props) => {
 					{props.title}
 				</Space.CenteredVertically>
 			</Space.Top>
-			<Space.Fill className="content">
+			<Space.Fill className="content" style={{ backgroundColor: '#1f1f1f' }}>
 				{props.children}
 			</Space.Fill>
 		</>
@@ -125,7 +125,7 @@ const SideBarPaneInner: React.FC<{ title: string }> = (props) => {
 
 const BottomPane : React.FC<{ toggleVisibility: () => void, toggleSize: () => void }> = (props) => {
 	return (
-		<Space.BottomResizable className="bottom-pane" size={60} handleSize={2} centerContent={Space.CenterType.HorizontalVertical}>
+		<Space.BottomResizable className="bottom-pane" size={60} handleSize={20} centerContent={Space.CenterType.HorizontalVertical}>
 			<button onClick={props.toggleVisibility}>Toggle sidebar visibility</button>
 			<button onClick={props.toggleSize}>Toggle sidebar size</button>
 		</Space.BottomResizable>

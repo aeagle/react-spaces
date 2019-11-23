@@ -19,11 +19,11 @@ export const ScrollableDemo = () => {
 	}, [selectedKey]);
 
 	return (
-	<Space.Fill className="scrollable-demo">
+	<Space.Fill as="main" className="scrollable-demo">
 		<Space.Top as="header" size={50} centerContent={Space.CenterType.Vertical}>
 			Header
 		</Space.Top>
-		<Space.Fill>
+		<Space.Fill as="section">
 			<Space.LeftResizable as="aside" size={sidebarSize} onResizeEnd={(newSize) => { setSidebarSize(newSize);}} handleSize={30}>
 				<Menu defaultSelectedKeys={[ selectedKey ]} onSelect={e => setSelectedKey(e.key)}>
 					<Menu.Item key="1">Menu item 1</Menu.Item>
@@ -31,7 +31,7 @@ export const ScrollableDemo = () => {
 					<Menu.Item key="3">Menu item 3</Menu.Item>
 				</Menu>
 			</Space.LeftResizable>
-			<Space.Fill as="main" scrollable={true}>
+			<Space.Fill as="article" scrollable={true}>
 				{
 					loading ? 
 						<Space.Centered><Spin size="large" /><br />Loading stuff</Space.Centered> :

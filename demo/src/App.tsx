@@ -1,6 +1,7 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import './App.scss';
 import ReactGA from 'react-ga';
+// import { Test } from './Test';
 import { UI } from './ui-demo/UI';
 
 ReactGA.initialize("UA-144490437-1");

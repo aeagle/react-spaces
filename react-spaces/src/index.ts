@@ -2,13 +2,24 @@ export * from './Centered';
 export * from './ClearFix';
 export * from './Fixed';
 export * from './ViewPort';
-export * from './Space';
 export * from './Layer';
 export * from './SpaceInfo';
+export {
+	Fill,
+	Left,
+	Right,
+	Top,
+	Bottom,
+	LeftResizable,
+	RightResizable,
+	TopResizable,
+	BottomResizable,
+	Positioned
+} from './Space';
 
 export { 
 	useParentSpace 
-} from './Globals/Hooks';
+} from './Hooks/useParentSpace';
 
 export {
 	CenterType,
