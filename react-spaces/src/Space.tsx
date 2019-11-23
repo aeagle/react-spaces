@@ -244,7 +244,11 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 					onClick: props.onClick,
 					onMouseDown: props.onMouseDown,
 					onMouseEnter: props.onMouseEnter,
-					onMouseLeave: props.onMouseLeave
+					onMouseLeave: props.onMouseLeave,
+					onMouseMove: props.onMouseMove,
+					onTouchStart: props.onTouchStart,
+					onTouchMove: props.onTouchMove,
+					onTouchEnd: props.onTouchEnd
 				},
 				<>
 					{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
@@ -270,7 +274,11 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 					onClick: props.onClick,
 					onMouseDown: props.onMouseDown,
 					onMouseEnter: props.onMouseEnter,
-					onMouseLeave: props.onMouseLeave
+					onMouseLeave: props.onMouseLeave,
+					onMouseMove: props.onMouseMove,
+					onTouchStart: props.onTouchStart,
+					onTouchMove: props.onTouchMove,
+					onTouchEnd: props.onTouchEnd
 				},
 				<>
 					{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
