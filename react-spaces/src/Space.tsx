@@ -32,8 +32,9 @@ BottomResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps
 export const RightResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <SpaceInternal {...props} anchor={AnchorType.Right} anchorSize={props.size} resizable={true} />
 RightResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps};
 export const Positioned : React.FC<IPublicProps & IResizableProps & IPositionedProps> = (props) => <SpaceInternal {...props} />
-RightResizable.propTypes = {...publicProps, ...resizableProps, ...positionedProps};
+Positioned.propTypes = {...publicProps, ...resizableProps, ...positionedProps};
 export const Custom : React.FC<AllProps> = (props) => <SpaceInternal {...props} />
+Custom.propTypes = allProps;
 
 export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
