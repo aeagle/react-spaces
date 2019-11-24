@@ -33,6 +33,7 @@ export const RightResizable : React.FC<IPublicProps & IAnchoredProps & IResizabl
 RightResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps};
 export const Positioned : React.FC<IPublicProps & IResizableProps & IPositionedProps> = (props) => <SpaceInternal {...props} />
 RightResizable.propTypes = {...publicProps, ...resizableProps, ...positionedProps};
+export const Custom : React.FC<AllProps> = (props) => <SpaceInternal {...props} />
 
 export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
@@ -95,6 +96,13 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 			if (!divElementRef.current) {
 				return;
 			}
+			
+			if (props.onResizeStart) {
+				const result = props.onResizeStart();
+				if (typeof result === "boolean" && !result) {
+					return;
+				}
+			}
 
 			var rect = divElementRef.current.getBoundingClientRect();
 			var size = isHorizontalSpace(props.anchor) ? rect.width : rect.height;
@@ -129,12 +137,18 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 			window.addEventListener('touchend', removeListener);
 			e.preventDefault();
 			e.stopPropagation();
-			props.onResizeStart && props.onResizeStart();
 		};
 	
 		const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 			if (!divElementRef.current) {
 				return;
+			}
+			
+			if (props.onResizeStart) {
+				const result = props.onResizeStart();
+				if (typeof result === "boolean" && !result) {
+					return;
+				}
 			}
 
 			var rect = divElementRef.current.getBoundingClientRect();
@@ -170,7 +184,6 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 			window.addEventListener('mouseup', removeListener);
 			e.preventDefault();
 			e.stopPropagation();
-			props.onResizeStart && props.onResizeStart();
 		};
 
 		resizeHandle =

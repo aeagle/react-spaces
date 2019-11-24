@@ -34,16 +34,7 @@ export enum CenterType {
 	HorizontalVertical = "horizontalVertical"
 }
 
-export interface IPublicProps {
-	id?: string,
-	className?: string,
-	style?: React.CSSProperties,
-	scrollable?: boolean,
-	trackSize?: boolean,
-	centerContent?: CenterType,
-	as?: string,
-	children?: React.ReactNode,
-	zIndex?: number,
+export interface IReactEvents {
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
 	onMouseDown?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
 	onMouseEnter?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
@@ -52,6 +43,18 @@ export interface IPublicProps {
 	onTouchStart?: (event: React.TouchEvent<HTMLElement>) => void,
 	onTouchMove?: (event: React.TouchEvent<HTMLElement>) => void,
 	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void
+}
+
+export interface IPublicProps extends IReactEvents {
+	id?: string,
+	className?: string,
+	style?: React.CSSProperties,
+	scrollable?: boolean,
+	trackSize?: boolean,
+	centerContent?: CenterType,
+	as?: string,
+	children?: React.ReactNode,
+	zIndex?: number
 }
 
 export const publicProps = {
@@ -103,7 +106,7 @@ export interface IResizableProps {
 	overlayHandle?: boolean,
 	minimumSize?: number,
 	maximumSize?: number,
-	onResizeStart?: () => void,
+	onResizeStart?: () => boolean | void,
 	onResizeEnd?: (newSize: number) => void
 }
 
