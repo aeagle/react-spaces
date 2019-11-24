@@ -129,8 +129,8 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	const currentContext = 
 		createSpaceContext(
 			state.children, 
-			(children) => setState({ children: children }), 
-			space, 
+			(children) => setState({ children: children }),
+			(resizing) => setState({ resizing: resizing }),
 			parentContext
 		);
 
@@ -138,6 +138,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		space,
 		parentContext,
 		currentContext,
-		currentSize: currentSize || { width: 0, height: 0 }
+		currentSize: currentSize || { width: 0, height: 0 },
+		resizing: state.resizing
 	} 
 }

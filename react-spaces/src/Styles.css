@@ -68,8 +68,8 @@
 	box-sizing: border-box;
 }
 
-.spaces-space.resizing .spaces-space {
-	transition: inherit !important;
+.spaces-resizing .spaces-space {
+	transition: none !important;
 }
 
 .spaces-space .spaces-space-inner {

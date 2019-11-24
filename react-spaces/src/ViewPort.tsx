@@ -16,10 +16,11 @@ interface IProps extends IReactEvents {
 
 export const ViewPort : React.FC<IProps> = (props) => {
 	const [ children, setChildren ] = React.useState<ISpace[]>([]);
+	const [ resizing, setResizing ] = React.useState(false);
 
 	return (
 		<div 
-			className={`spaces-fullpage-layout${props.className ? ` ${props.className}` : ``}`}
+			className={`spaces-fullpage-layout${props.className ? ` ${props.className}` : ``}${resizing ? ` spaces-resizing` : ``}`}
 			style={{ 
 				left: props.left || 0, 
 				top: props.top || 0, 
@@ -35,7 +36,7 @@ export const ViewPort : React.FC<IProps> = (props) => {
 			onTouchMove={props.onTouchMove}
 			onTouchEnd={props.onTouchEnd}>
 			<HeadStyles spaces={children} />
-			<SpaceContext.Provider value={createSpaceContext(children, setChildren)}>
+			<SpaceContext.Provider value={createSpaceContext(children, setChildren, setResizing)}>
 				{props.children}
 			</SpaceContext.Provider>
 		</div>

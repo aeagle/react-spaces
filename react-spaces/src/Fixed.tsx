@@ -15,6 +15,7 @@ interface IProps extends IReactEvents {
 
 export const Fixed : React.FC<IProps> = (props) => {
 	const [ children, setChildren ] = React.useState<ISpace[]>([]);
+	const [ resizing, setResizing ] = React.useState(false);
 
 	const style = {
 		...props.style,
@@ -26,7 +27,7 @@ export const Fixed : React.FC<IProps> = (props) => {
 
 	return (
 	<div 
-		className={`spaces-fixedsize-layout${props.className ? ` ${props.className}` : ``}`}
+		className={`spaces-fixedsize-layout${props.className ? ` ${props.className}` : ``}${resizing ? ` spaces-resizing` : ``}`}
 		style={style}
 		onClick={props.onClick}
 		onMouseDown={props.onMouseDown}
@@ -37,7 +38,7 @@ export const Fixed : React.FC<IProps> = (props) => {
 		onTouchMove={props.onTouchMove}
 		onTouchEnd={props.onTouchEnd}>
 		<HeadStyles spaces={children} />
-		<SpaceContext.Provider value={createSpaceContext(children, setChildren)}>
+		<SpaceContext.Provider value={createSpaceContext(children, setChildren, setResizing)}>
 			{props.children}
 		</SpaceContext.Provider>
 	</div>

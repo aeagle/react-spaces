@@ -145,6 +145,7 @@ export const allProps = { ...publicProps, ...privateProps, ...resizableProps, ..
 
 export interface IState {
 	id: string,
+	resizing: boolean,
 	children: ISpace[]
 }
 
@@ -167,7 +168,7 @@ export interface ISpace {
 	right?: number | string,
 	bottom?: number | string,
 	width?: number | string,
-	height?: number | string,
+	height?: number | string
 }
 
 export interface ISpaceInfo {

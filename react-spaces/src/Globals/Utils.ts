@@ -20,7 +20,8 @@ function shortuuid() {
 
 export const initialState = (props: AllProps) => ({
 	id: props.id || `s${shortuuid()}`,
-	children: []
+	children: [],
+	resizing: false
 })
 
 export const cssValue = (value: number | string | undefined, adjusted: number) =>
