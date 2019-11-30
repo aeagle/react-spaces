@@ -14,7 +14,8 @@ export {
 	RightResizable,
 	TopResizable,
 	BottomResizable,
-	Positioned
+	Positioned,
+	Custom
 } from './Space';
 
 export { 

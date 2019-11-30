@@ -4,7 +4,8 @@ import { getSizeString } from './Utils';
 export interface ISpaceContext {
 	level: number,
 	children: ISpace[],
-	updateChildren: (children: ISpace[]) => void
+	updateChildren: (children: ISpace[]) => void,
+	updateResizing: (state: boolean) => void
 }
 
 const recalcSpaces = (spaces: ISpace[]) => {
@@ -115,13 +116,14 @@ export const updateSpace = (context: ISpaceContext, id: string, delta: Partial<I
 export const createSpaceContext = (
 	children: ISpace[],
 	updateChildren: (children: ISpace[]) => void,
-	currentSpace?: ISpace,
+	updateResizing: (state: boolean) => void,
 	parent?: ISpaceContext | null) => {
 
 	const context : ISpaceContext = {
 		level: parent ? parent.level + 1 : 0,
 		children: children,
-		updateChildren: updateChildren
+		updateChildren: updateChildren,
+		updateResizing: updateResizing
 	}
 
 	return context;

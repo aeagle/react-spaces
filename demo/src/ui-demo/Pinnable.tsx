@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Space from 'react-spaces';
+import './Pinnable.scss';
 
 export const Pinnable = () => {
     const [leftOpen, setLeftOpen] = React.useState(false);
@@ -9,7 +10,7 @@ export const Pinnable = () => {
   
     return (
       <>
-        <Space.Fill>
+        <Space.Fill className="pinnable">
           <Space.LeftResizable
             order={1}
             size={leftOpen ? "25%" : 50}
