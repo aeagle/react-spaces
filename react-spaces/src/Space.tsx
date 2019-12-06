@@ -40,7 +40,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
 	const divElementRef = React.useRef<HTMLDivElement>();
 
-	const { 
+	const {
 		space,
 		parentContext,
 		currentContext,
@@ -69,36 +69,36 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 		const resizeHandleHeight = resizeType === ResizeType.Top || resizeType === ResizeType.Bottom ? handleSize : undefined;
 
 		const onResize = (
-			originalX: number, 
-			originalY: number, 
-			x: number, 
+			originalX: number,
+			originalY: number,
+			x: number,
 			y: number,
 			minimumAdjust: number,
 			maximumAdjust: number | undefined) => {
 
-			const adjustmentX = 
+			const adjustmentX =
 				Math.min(
 					Math.max(resizeType === ResizeType.Left ? originalX - x : x - originalX, minimumAdjust),
 					maximumAdjust === undefined ? 999999 : maximumAdjust
 				);
-			const adjustmentY = 
+			const adjustmentY =
 				Math.min(
 					Math.max(resizeType === ResizeType.Top ? originalY - y : y - originalY, minimumAdjust),
 					maximumAdjust === undefined ? 999999 : maximumAdjust
 				);
-	
+
 			const adjustment = isHorizontalSpace(props.anchor) ? adjustmentX : adjustmentY;
-	
+
 			if (adjustment !== space.adjustedSize) {
 				updateSpace(parentContext, space.id, { adjustedSize: adjustment });
 			}
 		};
-	
+
 		const startTouchResize = (e: React.TouchEvent<HTMLDivElement>) => {
 			if (!divElementRef.current) {
 				return;
 			}
-			
+
 			if (props.onResizeStart) {
 				const result = props.onResizeStart();
 				if (typeof result === "boolean" && !result) {
@@ -118,15 +118,15 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 			let lastX = 0;
 			let lastY = 0;
 			let moved = false;
-	
+
 			const touchResize = (x: number, y: number) => onResize(originalTouchX, originalTouchY, x, y, minimumAdjust, maximumAdjust);
 			const throttledTouchResize = throttle<typeof touchResize>(touchResize, RESIZE_THROTTLE);
-			const withPreventDefault = (e: TouchEvent) => { 
-				moved = true; 
-				lastX = e.touches[0].pageX; 
-				lastY = e.touches[0].pageY; 
-				e.preventDefault(); 
-				e.stopImmediatePropagation(); 
+			const withPreventDefault = (e: TouchEvent) => {
+				moved = true;
+				lastX = e.touches[0].pageX;
+				lastY = e.touches[0].pageY;
+				e.preventDefault();
+				e.stopImmediatePropagation();
 				throttledTouchResize(lastX, lastY);
 			};
 			const removeListener = () => {
@@ -143,12 +143,12 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 			e.preventDefault();
 			e.stopPropagation();
 		};
-	
+
 		const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 			if (!divElementRef.current) {
 				return;
 			}
-			
+
 			if (props.onResizeStart) {
 				const result = props.onResizeStart();
 				if (typeof result === "boolean" && !result) {
@@ -171,13 +171,13 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
 			const mouseResize = (x: number, y: number) => onResize(originalMouseX, originalMouseY, x, y, minimumAdjust, maximumAdjust);
 			const throttledMouseResize = throttle<typeof mouseResize>(mouseResize, RESIZE_THROTTLE);
-			const withPreventDefault = (e: MouseEvent) => { 
-				moved = true; 
+			const withPreventDefault = (e: MouseEvent) => {
+				moved = true;
 				lastX = e.pageX;
 				lastY = e.pageY;
-				e.preventDefault(); 
-				e.stopImmediatePropagation(); 
-				throttledMouseResize(lastX, lastY); 
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				throttledMouseResize(lastX, lastY);
 			};
 			const removeListener = () => {
 				if (moved) {
@@ -197,13 +197,13 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 		resizeHandle =
 			<ResizeHandle
 				type={resizeType}
-				adjustedSize={space.adjustedSize} 
+				adjustedSize={space.adjustedSize}
 				width={resizeHandleWidth}
 				height={resizeHandleHeight}
 				onMouseDown={e => startResize(e)}
 				onTouchStart={e => startTouchResize(e)} />;
 	}
-	
+
 	const outerStyle = {
 		left: (space.left !== undefined ? cssValue(space.left, space.adjustedLeft) : undefined),
 		top: (space.top !== undefined ? cssValue(space.top, space.adjustedTop) : undefined),
@@ -213,11 +213,11 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 		height: isVerticalSpace(props.anchor) ? cssValue(props.anchorSize, space.adjustedSize) : space.height,
 		zIndex: space.zIndex
 	};
-	
-	const innerStyle = 
+
+	const innerStyle =
 		{
-			...props.style, 
-			...{ 
+			...props.style,
+			...{
 				left: resizeType === ResizeType.Left && !overlayHandle ? handleSize : undefined,
 				top: resizeType === ResizeType.Top && !overlayHandle ? handleSize : undefined,
 				right: resizeType === ResizeType.Right && !overlayHandle ? handleSize : undefined,
@@ -225,12 +225,12 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 			}
 		};
 
-	const userClasses = 
-		props.className ? 
-			props.className.split(' ').map(c => c.trim()) : 
+	const userClasses =
+		props.className ?
+			props.className.split(' ').map(c => c.trim()) :
 			[];
-		
-	const outerClasses = 
+
+	const outerClasses =
 		[
 			...[
 				"spaces-space",
@@ -242,7 +242,7 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 
 	const innerClasses =
 		[
-			"spaces-space-inner", 
+			"spaces-space-inner",
 			...userClasses
 		].filter(c => c);
 
@@ -255,63 +255,36 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 	}
 
 	return (
-		resizeHandle && props.scrollable ?
-			React.createElement(
-				props.as || 'div',
-				{
-					id: space.id,
-					ref: divElementRef,
-					className: outerClasses.join(' '),
-					style: USE_INLINESTYLES ? {...outerStyle, ...innerStyle} : undefined,
-					onClick: props.onClick,
-					onMouseDown: props.onMouseDown,
-					onMouseEnter: props.onMouseEnter,
-					onMouseLeave: props.onMouseLeave,
-					onMouseMove: props.onMouseMove,
-					onTouchStart: props.onTouchStart,
-					onTouchMove: props.onTouchMove,
-					onTouchEnd: props.onTouchEnd
-				},
-				<>
-					{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-					{ resizeHandle }
-					<div 
-						className={innerClasses.join(' ')} 
-						style={innerStyle}>
-						<SpaceContext.Provider value={currentContext}>
-							<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
-								{ children }
-							</SpaceInfoContext.Provider>
-						</SpaceContext.Provider>
-					</div>
-				</>
-			) :
-			React.createElement(
-				props.as || 'div',
-				{
-					id: space.id,
-					ref: divElementRef,
-					className: outerClasses.join(' '),
-					style: USE_INLINESTYLES ? {...innerStyle, ...outerStyle} : innerStyle,
-					onClick: props.onClick,
-					onMouseDown: props.onMouseDown,
-					onMouseEnter: props.onMouseEnter,
-					onMouseLeave: props.onMouseLeave,
-					onMouseMove: props.onMouseMove,
-					onTouchStart: props.onTouchStart,
-					onTouchMove: props.onTouchMove,
-					onTouchEnd: props.onTouchEnd
-				},
-				<>
-					{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
-					{ resizeHandle }
+		React.createElement(
+			props.as || 'div',
+			{
+				id: space.id,
+				ref: divElementRef,
+				className: outerClasses.join(' '),
+				style: resizeHandle && props.scrollable ?  (USE_INLINESTYLES ? {...outerStyle, ...innerStyle} : undefined) : (USE_INLINESTYLES ? {...innerStyle, ...outerStyle} : innerStyle),
+				onClick: props.onClick,
+				onMouseDown: props.onMouseDown,
+				onMouseEnter: props.onMouseEnter,
+				onMouseLeave: props.onMouseLeave,
+				onMouseMove: props.onMouseMove,
+				onTouchStart: props.onTouchStart,
+				onTouchMove: props.onTouchMove,
+				onTouchEnd: props.onTouchEnd
+			},
+			<>
+				{ !USE_INLINESTYLES && <HeadStyles spaces={currentContext.children} /> }
+				{ resizeHandle }
+				<div
+					className={resizeHandle && props.scrollable ? innerClasses.join(' ') : ''}
+					style={resizeHandle && props.scrollable ? innerStyle : {}}>
 					<SpaceContext.Provider value={currentContext}>
-					<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
-						{ children }
+						<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
+							{ children }
 						</SpaceInfoContext.Provider>
 					</SpaceContext.Provider>
-				</>
-			)
+				</div>
+			</>
+		)
 	)
 })
 
