@@ -4,6 +4,7 @@ import 'antd/dist/antd.css';
 import './UI.scss';
 import { CodeEditor } from './CodeEditor';
 import { Resizable } from './Resizable';
+import { ResizableScrollable } from './ResizableScrollable';
 import { ScrollableDemo } from './Scrollable';
 import { LayersDemo } from './Layers';
 import { WindowsDemo } from './Windows';
@@ -46,6 +47,14 @@ const DemoSelection = (props: {
 								Nested / resizable spaces
 								<span>
 									Example with nested and resizable spaces
+								</span>
+							</a>
+						</li>
+						<li className={props.selectedDemo === "resizablescrollable" ? "active" : undefined}>
+							<a onClick={() => props.setSelectedDemo("resizablescrollable")}>
+								Resizable / Scrollable
+								<span>
+									Resizable and scrollable spaces
 								</span>
 							</a>
 						</li>
@@ -127,6 +136,7 @@ const Main = (props: { selectedDemo: string, showSpaces: boolean }) => {
 	return (
 		<Space.Fill>
 			{ props.selectedDemo === "resizable" ? <Resizable /> : null }
+			{ props.selectedDemo === "resizablescrollable" ? <ResizableScrollable /> : null }
 			{ props.selectedDemo === "scrollable" ? <ScrollableDemo /> : null }
 			{ props.selectedDemo === "layers" ? <LayersDemo /> : null }
 			{ props.selectedDemo === "windows" ? <WindowsDemo /> : null }
