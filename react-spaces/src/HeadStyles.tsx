@@ -37,10 +37,10 @@ export const HeadStyles : React.FC<{ spaces: ISpace[] }> = (props) => {
 				css.push(`width: ${style.width};`);
 			}
 			if (style.height) {
-				css.push(`height: ${style.height}`);
+				css.push(`height: ${style.height};`);
 			}
 			if (style.zIndex) {
-				css.push(`z-index: ${style.zIndex}`);
+				css.push(`z-index: ${style.zIndex};`);
 			}
 			if (css.length > 0) {
 				styles.push(`#${space.id} { ${css.join(' ')} }`);
