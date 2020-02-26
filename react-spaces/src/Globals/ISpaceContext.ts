@@ -5,7 +5,8 @@ export interface ISpaceContext {
 	level: number,
 	children: ISpace[],
 	updateChildren: (children: ISpace[]) => void,
-	updateResizing: (state: boolean) => void
+	updateResizing: (state: boolean) => void,
+	startDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 const recalcSpaces = (spaces: ISpace[]) => {
@@ -124,13 +125,15 @@ export const createSpaceContext = (
 	children: ISpace[],
 	updateChildren: (children: ISpace[]) => void,
 	updateResizing: (state: boolean) => void,
+	startDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void,
 	parent?: ISpaceContext | null) => {
 
 	const context : ISpaceContext = {
 		level: parent ? parent.level + 1 : 0,
 		children: children,
 		updateChildren: updateChildren,
-		updateResizing: updateResizing
+		updateResizing: updateResizing,
+		startDrag: startDrag
 	}
 
 	return context;

@@ -36,7 +36,7 @@ export const ViewPort : React.FC<IProps> = (props) => {
 			onTouchMove={props.onTouchMove}
 			onTouchEnd={props.onTouchEnd}>
 			<HeadStyles spaces={children} />
-			<SpaceContext.Provider value={createSpaceContext(children, setChildren, setResizing)}>
+			<SpaceContext.Provider value={createSpaceContext(children, setChildren, setResizing, () => null)}>
 				{props.children}
 			</SpaceContext.Provider>
 		</div>
