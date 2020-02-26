@@ -1,5 +1,7 @@
 import * as PropTypes from "prop-types";
 
+export type SizeUnit = number | string | undefined;
+
 export enum ResizeType {
 	Left = "resize-left",
 	Right = "resize-right",
@@ -77,13 +79,15 @@ export const publicProps = {
 }
 
 export interface IPrivateProps {
-	anchorSize?: string | number,
+	isPositioned: boolean,
+	anchorSize?: SizeUnit,
 	anchor?: AnchorType,
 	resizable?: boolean,
 	order?: number
 }
 
 export const privateProps = {
+	isPositioned: PropTypes.bool.isRequired,
 	anchorSize: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
 	anchor: PropTypes.oneOf([ AnchorType.Bottom, AnchorType.Left, AnchorType.Right, AnchorType.Top ]),
 	resizable: PropTypes.bool,
@@ -92,7 +96,7 @@ export const privateProps = {
 }
 
 export interface IAnchoredProps {
-	size: number | string,
+	size: SizeUnit,
 	order?: number
 }
 
@@ -109,7 +113,7 @@ export interface IResizableProps {
 	onResizeStart?: () => boolean | void,
 	onResizeEnd?: (newSize: number) => void
 }
-
+ 
 export const resizableProps = {
 	handleSize: PropTypes.number,
 	overlayHandle: PropTypes.bool,
@@ -120,12 +124,12 @@ export const resizableProps = {
 }
 
 export interface IPositionedProps {
-	left?: string | number,
-	top?: string | number,
-	right?: string | number,
-	bottom?: string | number,
-	width?: string | number,
-	height?: string | number,
+	left?: SizeUnit,
+	top?: SizeUnit,
+	right?: SizeUnit,
+	bottom?: SizeUnit,
+	width?: SizeUnit,
+	height?: SizeUnit,
 	resizable?: boolean
 }
 
@@ -161,14 +165,15 @@ export interface ISpace {
 	order: number,
 	zIndex: number,
 	anchorType: AnchorType | undefined,
-	anchorSize: number | string,
+	anchorSize: SizeUnit,
 	adjustedSize: number,
-	left?: number | string,
-	top?: number | string,
-	right?: number | string,
-	bottom?: number | string,
-	width?: number | string,
-	height?: number | string
+	left?: SizeUnit,
+	top?: SizeUnit,
+	right?: SizeUnit,
+	bottom?: SizeUnit,
+	width?: SizeUnit,
+	height?: SizeUnit,
+	isPositioned: boolean
 }
 
 export interface ISpaceInfo {

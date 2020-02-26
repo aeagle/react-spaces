@@ -4,7 +4,7 @@ import { SpaceContext, SpaceInfoContext } from './Globals/Contexts';
 import './Styles.css';
 import { CenteredVertically, Centered } from './Centered';
 import { useSpace } from './Hooks/useSpace';
-import { cssValue, isHorizontalSpace, isVerticalSpace } from './Globals/Utils';
+import { cssValue, isHorizontalSpace, isVerticalSpace, getSizeString } from './Globals/Utils';
 import { HeadStyles } from './HeadStyles';
 import { ResizeHandle } from './ResizeHandle';
 import { updateSpace } from './Globals/ISpaceContext';
@@ -13,25 +13,25 @@ import { throttle } from './Globals/Throttle';
 const USE_INLINESTYLES = false;
 const RESIZE_THROTTLE = 5;
 
-export const Fill : React.FC<IPublicProps> = (props) => <SpaceInternal {...props} />
+export const Fill : React.FC<IPublicProps> = (props) => <SpaceInternal {...props} isPositioned={false} />
 Fill.propTypes = publicProps;
-export const Top : React.FC<IPublicProps & IAnchoredProps> = (props) => <SpaceInternal {...props} anchor={AnchorType.Top} anchorSize={props.size} />
+export const Top : React.FC<IPublicProps & IAnchoredProps> = (props) => <SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Top} anchorSize={props.size} />
 Top.propTypes = {...publicProps, ...anchoredProps};
-export const Left : React.FC<IPublicProps & IAnchoredProps> = (props) => <SpaceInternal {...props} anchor={AnchorType.Left} anchorSize={props.size} />
+export const Left : React.FC<IPublicProps & IAnchoredProps> = (props) => <SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Left} anchorSize={props.size} />
 Left.propTypes = {...publicProps, ...anchoredProps};
-export const Bottom : React.FC<IPublicProps & IAnchoredProps> = (props) => <SpaceInternal {...props} anchor={AnchorType.Bottom} anchorSize={props.size} />
+export const Bottom : React.FC<IPublicProps & IAnchoredProps> = (props) => <SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Bottom} anchorSize={props.size} />
 Bottom.propTypes = {...publicProps, ...anchoredProps};
-export const Right : React.FC<IPublicProps & IAnchoredProps> = (props) => <SpaceInternal {...props} anchor={AnchorType.Right} anchorSize={props.size} />
+export const Right : React.FC<IPublicProps & IAnchoredProps> = (props) => <SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Right} anchorSize={props.size} />
 Right.propTypes = {...publicProps, ...anchoredProps};
-export const TopResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <SpaceInternal {...props} anchor={AnchorType.Top} anchorSize={props.size} resizable={true} />
+export const TopResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Top} anchorSize={props.size} resizable={true} />
 TopResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps};
-export const LeftResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <SpaceInternal {...props} anchor={AnchorType.Left} anchorSize={props.size} resizable={true} />
+export const LeftResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Left} anchorSize={props.size} resizable={true} />
 LeftResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps};
-export const BottomResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <SpaceInternal {...props} anchor={AnchorType.Bottom} anchorSize={props.size} resizable={true} />
+export const BottomResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Bottom} anchorSize={props.size} resizable={true} />
 BottomResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps};
-export const RightResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <SpaceInternal {...props} anchor={AnchorType.Right} anchorSize={props.size} resizable={true} />
+export const RightResizable : React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => <SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Right} anchorSize={props.size} resizable={true} />
 RightResizable.propTypes = {...publicProps, ...anchoredProps, ...resizableProps};
-export const Positioned : React.FC<IPublicProps & IResizableProps & IPositionedProps> = (props) => <SpaceInternal {...props} />
+export const Positioned : React.FC<IPublicProps & IResizableProps & IPositionedProps> = (props) => <SpaceInternal {...props} isPositioned={true} />
 Positioned.propTypes = {...publicProps, ...resizableProps, ...positionedProps};
 export const Custom : React.FC<AllProps> = (props) => <SpaceInternal {...props} />
 Custom.propTypes = allProps;
@@ -209,8 +209,8 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 		top: (space.top !== undefined ? cssValue(space.top, space.adjustedTop) : undefined),
 		right: (space.right !== undefined ? cssValue(space.right, space.adjustedLeft) : undefined),
 		bottom: (space.bottom !== undefined ? cssValue(space.bottom, space.adjustedTop) : undefined),
-		width: isHorizontalSpace(props.anchor) ? cssValue(props.anchorSize, space.adjustedSize) : space.width,
-		height: isVerticalSpace(props.anchor) ? cssValue(props.anchorSize, space.adjustedSize) : space.height,
+		width: isHorizontalSpace(props.anchor) ? cssValue(props.anchorSize, space.adjustedSize) : getSizeString(space.width),
+		height: isVerticalSpace(props.anchor) ? cssValue(props.anchorSize, space.adjustedSize) : getSizeString(space.height),
 		zIndex: space.zIndex
 	};
 	

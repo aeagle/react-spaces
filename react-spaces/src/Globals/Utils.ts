@@ -1,7 +1,10 @@
-import { AnchorType, AllProps } from './Types';
+import { AnchorType, AllProps, SizeUnit } from './Types';
 
 export const getSizeString = 
-	(size: string | number) => typeof(size) === "string" ? size : `${size}${size !== 0 ? "px" : ""}`;
+	(size: SizeUnit) => 
+		size !== undefined ?
+			(typeof(size) === "string" ? size : `${size}${size !== 0 ? "px" : ""}`) :
+			undefined;
 
 export const isFilledSpace = 
 	(props: AllProps) => !props.anchor
@@ -24,7 +27,11 @@ export const initialState = (props: AllProps) => ({
 	resizing: false
 })
 
-export const cssValue = (value: number | string | undefined, adjusted: number) =>
+export const cssValue = (value: SizeUnit, adjusted: number) =>
 	adjusted ?
 		`calc(${getSizeString(value || 0)} + ${getSizeString(adjusted)})` :
-		getSizeString(value || 0)
+		getSizeString(value || 0);
+
+export function coalesce(...args: any[]) {
+	return args.find(x => x !== null && x !== undefined);
+}

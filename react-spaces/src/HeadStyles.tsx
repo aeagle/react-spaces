@@ -1,6 +1,6 @@
 import { ISpace } from "./Globals/Types";
 import * as ReactDOM from 'react-dom';
-import { cssValue, isHorizontalSpace, isVerticalSpace } from './Globals/Utils';
+import { cssValue, isHorizontalSpace, isVerticalSpace, getSizeString } from './Globals/Utils';
 import * as React from 'react';
 
 export const HeadStyles : React.FC<{ spaces: ISpace[] }> = (props) => {
@@ -17,8 +17,8 @@ export const HeadStyles : React.FC<{ spaces: ISpace[] }> = (props) => {
 				top: (space.top !== undefined ? cssValue(space.top, space.adjustedTop) : undefined),
 				right: (space.right !== undefined ? cssValue(space.right, space.adjustedLeft) : undefined),
 				bottom: (space.bottom !== undefined ? cssValue(space.bottom, space.adjustedTop) : undefined),
-				width: isHorizontalSpace(space.anchorType) ? cssValue(space.anchorSize, space.adjustedSize) : space.width,
-				height: isVerticalSpace(space.anchorType) ? cssValue(space.anchorSize, space.adjustedSize) : space.height,
+				width: isHorizontalSpace(space.anchorType) ? cssValue(space.anchorSize, space.adjustedSize) : getSizeString(space.width),
+				height: isVerticalSpace(space.anchorType) ? cssValue(space.anchorSize, space.adjustedSize) : getSizeString(space.height),
 				zIndex: space.zIndex
 			};
 			if (style.left) {

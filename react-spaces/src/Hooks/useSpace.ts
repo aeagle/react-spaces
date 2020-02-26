@@ -1,9 +1,42 @@
 import * as React from 'react';
-import { AllProps, IState, AnchorType, ISize } from 'src/Globals/Types';
+import { AllProps, IState, AnchorType, ISize, SizeUnit } from 'src/Globals/Types';
 import { initialState, isHorizontalSpace, isVerticalSpace } from 'src/Globals/Utils';
 import { ISpaceContext, updateSpace, removeSpace, registerSpace, createSpaceContext } from 'src/Globals/ISpaceContext';
 import { SpaceLayerContext, SpaceContext } from 'src/Globals/Contexts';
 import { ResizeSensor } from 'css-element-queries';
+
+const calcProp = (props: AllProps, positionedFn: (p: AllProps) => SizeUnit, elseFn: (p: AllProps) => SizeUnit) =>
+	props.isPositioned ? positionedFn(props) : elseFn(props);
+const initialLeft = (props: AllProps) => 
+	calcProp(props, 
+		p => p.left,
+		p => p.anchor !== AnchorType.Right ? p.left || 0 : undefined
+	);
+const initialTop = (props: AllProps) => 
+	calcProp(props, 
+		p => p.top,
+		p => p.anchor !== AnchorType.Bottom ? p.top || 0 : undefined
+	);
+const initialRight = (props: AllProps) => 
+	calcProp(props, 
+		p => p.right,
+		p => p.anchor !== AnchorType.Left ? p.right || 0 : undefined
+	);
+const initialBottom = (props: AllProps) =>
+	calcProp(props, 
+		p => p.bottom,
+		p => p.anchor !== AnchorType.Top ? p.bottom || 0 : undefined
+	);
+const initialWidth = (props: AllProps) => 
+	calcProp(props, 
+		p => p.width,
+		p => isHorizontalSpace(p.anchor) ? p.anchorSize || 0 : p.width
+	);
+const initialHeight = (props: AllProps) => 
+	calcProp(props, 
+		p => p.height,
+		p => isVerticalSpace(p.anchor) ? p.anchorSize || 0 : p.height
+	);
 
 export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<HTMLElement | undefined>) => {
 
@@ -31,6 +64,10 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		}
 	}, []);
 
+	if (props.isPositioned) {
+		console.log(initialLeft(props));
+	}
+
 	const space = 
 		registerSpace(
 			parentContext,
@@ -43,8 +80,13 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 				adjustedSize: 0,
 				adjustedLeft: 0,
 				adjustedTop: 0,
-				width: props.anchor && isHorizontalSpace(props.anchor) ? props.anchorSize || 0 : props.width,
-				height: props.anchor && isVerticalSpace(props.anchor) ? props.anchorSize || 0 : props.height
+				left: initialLeft(props),
+				top: initialTop(props),
+				right: initialRight(props),
+				bottom: initialBottom(props),
+				width: initialWidth(props),
+				height: initialHeight(props),
+				isPositioned: props.isPositioned
 			}
 		);
 
@@ -58,8 +100,8 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 			parentContext,
 			state.id, 
 			{
-				width: isHorizontalSpace(props.anchor) ? props.anchorSize || 0 : props.width,
-				height: isVerticalSpace(props.anchor) ? props.anchorSize || 0 : props.height,
+				width: isHorizontalSpace(props.anchor) ? initialWidth(props) : undefined,
+				height: isVerticalSpace(props.anchor) ? initialHeight(props) : undefined,
 				adjustedSize: 0 
 			}
 		);
@@ -70,12 +112,12 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 			parentContext,
 			state.id, 
 			{ 
-				left: props.anchor !== AnchorType.Right ? props.left || 0 : undefined,
-				top: props.anchor !== AnchorType.Bottom ? props.top || 0 : undefined,
-				right: props.anchor !== AnchorType.Left ? props.right || 0 : undefined,
-				bottom: props.anchor !== AnchorType.Top ? props.bottom || 0 : undefined,
-				width: isHorizontalSpace(props.anchor) ? props.anchorSize || 0 : props.width,
-				height: isVerticalSpace(props.anchor) ? props.anchorSize || 0 : props.height
+				left: initialLeft(props),
+				top: initialTop(props),
+				right: initialRight(props),
+				bottom: initialBottom(props),
+				width: initialWidth(props),
+				height: initialHeight(props)
 			}
 		);
 	}, [ props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor ]);
