@@ -79,7 +79,7 @@ export const publicProps = {
 }
 
 export interface IPrivateProps {
-	isPositioned: boolean,
+	isPositioned?: boolean,
 	anchorSize?: SizeUnit,
 	anchor?: AnchorType,
 	resizable?: boolean,
@@ -87,7 +87,7 @@ export interface IPrivateProps {
 }
 
 export const privateProps = {
-	isPositioned: PropTypes.bool.isRequired,
+	isPositioned: PropTypes.bool,
 	anchorSize: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
 	anchor: PropTypes.oneOf([ AnchorType.Bottom, AnchorType.Left, AnchorType.Right, AnchorType.Top ]),
 	resizable: PropTypes.bool,

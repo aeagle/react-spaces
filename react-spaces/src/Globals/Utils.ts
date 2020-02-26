@@ -27,9 +27,19 @@ export const initialState = (props: AllProps) => ({
 	resizing: false
 })
 
+export const appendAdjusted = (adjusted: number) => {
+	if (adjusted < 0) {
+		console.log(` - ${getSizeString(Math.abs(adjusted))}`);
+	}
+
+	return adjusted >= 0 ?
+		` + ${getSizeString(adjusted)}` :
+		` - ${getSizeString(Math.abs(adjusted))}`;
+}
+
 export const cssValue = (value: SizeUnit, adjusted: number) =>
 	adjusted ?
-		`calc(${getSizeString(value || 0)} + ${getSizeString(adjusted)})` :
+		`calc(${getSizeString(value || 0)}${appendAdjusted(adjusted)})` :
 		getSizeString(value || 0);
 
 export function coalesce(...args: any[]) {

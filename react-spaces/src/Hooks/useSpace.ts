@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AllProps, IState, AnchorType, ISize, SizeUnit } from 'src/Globals/Types';
-import { initialState, isHorizontalSpace, isVerticalSpace } from 'src/Globals/Utils';
+import { initialState, isHorizontalSpace, isVerticalSpace, coalesce } from 'src/Globals/Utils';
 import { ISpaceContext, updateSpace, removeSpace, registerSpace, createSpaceContext } from 'src/Globals/ISpaceContext';
 import { SpaceLayerContext, SpaceContext } from 'src/Globals/Contexts';
 import { ResizeSensor } from 'css-element-queries';
@@ -83,7 +83,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 				bottom: initialBottom(props),
 				width: initialWidth(props),
 				height: initialHeight(props),
-				isPositioned: props.isPositioned
+				isPositioned: coalesce(props.isPositioned, false)
 			}
 		);
 

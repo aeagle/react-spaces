@@ -207,8 +207,8 @@ export const SpaceInternal : React.FC<AllProps> = React.memo((props) => {
 	const outerStyle = {
 		left: (space.left !== undefined ? cssValue(space.left, space.adjustedLeft) : undefined),
 		top: (space.top !== undefined ? cssValue(space.top, space.adjustedTop) : undefined),
-		right: (space.right !== undefined ? cssValue(space.right, space.adjustedLeft) : undefined),
-		bottom: (space.bottom !== undefined ? cssValue(space.bottom, space.adjustedTop) : undefined),
+		right: (space.right !== undefined ? cssValue(space.right, -space.adjustedLeft) : undefined),
+		bottom: (space.bottom !== undefined ? cssValue(space.bottom, -space.adjustedTop) : undefined),
 		width: isHorizontalSpace(props.anchor) ? cssValue(props.anchorSize, space.adjustedSize) : getSizeString(space.width),
 		height: isVerticalSpace(props.anchor) ? cssValue(props.anchorSize, space.adjustedSize) : getSizeString(space.height),
 		zIndex: space.zIndex
