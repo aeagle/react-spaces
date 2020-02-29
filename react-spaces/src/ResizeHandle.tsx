@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./Styles.css";
 import { ResizeType, ISpace, AnchorToResizeTypeMap, AnchorType } from "./Globals/Types";
-import { startResize, startTouchResize } from "./Globals/Resizing";
+import { startMouseResize, startTouchResize } from "./Globals/Resizing";
 import { ISpaceContext } from "./Globals/ISpaceContext";
 
 interface IProps {
@@ -23,7 +23,7 @@ export const ResizeHandle: React.FC<IProps> = (props) => {
 			<div
 				style={{ width: width, height: height }}
 				className={`spaces-resize-handle ${AnchorToResizeTypeMap[props.anchor]}`}
-				onMouseDown={(e) => startResize(e, props.parentContext, props.space, props, props.spaceElement)}
+				onMouseDown={(e) => startMouseResize(e, props.parentContext, props.space, props, props.spaceElement)}
 				onTouchStart={(e) => startTouchResize(e, props.parentContext, props.space, props, props.spaceElement)}
 			/>
 		);
