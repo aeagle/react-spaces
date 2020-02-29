@@ -1,29 +1,33 @@
-import * as React from 'react';
-import './Styles.css';
-import { ResizeType } from './Globals/Types';
-import * as PropTypes from 'prop-types';
+import * as React from "react";
+import "./Styles.css";
+import { ResizeType, ISpace, AnchorToResizeTypeMap, AnchorType } from "./Globals/Types";
+import { startResize, startTouchResize } from "./Globals/Resizing";
+import { ISpaceContext } from "./Globals/ISpaceContext";
 
 interface IProps {
-	type: ResizeType,
-	adjustedSize: number,
-	width?: number,
-	height?: number,
-	onMouseDown: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
-	onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => void
+	resizable?: boolean;
+	anchor?: AnchorType;
+	handleSize?: number;
+	parentContext: ISpaceContext | undefined;
+	space: ISpace;
+	spaceElement: HTMLElement | undefined;
 }
 
-export const ResizeHandle : React.FC<IProps> = (props) => {
-	return (
-		<div 
-			style={{ width: props.width, height: props.height }}
-			className={`spaces-resize-handle ${props.type}`} 
-			onMouseDown={props.onMouseDown}
-			onTouchStart={props.onTouchStart} />
-	)
-}
+export const ResizeHandle: React.FC<IProps> = (props) => {
+	if (props.parentContext && props.anchor && props.resizable) {
+		const handleSize = props.handleSize === undefined ? 5 : props.handleSize;
+		const resizeType: ResizeType | undefined = props.anchor ? AnchorToResizeTypeMap[props.anchor] : undefined;
+		const width = resizeType === ResizeType.Left || resizeType === ResizeType.Right ? handleSize : undefined;
+		const height = resizeType === ResizeType.Top || resizeType === ResizeType.Bottom ? handleSize : undefined;
+		return (
+			<div
+				style={{ width: width, height: height }}
+				className={`spaces-resize-handle ${AnchorToResizeTypeMap[props.anchor]}`}
+				onMouseDown={(e) => startResize(e, props.parentContext, props.space, props, props.spaceElement)}
+				onTouchStart={(e) => startTouchResize(e, props.parentContext, props.space, props, props.spaceElement)}
+			/>
+		);
+	}
 
-ResizeHandle.propTypes = {
-	type: PropTypes.oneOf([ ResizeType.Bottom, ResizeType.Left, ResizeType.Right, ResizeType.Top ]).isRequired,
-	width: PropTypes.number,
-	height: PropTypes.number
-}
+	return null;
+};

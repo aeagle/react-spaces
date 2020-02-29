@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { SpaceContext } from 'src/Globals/Contexts';
+import * as React from "react";
+import { SpaceContext } from "src/Contexts";
 
 export const useParentSpace = () => {
 	const parentSpace = React.useContext(SpaceContext);
 
-	return { 
-		startDrag: !parentSpace ? (e: React.MouseEvent<HTMLElement, MouseEvent>) => null : parentSpace.startDrag
-	}
-}
+	return {
+		startDrag: !parentSpace ? (e: React.MouseEvent<HTMLElement, MouseEvent>) => null : parentSpace.startDrag,
+	};
+};
