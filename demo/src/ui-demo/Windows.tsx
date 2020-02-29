@@ -62,7 +62,7 @@ const WindowInner: React.FC<{ onClick?: () => void }> = (props) => {
 				className="title-bar"
 				onMouseDown={(e) => {
 					props.onClick && props.onClick();
-					parentSpace.startDrag(e);
+					parentSpace.startMouseDrag(e);
 				}}
 				size={40}>
 				{Description(`Window title`)}

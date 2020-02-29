@@ -5,6 +5,6 @@ export const useParentSpace = () => {
 	const parentSpace = React.useContext(SpaceContext);
 
 	return {
-		startDrag: !parentSpace ? (e: React.MouseEvent<HTMLElement, MouseEvent>) => null : parentSpace.startDrag,
+		startMouseDrag: !parentSpace ? (e: React.MouseEvent<HTMLElement, MouseEvent>) => null : parentSpace.startMouseDrag,
 	};
 };

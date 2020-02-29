@@ -16,17 +16,33 @@ enum EndEvent {
 	Touch = "touchend",
 }
 
+interface IResizeChange {
+	x: number;
+	y: number;
+}
+
 export function startTouchResize(
 	e: React.TouchEvent<HTMLElement>,
 	parentContext: ISpaceContext | undefined,
 	space: ISpace,
 	props: AllProps,
 	element: HTMLElement | undefined,
+	customResizeHandler?: (resizeDelta: IResizeChange) => void,
 ) {
-	return startResize(e, parentContext, space, props, element, EndEvent.Touch, MoveEvent.Touch, (e) => ({
-		x: e.touches[0].pageX,
-		y: e.touches[0].pageY,
-	}));
+	return startResize(
+		e,
+		parentContext,
+		space,
+		props,
+		element,
+		EndEvent.Touch,
+		MoveEvent.Touch,
+		(e) => ({
+			x: e.touches[0].pageX,
+			y: e.touches[0].pageY,
+		}),
+		customResizeHandler,
+	);
 }
 
 export function startMouseResize(
@@ -35,11 +51,22 @@ export function startMouseResize(
 	space: ISpace,
 	props: AllProps,
 	element: HTMLElement | undefined,
+	customResizeHandler?: (resizeDelta: IResizeChange) => void,
 ) {
-	return startResize(e, parentContext, space, props, element, EndEvent.Mouse, MoveEvent.Mouse, (e) => ({
-		x: e.pageX,
-		y: e.pageY,
-	}));
+	return startResize(
+		e,
+		parentContext,
+		space,
+		props,
+		element,
+		EndEvent.Mouse,
+		MoveEvent.Mouse,
+		(e) => ({
+			x: e.pageX,
+			y: e.pageY,
+		}),
+		customResizeHandler,
+	);
 }
 
 function onResizeEnd(props: AllProps, resizeType: ResizeType, element: HTMLElement) {
@@ -59,6 +86,7 @@ function onResize(
 	y: number,
 	minimumAdjust: number,
 	maximumAdjust: number | undefined,
+	customResizeHandler?: (resizeDelta: IResizeChange) => void,
 ) {
 	const adjustmentX = Math.min(
 		Math.max(resizeType === ResizeType.Left ? originalX - x : x - originalX, minimumAdjust),
@@ -69,10 +97,14 @@ function onResize(
 		maximumAdjust === undefined ? 999999 : maximumAdjust,
 	);
 
-	const adjustment = isHorizontalSpace(props.anchor) ? adjustmentX : adjustmentY;
+	if (customResizeHandler) {
+		customResizeHandler({ x: adjustmentX, y: adjustmentY });
+	} else {
+		const adjustment = isHorizontalSpace(props.anchor) ? adjustmentX : adjustmentY;
 
-	if (adjustment !== space.adjustedSize) {
-		updateSpace(parentContext, space.id, { adjustedSize: adjustment });
+		if (adjustment !== space.adjustedSize) {
+			updateSpace(parentContext, space.id, { adjustedSize: adjustment });
+		}
 	}
 }
 
@@ -85,6 +117,7 @@ function startResize<T extends SyntheticEvent<HTMLElement> | MouseEvent | TouchE
 	endEvent: EndEvent,
 	moveEvent: MoveEvent,
 	getCoords: (event: T) => { x: number; y: number },
+	customResizeHandler?: (resizeDelta: IResizeChange) => void,
 ) {
 	if (element && props.resizable && props.anchor && parentContext) {
 		const resizeType: ResizeType | undefined = AnchorToResizeTypeMap[props.anchor];
@@ -112,7 +145,19 @@ function startResize<T extends SyntheticEvent<HTMLElement> | MouseEvent | TouchE
 		let moved = false;
 
 		const resize = (x: number, y: number) =>
-			onResize(props, parentContext, space, resizeType, originalMouseX, originalMouseY, x, y, minimumAdjust, maximumAdjust);
+			onResize(
+				props,
+				parentContext,
+				space,
+				resizeType,
+				originalMouseX,
+				originalMouseY,
+				x,
+				y,
+				minimumAdjust,
+				maximumAdjust,
+				customResizeHandler,
+			);
 
 		const withPreventDefault = (e: T) => {
 			moved = true;

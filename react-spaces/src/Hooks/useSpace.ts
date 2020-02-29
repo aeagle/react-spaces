@@ -4,7 +4,7 @@ import { initialState, isHorizontalSpace, isVerticalSpace, coalesce } from "src/
 import { ISpaceContext, updateSpace, removeSpace, registerSpace, createSpaceContext } from "src/Globals/ISpaceContext";
 import { SpaceLayerContext, SpaceContext } from "src/Contexts";
 import { ResizeSensor } from "css-element-queries";
-import { startDrag } from "src/Globals/Dragging";
+import { startMouseDrag } from "src/Globals/Dragging";
 
 const calcProp = (props: AllProps, positionedFn: (p: AllProps) => SizeUnit, elseFn: (p: AllProps) => SizeUnit) =>
 	props.isPositioned ? positionedFn(props) : elseFn(props);
@@ -156,7 +156,7 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		state.children,
 		(children) => setState({ children: children }),
 		(resizing) => setState({ resizing: resizing }),
-		(e) => startDrag(e, parentContext, space, divElementRef.current),
+		(e) => startMouseDrag(e, parentContext, space, divElementRef.current),
 		parentContext,
 	);
 

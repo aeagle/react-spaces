@@ -16,22 +16,13 @@ const onMove = (parentContext: ISpaceContext | undefined, space: ISpace, origina
 	}
 };
 
-export const startDrag = (
+export const startMouseDrag = (
 	e: React.MouseEvent<HTMLElement, MouseEvent>,
 	parentContext: ISpaceContext | undefined,
 	space: ISpace,
 	element: HTMLElement | undefined,
 ) => {
 	if (parentContext && element) {
-		// if (props.onResizeStart) {
-		// 	const result = props.onResizeStart();
-		// 	if (typeof result === "boolean" && !result) {
-		// 		return;
-		// 	}
-		// }
-
-		//parentContext.updateResizing(true);
-
 		const originalMouseX = e.pageX - space.adjustedLeft;
 		const originalMouseY = e.pageY - space.adjustedTop;
 		let lastX = 0;
@@ -54,9 +45,6 @@ export const startDrag = (
 			}
 			window.removeEventListener("mousemove", withPreventDefault);
 			window.removeEventListener("mouseup", removeListener);
-
-			//parentContext.updateResizing(false);
-			//onResizeEnd();
 		};
 		window.addEventListener("mousemove", withPreventDefault);
 		window.addEventListener("mouseup", removeListener);
