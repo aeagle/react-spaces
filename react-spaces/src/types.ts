@@ -48,8 +48,12 @@ export interface IReactEvents {
 }
 
 export interface IParentSpace {
-	startMouseDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>, onDragEnd?: (info: IPosition) => void) => void;
-	startMouseResize: (e: React.MouseEvent<HTMLElement, MouseEvent>, resizeType: ResizeType, onResizeEnd?: (e: any) => void) => void;
+	startMouseDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>, onDragEnd?: (position: IPosition) => void) => void;
+	startMouseResize: (
+		e: React.MouseEvent<HTMLElement, MouseEvent>,
+		resizeType: ResizeType,
+		onResizeEnd?: (size: number, position: IPosition) => void,
+	) => void;
 }
 
 export interface IPosition {
@@ -176,6 +180,8 @@ export interface ISpace {
 	id: string;
 	adjustedLeft: number;
 	adjustedTop: number;
+	adjustedWidth: number;
+	adjustedHeight: number;
 	order: number;
 	zIndex: number;
 	anchorType: AnchorType | undefined;

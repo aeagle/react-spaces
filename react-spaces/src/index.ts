@@ -8,4 +8,4 @@ export { Fill, Left, Right, Top, Bottom, LeftResizable, RightResizable, TopResiz
 
 export { useParentSpace } from "./hooks/useParentSpace";
 
-export { CenterType, AnchorType, ResizeType, ISpaceInfo, IParentSpace, IPosition as IDragEndInfo } from "./types";
+export { CenterType, AnchorType, ResizeType, ISpaceInfo, IParentSpace, IPosition } from "./types";

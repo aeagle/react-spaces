@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AllProps, IState, AnchorType, ISize, SizeUnit } from "src/types";
+import { AllProps, IState, AnchorType, ISize, SizeUnit, ResizeType } from "src/types";
 import { initialState, isHorizontalSpace, isVerticalSpace, coalesce } from "src/utils";
 import { ISpaceContext, updateSpace, removeSpace, registerSpace, createSpaceContext } from "src/ISpaceContext";
 import { SpaceLayerContext, SpaceContext } from "src/components/Contexts";
@@ -86,6 +86,8 @@ export const useSpace = (props: AllProps, spaceElement: React.MutableRefObject<H
 		adjustedSize: 0,
 		adjustedLeft: 0,
 		adjustedTop: 0,
+		adjustedWidth: 0,
+		adjustedHeight: 0,
 		left: initialLeft(props),
 		top: initialTop(props),
 		right: initialRight(props),
@@ -105,6 +107,8 @@ export const useSpace = (props: AllProps, spaceElement: React.MutableRefObject<H
 			width: isHorizontalSpace(props.anchor) ? initialWidth(props) : undefined,
 			height: isVerticalSpace(props.anchor) ? initialHeight(props) : undefined,
 			adjustedSize: 0,
+			adjustedWidth: 0,
+			adjustedHeight: 0,
 		});
 	}, [props.anchorSize]);
 
@@ -118,6 +122,8 @@ export const useSpace = (props: AllProps, spaceElement: React.MutableRefObject<H
 			height: initialHeight(props),
 			adjustedLeft: 0,
 			adjustedTop: 0,
+			adjustedWidth: 0,
+			adjustedHeight: 0,
 		});
 	}, [props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor]);
 
@@ -166,10 +172,26 @@ export const useSpace = (props: AllProps, spaceElement: React.MutableRefObject<H
 		(children) => setState({ children: children }),
 		(resizing) => setState({ resizing: resizing }),
 		(event, onDragEnd) => startMouseDrag(event, parentContext, space, spaceElement.current, onDragEnd),
-		(event, resizeType) =>
-			startMouseResize(event, parentContext, space, props, spaceElement.current, (r) => {
-				updateSpace(parentContext, space.id, { adjustedLeft: r.x });
-			}),
+		(event, resizeType, onResizeEnd) =>
+			startMouseResize(
+				event,
+				parentContext,
+				space,
+				props,
+				spaceElement.current,
+				resizeType,
+				(r) => {
+					switch (resizeType) {
+						case ResizeType.Left:
+							updateSpace(parentContext, space.id, { adjustedLeft: -r.x });
+							break;
+						case ResizeType.Top:
+							updateSpace(parentContext, space.id, { adjustedTop: -r.y });
+							break;
+					}
+				},
+				onResizeEnd,
+			),
 		parentContext,
 	);
 
