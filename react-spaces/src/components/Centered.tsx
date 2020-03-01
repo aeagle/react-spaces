@@ -1,5 +1,5 @@
 import * as React from "react";
-import "./Styles.css";
+import "../styles.css";
 
 export const Centered: React.FC = (props) => <div className={`spaces-centered`}>{props.children}</div>;
 

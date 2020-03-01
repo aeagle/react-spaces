@@ -1,6 +1,6 @@
-import { ISpace } from "./Types";
+import { ISpace, IPosition } from "./types";
 import { ISpaceContext, updateSpace } from "./ISpaceContext";
-import { throttle } from "./Throttle";
+import { throttle } from "./throttle";
 
 const onMove = (parentContext: ISpaceContext | undefined, space: ISpace, originalX: number, originalY: number, x: number, y: number) => {
 	if (parentContext) {
@@ -21,6 +21,7 @@ export const startMouseDrag = (
 	parentContext: ISpaceContext | undefined,
 	space: ISpace,
 	element: HTMLElement | undefined,
+	onDragEnd?: (position: IPosition) => void,
 ) => {
 	if (parentContext && element) {
 		const originalMouseX = e.pageX - space.adjustedLeft;
@@ -45,6 +46,13 @@ export const startMouseDrag = (
 			}
 			window.removeEventListener("mousemove", withPreventDefault);
 			window.removeEventListener("mouseup", removeListener);
+
+			if (onDragEnd) {
+				const info = (({ left, top, right, bottom, width, height }) => ({ left, top, right, bottom, width, height }))(
+					element.getBoundingClientRect(),
+				);
+				onDragEnd(info);
+			}
 		};
 		window.addEventListener("mousemove", withPreventDefault);
 		window.addEventListener("mouseup", removeListener);

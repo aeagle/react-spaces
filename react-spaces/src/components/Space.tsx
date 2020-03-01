@@ -14,13 +14,13 @@ import {
 	allProps,
 	ResizeType,
 	AnchorToResizeTypeMap,
-} from "./Globals/Types";
+} from "../types";
 import { SpaceContext, SpaceInfoContext } from "./Contexts";
 import { CenteredVertically, Centered } from "./Centered";
-import { useSpace } from "./Hooks/useSpace";
+import { useSpace } from "../hooks/useSpace";
 import { HeadStyles } from "./HeadStyles";
 import { ResizeHandle } from "./ResizeHandle";
-import "./Styles.css";
+import "../styles.css";
 
 export const Fill: React.FC<IPublicProps> = (props) => <SpaceInternal {...props} isPositioned={false} />;
 Fill.propTypes = publicProps;
@@ -121,6 +121,7 @@ export const SpaceInternal: React.FC<AllProps> = React.memo((props) => {
 		onTouchMove: props.onTouchMove,
 		onTouchEnd: props.onTouchEnd,
 		onClick: props.onClick,
+		onDoubleClick: props.onDoubleClick,
 	};
 
 	return props.resizable && props.scrollable

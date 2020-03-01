@@ -1,11 +1,11 @@
-export * from "./Centered";
-export * from "./ClearFix";
-export * from "./Fixed";
-export * from "./ViewPort";
-export * from "./Layer";
-export * from "./SpaceInfo";
-export { Fill, Left, Right, Top, Bottom, LeftResizable, RightResizable, TopResizable, BottomResizable, Positioned, Custom } from "./Space";
+export * from "./components/Centered";
+export * from "./components/ClearFix";
+export * from "./components/Fixed";
+export * from "./components/ViewPort";
+export * from "./components/Layer";
+export * from "./components/SpaceInfo";
+export { Fill, Left, Right, Top, Bottom, LeftResizable, RightResizable, TopResizable, BottomResizable, Positioned, Custom } from "./components/Space";
 
-export { useParentSpace } from "./Hooks/useParentSpace";
+export { useParentSpace } from "./hooks/useParentSpace";
 
-export { CenterType, AnchorType, ISpaceInfo } from "./Globals/Types";
+export { CenterType, AnchorType, ResizeType, ISpaceInfo, IParentSpace, IPosition as IDragEndInfo } from "./types";

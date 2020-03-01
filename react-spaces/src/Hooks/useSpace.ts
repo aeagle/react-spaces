@@ -1,43 +1,50 @@
 import * as React from "react";
-import { AllProps, IState, AnchorType, ISize, SizeUnit } from "src/Globals/Types";
-import { initialState, isHorizontalSpace, isVerticalSpace, coalesce } from "src/Globals/Utils";
-import { ISpaceContext, updateSpace, removeSpace, registerSpace, createSpaceContext } from "src/Globals/ISpaceContext";
-import { SpaceLayerContext, SpaceContext } from "src/Contexts";
+import { AllProps, IState, AnchorType, ISize, SizeUnit } from "src/types";
+import { initialState, isHorizontalSpace, isVerticalSpace, coalesce } from "src/utils";
+import { ISpaceContext, updateSpace, removeSpace, registerSpace, createSpaceContext } from "src/ISpaceContext";
+import { SpaceLayerContext, SpaceContext } from "src/components/Contexts";
 import { ResizeSensor } from "css-element-queries";
-import { startMouseDrag } from "src/Globals/Dragging";
+import { startMouseDrag } from "src/dragging";
+import { startMouseResize } from "src/resizing";
 
 const calcProp = (props: AllProps, positionedFn: (p: AllProps) => SizeUnit, elseFn: (p: AllProps) => SizeUnit) =>
 	props.isPositioned ? positionedFn(props) : elseFn(props);
+
 const initialLeft = (props: AllProps) =>
 	calcProp(
 		props,
 		(p) => p.left,
 		(p) => (p.anchor !== AnchorType.Right ? p.left || 0 : undefined),
 	);
+
 const initialTop = (props: AllProps) =>
 	calcProp(
 		props,
 		(p) => p.top,
 		(p) => (p.anchor !== AnchorType.Bottom ? p.top || 0 : undefined),
 	);
+
 const initialRight = (props: AllProps) =>
 	calcProp(
 		props,
 		(p) => p.right,
 		(p) => (p.anchor !== AnchorType.Left ? p.right || 0 : undefined),
 	);
+
 const initialBottom = (props: AllProps) =>
 	calcProp(
 		props,
 		(p) => p.bottom,
 		(p) => (p.anchor !== AnchorType.Top ? p.bottom || 0 : undefined),
 	);
+
 const initialWidth = (props: AllProps) =>
 	calcProp(
 		props,
 		(p) => p.width,
 		(p) => (isHorizontalSpace(p.anchor) ? p.anchorSize || 0 : p.width),
 	);
+
 const initialHeight = (props: AllProps) =>
 	calcProp(
 		props,
@@ -45,7 +52,7 @@ const initialHeight = (props: AllProps) =>
 		(p) => (isVerticalSpace(p.anchor) ? p.anchorSize || 0 : p.height),
 	);
 
-export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<HTMLElement | undefined>) => {
+export const useSpace = (props: AllProps, spaceElement: React.MutableRefObject<HTMLElement | undefined>) => {
 	const parentContext = React.useContext(SpaceContext) as ISpaceContext;
 
 	if (!parentContext) {
@@ -61,8 +68,8 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	const currentZIndex = props.zIndex || layerContext || 0;
 
 	const updateCurrentSize = React.useCallback(() => {
-		if (divElementRef.current) {
-			const rect = divElementRef.current.getBoundingClientRect();
+		if (spaceElement.current) {
+			const rect = spaceElement.current.getBoundingClientRect();
 			setCurrentSize({
 				width: rect.width,
 				height: rect.height,
@@ -109,6 +116,8 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 			bottom: initialBottom(props),
 			width: initialWidth(props),
 			height: initialHeight(props),
+			adjustedLeft: 0,
+			adjustedTop: 0,
 		});
 	}, [props.left, props.top, props.bottom, props.right, props.width, props.height, props.anchor]);
 
@@ -121,9 +130,9 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 	// Setup / cleanup
 
 	React.useEffect(() => {
-		if (divElementRef.current) {
+		if (spaceElement.current) {
 			if (props.trackSize) {
-				resizeSensor.current = new ResizeSensor(divElementRef.current, (size) =>
+				resizeSensor.current = new ResizeSensor(spaceElement.current, (size) =>
 					setCurrentSize({
 						width: size.width,
 						height: size.height,
@@ -156,7 +165,11 @@ export const useSpace = (props: AllProps, divElementRef: React.MutableRefObject<
 		state.children,
 		(children) => setState({ children: children }),
 		(resizing) => setState({ resizing: resizing }),
-		(e) => startMouseDrag(e, parentContext, space, divElementRef.current),
+		(event, onDragEnd) => startMouseDrag(event, parentContext, space, spaceElement.current, onDragEnd),
+		(event, resizeType) =>
+			startMouseResize(event, parentContext, space, props, spaceElement.current, (r) => {
+				updateSpace(parentContext, space.id, { adjustedLeft: r.x });
+			}),
 		parentContext,
 	);
 

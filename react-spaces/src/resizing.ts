@@ -1,7 +1,7 @@
-import { ResizeType, AllProps, AnchorToResizeTypeMap, ISpace } from "./Types";
-import { isHorizontalSpace } from "./Utils";
+import { ResizeType, AllProps, AnchorToResizeTypeMap, ISpace } from "./types";
+import { isHorizontalSpace } from "./utils";
 import { ISpaceContext, updateSpace } from "./ISpaceContext";
-import { throttle } from "./Throttle";
+import { throttle } from "./throttle";
 import { SyntheticEvent } from "react";
 
 const RESIZE_THROTTLE = 5;
@@ -186,6 +186,6 @@ function startResize<T extends SyntheticEvent<HTMLElement> | MouseEvent | TouchE
 		window.addEventListener(moveEvent, withPreventDefault as EventListener);
 		window.addEventListener(endEvent, removeListener);
 		e.preventDefault();
-		e.stopPropagation();
+		//e.stopPropagation();
 	}
 }

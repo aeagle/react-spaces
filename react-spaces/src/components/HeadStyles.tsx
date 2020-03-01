@@ -1,6 +1,6 @@
-import { ISpace } from "./Globals/Types";
+import { ISpace } from "../types";
 import * as ReactDOM from "react-dom";
-import { cssValue, isHorizontalSpace, isVerticalSpace, getSizeString } from "./Globals/Utils";
+import { cssValue, isHorizontalSpace, isVerticalSpace, getSizeString } from "../utils";
 import * as React from "react";
 
 export const HeadStyles: React.FC<{ spaces: ISpace[] }> = (props) => {

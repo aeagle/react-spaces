@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ISpaceInfo } from "./Globals/Types";
+import { ISpaceInfo } from "../types";
 import { SpaceInfoContext } from "./Contexts";
 
 interface IProps {

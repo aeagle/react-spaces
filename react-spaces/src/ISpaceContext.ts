@@ -1,12 +1,13 @@
-import { ISpace, AnchorType, AnchorTypes } from "./Types";
-import { getSizeString } from "./Utils";
+import { ISpace, AnchorType, AnchorTypes, ResizeType, IPosition } from "./types";
+import { getSizeString } from "./utils";
 
 export interface ISpaceContext {
 	level: number;
 	children: ISpace[];
 	updateChildren: (children: ISpace[]) => void;
 	updateResizing: (state: boolean) => void;
-	startMouseDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	startMouseDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>, onDragEnd?: (info: IPosition) => void) => void;
+	startMouseResize: (e: React.MouseEvent<HTMLElement, MouseEvent>, resizeType: ResizeType) => void;
 }
 
 const recalcSpaces = (spaces: ISpace[]) => {
@@ -109,7 +110,8 @@ export const createSpaceContext = (
 	children: ISpace[],
 	updateChildren: (children: ISpace[]) => void,
 	updateResizing: (state: boolean) => void,
-	startDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void,
+	startMouseDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>, onDragEnd?: (info: IPosition) => void) => void,
+	startMouseResize: (e: React.MouseEvent<HTMLElement, MouseEvent>, resizeType: ResizeType) => void,
 	parent?: ISpaceContext | null,
 ) => {
 	const context: ISpaceContext = {
@@ -117,7 +119,8 @@ export const createSpaceContext = (
 		children: children,
 		updateChildren: updateChildren,
 		updateResizing: updateResizing,
-		startMouseDrag: startDrag,
+		startMouseDrag: startMouseDrag,
+		startMouseResize: startMouseResize,
 	};
 
 	return context;

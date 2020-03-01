@@ -1,4 +1,4 @@
-import { AnchorType, AllProps, SizeUnit } from "./Types";
+import { AnchorType, AllProps, SizeUnit } from "./types";
 
 export const getSizeString = (size: SizeUnit) =>
 	size !== undefined ? (typeof size === "string" ? size : `${size}${size !== 0 ? "px" : ""}`) : undefined;
@@ -22,10 +22,6 @@ export const initialState = (props: AllProps) => ({
 });
 
 export const appendAdjusted = (adjusted: number) => {
-	if (adjusted < 0) {
-		console.log(` - ${getSizeString(Math.abs(adjusted))}`);
-	}
-
 	return adjusted >= 0 ? ` + ${getSizeString(adjusted)}` : ` - ${getSizeString(Math.abs(adjusted))}`;
 };
 

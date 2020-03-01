@@ -1,8 +1,8 @@
 import * as React from "react";
-import "./Styles.css";
-import { ResizeType, ISpace, AnchorToResizeTypeMap, AnchorType } from "./Globals/Types";
-import { startMouseResize, startTouchResize } from "./Globals/Resizing";
-import { ISpaceContext } from "./Globals/ISpaceContext";
+import { ResizeType, ISpace, AnchorToResizeTypeMap, AnchorType } from "../types";
+import { startMouseResize, startTouchResize } from "../resizing";
+import { ISpaceContext } from "../ISpaceContext";
+import "../styles.css";
 
 interface IProps {
 	resizable?: boolean;

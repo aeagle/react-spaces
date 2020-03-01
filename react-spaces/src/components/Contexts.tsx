@@ -1,6 +1,6 @@
 import * as React from "react";
-import { ISpaceInfo } from "./Globals/Types";
-import { ISpaceContext } from "./Globals/ISpaceContext";
+import { ISpaceInfo } from "../types";
+import { ISpaceContext } from "../ISpaceContext";
 
 export const SpaceContext = React.createContext<ISpaceContext | null>(null);
 export const SpaceLayerContext = React.createContext<number | null>(null);

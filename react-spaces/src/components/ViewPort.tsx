@@ -1,10 +1,10 @@
 import * as React from "react";
-import "./Styles.css";
 import * as PropTypes from "prop-types";
 import { SpaceContext } from "./Contexts";
-import { ISpace, IReactEvents } from "./Globals/Types";
-import { createSpaceContext } from "./Globals/ISpaceContext";
+import { ISpace, IReactEvents } from "../types";
+import { createSpaceContext } from "../ISpaceContext";
 import { HeadStyles } from "./HeadStyles";
+import "../styles.css";
 
 interface IProps extends IReactEvents {
 	className?: string;
@@ -36,7 +36,16 @@ export const ViewPort: React.FC<IProps> = (props) => {
 			onTouchMove={props.onTouchMove}
 			onTouchEnd={props.onTouchEnd}>
 			<HeadStyles spaces={children} />
-			<SpaceContext.Provider value={createSpaceContext(children, setChildren, setResizing, () => null)}>{props.children}</SpaceContext.Provider>
+			<SpaceContext.Provider
+				value={createSpaceContext(
+					children,
+					setChildren,
+					setResizing,
+					() => null,
+					() => null,
+				)}>
+				{props.children}
+			</SpaceContext.Provider>
 		</div>
 	);
 };

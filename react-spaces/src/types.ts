@@ -7,6 +7,10 @@ export enum ResizeType {
 	Right = "resize-right",
 	Top = "resize-top",
 	Bottom = "resize-bottom",
+	NW = "resize-nw",
+	NE = "resize-ne",
+	SW = "resize-sw",
+	SE = "resize-se",
 }
 
 export enum AnchorType {
@@ -33,6 +37,7 @@ export enum CenterType {
 
 export interface IReactEvents {
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onDoubleClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 	onMouseDown?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 	onMouseEnter?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 	onMouseLeave?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
@@ -40,6 +45,20 @@ export interface IReactEvents {
 	onTouchStart?: (event: React.TouchEvent<HTMLElement>) => void;
 	onTouchMove?: (event: React.TouchEvent<HTMLElement>) => void;
 	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
+}
+
+export interface IParentSpace {
+	startMouseDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>, onDragEnd?: (info: IPosition) => void) => void;
+	startMouseResize: (e: React.MouseEvent<HTMLElement, MouseEvent>, resizeType: ResizeType, onResizeEnd?: (e: any) => void) => void;
+}
+
+export interface IPosition {
+	left?: number;
+	top?: number;
+	right?: number;
+	bottom?: number;
+	width?: number;
+	height?: number;
 }
 
 export interface IPublicProps extends IReactEvents {
