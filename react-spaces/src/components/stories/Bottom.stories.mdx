@@ -1,0 +1,32 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../ViewPort";
+import { Bottom } from "../Space";
+import { green, description } from "./Utils";
+
+<Meta title="Components|Bottom" component={Bottom} />
+
+# Default
+
+Anchored space on the bottom edge of it's parent.
+
+<Preview>
+	<Story name="Default (%)">
+		<ViewPort>
+			<Bottom style={green} size="50%">
+				{description("Bottom 50%")}
+			</Bottom>
+		</ViewPort>
+	</Story>
+	<Story name="Default (px)">
+		<ViewPort>
+			<Bottom style={green} size={300}>
+				{description("Bottom 300px")}
+			</Bottom>
+		</ViewPort>
+	</Story>
+</Preview>
+
+# Properties
+
+<Props of={Bottom} />

@@ -1,0 +1,32 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../ViewPort";
+import { Right } from "../Space";
+import { green, description } from "./Utils";
+
+<Meta title="Components|Right" component={Right} />
+
+# Default
+
+Anchored space on the right edge of it's parent.
+
+<Preview>
+	<Story name="Default (%)">
+		<ViewPort>
+			<Right style={green} size="50%">
+				{description("Right 50%")}
+			</Right>
+		</ViewPort>
+	</Story>
+	<Story name="Default (px)">
+		<ViewPort>
+			<Right style={green} size={300}>
+				{description("RightTop 300px")}
+			</Right>
+		</ViewPort>
+	</Story>
+</Preview>
+
+# Properties
+
+<Props of={Right} />

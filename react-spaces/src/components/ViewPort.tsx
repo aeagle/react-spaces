@@ -8,6 +8,7 @@ import "../styles.css";
 
 interface IProps extends IReactEvents {
 	className?: string;
+	style?: React.CSSProperties;
 	left?: number;
 	top?: number;
 	right?: number;
@@ -22,10 +23,13 @@ export const ViewPort: React.FC<IProps> = (props) => {
 		<div
 			className={`spaces-fullpage-layout${props.className ? ` ${props.className}` : ``}${resizing ? ` spaces-resizing` : ``}`}
 			style={{
-				left: props.left || 0,
-				top: props.top || 0,
-				right: props.right || 0,
-				bottom: props.bottom || 0,
+				...props.style,
+				...{
+					left: props.left || 0,
+					top: props.top || 0,
+					right: props.right || 0,
+					bottom: props.bottom || 0,
+				},
 			}}
 			onClick={props.onClick}
 			onMouseDown={props.onMouseDown}

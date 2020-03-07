@@ -1,0 +1,32 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../ViewPort";
+import { Left } from "../Space";
+import { green, description } from "./Utils";
+
+<Meta title="Components|Left" component={Left} />
+
+# Default
+
+Anchored space on the left edge of it's parent.
+
+<Preview>
+	<Story name="Default (%)">
+		<ViewPort>
+			<Left style={green} size="50%">
+				{description("Left 50%")}
+			</Left>
+		</ViewPort>
+	</Story>
+	<Story name="Default (px)">
+		<ViewPort>
+			<Left style={green} size={300}>
+				{description("Left 300px")}
+			</Left>
+		</ViewPort>
+	</Story>
+</Preview>
+
+# Properties
+
+<Props of={Left} />

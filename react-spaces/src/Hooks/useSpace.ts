@@ -1,11 +1,11 @@
 import * as React from "react";
-import { AllProps, IState, AnchorType, ISize, SizeUnit, ResizeType } from "src/types";
-import { initialState, isHorizontalSpace, isVerticalSpace, coalesce } from "src/utils";
-import { ISpaceContext, updateSpace, removeSpace, registerSpace, createSpaceContext } from "src/ISpaceContext";
-import { SpaceLayerContext, SpaceContext } from "src/components/Contexts";
+import { AllProps, IState, AnchorType, ISize, SizeUnit, ResizeType } from "../types";
+import { initialState, isHorizontalSpace, isVerticalSpace, coalesce } from "../utils";
+import { ISpaceContext, updateSpace, removeSpace, registerSpace, createSpaceContext } from "../ISpaceContext";
+import { SpaceLayerContext, SpaceContext } from "../components/Contexts";
 import { ResizeSensor } from "css-element-queries";
-import { startMouseDrag } from "src/dragging";
-import { startMouseResize } from "src/resizing";
+import { startMouseDrag } from "../dragging";
+import { startMouseResize } from "../resizing";
 
 const calcProp = (props: AllProps, positionedFn: (p: AllProps) => SizeUnit, elseFn: (p: AllProps) => SizeUnit) =>
 	props.isPositioned ? positionedFn(props) : elseFn(props);

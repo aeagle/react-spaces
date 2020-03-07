@@ -1,0 +1,48 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../ViewPort";
+import { LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../Space";
+import { red, green, blue, description } from "./Utils";
+
+<Meta title="Components|ViewPort" component={ViewPort} />
+
+# Default
+
+Fills entire browser view port
+
+<Preview>
+	<Story name="Default">
+		<ViewPort style={blue}>{description("ViewPort")}</ViewPort>
+	</Story>
+</Preview>
+
+# With offsets
+
+Fills entire browser view port with offsets from the edge.
+
+<Preview>
+	<Story name="Top offset">
+		<ViewPort style={blue} top={50}>
+			{description("ViewPort with top offset")}
+		</ViewPort>
+	</Story>
+	<Story name="Right offset">
+		<ViewPort style={blue} right={50}>
+			{description("ViewPort with right offset")}
+		</ViewPort>
+	</Story>
+	<Story name="Bottom offset">
+		<ViewPort style={blue} bottom={50}>
+			{description("ViewPort with bottom offset")}
+		</ViewPort>
+	</Story>
+	<Story name="Left offset">
+		<ViewPort style={blue} left={50}>
+			{description("ViewPort with left offset")}
+		</ViewPort>
+	</Story>
+</Preview>
+
+# Properties
+
+<Props of={ViewPort} />
