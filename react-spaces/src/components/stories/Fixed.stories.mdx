@@ -1,0 +1,29 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { Fixed } from "../Fixed";
+import { Centered } from "../Centered";
+import { LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../Space";
+import { red, green, blue, description } from "./Utils";
+
+<Meta title="Components|Fixed" component={Fixed} />
+
+# Default
+
+Top-level space with a fixed height and optional width.
+
+<Preview>
+	<Story name="With width">
+		<Fixed style={blue} width={300} height={300}>
+			{description("Fixed 300px x 300px")}
+		</Fixed>
+	</Story>
+	<Story name="Without width">
+		<Fixed style={blue} height={300}>
+			{description("Fixed 100% x 300px")}
+		</Fixed>
+	</Story>
+</Preview>
+
+# Properties
+
+<Props of={Fixed} />

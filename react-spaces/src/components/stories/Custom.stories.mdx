@@ -1,0 +1,88 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../ViewPort";
+import { Custom } from "../Space";
+import { AnchorType } from "../../types";
+import { green, description } from "./Utils";
+
+<Meta title="Components|Custom" component={Custom} />
+
+# Default
+
+A space that can be any other type of space given it's properties. You should use this space if you
+intend to change the type of the space dynamically without causing remounting of child components.
+
+<Preview>
+	<Story name="Fill">
+		<ViewPort>
+			<Custom style={green}>{description("Custom fill")}</Custom>
+		</ViewPort>
+	</Story>
+	<Story name="Positioned">
+		<ViewPort>
+			<Custom style={green} left={200} top={200} width={300} height={300} isPositioned={true}>
+				{description("Custom positioned")}
+			</Custom>
+		</ViewPort>
+	</Story>
+	<Story name="Anchored left">
+		<ViewPort>
+			<Custom style={green} anchor={AnchorType.Left} anchorSize={200}>
+				{description("Custom anchored left")}
+			</Custom>
+		</ViewPort>
+	</Story>
+	<Story name="Anchored top">
+		<ViewPort>
+			<Custom style={green} anchor={AnchorType.Top} anchorSize={200}>
+				{description("Custom anchored top")}
+			</Custom>
+		</ViewPort>
+	</Story>
+	<Story name="Anchored right">
+		<ViewPort>
+			<Custom style={green} anchor={AnchorType.Right} anchorSize={200}>
+				{description("Custom anchored right")}
+			</Custom>
+		</ViewPort>
+	</Story>
+	<Story name="Anchored bottom">
+		<ViewPort>
+			<Custom style={green} anchor={AnchorType.Bottom} anchorSize={200}>
+				{description("Custom anchored bottom")}
+			</Custom>
+		</ViewPort>
+	</Story>
+	<Story name="Resizable left">
+		<ViewPort>
+			<Custom style={green} anchor={AnchorType.Left} anchorSize={200} resizable={true} trackSize={true}>
+				{description("Custom resizable left")}
+			</Custom>
+		</ViewPort>
+	</Story>
+	<Story name="Resizable top">
+		<ViewPort>
+			<Custom style={green} anchor={AnchorType.Top} anchorSize={200} resizable={true} trackSize={true}>
+				{description("Custom resizable top")}
+			</Custom>
+		</ViewPort>
+	</Story>
+	<Story name="Resizable right">
+		<ViewPort>
+			<Custom style={green} anchor={AnchorType.Right} anchorSize={200} resizable={true} trackSize={true}>
+				{description("Custom resizable right")}
+			</Custom>
+		</ViewPort>
+	</Story>
+	<Story name="Resizable bottom">
+		<ViewPort>
+			<Custom style={green} anchor={AnchorType.Bottom} anchorSize={200} resizable={true} trackSize={true}>
+				{description("Custom resizable bottom")}
+			</Custom>
+		</ViewPort>
+	</Story>
+</Preview>
+
+# Properties
+
+<Props of={Custom} />

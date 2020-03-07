@@ -1,0 +1,46 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../ViewPort";
+import { BottomResizable } from "../Space";
+import { green, description, lorem } from "./Utils";
+
+<Meta title="Components|BottomResizable" component={BottomResizable} />
+
+# Default
+
+Anchored resizable space on the bottom edge of it's parent.
+
+<Preview>
+	<Story name="Default (%)">
+		<ViewPort>
+			<BottomResizable style={green} size="50%" trackSize={true}>
+				{description("Bottom resizable")}
+			</BottomResizable>
+		</ViewPort>
+	</Story>
+	<Story name="Default (px)">
+		<ViewPort>
+			<BottomResizable style={green} size={300} trackSize={true}>
+				{description("Bottom resizable")}
+			</BottomResizable>
+		</ViewPort>
+	</Story>
+	<Story name="With resize constraints">
+		<ViewPort>
+			<BottomResizable style={green} size={300} trackSize={true} minimumSize={150} maximumSize={450}>
+				{description("Bottom resizable")}
+			</BottomResizable>
+		</ViewPort>
+	</Story>
+	<Story name="Scrollable">
+		<ViewPort>
+			<BottomResizable style={green} size={300} scrollable={true}>
+				{lorem}
+			</BottomResizable>
+		</ViewPort>
+	</Story>
+</Preview>
+
+# Properties
+
+<Props of={BottomResizable} />

@@ -171,7 +171,9 @@ export const useSpace = (props: AllProps, spaceElement: React.MutableRefObject<H
 		state.children,
 		(children) => setState({ children: children }),
 		(resizing) => setState({ resizing: resizing }),
-		(event, onDragEnd) => startMouseDrag(event, parentContext, space, spaceElement.current, onDragEnd),
+		(event, onDragEnd) => {
+			startMouseDrag(event, parentContext, space, spaceElement.current, onDragEnd);
+		},
 		(event, resizeType, onResizeEnd) =>
 			startMouseResize(
 				event,

@@ -1,0 +1,23 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../ViewPort";
+import { CenteredVertically } from "../Centered";
+import { blue } from "./Utils";
+
+<Meta title="Components|CenteredVertically" component={CenteredVertically} />
+
+# Default
+
+Centers children vertically within a space.
+
+<Preview>
+	<Story name="Default">
+		<ViewPort style={blue}>
+			<CenteredVertically>Centered content vertically</CenteredVertically>
+		</ViewPort>
+	</Story>
+</Preview>
+
+# Properties
+
+<Props of={CenteredVertically} />
