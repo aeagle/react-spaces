@@ -1,16 +1,21 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
-import { ViewPort } from "../ViewPort";
-import { Custom } from "../Space";
-import { AnchorType } from "../../types";
-import { green, description } from "./Utils";
+import { ViewPort } from "../../ViewPort";
+import { Custom } from "../../Space";
+import { AnchorType } from "../../../types";
+import { green, description } from "../Utils";
+import { CommonHeader } from "../Utils";
+
+<CommonHeader />
 
 <Meta title="Components|Custom" component={Custom} />
 
-# Default
+## Custom
 
 A space that can be any other type of space given it's properties. You should use this space if you
 intend to change the type of the space dynamically without causing remounting of child components.
+
+### As a fill space
 
 <Preview>
 	<Story name="Fill">
@@ -18,6 +23,11 @@ intend to change the type of the space dynamically without causing remounting of
 			<Custom style={green}>{description("Custom fill")}</Custom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a positioned space
+
+<Preview>
 	<Story name="Positioned">
 		<ViewPort>
 			<Custom style={green} left={200} top={200} width={300} height={300} isPositioned={true}>
@@ -25,6 +35,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a left anchored space
+
+<Preview>
 	<Story name="Anchored left">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Left} anchorSize={200}>
@@ -32,6 +47,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a top anchored space
+
+<Preview>
 	<Story name="Anchored top">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Top} anchorSize={200}>
@@ -39,6 +59,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a right anchored space
+
+<Preview>
 	<Story name="Anchored right">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Right} anchorSize={200}>
@@ -46,6 +71,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a bottom anchored space
+
+<Preview>
 	<Story name="Anchored bottom">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Bottom} anchorSize={200}>
@@ -53,6 +83,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a left resizable space
+
+<Preview>
 	<Story name="Resizable left">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Left} anchorSize={200} resizable={true} trackSize={true}>
@@ -60,6 +95,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a top resizable space
+
+<Preview>
 	<Story name="Resizable top">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Top} anchorSize={200} resizable={true} trackSize={true}>
@@ -67,6 +107,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a right resizable space
+
+<Preview>
 	<Story name="Resizable right">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Right} anchorSize={200} resizable={true} trackSize={true}>
@@ -74,6 +119,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a bottom resizable space
+
+<Preview>
 	<Story name="Resizable bottom">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Bottom} anchorSize={200} resizable={true} trackSize={true}>

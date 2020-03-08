@@ -1,0 +1,116 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { CommonHeader } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="React Spaces|Change history" />
+
+## Change history
+
+### 0.1.23
+
+- Fixed generation of head styles height and z-index which were missing a semi-colon.
+
+### 0.1.22
+
+- Added Custom space to allow access to all space properties.
+- Allowed false to be returned from onResizeStart event callback to conditionally cancel resize operation.
+
+### 0.1.21
+
+- Added onMouseMove, onTouchStart, onTouchMove and onTouchEnd events.
+
+### 0.1.20
+
+- Moved child state and recalculation of child spaces to the parent space to remove synchronisation issues causing various update issues.
+- Moved space styles to document head to generate cleaner mark-up. All spaces now get a auto-generated short ID which can be overriden with the id property on a space.
+- Removed the need for an outer and inner container on all spaces except for when a space is resizable and scrollable to allow the space to maintain the resize handle location.
+- Optimised touch resize actions preventing default browser actions using css touch-action and changing debounce to throttling on resize updates.
+
+### 0.1.19
+
+- Fix to ensure spaces in same parent are updated when a space zIndex is adjusted. (issue / pull request)
+
+### 0.1.18
+
+- Added resize start and end events (issue / pull request)
+- Fixed useContext hook being used within condition expression causing 'React has detected a change in the order of Hooks called by SpaceInternal' error when zIndex property updated on space (issue / pull request)
+- Fix to ensure debounced resize (mouse/touch) events do not fire after mouse up or touch end events have fired. (pull request)
+- Fix to ensure mouse up and touch end events are unbound after a resize operation has completed to prevent multiple event handlers being bound on every resize operation. (pull request)
+
+### 0.1.17
+
+- Fix to ensured resize delta is reset when size property changed on anchored and resizable spaces (issue / pull request)
+- Added PropTypes for all exposed components for Javascript only consumers in addition to the Typescript typings in the library. (issue / pull request)
+- Fix when multiple classes provided as property to space to prevent a duplication of class names on the outer and inner space elements. (issue / pull request)
+
+### 0.1.16
+
+- Added touch resize functionality.
+- Remove old docs from demo project.
+
+### 0.1.15
+
+- Added <Layer /> component and layer support to allow floating of spaces above each other.
+
+### 0.1.14
+
+- Migrated from Webpack to Rollup for building component library
+- Created ES module bundles in /dist/es
+- Fixed window undefined error when rendering spaces via Next.js
+- Created server bundle (/dist/server) for using with Node.js server side apps when utilising SSR, e.g. Next.js and seperated styling from server bundle (/dist/server.css). This is currently experimental.
+
+### 0.1.13
+
+- Refactored spaces as functional component using hooks.
+- Fixed className type on <ViewPort /> component.
+
+### 0.1.11 - 0.1.12
+
+- Fix to deal with changes to size and anchor properties on anchored spaces and adjusted spaces accordingly.
+
+### 0.1.10
+
+- Added 'as' property to allow rendered DOM element to be specified (thanks to u/MahNonAnon and u/trevoreyre on Reddit for suggestion of this).
+- Added 'centerContent' property as short-hand for centering space content instead of having to introduce the extra <Centered /> or <CenteredVertically /> components.
+- Allow resize handle width to be specified and also it's placement within space controlled with the 'overlayHandle' property.
+- Fixed issue with dynamically added/removed anchored spaces where an anchored space would see itself as a space taking space.
+
+### 0.1.9
+
+- Added repository field to package.json
+
+### 0.1.8
+
+- Removed clear fix from space
+
+### 0.1.7
+
+- Fixed positioning of resize handles within scrollable divs
+
+### 0.1.6
+
+- Fixed resize minimum and maximum constraints
+
+### 0.1.5
+
+- Fixed resize handles being covered by nested spaces preventing resizing
+
+### 0.1.4
+
+- Add support for percentage sizing on anchored spaces
+
+### 0.1.3
+
+- Added readme
+- Updated documentation
+
+### 0.1.2
+
+- Removed ResizeSensor from spaces by default and now optionally allow live size updates with trackSize property
+- Added <VerticallyCentered /> component to vertically centre content within a space
+- Allow class names to be specified on top-level spaces <ViewPort /> and <Fixed />
+
+### 0.1.1
+
+- Initial version

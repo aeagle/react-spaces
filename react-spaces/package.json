@@ -37,6 +37,7 @@
 		"@storybook/addon-knobs": "^5.3.14",
 		"@storybook/addon-links": "^5.3.14",
 		"@storybook/addons": "^5.3.14",
+		"@storybook/preset-typescript": "^2.1.0",
 		"@storybook/react": "^5.3.14",
 		"@types/jest": "^24.0.15",
 		"@types/node": "^12.6.8",
@@ -61,6 +62,7 @@
 		"rollup-plugin-typescript2": "^0.22.1",
 		"rollup-watch": "^4.3.1",
 		"sass-loader": "^8.0.2",
+		"ts-loader": "^6.2.1",
 		"tslib": "^1.10.0",
 		"typescript": "^3.5.3"
 	},

@@ -1,14 +1,19 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
-import { ViewPort } from "../ViewPort";
-import { RightResizable } from "../Space";
-import { green, description, lorem } from "./Utils";
+import { ViewPort } from "../../ViewPort";
+import { RightResizable } from "../../Space";
+import { green, description, lorem } from "../Utils";
+import { CommonHeader } from "../Utils";
+
+<CommonHeader />
 
 <Meta title="Components|RightResizable" component={RightResizable} />
 
-# Default
+## RightResizable
 
 Anchored resizable space on the right edge of it's parent.
+
+### Specifying a % size
 
 <Preview>
 	<Story name="Default (%)">
@@ -18,6 +23,11 @@ Anchored resizable space on the right edge of it's parent.
 			</RightResizable>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### Specifying a pixel size
+
+<Preview>
 	<Story name="Default (px)">
 		<ViewPort>
 			<RightResizable style={green} size={300} trackSize={true}>
@@ -25,6 +35,11 @@ Anchored resizable space on the right edge of it's parent.
 			</RightResizable>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### With resize contrainsts
+
+<Preview>
 	<Story name="With resize constraints">
 		<ViewPort>
 			<RightResizable style={green} size={300} trackSize={true} minimumSize={150} maximumSize={450}>
@@ -32,6 +47,11 @@ Anchored resizable space on the right edge of it's parent.
 			</RightResizable>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### As a scrollable space
+
+<Preview>
 	<Story name="Scrollable">
 		<ViewPort>
 			<RightResizable style={green} size={300} scrollable={true}>

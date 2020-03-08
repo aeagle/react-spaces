@@ -1,14 +1,59 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort } from "../../ViewPort";
-import { LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../Space";
+import { Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../Space";
 import { red, green, blue, description } from "../Utils";
+import { CommonHeader } from "../Utils";
+
+<CommonHeader />
 
 <Meta title="Basic examples|Nested" />
 
-### Nested
+## Nested spaces
 
-Example of nested spaces.
+Examples of nested spaces.
+
+### Non-resizable
+
+<Preview>
+	<Story name="Non-resizable">
+		<ViewPort>
+			<Left size="20%" style={green}>
+				{description("Left")}
+			</Left>
+			<Fill style={green}>
+				<Top size="20%" style={red}>
+					{description("Top")}
+				</Top>
+				<Fill style={green}>
+					<Left size="20%" style={blue}>
+						{description("Left")}
+					</Left>
+					<Fill style={green}>
+						<Top size="20%" style={green}>
+							{description("Top")}
+						</Top>
+						<Fill style={red}>{description("Fill")}</Fill>
+						<Bottom size="20%" style={green}>
+							{description("Bottom")}
+						</Bottom>
+					</Fill>
+					<Right size="20%" style={blue}>
+						{description("Right")}
+					</Right>
+				</Fill>
+				<Bottom size="20%" style={red}>
+					{description("Bottom")}
+				</Bottom>
+			</Fill>
+			<Right size="20%" style={green}>
+				{description("Right")}
+			</Right>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### Resizable
 
 <Preview>
 	<Story name="Resizable">

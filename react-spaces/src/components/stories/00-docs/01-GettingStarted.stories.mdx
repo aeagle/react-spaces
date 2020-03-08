@@ -1,0 +1,194 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { CommonHeader, DemoUI } from "../Utils";
+import { Fixed } from "../../Fixed";
+import { Top, Right, LeftResizable, BottomResizable, Fill } from "../../Space";
+import { CenterType } from "../../../types";
+
+<CommonHeader />
+
+<Meta title="React Spaces|Getting started" />
+
+## Getting started
+
+### Installation
+
+```bash
+npm install react-spaces
+```
+
+### A very basic example
+
+Usage of spaces always starts with a `<ViewPort />` or `<Fixed />` space at the top-level. *Note: these
+do not have to be at the top of your component tree, just above any use of other spaces.*
+
+A `<ViewPort />` space will take over the entire view port of the browser window and is ideal for full
+single page applications. 
+
+A `<Fixed />` will create a space on the page with a fixed height and optional width. This is useful
+for utilising spaces within a container in an existing application.
+
+Import the components and use directly within your React application. For example:
+
+```tsx
+import { ViewPort, LeftResizable, Fill } from "react-spaces";
+
+const App = () => (
+	<ViewPort>
+		<LeftResizable size={200}>...</LeftResizable>
+		<Fill>...</Fill>
+	</ViewPort>
+);
+```
+
+This will produce a very simple layout with a left sidebar and main area like below. *Note: borders, 
+lines and text alignment have been added specifically for this example. In practice spaces do not
+have any visual element, padding or margins leaving it up to you to fill them or style them however
+you want.*
+
+<Fixed style={{ outline: '1px solid black' }} height={400}>
+	<LeftResizable style={{ borderRight: '1px dashed black' }} size="25%" centerContent={CenterType.HorizontalVertical}>
+		Sidebar
+	</LeftResizable>
+	<Fill centerContent={CenterType.HorizontalVertical}>
+		Main content
+	</Fill>
+</Fixed>
+
+Notice how the fill space automatically adjusts it's size when the left resizable space is resized with 
+the mouse.
+
+### Nesting spaces
+
+By nesting spaces some more spaces we can easily add another bottom resizable area.
+
+```tsx
+import { ViewPort, LeftResizable, Fill } from "react-spaces";
+
+const App = () => (
+	<ViewPort>
+		<LeftResizable size={200}>...</LeftResizable>
+		<Fill>
+			<Fill>...</Fill>
+			<BottomResizable size={100}>...</BottomResizable>
+		</Fill>
+	</ViewPort>
+);
+```
+
+Here we have added additional nested spaces inside the original `<Fill />` space to achieve this:
+
+<Fixed style={{ outline: '1px solid black' }} height={400}>
+	<LeftResizable style={{ borderRight: '1px dashed black' }} size="25%" centerContent={CenterType.HorizontalVertical}>
+		Sidebar
+	</LeftResizable>
+	<Fill>
+		<Fill centerContent={CenterType.HorizontalVertical}>
+			Main content
+		</Fill>
+		<BottomResizable style={{ borderTop: '1px dashed black' }} size={100} centerContent={CenterType.HorizontalVertical}>
+			Bottom area
+		</BottomResizable>
+	</Fill>
+</Fixed>
+
+We can add further nested spaces to add elements like title bars into different areas.
+
+```tsx
+import { ViewPort, LeftResizable, Fill } from "react-spaces";
+
+const App = () => (
+	<ViewPort>
+		<Top size={25} order={1} centerContent={CenterType.Vertical}>...</Top>
+		<Top size={25} order={2} centerContent={CenterType.Vertical}>...</Top>
+		<Fill>
+			<LeftResizable size={200}>
+				<Top size={25} centerContent={CenterType.Vertical}>...</Top>
+				<Fill>...</Fill>
+			</LeftResizable>
+			<Fill>
+				<Fill>...</Fill>
+				<BottomResizable size={100}>...</BottomResizable>
+			</Fill>
+		</Fill>
+	</ViewPort>
+);
+```
+
+Now we have something like below:
+
+<Fixed style={{ outline: '1px solid black' }} height={400}>
+	<Top style={{ borderBottom: '1px dashed black', padding: 5 }} order={1} size={25} centerContent={CenterType.Vertical}>
+		Title
+	</Top>
+	<Top style={{ borderBottom: '1px dashed black', padding: 5 }} order={2} size={25} centerContent={CenterType.Vertical}>
+		Menu bar
+	</Top>
+	<Fill>
+		<LeftResizable style={{ borderRight: '1px dashed black' }} size="25%">
+			<Top style={{ borderBottom: '1px dashed black', padding: 5 }} size={25} centerContent={CenterType.Vertical}>Sidebar title</Top>
+			<Fill centerContent={CenterType.HorizontalVertical}>Sidebar</Fill>
+		</LeftResizable>
+		<Fill>
+			<Fill centerContent={CenterType.HorizontalVertical}>
+				Main content
+			</Fill>
+			<BottomResizable style={{ borderTop: '1px dashed black' }} size={100} centerContent={CenterType.HorizontalVertical}>
+				Bottom area
+			</BottomResizable>
+		</Fill>
+	</Fill>
+</Fixed>
+
+### Introducing simple interactivity
+
+We can add some very simple state manipulate the space representing the sidebar.
+
+Here we add a widget in the sidebar title which we will use to perform an action on the sidebar. This is just 
+another nested `<Right />` space with an icon.
+
+```tsx
+...
+<LeftResizable size={200}>
+	<Top size={25}>
+		<Fill centerContent={CenterType.Vertical}>Sidebar title ...</Fill>
+		<Right size={25} centerContent={CenterType.HorizontalVertical}>
+			<i class="fa fa-arrow-right" />
+		</Right>
+	</Top>
+	<Fill>...</Fill>
+</LeftResizable>
+...
+```
+
+Next we can introduce some state to represent if the sidebar is expanded or not.
+
+```tsx
+const [ sidebarExpanded, setSidebarExpanded ] = useState(true);
+```
+
+Let's apply this to the sidebar space to dynamically set the size and also show the correct icon based 
+on the state. We'll also add a click handler to the space to change the state.
+
+```tsx
+...
+<LeftResizable size={sidebarExpanded ? 200 : 25}>
+	<Top size={25}>
+		...
+		<Right 
+			size={25} 
+			centerContent={CenterType.HorizontalVertical} 
+			onClick={() => setSidebarExpanded(prev => !prev)}>
+
+			<i className={"fa fa-arrow-" + (sidebarExpanded ? "left" : "right")} />
+
+		</Right>
+	</Top>
+	...
+</LeftResizable>
+...
+```
+
+The result is a collapsible sidebar.
+
+<DemoUI />
+

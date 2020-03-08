@@ -3,12 +3,17 @@ import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort } from "../../ViewPort";
 import { LeftResizable, RightResizable, Left, Right, TopResizable, BottomResizable, Top, Bottom, Fill } from "../../Space";
 import { red, green, blue, description } from "../Utils";
+import { CommonHeader } from "../Utils";
+
+<CommonHeader />
 
 <Meta title="Basic examples|Stacked" />
 
-### Stacked
+## Stacked
 
 Example of stacking spaces.
+
+### Left and right stacked spaces
 
 <Preview>
 	<Story name="Fixed vertical">
@@ -28,6 +33,11 @@ Example of stacking spaces.
 			</Right>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### Top and bottom stacked spaces
+
+<Preview>
 	<Story name="Fixed horizontal">
 		<ViewPort>
 			<Top size="15%" style={blue} order={1}>
@@ -45,6 +55,11 @@ Example of stacking spaces.
 			</Bottom>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### Left and right resizable stacked spaces
+
+<Preview>
 	<Story name="Resizable vertical">
 		<ViewPort>
 			<LeftResizable size="15%" style={blue} trackSize={true} order={1}>
@@ -64,6 +79,11 @@ Example of stacking spaces.
 			</RightResizable>
 		</ViewPort>
 	</Story>
+</Preview>
+
+### Top and bottom resizable stacked spaces
+
+<Preview>
 	<Story name="Resizable horizontal">
 		<ViewPort>
 			<TopResizable size="15%" style={blue} trackSize={true} order={1}>
