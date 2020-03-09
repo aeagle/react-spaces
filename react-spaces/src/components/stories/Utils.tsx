@@ -5,6 +5,7 @@ import { Info } from "../SpaceInfo";
 import { Fixed } from "../Fixed";
 import { Top, Fill, LeftResizable, Right, BottomResizable } from "../Space";
 import { CenterType } from "../../types";
+import "./Utils.scss";
 
 export const CommonHeader = () => (
 	<div style={{ marginBottom: 25 }}>
@@ -25,7 +26,7 @@ export const CommonHeader = () => (
 );
 
 export const PropsTable: React.FC = (props) => (
-	<table className="sbdocs sbdocs-table css-lckf62">
+	<table className="sbdocs sbdocs-table properties-table css-lckf62">
 		<tr>
 			<th>Property</th>
 			<th>Type</th>
@@ -36,7 +37,7 @@ export const PropsTable: React.FC = (props) => (
 	</table>
 );
 
-const propHeader = {
+const propHeaderStyle: CSSProperties = {
 	paddingTop: 2,
 	paddingBottom: 2,
 	backgroundColor: "#03396c",
@@ -46,133 +47,104 @@ const propHeader = {
 	fontWeight: 500,
 };
 
+export const PropsHeader: React.FC = (props) => (
+	<tr>
+		<td colSpan={4} style={propHeaderStyle}>
+			{props.children}
+		</td>
+	</tr>
+);
+
+export const Prop: React.FC<{ name: string; type: string; default?: string; description: React.ReactNode }> = (props) => (
+	<tr>
+		<td>{props.name}</td>
+		<td>{props.type}</td>
+		<td>{props.default}</td>
+		<td>{props.description}</td>
+	</tr>
+);
+
 export const StandardProps = () => (
 	<>
-		<tr>
-			<td colSpan={4} style={propHeader}>
-				Standard properties
-			</td>
-		</tr>
-		<tr>
-			<td>as</td>
-			<td>string</td>
-			<td>div</td>
-			<td>Allows control over the outputted HTML element allowing HTML 5 semantic markup to be created.</td>
-		</tr>
-		<tr>
-			<td>centerContent</td>
-			<td>CenterType.Vertical or CenterType.HorizontalVertical or "vertical" or "horizontalVertical"</td>
-			<td></td>
-			<td>Apply centering to children.</td>
-		</tr>
-		<tr>
-			<td>className</td>
-			<td>string</td>
-			<td></td>
-			<td>A class name to apply to the space element.</td>
-		</tr>
-		<tr>
-			<td>id</td>
-			<td>string</td>
-			<td>Randomly generated id</td>
-			<td>
-				By default a space outputs an element with a randomly generated id. You can specify your own id. It is preferable to specify an id on
-				a space that is being added and removed based on state changes.
-			</td>
-		</tr>
-		<tr>
-			<td>scrollable</td>
-			<td>boolean</td>
-			<td>false</td>
-			<td>
-				Makes the space scrollable. By default content that overflows the space will be hidden. This will allow the space to add a scroll bar
-				if the content overflows.
-			</td>
-		</tr>
-		<tr>
-			<td>trackSize</td>
-			<td>boolean</td>
-			<td>false</td>
-			<td>
-				Tells the space to report it's size when it changes size to the &lt;Info /&gt; component. With this turned off the space will only
-				report the initial size.
-			</td>
-		</tr>
-		<tr>
-			<td>zIndex</td>
-			<td>number</td>
-			<td>0</td>
-			<td>
-				A number representing which layer the space sits within. If not specified the space is place in layer 0. Higher numbers appear in
-				front of lower numbers. This is intended to be an alternative to using &lt;Layer /&gt; as a wrapper and preferable for spaces moving
-				between different layers to avoid remounting of child components.
-			</td>
-		</tr>
+		<PropsHeader>Standard properties</PropsHeader>
+		<Prop
+			name="as"
+			type="string"
+			default="div"
+			description="Allows control over the outputted HTML element allowing HTML 5 semantic markup to be created."
+		/>
+		<Prop
+			name="centerContent"
+			type="CenterType.Vertical or CenterType.HorizontalVertical or 'vertical' or 'horizontalVertical'"
+			description="Apply centering to children."
+		/>
+		<Prop name="className" type="string" description="A class name to apply to the space element." />
+		<Prop
+			name="id"
+			type="string"
+			default="Randomly generated id"
+			description="By default a space outputs an element with a randomly generated id. You can specify your own id. It is preferable to specify an id on a space that is being added and removed based on state changes."
+		/>
+		<Prop
+			name="scrollable"
+			type="boolean"
+			default="false"
+			description="Makes the space scrollable. By default content that overflows the space will be hidden. This will allow the space to add a scroll bar if the content overflows."
+		/>
+		<Prop name="style" type="CSSProperties" default="" description="CSS properties" />
+		<Prop
+			name="trackSize"
+			type="boolean"
+			default="false"
+			description="Tells the space to report it's size when it changes size to the &lt;Info /&gt; component. With this turned off the space will only report the initial size."
+		/>
+		<Prop
+			name="zIndex"
+			type="number"
+			default="0"
+			description="A number representing which layer the space sits within. If not specified the space is place in layer 0. Higher numbers appear in front of lower numbers. This is intended to be an alternative to using &lt;Layer /&gt; as a wrapper and preferable for spaces moving between different layers to avoid remounting of child components."
+		/>
+		<Prop name="onClick" type="(event) => void" description="onClick handler" />
+		<Prop name="onDoubleClick" type="(event) => void" description="onDoubleClick handler" />
+		<Prop name="onMouseDown" type="(event) => void" description="onMouseDown handler" />
+		<Prop name="onMouseEnter" type="(event) => void" description="onMouseEnter handler" />
+		<Prop name="onMouseLeave" type="(event) => void" description="onMouseLeave handler" />
+		<Prop name="onMouseMove" type="(event) => void" description="onMouseMove handler" />
+		<Prop name="onTouchStart" type="(event) => void" description="onTouchStart handler" />
+		<Prop name="onTouchMove" type="(event) => void" description="onTouchMove handler" />
+		<Prop name="onTouchEnd" type="(event) => void" description="onTouchEnd handler" />
 	</>
 );
 
 export const AnchoredProps = () => (
 	<>
-		<tr>
-			<td colSpan={4} style={propHeader}>
-				Anchored properties
-			</td>
-		</tr>
-		<tr>
-			<td>size</td>
-			<td>string | number</td>
-			<td></td>
-			<td>Initial size of space specified as a percentage or in pixels.</td>
-		</tr>
+		<PropsHeader>Anchored properties</PropsHeader>
+		<Prop name="size" type="string | number" description="Initial size of space specified as a percentage or in pixels." />
 	</>
 );
 
 export const ResizableProps = () => (
 	<>
-		<tr>
-			<td colSpan={4} style={propHeader}>
-				Resizable properties
-			</td>
-		</tr>
-		<tr>
-			<td>handleSize</td>
-			<td>number</td>
-			<td>5</td>
-			<td>Size of the resize handle in pixels.</td>
-		</tr>
-		<tr>
-			<td>overlayHandle</td>
-			<td>boolean</td>
-			<td>true</td>
-			<td>
-				Determines method of placement of the resize handle. By default the handle is placed over the space. When set to false, the space
-				resize handle sits next to the space reducing the size of the space.
-			</td>
-		</tr>
-		<tr>
-			<td>minimumSize</td>
-			<td>number</td>
-			<td></td>
-			<td>Constrains resizing of the space to a minimum size.</td>
-		</tr>
-		<tr>
-			<td>maximumSize</td>
-			<td>number</td>
-			<td></td>
-			<td>Constrains resizing of the space to a maximum size.</td>
-		</tr>
-		<tr>
-			<td>onResizeStart</td>
-			<td>() => boolean</td>
-			<td></td>
-			<td>Triggered when a resize starts. Returning false from the event handler cancels the resize.</td>
-		</tr>
-		<tr>
-			<td>onResizeEnd</td>
-			<td>(newSize: number) => void</td>
-			<td></td>
-			<td>Triggered when a resize ends. The final size in pixels of the space in after the resize is passed as the first parameter.</td>
-		</tr>
+		<PropsHeader>Resizable properties</PropsHeader>
+		<Prop name="handleSize" type="number" default="5" description="Size of the resize handle in pixels." />
+		<Prop
+			name="overlayHandle"
+			type="boolean"
+			default="true"
+			description="Determines method of placement of the resize handle. By default the handle is placed over the space. When set to false, the space resize handle sits next to the space reducing the size of the space."
+		/>
+		<Prop name="minimumSize" type="number" description="Constrains resizing of the space to a minimum size." />
+		<Prop name="maximumSize" type="number" description="Constrains resizing of the space to a maximum size." />
+		<Prop
+			name="onResizeStart"
+			type="() => boolean"
+			description="Triggered when a resize starts. Returning false from the event handler cancels the resize."
+		/>
+		<Prop
+			name="onResizeEnd"
+			type="(newSize: number) => void"
+			description="Triggered when a resize ends. The final size in pixels of the space in after the resize is passed as the first parameter."
+		/>
 	</>
 );
 

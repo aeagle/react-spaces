@@ -5,7 +5,7 @@ import { Centered } from "../../Centered";
 import { Positioned } from "../../Space";
 import { useParentSpace } from "../../../hooks/useParentSpace";
 import { green, description } from "../Utils";
-import { CommonHeader } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
 
 <CommonHeader />
 
@@ -63,6 +63,17 @@ Absolutely positioned space within it's parent.
 	</Story>
 </Preview>
 
-# Properties
+### Properties
 
-<Props of={Positioned} />
+<Story name="Properties">
+	<PropsTable>
+		<PropsHeader>Positioned properties</PropsHeader>
+		<Prop name="bottom" type="number | string" description="Bottom offset from viewport edge." />
+		<Prop name="left" type="number | string" description="Left offset from viewport edge" />
+		<Prop name="right" type="number | string" description="Right offset from viewport edge" />
+		<Prop name="top" type="number | string" description="Top offset from viewport edge" />
+		<Prop name="width" type="number | string" description="Width of space" />
+		<Prop name="height" type="number | string" description="Height of space" />
+		<StandardProps />
+	</PropsTable>
+</Story>
