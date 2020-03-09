@@ -1,0 +1,47 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../../ViewPort";
+import { Layer } from "../../Layer";
+import { Centered } from "../../Centered";
+import { Positioned } from "../../Space";
+import { blue, red } from "../Utils";
+import { CommonHeader, description, PropsTable, Prop } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="Components|Layer" component={Layer} />
+
+## Layer
+
+Groups child spaces and places them all at a certain `zIndex`.
+
+<Preview>
+	<Story name="Default">
+		<ViewPort>
+			<Layer zIndex={1}>
+				<Positioned style={blue} left={100} top={100} width={200} height={200}>
+					{description("Positioned in layer with zIndex 1")}
+				</Positioned>
+				<Positioned style={blue} left={350} top={100} width={200} height={200}>
+					{description("Positioned in layer with zIndex 1")}
+				</Positioned>
+			</Layer>
+			<Layer zIndex={2}>
+				<Positioned style={red} left={200} top={250} width={200} height={200}>
+					{description("Positioned in layer with zIndex 2")}
+				</Positioned>
+				<Positioned style={red} left={450} top={250} width={200} height={200}>
+					{description("Positioned in layer with zIndex 2")}
+				</Positioned>
+			</Layer>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### Properties
+
+<Story name="Properties">
+	<PropsTable>
+		<Prop name="zIndex" type="number" description="zIndex to apply to all child spaces." />
+	</PropsTable>
+</Story>

@@ -1,5 +1,5 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
-import { CommonHeader } from "../Utils";
+import { CommonHeader, PropsTable, StandardProps } from "../Utils";
 
 <CommonHeader />
 
@@ -9,12 +9,6 @@ import { CommonHeader } from "../Utils";
 
 Applies to `<Fill />` `<Left />` `<Top />` `<Right />` `<Bottom />` `<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />` `<Positioned />` `<Custom />`
 
-| Property  | Type | Default | Description |
-| --- | --- | --- | --- |
-| as | *string* | div | Allows control over the outputted HTML element allowing HTML 5 semantic markup to be created. |
-| centerContent | *CenterType.Vertical* or *CenterType.HorizontalVertical* or *"vertical"* or *"horizontalVertical"* | | Apply centering to children. |
-| className | *string* | | A class name to apply to the space element. |
-| id | *string* or *number* | *Randomly generated `id`* | By default a space outputs an element with a randomly generated `id`. You can specify your own `id`. It is preferable to specify an `id` on a space that is being added and removed based on state changes. |
-| scrollable | *boolean* | false | Makes the space scrollable. By default content that overflows the space will be hidden. This will allow the space to add a scroll bar if the content overflows. |
-| trackSize | *boolean* | false | Tells the space to report it's size when it changes size to the `<Info />` component. With this turned off the space will only report the initial size. |
-| zIndex | *number* | 0 | A number representing which layer the space sits within. If not specified the space is place in layer 0. Higher numbers appear in front of lower numbers. This is intended to be an alternative to using `<Layer />` as a wrapper and preferable for spaces moving between different layers to avoid remounting of child components. |
+<PropsTable>
+	<StandardProps />
+</PropsTable>
