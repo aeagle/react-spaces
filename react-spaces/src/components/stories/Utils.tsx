@@ -188,9 +188,9 @@ export const DemoUI = () => {
 	);
 };
 
-export const blue: CSSProperties = { backgroundColor: "#e0eeee", opacity: 0.7 };
-export const red: CSSProperties = { backgroundColor: "#eee0e0", opacity: 0.7 };
-export const green: CSSProperties = { backgroundColor: "#e0eee0", opacity: 0.7 };
+export const blue: CSSProperties = { backgroundColor: "rgb(224, 238, 238, 0.7)" };
+export const red: CSSProperties = { backgroundColor: "rgb(238, 224, 224, 0.7)" };
+export const green: CSSProperties = { backgroundColor: "rgb(224, 238, 224, 0.7)" };
 
 export const description = (props: string, additional?: React.ReactNode) => (
 	<Info>
