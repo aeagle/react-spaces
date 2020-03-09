@@ -12,7 +12,7 @@ import { CenterType } from "../../../types";
 
 ### Installation
 
-```bash
+```shell
 npm install react-spaces
 ```
 
@@ -34,8 +34,12 @@ import { ViewPort, LeftResizable, Fill } from "react-spaces";
 
 const App = () => (
 	<ViewPort>
-		<LeftResizable size={200}>...</LeftResizable>
-		<Fill>...</Fill>
+		<LeftResizable size={200}>
+		  ...
+		</LeftResizable>
+		<Fill>
+		  ...
+		</Fill>
 	</ViewPort>
 );
 ```
@@ -59,17 +63,23 @@ the mouse.
 
 ### Nesting spaces
 
-By nesting spaces some more spaces we can easily add another bottom resizable area.
+By nesting spaces we can easily add another bottom resizable area.
 
 ```tsx
 import { ViewPort, LeftResizable, Fill } from "react-spaces";
 
 const App = () => (
 	<ViewPort>
-		<LeftResizable size={200}>...</LeftResizable>
+		<LeftResizable size={200}>
+		  ...
+		</LeftResizable>
 		<Fill>
-			<Fill>...</Fill>
-			<BottomResizable size={100}>...</BottomResizable>
+			<Fill>
+			  ...
+			</Fill>
+			<BottomResizable size={100}>
+			  ...
+			</BottomResizable>
 		</Fill>
 	</ViewPort>
 );
@@ -98,16 +108,28 @@ import { ViewPort, LeftResizable, Fill } from "react-spaces";
 
 const App = () => (
 	<ViewPort>
-		<Top size={25} order={1} centerContent={CenterType.Vertical}>...</Top>
-		<Top size={25} order={2} centerContent={CenterType.Vertical}>...</Top>
+		<Top size={25} order={1} centerContent={CenterType.Vertical}>
+		  ...
+		</Top>
+		<Top size={25} order={2} centerContent={CenterType.Vertical}>
+		  ...
+		</Top>
 		<Fill>
 			<LeftResizable size={200}>
-				<Top size={25} centerContent={CenterType.Vertical}>...</Top>
-				<Fill>...</Fill>
+				<Top size={25} centerContent={CenterType.Vertical}>
+				  ...
+				</Top>
+				<Fill>
+				  ...
+				</Fill>
 			</LeftResizable>
 			<Fill>
-				<Fill>...</Fill>
-				<BottomResizable size={100}>...</BottomResizable>
+				<Fill>
+				  ...
+				</Fill>
+				<BottomResizable size={100}>
+				  ...
+				</BottomResizable>
 			</Fill>
 		</Fill>
 	</ViewPort>
@@ -141,7 +163,7 @@ Now we have something like below:
 
 ### Introducing simple interactivity
 
-We can add some very simple state manipulate the space representing the sidebar.
+We can add some very simple state to manipulate the space representing the sidebar.
 
 Here we add a widget in the sidebar title which we will use to perform an action on the sidebar. This is just 
 another nested `<Right />` space with an icon.
@@ -150,12 +172,16 @@ another nested `<Right />` space with an icon.
 ...
 <LeftResizable size={200}>
 	<Top size={25}>
-		<Fill centerContent={CenterType.Vertical}>Sidebar title ...</Fill>
+		<Fill centerContent={CenterType.Vertical}>
+		  Sidebar title ...
+		</Fill>
 		<Right size={25} centerContent={CenterType.HorizontalVertical}>
 			<i class="fa fa-arrow-right" />
 		</Right>
 	</Top>
-	<Fill>...</Fill>
+	<Fill>
+	  ...
+	</Fill>
 </LeftResizable>
 ...
 ```

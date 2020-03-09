@@ -3,7 +3,7 @@ import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort } from "../../ViewPort";
 import { BottomResizable } from "../../Space";
 import { green, description, lorem } from "../Utils";
-import { CommonHeader } from "../Utils";
+import { CommonHeader, PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../Utils";
 
 <CommonHeader />
 
@@ -61,6 +61,10 @@ Anchored resizable space on the bottom edge of it's parent.
 	</Story>
 </Preview>
 
-# Properties
+### Properties
 
-<Props of={BottomResizable} />
+<PropsTable>
+	<ResizableProps />
+	<AnchoredProps />
+	<StandardProps />
+</PropsTable>

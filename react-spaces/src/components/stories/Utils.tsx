@@ -24,6 +24,158 @@ export const CommonHeader = () => (
 	</div>
 );
 
+export const PropsTable: React.FC = (props) => (
+	<table className="sbdocs sbdocs-table css-lckf62">
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Default value</th>
+			<th>Description</th>
+		</tr>
+		{props.children}
+	</table>
+);
+
+const propHeader = {
+	paddingTop: 2,
+	paddingBottom: 2,
+	backgroundColor: "#03396c",
+	color: "white",
+	fontSize: 12,
+	textTransform: "uppercase",
+	fontWeight: 500,
+};
+
+export const StandardProps = () => (
+	<>
+		<tr>
+			<td colSpan={4} style={propHeader}>
+				Standard properties
+			</td>
+		</tr>
+		<tr>
+			<td>as</td>
+			<td>string</td>
+			<td>div</td>
+			<td>Allows control over the outputted HTML element allowing HTML 5 semantic markup to be created.</td>
+		</tr>
+		<tr>
+			<td>centerContent</td>
+			<td>CenterType.Vertical or CenterType.HorizontalVertical or "vertical" or "horizontalVertical"</td>
+			<td></td>
+			<td>Apply centering to children.</td>
+		</tr>
+		<tr>
+			<td>className</td>
+			<td>string</td>
+			<td></td>
+			<td>A class name to apply to the space element.</td>
+		</tr>
+		<tr>
+			<td>id</td>
+			<td>string</td>
+			<td>Randomly generated id</td>
+			<td>
+				By default a space outputs an element with a randomly generated id. You can specify your own id. It is preferable to specify an id on
+				a space that is being added and removed based on state changes.
+			</td>
+		</tr>
+		<tr>
+			<td>scrollable</td>
+			<td>boolean</td>
+			<td>false</td>
+			<td>
+				Makes the space scrollable. By default content that overflows the space will be hidden. This will allow the space to add a scroll bar
+				if the content overflows.
+			</td>
+		</tr>
+		<tr>
+			<td>trackSize</td>
+			<td>boolean</td>
+			<td>false</td>
+			<td>
+				Tells the space to report it's size when it changes size to the &lt;Info /&gt; component. With this turned off the space will only
+				report the initial size.
+			</td>
+		</tr>
+		<tr>
+			<td>zIndex</td>
+			<td>number</td>
+			<td>0</td>
+			<td>
+				A number representing which layer the space sits within. If not specified the space is place in layer 0. Higher numbers appear in
+				front of lower numbers. This is intended to be an alternative to using &lt;Layer /&gt; as a wrapper and preferable for spaces moving
+				between different layers to avoid remounting of child components.
+			</td>
+		</tr>
+	</>
+);
+
+export const AnchoredProps = () => (
+	<>
+		<tr>
+			<td colSpan={4} style={propHeader}>
+				Anchored properties
+			</td>
+		</tr>
+		<tr>
+			<td>size</td>
+			<td>string | number</td>
+			<td></td>
+			<td>Initial size of space specified as a percentage or in pixels.</td>
+		</tr>
+	</>
+);
+
+export const ResizableProps = () => (
+	<>
+		<tr>
+			<td colSpan={4} style={propHeader}>
+				Resizable properties
+			</td>
+		</tr>
+		<tr>
+			<td>handleSize</td>
+			<td>number</td>
+			<td>5</td>
+			<td>Size of the resize handle in pixels.</td>
+		</tr>
+		<tr>
+			<td>overlayHandle</td>
+			<td>boolean</td>
+			<td>true</td>
+			<td>
+				Determines method of placement of the resize handle. By default the handle is placed over the space. When set to false, the space
+				resize handle sits next to the space reducing the size of the space.
+			</td>
+		</tr>
+		<tr>
+			<td>minimumSize</td>
+			<td>number</td>
+			<td></td>
+			<td>Constrains resizing of the space to a minimum size.</td>
+		</tr>
+		<tr>
+			<td>maximumSize</td>
+			<td>number</td>
+			<td></td>
+			<td>Constrains resizing of the space to a maximum size.</td>
+		</tr>
+		<tr>
+			<td>onResizeStart</td>
+			<td>() => boolean</td>
+			<td></td>
+			<td>Triggered when a resize starts. Returning false from the event handler cancels the resize.</td>
+		</tr>
+		<tr>
+			<td>onResizeEnd</td>
+			<td>(newSize: number) => void</td>
+			<td></td>
+			<td>Triggered when a resize ends. The final size in pixels of the space in after the resize is passed as the first parameter.</td>
+		</tr>
+	</>
+);
+
 export const DemoUI = () => {
 	const [sidebarExpanded, setSidebarExpanded] = React.useState(true);
 
@@ -36,7 +188,7 @@ export const DemoUI = () => {
 				Menu bar
 			</Top>
 			<Fill>
-				<LeftResizable style={{ borderRight: "1px dashed black" }} size={sidebarExpanded ? 200 : 25}>
+				<LeftResizable style={{ borderRight: "1px dashed black", transition: "width 0.5s ease" }} size={sidebarExpanded ? 200 : 25}>
 					<Top style={{ borderBottom: "1px dashed black" }} size={25}>
 						{sidebarExpanded && (
 							<Fill style={{ padding: 5 }} centerContent={CenterType.Vertical}>
@@ -53,7 +205,7 @@ export const DemoUI = () => {
 					</Top>
 					{sidebarExpanded && <Fill centerContent={CenterType.HorizontalVertical}>Sidebar</Fill>}
 				</LeftResizable>
-				<Fill>
+				<Fill style={{ borderRight: "1px dashed black", transition: "left 0.5s ease" }}>
 					<Fill centerContent={CenterType.HorizontalVertical}>Main content</Fill>
 					<BottomResizable style={{ borderTop: "1px dashed black" }} size={100} centerContent={CenterType.HorizontalVertical}>
 						Bottom area

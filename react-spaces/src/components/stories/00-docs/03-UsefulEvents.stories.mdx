@@ -1,0 +1,69 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { CommonHeader } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="React Spaces|Useful events" />
+
+## Useful events
+
+### Space specific events
+
+#### onResizeStart
+
+Applies to `<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />`
+
+Triggered when a mouse/touch resize starts. 
+
+The resize action can be cancelled by returning `false` from the event handler.
+
+```tsx
+const Example = () => {
+	const shouldResize = // logic to determine if resizing should be possible
+
+	return (
+		<LeftResizable onResizeStart={() => shouldResize}>
+		...
+		</LeftResizable>
+	)
+}
+```
+
+#### onResizeEnd
+
+Applies to `<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />`
+
+Triggered at the end of a resize action providing the new size (in pixels) of the space.
+
+The likely scenario where you need to use this is to keep the size of the space controlled 
+in state:
+
+```tsx
+const Example = () => {
+	const [ size, setSize ] = useState(200);
+
+	return (
+		<ViewPort>
+			<LeftResizable onResizeEnd={(newSize) => setSize(newSize)}>
+			  ...
+			</LeftResizable>
+		</ViewPort>
+	)
+}
+```
+
+### Passthrough events
+
+Applies to `<Fill />` `<Left />` `<Top />` `<Right />` `<Bottom />` `<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />` `<Positioned />` `<Custom />`
+
+Space currently components support the follow HTML element events.
+
+- `onClick`
+- `onDoubleClick`
+- `onMouseDown`
+- `onMouseEnter`
+- `onMouseLeave`
+- `onMouseMove`
+- `onTouchStart`
+- `onTouchMove`
+- `onTouchEnd`
