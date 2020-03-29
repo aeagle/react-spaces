@@ -34,20 +34,20 @@ import { CommonHeader } from "../Utils";
 
 ### 0.1.19
 
-- Fix to ensure spaces in same parent are updated when a space zIndex is adjusted. (issue / pull request)
+- Fix to ensure spaces in same parent are updated when a space zIndex is adjusted.
 
 ### 0.1.18
 
-- Added resize start and end events (issue / pull request)
-- Fixed useContext hook being used within condition expression causing 'React has detected a change in the order of Hooks called by SpaceInternal' error when zIndex property updated on space (issue / pull request)
-- Fix to ensure debounced resize (mouse/touch) events do not fire after mouse up or touch end events have fired. (pull request)
-- Fix to ensure mouse up and touch end events are unbound after a resize operation has completed to prevent multiple event handlers being bound on every resize operation. (pull request)
+- Added resize start and end events
+- Fixed useContext hook being used within condition expression causing 'React has detected a change in the order of Hooks called by SpaceInternal' error when zIndex property updated on space.
+- Fix to ensure debounced resize (mouse/touch) events do not fire after mouse up or touch end events have fired.
+- Fix to ensure mouse up and touch end events are unbound after a resize operation has completed to prevent multiple event handlers being bound on every resize operation.
 
 ### 0.1.17
 
-- Fix to ensured resize delta is reset when size property changed on anchored and resizable spaces (issue / pull request)
-- Added PropTypes for all exposed components for Javascript only consumers in addition to the Typescript typings in the library. (issue / pull request)
-- Fix when multiple classes provided as property to space to prevent a duplication of class names on the outer and inner space elements. (issue / pull request)
+- Fix to ensured resize delta is reset when size property changed on anchored and resizable spaces
+- Added PropTypes for all exposed components for Javascript only consumers in addition to the Typescript typings in the library.
+- Fix when multiple classes provided as property to space to prevent a duplication of class names on the outer and inner space elements.
 
 ### 0.1.16
 
@@ -61,14 +61,14 @@ import { CommonHeader } from "../Utils";
 ### 0.1.14
 
 - Migrated from Webpack to Rollup for building component library
-- Created ES module bundles in /dist/es
+- Created ES module bundles in `/dist/es`
 - Fixed window undefined error when rendering spaces via Next.js
-- Created server bundle (/dist/server) for using with Node.js server side apps when utilising SSR, e.g. Next.js and seperated styling from server bundle (/dist/server.css). This is currently experimental.
+- Created server bundle `/dist/server` for using with Node.js server side apps when utilising SSR, e.g. Next.js and seperated styling from server bundle (/dist/server.css). This is currently experimental.
 
 ### 0.1.13
 
 - Refactored spaces as functional component using hooks.
-- Fixed className type on <ViewPort /> component.
+- Fixed className type on `<ViewPort />` component.
 
 ### 0.1.11 - 0.1.12
 
@@ -77,7 +77,7 @@ import { CommonHeader } from "../Utils";
 ### 0.1.10
 
 - Added 'as' property to allow rendered DOM element to be specified (thanks to u/MahNonAnon and u/trevoreyre on Reddit for suggestion of this).
-- Added 'centerContent' property as short-hand for centering space content instead of having to introduce the extra <Centered /> or <CenteredVertically /> components.
+- Added 'centerContent' property as short-hand for centering space content instead of having to introduce the extra `<Centered />` or `<CenteredVertically />` components.
 - Allow resize handle width to be specified and also it's placement within space controlled with the 'overlayHandle' property.
 - Fixed issue with dynamically added/removed anchored spaces where an anchored space would see itself as a space taking space.
 
@@ -113,8 +113,8 @@ import { CommonHeader } from "../Utils";
 ### 0.1.2
 
 - Removed ResizeSensor from spaces by default and now optionally allow live size updates with trackSize property
-- Added <VerticallyCentered /> component to vertically centre content within a space
-- Allow class names to be specified on top-level spaces <ViewPort /> and <Fixed />
+- Added `<VerticallyCentered />` component to vertically centre content within a space
+- Allow class names to be specified on top-level spaces `<ViewPort />` and `<Fixed />`
 
 ### 0.1.1
 
