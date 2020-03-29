@@ -23,8 +23,8 @@ export const ResizeHandle: React.FC<IProps> = (props) => {
 			<div
 				style={{ width: width, height: height }}
 				className={`spaces-resize-handle ${AnchorToResizeTypeMap[props.anchor]}`}
-				onMouseDown={(e) => startMouseResize(e, props.parentContext, props.space, props, props.spaceElement)}
-				onTouchStart={(e) => startTouchResize(e, props.parentContext, props.space, props, props.spaceElement)}
+				onMouseDown={(e) => startMouseResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType)}
+				onTouchStart={(e) => startTouchResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType)}
 			/>
 		);
 	}
