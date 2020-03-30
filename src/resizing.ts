@@ -1,5 +1,5 @@
 import { ResizeType, AllProps, AnchorToResizeTypeMap, ISpace, IPosition } from "./types";
-import { isHorizontalSpace } from "./utils";
+import { isHorizontalSpace, coalesce } from "./utils";
 import { ISpaceContext, updateSpace } from "./ISpaceContext";
 import { throttle } from "./throttle";
 import { SyntheticEvent } from "react";
@@ -147,8 +147,9 @@ function startResize<T extends SyntheticEvent<HTMLElement> | MouseEvent | TouchE
 		const coords = getCoords(e);
 		const originalMouseX = resizeType === ResizeType.Left ? coords.x + space.adjustedSize : coords.x - space.adjustedSize;
 		const originalMouseY = resizeType === ResizeType.Top ? coords.y + space.adjustedSize : coords.y - space.adjustedSize;
-		const minimumAdjust = (props.minimumSize === undefined ? 20 : props.minimumSize) - size + space.adjustedSize;
+		const minimumAdjust = coalesce(props.minimumSize, 20) - size + space.adjustedSize;
 		const maximumAdjust = props.maximumSize ? props.maximumSize - size + space.adjustedSize : undefined;
+
 		let lastX = 0;
 		let lastY = 0;
 		let moved = false;

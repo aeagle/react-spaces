@@ -8,6 +8,8 @@ interface IProps {
 	resizable?: boolean;
 	anchor?: AnchorType;
 	handleSize?: number;
+	maximumSize?: number;
+	minimumSize?: number;
 	parentContext: ISpaceContext | undefined;
 	space: ISpace;
 	spaceElement: HTMLElement | undefined;
