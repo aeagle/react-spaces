@@ -1,0 +1,48 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { Fixed } from "../../Fixed";
+import { Centered } from "../../Centered";
+import { LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../Space";
+import { red, green, blue, description } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="Components|Fixed" component={Fixed} />
+
+## Fixed
+
+Top-level space with a fixed height and optional width.
+
+### With width specified
+
+<Preview>
+	<Story name="With width">
+		<Fixed style={blue} width={300} height={300}>
+			{description("Fixed 300px x 300px")}
+		</Fixed>
+	</Story>
+</Preview>
+
+### Without a width specified
+
+<Preview>
+	<Story name="Without width">
+		<Fixed style={blue} height={300}>
+			{description("Fixed 100% x 300px")}
+		</Fixed>
+	</Story>
+</Preview>
+
+### Properties
+
+<Story name="Properties">
+	<PropsTable>
+		<PropsHeader>Fixed properties</PropsHeader>
+		<Prop name="width" type="number | string" description="Optional width of space. When not specified the space will fill 100% of it's container." />
+		<Prop name="height" type="number | string" description="Height of space." />
+		<PropsHeader>Standard properties</PropsHeader>
+		<Prop name="className" type="string" description="A class name to apply to the space element." />
+		<Prop name="style" type="CSSProperties" description="CSS properties" />
+	</PropsTable>
+</Story>

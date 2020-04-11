@@ -1,0 +1,82 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../../ViewPort";
+import { LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../Space";
+import { red, green, blue, description } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="Components|ViewPort" component={ViewPort} />
+
+## ViewPort
+
+Top-level space that fills entire browser view port
+
+### Full coverage
+
+<Preview>
+	<Story name="Default">
+		<ViewPort style={blue}>{description("ViewPort")}</ViewPort>
+	</Story>
+</Preview>
+
+## With offsets
+
+Fills entire browser view port with offsets from the edge. Useful for making visible existing
+window elements that may be on the page.
+
+### With a top offset
+
+<Preview>
+	<Story name="Top offset">
+		<ViewPort style={blue} top={50}>
+			{description("ViewPort with top offset")}
+		</ViewPort>
+	</Story>
+</Preview>
+
+### With a right offset
+
+<Preview>
+	<Story name="Right offset">
+		<ViewPort style={blue} right={50}>
+			{description("ViewPort with right offset")}
+		</ViewPort>
+	</Story>
+</Preview>
+
+### With a bottom offset
+
+<Preview>
+	<Story name="Bottom offset">
+		<ViewPort style={blue} bottom={50}>
+			{description("ViewPort with bottom offset")}
+		</ViewPort>
+	</Story>
+</Preview>
+
+### With a left offset
+
+<Preview>
+	<Story name="Left offset">
+		<ViewPort style={blue} left={50}>
+			{description("ViewPort with left offset")}
+		</ViewPort>
+	</Story>
+</Preview>
+
+### Properties
+
+<Story name="Properties">
+	<PropsTable>
+		<PropsHeader>ViewPort properties</PropsHeader>
+		<Prop name="bottom" type="number | string" description="Bottom offset from viewport edge." />
+		<Prop name="left" type="number | string" description="Left offset from viewport edge" />
+		<Prop name="right" type="number | string" description="Right offset from viewport edge" />
+		<Prop name="top" type="number | string" description="Top offset from viewport edge" />
+		<PropsHeader>Standard properties</PropsHeader>
+		<Prop name="className" type="string" description="A class name to apply to the space element." />
+		<Prop name="style" type="CSSProperties" description="CSS properties" />
+	</PropsTable>
+</Story>

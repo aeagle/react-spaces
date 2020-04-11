@@ -1,0 +1,79 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../../ViewPort";
+import { Centered } from "../../Centered";
+import { Positioned } from "../../Space";
+import { useParentSpace } from "../../../hooks/useParentSpace";
+import { green, description } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="Components|Positioned" component={Positioned} />
+
+## Positioned
+
+Absolutely positioned space within it's parent.
+
+### With a width and height specified
+
+<Preview>
+	<Story name="With size">
+		<ViewPort>
+			<Positioned style={green} left={200} top={200} width={400} height={300}>
+				{description("Positioned")}
+			</Positioned>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### With all side offsets specified
+
+<Preview>
+	<Story name="Without size">
+		<ViewPort>
+			<Positioned style={green} left={200} top={200} right={200} bottom={200} trackSize={true}>
+				{description("Positioned")}
+			</Positioned>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### Allowing repositioning by dragging with a drag handle
+
+<Preview>
+	<Story name="With drag handle">
+		{() => {
+			const DragHandle = () => {
+				const parent = useParentSpace();
+				return (
+					<Centered>
+						<button onMouseDown={(e) => parent.startMouseDrag(e)}>
+							Drag handle
+						</button>
+					</Centered>
+				)
+			}
+			return <ViewPort>
+				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true}>
+					<DragHandle />
+				</Positioned>
+			</ViewPort>
+		}}
+	</Story>
+</Preview>
+
+### Properties
+
+<Story name="Properties">
+	<PropsTable>
+		<PropsHeader>Positioned properties</PropsHeader>
+		<Prop name="bottom" type="number | string" description="Bottom offset from viewport edge." />
+		<Prop name="left" type="number | string" description="Left offset from viewport edge" />
+		<Prop name="right" type="number | string" description="Right offset from viewport edge" />
+		<Prop name="top" type="number | string" description="Top offset from viewport edge" />
+		<Prop name="width" type="number | string" description="Width of space" />
+		<Prop name="height" type="number | string" description="Height of space" />
+		<StandardProps />
+	</PropsTable>
+</Story>

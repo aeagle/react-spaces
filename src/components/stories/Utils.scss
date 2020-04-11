@@ -1,0 +1,20 @@
+.properties-table,
+.css-lckf62 {
+	margin-top: 15px;
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 100%;
+	font-size: 14px;
+	line-height: 24px;
+	td,
+	th {
+		vertical-align: top;
+		text-align: left;
+		padding: 6px 13px;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+	}
+
+	tr:nth-of-type(2n) {
+		background-color: #f8f8f8;
+	}
+}

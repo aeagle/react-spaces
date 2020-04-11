@@ -1,0 +1,59 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../../ViewPort";
+import { Bottom } from "../../Space";
+import { green, description, lorem } from "../Utils";
+import { CommonHeader, PropsTable, StandardProps, AnchoredProps } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="Components|Bottom" component={Bottom} />
+
+## Bottom
+
+Anchored space on the bottom edge of it's parent.
+
+### Specifying a % size
+
+<Preview>
+	<Story name="Default (%)">
+		<ViewPort>
+			<Bottom style={green} size="50%">
+				{description("Bottom 50%")}
+			</Bottom>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### Specifying a pixel size
+
+<Preview>
+	<Story name="Default (px)">
+		<ViewPort>
+			<Bottom style={green} size={300}>
+				{description("Bottom 300px")}
+			</Bottom>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### As a scrollable space
+
+<Preview>
+	<Story name="Scrollable">
+		<ViewPort>
+			<Bottom style={green} size={300} scrollable={true}>
+				{lorem}
+			</Bottom>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### Properties
+
+<Story name="Properties">
+	<PropsTable>
+		<AnchoredProps />
+		<StandardProps />
+	</PropsTable>
+</Story>

@@ -1,0 +1,106 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort } from "../../ViewPort";
+import { LeftResizable, RightResizable, Left, Right, TopResizable, BottomResizable, Top, Bottom, Fill } from "../../Space";
+import { red, green, blue, description } from "../Utils";
+import { CommonHeader } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="Basic examples|Stacked" />
+
+## Stacked
+
+Example of stacking spaces.
+
+### Left and right stacked spaces
+
+<Preview>
+	<Story name="Fixed vertical">
+		<ViewPort>
+			<Left size="15%" style={blue} order={1}>
+				{description("Left 1")}
+			</Left>
+			<Left size="15%" style={red} order={2}>
+				{description("Left 2")}
+			</Left>
+			<Fill style={green}>{description("Fill")}</Fill>
+			<Right size="15%" style={red} order={2}>
+				{description("Right 2")}
+			</Right>
+			<Right size="15%" style={blue} order={1}>
+				{description("Right 1")}
+			</Right>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### Top and bottom stacked spaces
+
+<Preview>
+	<Story name="Fixed horizontal">
+		<ViewPort>
+			<Top size="15%" style={blue} order={1}>
+				{description("Top 1")}
+			</Top>
+			<Top size="15%" style={red} order={2}>
+				{description("Top 2")}
+			</Top>
+			<Fill style={green}>{description("Fill")}</Fill>
+			<Bottom size="15%" style={red} order={2}>
+				{description("Bottom 2")}
+			</Bottom>
+			<Bottom size="15%" style={blue} order={1}>
+				{description("Bottom 1")}
+			</Bottom>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### Left and right resizable stacked spaces
+
+<Preview>
+	<Story name="Resizable vertical">
+		<ViewPort>
+			<LeftResizable size="15%" style={blue} trackSize={true} order={1}>
+				{description("Left 1")}
+			</LeftResizable>
+			<LeftResizable size="15%" style={red} trackSize={true} order={2}>
+				{description("Left 2")}
+			</LeftResizable>
+			<Fill style={green} trackSize={true}>
+				{description("Fill")}
+			</Fill>
+			<RightResizable size="15%" style={red} trackSize={true} order={2}>
+				{description("Right 2")}
+			</RightResizable>
+			<RightResizable size="15%" style={blue} trackSize={true} order={1}>
+				{description("Right 1")}
+			</RightResizable>
+		</ViewPort>
+	</Story>
+</Preview>
+
+### Top and bottom resizable stacked spaces
+
+<Preview>
+	<Story name="Resizable horizontal">
+		<ViewPort>
+			<TopResizable size="15%" style={blue} trackSize={true} order={1}>
+				{description("Top 1")}
+			</TopResizable>
+			<TopResizable size="15%" style={red} trackSize={true} order={2}>
+				{description("Top 2")}
+			</TopResizable>
+			<Fill style={green} trackSize={true}>
+				{description("Fill")}
+			</Fill>
+			<BottomResizable size="15%" style={red} trackSize={true} order={2}>
+				{description("Bottom 2")}
+			</BottomResizable>
+			<BottomResizable size="15%" style={blue} trackSize={true} order={1}>
+				{description("Bottom 1")}
+			</BottomResizable>
+		</ViewPort>
+	</Story>
+</Preview>
