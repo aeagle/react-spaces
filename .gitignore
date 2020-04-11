@@ -22,3 +22,4 @@ yarn-debug.log*
 yarn-error.log*
 **/.rpt2_cache
 **/.next
+**/storybook-static
