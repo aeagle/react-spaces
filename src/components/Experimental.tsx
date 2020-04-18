@@ -35,40 +35,48 @@ export interface IPositionalProps {
 	zIndex?: number;
 }
 
-export interface ISpaceDefinition extends IPositionalProps {
+interface ISizeParts {
+	size: SizeUnit;
+	adjusted: SizeUnit[];
+	resized: number;
+}
+
+export interface ISpaceDefinition {
 	update: () => void;
+	adjustLeft: (adjusted: SizeUnit[]) => boolean;
+	adjustRight: (adjusted: SizeUnit[]) => boolean;
+	adjustTop: (adjusted: SizeUnit[]) => boolean;
+	adjustBottom: (adjusted: SizeUnit[]) => boolean;
+	adjustEdge: (adjusted: SizeUnit[]) => boolean;
+	anchoredChildren: (anchor: Anchor, zIndex: number) => ISpaceDefinition[];
 	invalid: boolean;
 	id: string;
 	type: Type;
 	anchor?: Anchor;
 	orientation: Orientation;
-	order?: number;
+	order: number;
 	position: "fixed" | "absolute";
 	children: ISpaceDefinition[];
 	parent: ISpaceDefinition | undefined;
 	store: ISpaceStore;
-	adjustedLeft: SizeUnit[];
-	adjustedTop: SizeUnit[];
-	adjustedRight: SizeUnit[];
-	adjustedBottom: SizeUnit[];
-	resizedLeft: SizeUnit;
-	resizedTop: SizeUnit;
-	resizedBottom: SizeUnit;
-	resizedRight: SizeUnit;
-	resizedWidth: SizeUnit;
-	resizedHeight: SizeUnit;
+	left: ISizeParts;
+	top: ISizeParts;
+	right: ISizeParts;
+	bottom: ISizeParts;
+	width: ISizeParts;
+	height: ISizeParts;
+	zIndex: number;
 }
 
-const getSizeString = (size: SizeUnit) => (typeof size === "string" ? size : `${size}${size !== 0 ? "px" : ""}`);
+const getSizeString = (size: SizeUnit) => (typeof size === "string" ? size : `${size}px`);
 
-const cssLeft = (space: ISpaceDefinition) => {
+const css = (size: ISizeParts) => {
 	const parts: string[] = [];
-
-	if (space.left !== undefined) {
-		parts.push(getSizeString(space.left));
+	if (size !== undefined) {
+		parts.push(getSizeString(size.size));
 	}
 
-	space.adjustedLeft.forEach((l) => parts.push(getSizeString(l)));
+	size.adjusted.forEach((l) => parts.push(getSizeString(l)));
 
 	if (parts.length === 0) {
 		return undefined;
@@ -76,54 +84,24 @@ const cssLeft = (space: ISpaceDefinition) => {
 
 	return `calc(${parts.join(" + ")})`;
 };
-
-const cssTop = (space: ISpaceDefinition) => {
-	const parts: string[] = [];
-
-	if (space.top !== undefined) {
-		parts.push(getSizeString(space.top));
-	}
-
-	space.adjustedTop.forEach((l) => parts.push(getSizeString(l)));
-
-	if (parts.length === 0) {
-		return undefined;
-	}
-
-	return `calc(${parts.join(" + ")})`;
-};
-
-const cssRight = (space: ISpaceDefinition) => {
-	const parts: string[] = [];
-
-	if (space.right !== undefined) {
-		parts.push(getSizeString(space.right));
-	}
-
-	space.adjustedRight.forEach((l) => parts.push(getSizeString(l)));
-
-	if (parts.length === 0) {
-		return undefined;
-	}
-
-	return `calc(${parts.join(" + ")})`;
-};
-
-const cssBottom = (space: ISpaceDefinition) => {
-	const parts: string[] = [];
-
-	if (space.bottom !== undefined) {
-		parts.push(getSizeString(space.bottom));
-	}
-
-	space.adjustedBottom.forEach((l) => parts.push(getSizeString(l)));
-
-	if (parts.length === 0) {
-		return undefined;
-	}
-
-	return `calc(${parts.join(" + ")})`;
-};
+const anchorUpdates = (space: ISpaceDefinition) => [
+	{
+		anchor: Anchor.Left,
+		update: space.adjustLeft,
+	},
+	{
+		anchor: Anchor.Top,
+		update: space.adjustTop,
+	},
+	{
+		anchor: Anchor.Right,
+		update: space.adjustRight,
+	},
+	{
+		anchor: Anchor.Bottom,
+		update: space.adjustBottom,
+	},
+];
 
 export function createStore(): ISpaceStore {
 	const spaces: ISpaceDefinition[] = [];
@@ -157,44 +135,18 @@ export function createStore(): ISpaceStore {
 			const space = parent.children[i];
 
 			if (space.type === Type.Fill) {
-				const adjusted: SizeUnit[] = [];
-
-				[
-					{
-						anchor: Anchor.Left,
-						update: (adjusted: SizeUnit[]) => {
-							space.adjustedLeft = adjusted;
-						},
-					},
-					{
-						anchor: Anchor.Top,
-						update: (adjusted: SizeUnit[]) => {
-							space.adjustedTop = adjusted;
-						},
-					},
-					{
-						anchor: Anchor.Right,
-						update: (adjusted: SizeUnit[]) => {
-							space.adjustedRight = adjusted;
-						},
-					},
-					{
-						anchor: Anchor.Bottom,
-						update: (adjusted: SizeUnit[]) => {
-							space.adjustedBottom = adjusted;
-						},
-					},
-				].forEach((info) => {
-					const anchoredSpaces = parent.children.filter((s) => s.type === Type.Anchored && s.anchor === info.anchor);
+				anchorUpdates(space).forEach((info) => {
+					const adjusted: SizeUnit[] = [];
+					const anchoredSpaces = parent.anchoredChildren(info.anchor, space.zIndex);
 
 					anchoredSpaces.forEach((as) => {
 						if (as.orientation === Orientation.Vertical) {
-							if (as.height) {
-								adjusted.push(as.height);
+							if (as.height.size) {
+								adjusted.push(as.height.size);
 							}
 						} else {
-							if (as.width) {
-								adjusted.push(as.width);
+							if (as.width.size) {
+								adjusted.push(as.width.size);
 							}
 						}
 					});
@@ -203,35 +155,22 @@ export function createStore(): ISpaceStore {
 				});
 			} else if (space.type === Type.Anchored) {
 				const adjusted: SizeUnit[] = [];
-
-				const anchoredSpaces = parent.children.filter(
-					(s) => s.type === Type.Anchored && s.anchor === space.anchor && s.id !== space.id && (s.order || 0) < (space.order || 0),
-				);
+				const anchoredSpaces = parent.anchoredChildren(space.anchor!, space.zIndex).filter((s) => s.id !== space.id && s.order < space.order);
 
 				anchoredSpaces.forEach((as) => {
 					if (as.orientation === Orientation.Vertical) {
-						if (as.height) {
-							adjusted.push(as.height);
+						if (as.height.size) {
+							adjusted.push(as.height.size);
 						}
 					} else {
-						if (as.width) {
-							adjusted.push(as.width);
+						if (as.width.size) {
+							adjusted.push(as.width.size);
 						}
 					}
 				});
 
-				if (space.anchor === Anchor.Left) {
-					space.adjustedLeft = adjusted;
-				} else if (space.anchor === Anchor.Top) {
-					space.adjustedTop = adjusted;
-				} else if (space.anchor === Anchor.Right) {
-					space.adjustedRight = adjusted;
-				} else if (space.anchor === Anchor.Bottom) {
-					space.adjustedBottom = adjusted;
-				}
+				space.adjustEdge(adjusted);
 			}
-
-			queueUpdate();
 		}
 	};
 
@@ -279,43 +218,76 @@ const useSpace = (id: string, type: Type, anchor?: Anchor, order?: number, posit
 	}
 
 	const newSpace: ISpaceDefinition = {
-		...{
-			store: store,
-			parent: parent,
-			update: update,
-			invalid: true,
-			id: id,
-			type: type,
-			anchor: anchor,
-			orientation: anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal,
-			order: order,
-			position: type === Type.ViewPort ? "fixed" : "absolute",
-			children: [],
-			adjustedLeft: [],
-			adjustedTop: [],
-			adjustedRight: [],
-			adjustedBottom: [],
-			resizedLeft: 0,
-			resizedTop: 0,
-			resizedRight: 0,
-			resizedBottom: 0,
-			resizedWidth: 0,
-			resizedHeight: 0,
-		},
-		...position,
+		store: store,
+		parent: parent,
+		update: update,
+		invalid: true,
+		id: id,
+		type: type,
+		anchor: anchor,
+		orientation: anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal,
+		order: order || 0,
+		position: type === Type.ViewPort ? "fixed" : "absolute",
+		children: [],
+		zIndex: (position && position.zIndex) || 0,
+		left: { size: position && position.left, adjusted: [], resized: 0 },
+		right: { size: position && position.right, adjusted: [], resized: 0 },
+		top: { size: position && position.top, adjusted: [], resized: 0 },
+		bottom: { size: position && position.bottom, adjusted: [], resized: 0 },
+		width: { size: position && position.width, adjusted: [], resized: 0 },
+		height: { size: position && position.height, adjusted: [], resized: 0 },
+		adjustLeft: () => false,
+		adjustRight: () => false,
+		adjustTop: () => false,
+		adjustBottom: () => false,
+		adjustEdge: () => false,
+		anchoredChildren: () => [],
 	};
+
+	newSpace.anchoredChildren = (anchor, zIndex) =>
+		newSpace.children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
+	newSpace.adjustLeft = (adjusted) => {
+		newSpace.left.adjusted = adjusted;
+		return true;
+	};
+	newSpace.adjustRight = (adjusted) => {
+		newSpace.right.adjusted = adjusted;
+		return true;
+	};
+	newSpace.adjustTop = (adjusted) => {
+		newSpace.top.adjusted = adjusted;
+		return true;
+	};
+	newSpace.adjustBottom = (adjusted) => {
+		newSpace.bottom.adjusted = adjusted;
+		return true;
+	};
+
+	if (type === Type.Anchored) {
+		if (anchor === Anchor.Left) {
+			newSpace.adjustEdge = newSpace.adjustLeft;
+		} else if (anchor === Anchor.Top) {
+			newSpace.adjustEdge = newSpace.adjustTop;
+		} else if (anchor === Anchor.Right) {
+			newSpace.adjustEdge = newSpace.adjustRight;
+		} else if (anchor === Anchor.Bottom) {
+			newSpace.adjustEdge = newSpace.adjustBottom;
+		}
+	}
 
 	store.addSpace(newSpace);
 
 	return newSpace;
 };
 
-export const Left: React.FC<{
+interface IAnchorProps {
 	id: string;
 	size: SizeUnit;
 	order?: number;
 	style: React.CSSProperties;
-}> = (props) => {
+}
+
+export const Left: React.FC<IAnchorProps> = (props) => {
 	return (
 		<Space
 			id={props.id}
@@ -329,12 +301,7 @@ export const Left: React.FC<{
 	);
 };
 
-export const Top: React.FC<{
-	id: string;
-	size: SizeUnit;
-	order?: number;
-	style: React.CSSProperties;
-}> = (props) => {
+export const Top: React.FC<IAnchorProps> = (props) => {
 	return (
 		<Space
 			id={props.id}
@@ -348,12 +315,7 @@ export const Top: React.FC<{
 	);
 };
 
-export const Right: React.FC<{
-	id: string;
-	size: SizeUnit;
-	order?: number;
-	style: React.CSSProperties;
-}> = (props) => {
+export const Right: React.FC<IAnchorProps> = (props) => {
 	return (
 		<Space
 			id={props.id}
@@ -367,12 +329,7 @@ export const Right: React.FC<{
 	);
 };
 
-export const Bottom: React.FC<{
-	id: string;
-	size: SizeUnit;
-	order?: number;
-	style: React.CSSProperties;
-}> = (props) => {
+export const Bottom: React.FC<IAnchorProps> = (props) => {
 	return (
 		<Space
 			id={props.id}
@@ -391,7 +348,7 @@ export const Fill: React.FC<{
 	style: React.CSSProperties;
 }> = (props) => {
 	return (
-		<Space id={props.id} type={Type.Fill} style={props.style}>
+		<Space id={props.id} type={Type.Fill} style={props.style} position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
 			{props.children}
 		</Space>
 	);
@@ -425,12 +382,12 @@ export const Space: React.FC<{
 		...props.style,
 		...{
 			position: space.position,
-			left: cssLeft(space),
-			top: cssTop(space),
-			right: cssRight(space),
-			bottom: cssBottom(space),
-			width: space.width,
-			height: space.height,
+			left: css(space.left),
+			top: css(space.top),
+			right: css(space.right),
+			bottom: css(space.bottom),
+			width: css(space.width),
+			height: css(space.height),
 			zIndex: space.zIndex,
 			boxSizing: "border-box",
 		},
