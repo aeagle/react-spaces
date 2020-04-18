@@ -2,16 +2,21 @@ import * as React from "react";
 import { SizeUnit } from "../types";
 
 export enum Type {
-	ViewPort = "viewport",
-	Fill = "fill",
-	Anchored = "anchored",
+	ViewPort,
+	Fill,
+	Anchored,
 }
 
 export enum Anchor {
-	Left = "left",
-	Top = "top",
-	Right = "right",
-	Bottom = "bottom",
+	Left,
+	Top,
+	Right,
+	Bottom,
+}
+
+export enum Orientation {
+	Horizontal,
+	Vertical,
 }
 
 export interface ISpaceStore {
@@ -36,12 +41,89 @@ export interface ISpaceDefinition extends IPositionalProps {
 	id: string;
 	type: Type;
 	anchor?: Anchor;
+	orientation: Orientation;
 	order?: number;
 	position: "fixed" | "absolute";
 	children: ISpaceDefinition[];
 	parent: ISpaceDefinition | undefined;
 	store: ISpaceStore;
+	adjustedLeft: SizeUnit[];
+	adjustedTop: SizeUnit[];
+	adjustedRight: SizeUnit[];
+	adjustedBottom: SizeUnit[];
+	resizedLeft: SizeUnit;
+	resizedTop: SizeUnit;
+	resizedBottom: SizeUnit;
+	resizedRight: SizeUnit;
+	resizedWidth: SizeUnit;
+	resizedHeight: SizeUnit;
 }
+
+const getSizeString = (size: SizeUnit) => (typeof size === "string" ? size : `${size}${size !== 0 ? "px" : ""}`);
+
+const cssLeft = (space: ISpaceDefinition) => {
+	const parts: string[] = [];
+
+	if (space.left !== undefined) {
+		parts.push(getSizeString(space.left));
+	}
+
+	space.adjustedLeft.forEach((l) => parts.push(getSizeString(l)));
+
+	if (parts.length === 0) {
+		return undefined;
+	}
+
+	return `calc(${parts.join(" + ")})`;
+};
+
+const cssTop = (space: ISpaceDefinition) => {
+	const parts: string[] = [];
+
+	if (space.top !== undefined) {
+		parts.push(getSizeString(space.top));
+	}
+
+	space.adjustedTop.forEach((l) => parts.push(getSizeString(l)));
+
+	if (parts.length === 0) {
+		return undefined;
+	}
+
+	return `calc(${parts.join(" + ")})`;
+};
+
+const cssRight = (space: ISpaceDefinition) => {
+	const parts: string[] = [];
+
+	if (space.right !== undefined) {
+		parts.push(getSizeString(space.right));
+	}
+
+	space.adjustedRight.forEach((l) => parts.push(getSizeString(l)));
+
+	if (parts.length === 0) {
+		return undefined;
+	}
+
+	return `calc(${parts.join(" + ")})`;
+};
+
+const cssBottom = (space: ISpaceDefinition) => {
+	const parts: string[] = [];
+
+	if (space.bottom !== undefined) {
+		parts.push(getSizeString(space.bottom));
+	}
+
+	space.adjustedBottom.forEach((l) => parts.push(getSizeString(l)));
+
+	if (parts.length === 0) {
+		return undefined;
+	}
+
+	return `calc(${parts.join(" + ")})`;
+};
 
 export function createStore(): ISpaceStore {
 	const spaces: ISpaceDefinition[] = [];
@@ -73,78 +155,83 @@ export function createStore(): ISpaceStore {
 	const recalcSpaces = (parent: ISpaceDefinition) => {
 		for (var i = 0, len = parent.children.length; i < len; i++) {
 			const space = parent.children[i];
+
 			if (space.type === Type.Fill) {
-				space.left = 0;
-				space.top = 0;
-				space.right = 0;
-				space.bottom = 0;
+				const adjusted: SizeUnit[] = [];
 
 				[
 					{
 						anchor: Anchor.Left,
-						update: (space: ISpaceDefinition, anchoredSpace: ISpaceDefinition) => {
-							space.left += anchoredSpace.width;
+						update: (adjusted: SizeUnit[]) => {
+							space.adjustedLeft = adjusted;
 						},
 					},
 					{
 						anchor: Anchor.Top,
-						update: (space: ISpaceDefinition, anchoredSpace: ISpaceDefinition) => {
-							space.top += anchoredSpace.height;
+						update: (adjusted: SizeUnit[]) => {
+							space.adjustedTop = adjusted;
 						},
 					},
 					{
 						anchor: Anchor.Right,
-						update: (space: ISpaceDefinition, anchoredSpace: ISpaceDefinition) => {
-							space.right += anchoredSpace.width;
+						update: (adjusted: SizeUnit[]) => {
+							space.adjustedRight = adjusted;
 						},
 					},
 					{
 						anchor: Anchor.Bottom,
-						update: (space: ISpaceDefinition, anchoredSpace: ISpaceDefinition) => {
-							space.bottom += anchoredSpace.height;
+						update: (adjusted: SizeUnit[]) => {
+							space.adjustedBottom = adjusted;
 						},
 					},
 				].forEach((info) => {
 					const anchoredSpaces = parent.children.filter((s) => s.type === Type.Anchored && s.anchor === info.anchor);
+
 					anchoredSpaces.forEach((as) => {
-						info.update(space, as);
+						if (as.orientation === Orientation.Vertical) {
+							if (as.height) {
+								adjusted.push(as.height);
+							}
+						} else {
+							if (as.width) {
+								adjusted.push(as.width);
+							}
+						}
 					});
+
+					info.update(adjusted);
 				});
 			} else if (space.type === Type.Anchored) {
-				if (space.anchor === Anchor.Left) {
-					space.left = 0;
-				} else if (space.anchor === Anchor.Right) {
-					space.right = 0;
-				} else if (space.anchor === Anchor.Top) {
-					space.top = 0;
-				} else if (space.anchor === Anchor.Bottom) {
-					space.bottom = 0;
-				}
+				const adjusted: SizeUnit[] = [];
 
 				const anchoredSpaces = parent.children.filter(
 					(s) => s.type === Type.Anchored && s.anchor === space.anchor && s.id !== space.id && (s.order || 0) < (space.order || 0),
 				);
 
 				anchoredSpaces.forEach((as) => {
-					if (as.anchor === Anchor.Left) {
-						if (as.width) {
-							space.left += as.width;
-						}
-					} else if (as.anchor === Anchor.Right) {
-						if (as.width) {
-							space.right += as.width;
-						}
-					} else if (as.anchor === Anchor.Top) {
+					if (as.orientation === Orientation.Vertical) {
 						if (as.height) {
-							space.top += as.height;
+							adjusted.push(as.height);
 						}
-					} else if (as.anchor === Anchor.Bottom) {
-						if (as.height) {
-							space.bottom += as.height;
+					} else {
+						if (as.width) {
+							adjusted.push(as.width);
 						}
 					}
 				});
+
+				if (space.anchor === Anchor.Left) {
+					space.adjustedLeft = adjusted;
+				} else if (space.anchor === Anchor.Top) {
+					space.adjustedTop = adjusted;
+				} else if (space.anchor === Anchor.Right) {
+					space.adjustedRight = adjusted;
+				} else if (space.anchor === Anchor.Bottom) {
+					space.adjustedBottom = adjusted;
+				}
 			}
+
+			queueUpdate();
 		}
 	};
 
@@ -200,9 +287,20 @@ const useSpace = (id: string, type: Type, anchor?: Anchor, order?: number, posit
 			id: id,
 			type: type,
 			anchor: anchor,
+			orientation: anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal,
 			order: order,
 			position: type === Type.ViewPort ? "fixed" : "absolute",
 			children: [],
+			adjustedLeft: [],
+			adjustedTop: [],
+			adjustedRight: [],
+			adjustedBottom: [],
+			resizedLeft: 0,
+			resizedTop: 0,
+			resizedRight: 0,
+			resizedBottom: 0,
+			resizedWidth: 0,
+			resizedHeight: 0,
 		},
 		...position,
 	};
@@ -250,6 +348,44 @@ export const Top: React.FC<{
 	);
 };
 
+export const Right: React.FC<{
+	id: string;
+	size: SizeUnit;
+	order?: number;
+	style: React.CSSProperties;
+}> = (props) => {
+	return (
+		<Space
+			id={props.id}
+			type={Type.Anchored}
+			anchor={Anchor.Right}
+			order={props.order}
+			style={props.style}
+			position={{ bottom: 0, top: 0, right: 0, width: props.size }}>
+			{props.children}
+		</Space>
+	);
+};
+
+export const Bottom: React.FC<{
+	id: string;
+	size: SizeUnit;
+	order?: number;
+	style: React.CSSProperties;
+}> = (props) => {
+	return (
+		<Space
+			id={props.id}
+			type={Type.Anchored}
+			anchor={Anchor.Bottom}
+			order={props.order}
+			style={props.style}
+			position={{ bottom: 0, left: 0, right: 0, height: props.size }}>
+			{props.children}
+		</Space>
+	);
+};
+
 export const Fill: React.FC<{
 	id: string;
 	style: React.CSSProperties;
@@ -289,13 +425,14 @@ export const Space: React.FC<{
 		...props.style,
 		...{
 			position: space.position,
-			left: space.left,
-			top: space.top,
-			right: space.right,
-			bottom: space.bottom,
+			left: cssLeft(space),
+			top: cssTop(space),
+			right: cssRight(space),
+			bottom: cssBottom(space),
 			width: space.width,
 			height: space.height,
 			zIndex: space.zIndex,
+			boxSizing: "border-box",
 		},
 	};
 
