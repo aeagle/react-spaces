@@ -1,0 +1,19 @@
+import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { createStore, StoreProvider, Space, Type, Anchor } from "./Experimental";
+
+<Meta title="Experimental|Store" />
+
+<Preview>
+	<Story name="Experimental space global store">
+		<StoreProvider store={createStore()}>
+			<Space id="viewport" type={Type.ViewPort} left={0} top={0} right={0} bottom={0}>
+				<Space id="sidebar" type={Type.Anchor} anchor={Anchor.Left} width={200} left={0} top={0} bottom={0} width={250} style={{ backgroundColor: '#ffdddd' }}>
+					Sidebar
+				</Space>
+				<Space id="main" type={Type.Fill}>
+					Main
+				</Space>
+			</Space>
+		</StoreProvider>
+	</Story>
+</Preview>
