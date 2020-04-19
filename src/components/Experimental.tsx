@@ -23,6 +23,7 @@ export interface ISpaceStore {
 	spaces: ISpaceDefinition[];
 	getSpace: (id: string) => ISpaceDefinition | undefined;
 	addSpace: (space: ISpaceDefinition) => void;
+	updateSpace: (space: ISpaceDefinition, type: Type, anchor?: Anchor, order?: number, position?: IPositionalProps) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
 	createSpace: (
 		update: () => void,
@@ -189,10 +190,10 @@ function createStore(): ISpaceStore {
 
 	const store: ISpaceStore = {
 		spaces: spaces,
-		getSpace: (id: string) => {
+		getSpace: (id) => {
 			return spaces.find((s) => s.id === id);
 		},
-		addSpace: (space: ISpaceDefinition) => {
+		addSpace: (space) => {
 			spaces.push(space);
 
 			if (space.parent) {
@@ -200,9 +201,75 @@ function createStore(): ISpaceStore {
 				recalcSpaces(space.parent);
 			}
 		},
-		removeSpace: (space: ISpaceDefinition) => {
+		removeSpace: (space) => {
 			if (space.parent) {
 				space.parent.children = space.parent.children.filter((s) => s.id !== space.id);
+				recalcSpaces(space.parent);
+			}
+		},
+		updateSpace: (space, type, anchor, order, position) => {
+			let changed = false;
+
+			if (space.type !== type) {
+				space.type = type;
+				space.position = type === Type.ViewPort ? "fixed" : "absolute";
+				changed = true;
+			}
+
+			if (space.anchor != anchor) {
+				space.anchor = anchor;
+				space.orientation = anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal;
+				changed = true;
+
+				if (type === Type.Anchored) {
+					if (anchor === Anchor.Left) {
+						space.adjustEdge = space.adjustLeft;
+					} else if (anchor === Anchor.Top) {
+						space.adjustEdge = space.adjustTop;
+					} else if (anchor === Anchor.Right) {
+						space.adjustEdge = space.adjustRight;
+					} else if (anchor === Anchor.Bottom) {
+						space.adjustEdge = space.adjustBottom;
+					}
+				}
+			}
+
+			if (space.left.size !== (position && position.left)) {
+				space.left.size = position && position.left;
+				space.left.resized = 0;
+				changed = true;
+			}
+
+			if (space.right.size !== (position && position.right)) {
+				space.right.size = position && position.right;
+				space.right.resized = 0;
+				changed = true;
+			}
+
+			if (space.top.size !== (position && position.top)) {
+				space.top.size = position && position.top;
+				space.top.resized = 0;
+				changed = true;
+			}
+
+			if (space.bottom.size !== (position && position.bottom)) {
+				space.bottom.size = position && position.bottom;
+				space.bottom.resized = 0;
+				changed = true;
+			}
+
+			if (space.order !== (order || 0)) {
+				space.order = order || 0;
+				changed = true;
+			}
+
+			if (space.zIndex !== ((position && position.zIndex) || 0)) {
+				space.zIndex = (position && position.zIndex) || 0;
+				changed = true;
+			}
+
+			if (changed && space.parent) {
+				space.update();
 				recalcSpaces(space.parent);
 			}
 		},
@@ -333,6 +400,8 @@ function useSpace(id: string, type: Type, anchor?: Anchor, order?: number, posit
 	if (!space) {
 		space = store.createSpace(update, parent, id, type, anchor, order, position);
 		store.addSpace(space);
+	} else {
+		store.updateSpace(space, type, anchor, order, position);
 	}
 
 	React.useEffect(() => {
