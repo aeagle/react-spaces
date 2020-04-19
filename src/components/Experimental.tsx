@@ -21,7 +21,6 @@ export enum Orientation {
 }
 
 export interface ISpaceStore {
-	spaces: ISpaceDefinition[];
 	getSpace: (id: string) => ISpaceDefinition | undefined;
 	addSpace: (space: ISpaceDefinition) => void;
 	updateSpace: (space: ISpaceDefinition, type: Type, anchor?: Anchor, order?: number, position?: IPositionalProps) => void;
@@ -144,6 +143,11 @@ function shortuuid() {
 function createStore(): ISpaceStore {
 	let spaces: ISpaceDefinition[] = [];
 
+	const setSpaces = (newSpaces: ISpaceDefinition[]) => {
+		spaces = newSpaces;
+	};
+	const getSpaces = () => spaces;
+
 	const recalcSpaces = (parent: ISpaceDefinition) => {
 		for (var i = 0, len = parent.children.length; i < len; i++) {
 			const space = parent.children[i];
@@ -198,12 +202,11 @@ function createStore(): ISpaceStore {
 	};
 
 	const store: ISpaceStore = {
-		spaces: spaces,
 		getSpace: (id) => {
-			return spaces.find((s) => s.id === id);
+			return getSpaces().find((s) => s.id === id);
 		},
 		addSpace: (space) => {
-			spaces.push(space);
+			getSpaces().push(space);
 
 			if (space.parent) {
 				space.parent.children.push(space);
@@ -212,7 +215,7 @@ function createStore(): ISpaceStore {
 		},
 		removeSpace: (space) => {
 			if (space.parent) {
-				spaces = spaces.filter((s) => s.id !== space.id);
+				setSpaces(getSpaces().filter((s) => s.id !== space.id));
 				space.parent.children = space.parent.children.filter((s) => s.id !== space.id);
 				recalcSpaces(space.parent);
 			}
