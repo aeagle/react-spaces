@@ -1,5 +1,6 @@
 import * as React from "react";
 import { SizeUnit } from "../types";
+import * as ReactDOM from "react-dom";
 
 export enum Type {
 	ViewPort,
@@ -60,7 +61,6 @@ export interface ISpaceDefinition {
 	adjustBottom: (adjusted: SizeUnit[]) => boolean;
 	adjustEdge: (adjusted: SizeUnit[]) => boolean;
 	anchoredChildren: (anchor: Anchor, zIndex: number) => ISpaceDefinition[];
-	invalid: boolean;
 	id: string;
 	type: Type;
 	anchor?: Anchor;
@@ -84,8 +84,12 @@ function getSizeString(size: SizeUnit) {
 }
 
 function css(size: ISize) {
+	if (size.size === 0 && size.adjusted.length === 0 && size.resized === 0) {
+		return `0`;
+	}
+
 	const parts: string[] = [];
-	if (size !== undefined) {
+	if (size.size !== undefined) {
 		parts.push(getSizeString(size.size));
 	}
 
@@ -131,8 +135,14 @@ function adjustmentsEqual(item1: SizeUnit[], item2: SizeUnit[]) {
 	return true;
 }
 
+function shortuuid() {
+	let firstPart = (Math.random() * 46656) | 0;
+	let secondPart = (Math.random() * 46656) | 0;
+	return ("000" + firstPart.toString(36)).slice(-3) + ("000" + secondPart.toString(36)).slice(-3);
+}
+
 function createStore(): ISpaceStore {
-	const spaces: ISpaceDefinition[] = [];
+	let spaces: ISpaceDefinition[] = [];
 
 	const recalcSpaces = (parent: ISpaceDefinition) => {
 		for (var i = 0, len = parent.children.length; i < len; i++) {
@@ -183,7 +193,6 @@ function createStore(): ISpaceStore {
 
 			if (changed) {
 				space.update();
-				space.invalid = false;
 			}
 		}
 	};
@@ -203,6 +212,7 @@ function createStore(): ISpaceStore {
 		},
 		removeSpace: (space) => {
 			if (space.parent) {
+				spaces = spaces.filter((s) => s.id !== space.id);
 				space.parent.children = space.parent.children.filter((s) => s.id !== space.id);
 				recalcSpaces(space.parent);
 			}
@@ -268,9 +278,11 @@ function createStore(): ISpaceStore {
 				changed = true;
 			}
 
-			if (changed && space.parent) {
+			if (changed) {
 				space.update();
-				recalcSpaces(space.parent);
+				if (space.parent) {
+					recalcSpaces(space.parent);
+				}
 			}
 		},
 		createSpace: () => ({} as ISpaceDefinition),
@@ -289,7 +301,6 @@ function createStore(): ISpaceStore {
 			store: store,
 			parent: parent,
 			update: update,
-			invalid: true,
 			id: id,
 			type: type,
 			anchor: anchor,
@@ -320,7 +331,6 @@ function createStore(): ISpaceStore {
 				return false;
 			}
 
-			newSpace.invalid = true;
 			newSpace.left.adjusted = adjusted;
 			return true;
 		};
@@ -330,7 +340,6 @@ function createStore(): ISpaceStore {
 				return false;
 			}
 
-			newSpace.invalid = true;
 			newSpace.right.adjusted = adjusted;
 			return true;
 		};
@@ -340,7 +349,6 @@ function createStore(): ISpaceStore {
 				return false;
 			}
 
-			newSpace.invalid = true;
 			newSpace.top.adjusted = adjusted;
 			return true;
 		};
@@ -350,7 +358,6 @@ function createStore(): ISpaceStore {
 				return false;
 			}
 
-			newSpace.invalid = true;
 			newSpace.bottom.adjusted = adjusted;
 			return true;
 		};
@@ -390,15 +397,16 @@ function useForceUpdate() {
 	return update;
 }
 
-function useSpace(id: string, type: Type, anchor?: Anchor, order?: number, position?: IPositionalProps) {
+function useSpace(id: string | undefined, type: Type, anchor?: Anchor, order?: number, position?: IPositionalProps) {
 	const update = useForceUpdate();
 	const store = React.useContext(StoreContext)!;
 	const parent = React.useContext(ParentContext);
+	const spaceId = React.useRef(id || `s${shortuuid()}`);
 
-	let space = store.getSpace(id);
+	let space = store.getSpace(spaceId.current);
 
 	if (!space) {
-		space = store.createSpace(update, parent, id, type, anchor, order, position);
+		space = store.createSpace(update, parent, spaceId.current, type, anchor, order, position);
 		store.addSpace(space);
 	} else {
 		store.updateSpace(space, type, anchor, order, position);
@@ -414,7 +422,7 @@ function useSpace(id: string, type: Type, anchor?: Anchor, order?: number, posit
 }
 
 interface IAnchorProps {
-	id: string;
+	id?: string;
 	size: SizeUnit;
 	order?: number;
 	style: React.CSSProperties;
@@ -477,7 +485,7 @@ export const Bottom: React.FC<IAnchorProps> = (props) => {
 };
 
 export const Fill: React.FC<{
-	id: string;
+	id?: string;
 	style?: React.CSSProperties;
 }> = (props) => {
 	return (
@@ -488,7 +496,7 @@ export const Fill: React.FC<{
 };
 
 export const ViewPort: React.FC<{
-	id: string;
+	id?: string;
 	style?: React.CSSProperties;
 }> = (props) => {
 	return (
@@ -500,8 +508,59 @@ export const ViewPort: React.FC<{
 	);
 };
 
+export const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
+	const space = props.space;
+
+	const style: React.CSSProperties = {
+		position: space.position,
+		left: css(space.left),
+		top: css(space.top),
+		right: css(space.right),
+		bottom: css(space.bottom),
+		width: css(space.width),
+		height: css(space.height),
+		zIndex: space.zIndex,
+		boxSizing: "border-box",
+	};
+
+	const cssString: string[] = [];
+
+	if (style.position) {
+		cssString.push(`position: ${style.position};`);
+	}
+	if (style.boxSizing) {
+		cssString.push(`box-sizing: ${style.boxSizing};`);
+	}
+	if (style.left) {
+		cssString.push(`left: ${style.left};`);
+	}
+	if (style.top) {
+		cssString.push(`top: ${style.top};`);
+	}
+	if (style.right) {
+		cssString.push(`right: ${style.right};`);
+	}
+	if (style.bottom) {
+		cssString.push(`bottom: ${style.bottom};`);
+	}
+	if (style.width) {
+		cssString.push(`width: ${style.width};`);
+	}
+	if (style.height) {
+		cssString.push(`height: ${style.height};`);
+	}
+	if (style.zIndex) {
+		cssString.push(`z-index: ${style.zIndex};`);
+	}
+	if (cssString.length > 0) {
+		return ReactDOM.createPortal(<style>{`#${space.id} { ${cssString.join(" ")} }`}</style>, window.document.head);
+	}
+
+	return null;
+};
+
 export const Space: React.FC<{
-	id: string;
+	id?: string;
 	type: Type;
 	anchor?: Anchor;
 	position?: IPositionalProps;
@@ -511,65 +570,67 @@ export const Space: React.FC<{
 	const { id, type, anchor, order, position } = props;
 	const space = useSpace(id, type, anchor, order, position);
 
-	const style: React.CSSProperties = {
-		...props.style,
-		...{
-			position: space.position,
-			left: css(space.left),
-			top: css(space.top),
-			right: css(space.right),
-			bottom: css(space.bottom),
-			width: css(space.width),
-			height: css(space.height),
-			zIndex: space.zIndex,
-			boxSizing: "border-box",
-		},
-	};
-
 	return (
-		<div id={space.id} style={style}>
-			<ParentContext.Provider value={space}>{props.children}</ParentContext.Provider>
-		</div>
+		<>
+			<HeadStyle space={space} />
+			<div id={space.id} style={props.style}>
+				<ParentContext.Provider value={space}>{props.children}</ParentContext.Provider>
+			</div>
+		</>
 	);
 };
 
+const green = { backgroundColor: "#ddffdd", padding: 15 };
+const red = { backgroundColor: "#ffdddd", padding: 15 };
+const blue = { backgroundColor: "#ddddff", padding: 15 };
+
 export const Demo: React.FC = () => {
 	const [visible, setVisible] = React.useState(true);
+	const [size, setSize] = React.useState(true);
 	return (
-		<ViewPort id="viewport">
-			<Left id="left" size="15%" style={{ backgroundColor: "#ffdddd", padding: 15 }}>
+		<ViewPort>
+			<Left size="15%" style={red}>
 				Left
 			</Left>
-			<Fill id="main-container">
-				<Top id="top" size="15%" style={{ backgroundColor: "#ddddff", padding: 15 }}>
+			<Fill>
+				<Top size="15%" style={blue}>
 					Top
 				</Top>
-				<Fill id="main">
+				<Fill>
 					{visible && (
-						<Left id="nleft" size="20%" style={{ backgroundColor: "#ddffdd", padding: 15 }}>
-							Left
+						<Left size={size ? "20%" : "25%"} order={0} style={green}>
+							Left 1
 						</Left>
 					)}
-					<Fill id="nmain-container">
-						<Top id="ntop" size="20%" style={{ backgroundColor: "#ffdddd", padding: 15 }}>
+					<Left size={"20%"} order={1} style={green}>
+						Left 2
+					</Left>
+					<Fill>
+						<Top size="20%" style={red}>
 							Top
 						</Top>
-						<Fill id="nmain" style={{ backgroundColor: "#ddddff", padding: 15 }}>
-							Fill <button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
+						<Fill style={blue}>
+							Fill
+							<div>
+								<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
+							</div>
+							<div>
+								<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
+							</div>
 						</Fill>
-						<Bottom id="nbottom" size="20%" style={{ backgroundColor: "#ffdddd", padding: 15 }}>
+						<Bottom size="20%" style={red}>
 							Bottom
 						</Bottom>
 					</Fill>
-					<Right id="nright" size="20%" style={{ backgroundColor: "#ddffdd", padding: 15 }}>
+					<Right size="20%" style={green}>
 						Right
 					</Right>
 				</Fill>
-				<Bottom id="bottom" size="15%" style={{ backgroundColor: "#ddddff", padding: 15 }}>
+				<Bottom size="15%" style={blue}>
 					Bottom
 				</Bottom>
 			</Fill>
-			<Right id="right" size="15%" style={{ backgroundColor: "#ffdddd", padding: 15 }}>
+			<Right size="15%" style={red}>
 				Right
 			</Right>
 		</ViewPort>
