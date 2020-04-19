@@ -4,6 +4,7 @@ import * as ReactDOM from "react-dom";
 
 export enum Type {
 	ViewPort,
+	Fixed,
 	Fill,
 	Anchored,
 }
@@ -23,7 +24,7 @@ export enum Orientation {
 export interface ISpaceStore {
 	getSpace: (id: string) => ISpaceDefinition | undefined;
 	addSpace: (space: ISpaceDefinition) => void;
-	updateSpace: (space: ISpaceDefinition, type: Type, anchor?: Anchor, order?: number, position?: IPositionalProps) => void;
+	updateSpace: (space: ISpaceDefinition, type: Type, anchor?: Anchor, order?: number, zIndex?: number, position?: IPositionalProps) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
 	createSpace: (
 		update: () => void,
@@ -32,6 +33,7 @@ export interface ISpaceStore {
 		type: Type,
 		anchor?: Anchor,
 		order?: number,
+		zIndex?: number,
 		position?: IPositionalProps,
 	) => ISpaceDefinition;
 }
@@ -43,7 +45,6 @@ export interface IPositionalProps {
 	bottom?: SizeUnit;
 	width?: SizeUnit;
 	height?: SizeUnit;
-	zIndex?: number;
 }
 
 interface ISize {
@@ -65,7 +66,7 @@ export interface ISpaceDefinition {
 	anchor?: Anchor;
 	orientation: Orientation;
 	order: number;
-	position: "fixed" | "absolute";
+	position: "fixed" | "absolute" | "relative";
 	children: ISpaceDefinition[];
 	parent: ISpaceDefinition | undefined;
 	store: ISpaceStore;
@@ -101,6 +102,10 @@ function css(size: ISize) {
 	return `calc(${parts.join(" + ")})`;
 }
 
+function coalesce<T>(...args: T[]) {
+	return args.find((x) => x !== null && x !== undefined);
+}
+
 const anchorUpdates = (space: ISpaceDefinition) => [
 	{
 		anchor: Anchor.Left,
@@ -119,6 +124,16 @@ const anchorUpdates = (space: ISpaceDefinition) => [
 		update: space.adjustBottom,
 	},
 ];
+
+function getPosition(type: Type) {
+	if (type === Type.ViewPort) {
+		return "fixed";
+	}
+	if (type === Type.Fixed) {
+		return "relative";
+	}
+	return "absolute";
+}
 
 function adjustmentsEqual(item1: SizeUnit[], item2: SizeUnit[]) {
 	if (item1.length !== item2.length) {
@@ -220,7 +235,7 @@ function createStore(): ISpaceStore {
 				recalcSpaces(space.parent);
 			}
 		},
-		updateSpace: (space, type, anchor, order, position) => {
+		updateSpace: (space, type, anchor, order, zIndex, position) => {
 			let changed = false;
 
 			if (space.type !== type) {
@@ -276,8 +291,8 @@ function createStore(): ISpaceStore {
 				changed = true;
 			}
 
-			if (space.zIndex !== ((position && position.zIndex) || 0)) {
-				space.zIndex = (position && position.zIndex) || 0;
+			if (space.zIndex !== zIndex || 0) {
+				space.zIndex = zIndex || 0;
 				changed = true;
 			}
 
@@ -298,6 +313,7 @@ function createStore(): ISpaceStore {
 		type: Type,
 		anchor?: Anchor,
 		order?: number,
+		zIndex?: number,
 		position?: IPositionalProps,
 	) => {
 		const newSpace: ISpaceDefinition = {
@@ -309,9 +325,9 @@ function createStore(): ISpaceStore {
 			anchor: anchor,
 			orientation: anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal,
 			order: order || 0,
-			position: type === Type.ViewPort ? "fixed" : "absolute",
+			position: getPosition(type),
 			children: [],
-			zIndex: (position && position.zIndex) || 0,
+			zIndex: zIndex || 0,
 			left: { size: position && position.left, adjusted: [], resized: 0 },
 			right: { size: position && position.right, adjusted: [], resized: 0 },
 			top: { size: position && position.top, adjusted: [], resized: 0 },
@@ -387,6 +403,7 @@ function createStore(): ISpaceStore {
 
 const StoreContext = React.createContext<ISpaceStore | undefined>(undefined);
 const ParentContext = React.createContext<ISpaceDefinition | undefined>(undefined);
+const LayerContext = React.createContext<number | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ store: ISpaceStore }> = (props) => (
 	<StoreContext.Provider value={props.store}>{props.children}</StoreContext.Provider>
@@ -400,19 +417,20 @@ function useForceUpdate() {
 	return update;
 }
 
-function useSpace(id: string | undefined, type: Type, anchor?: Anchor, order?: number, position?: IPositionalProps) {
+function useSpace(id: string | undefined, type: Type, anchor?: Anchor, order?: number, zIndex?: number, position?: IPositionalProps) {
 	const update = useForceUpdate();
 	const store = React.useContext(StoreContext)!;
 	const parent = React.useContext(ParentContext);
+	const layer = React.useContext(LayerContext);
 	const spaceId = React.useRef(id || `s${shortuuid()}`);
 
 	let space = store.getSpace(spaceId.current);
 
 	if (!space) {
-		space = store.createSpace(update, parent, spaceId.current, type, anchor, order, position);
+		space = store.createSpace(update, parent, spaceId.current, type, anchor, order, coalesce(layer, zIndex) || 0, position);
 		store.addSpace(space);
 	} else {
-		store.updateSpace(space, type, anchor, order, position);
+		store.updateSpace(space, type, anchor, order, coalesce(layer, zIndex) || 0, position);
 	}
 
 	React.useEffect(() => {
@@ -424,94 +442,42 @@ function useSpace(id: string | undefined, type: Type, anchor?: Anchor, order?: n
 	return space;
 }
 
-interface IAnchorProps {
+interface ICommonProps {
+	id?: string;
+	className?: string;
+	style?: React.CSSProperties;
+	as?: string;
+	centerContent?: "none" | "vertical" | "horizontalVertical";
+	zIndex?: number;
+}
+
+interface IAnchorProps extends ICommonProps {
 	id?: string;
 	size: SizeUnit;
 	order?: number;
-	style: React.CSSProperties;
+	resizable?: boolean;
 }
 
-export const Left: React.FC<IAnchorProps> = (props) => {
-	return (
-		<Space
-			id={props.id}
-			type={Type.Anchored}
-			anchor={Anchor.Left}
-			order={props.order}
-			style={props.style}
-			position={{ left: 0, top: 0, bottom: 0, width: props.size }}>
-			{props.children}
-		</Space>
-	);
-};
+interface IViewPortProps extends ICommonProps {
+	left?: SizeUnit;
+	right?: SizeUnit;
+	top?: SizeUnit;
+	bottom?: SizeUnit;
+}
 
-export const Top: React.FC<IAnchorProps> = (props) => {
-	return (
-		<Space
-			id={props.id}
-			type={Type.Anchored}
-			anchor={Anchor.Top}
-			order={props.order}
-			style={props.style}
-			position={{ left: 0, top: 0, right: 0, height: props.size }}>
-			{props.children}
-		</Space>
-	);
-};
+interface IFixedProps extends ICommonProps {
+	width?: SizeUnit;
+	height: SizeUnit;
+}
 
-export const Right: React.FC<IAnchorProps> = (props) => {
-	return (
-		<Space
-			id={props.id}
-			type={Type.Anchored}
-			anchor={Anchor.Right}
-			order={props.order}
-			style={props.style}
-			position={{ bottom: 0, top: 0, right: 0, width: props.size }}>
-			{props.children}
-		</Space>
-	);
-};
+interface ISpaceProps extends ICommonProps {
+	type: Type;
+	anchor?: Anchor;
+	order?: number;
+	position?: IPositionalProps;
+}
 
-export const Bottom: React.FC<IAnchorProps> = (props) => {
-	return (
-		<Space
-			id={props.id}
-			type={Type.Anchored}
-			anchor={Anchor.Bottom}
-			order={props.order}
-			style={props.style}
-			position={{ bottom: 0, left: 0, right: 0, height: props.size }}>
-			{props.children}
-		</Space>
-	);
-};
-
-export const Fill: React.FC<{
-	id?: string;
-	style?: React.CSSProperties;
-}> = (props) => {
-	return (
-		<Space id={props.id} type={Type.Fill} style={props.style} position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
-			{props.children}
-		</Space>
-	);
-};
-
-export const ViewPort: React.FC<{
-	id?: string;
-	style?: React.CSSProperties;
-}> = (props) => {
-	return (
-		<StoreProvider store={createStore()}>
-			<Space id={props.id} type={Type.ViewPort} style={props.style} position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
-				{props.children}
-			</Space>
-		</StoreProvider>
-	);
-};
-
-export const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
+const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
 	const space = props.space;
 
 	const style: React.CSSProperties = {
@@ -562,16 +528,103 @@ export const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
 	return null;
 };
 
-export const Space: React.FC<{
-	id?: string;
-	type: Type;
-	anchor?: Anchor;
-	position?: IPositionalProps;
-	order?: number;
-	style?: React.CSSProperties;
-}> = (props) => {
-	const { id, type, anchor, order, position } = props;
-	const space = useSpace(id, type, anchor, order, position);
+export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => <Left {...props}>{props.children}</Left>;
+export const Left: React.FC<IAnchorProps> = (props) => {
+	return (
+		<Space
+			id={props.id}
+			type={Type.Anchored}
+			anchor={Anchor.Left}
+			order={props.order}
+			style={props.style}
+			position={{ left: 0, top: 0, bottom: 0, width: props.size }}>
+			{props.children}
+		</Space>
+	);
+};
+
+export const TopResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => <Top {...props}>{props.children}</Top>;
+export const Top: React.FC<IAnchorProps> = (props) => {
+	return (
+		<Space
+			id={props.id}
+			type={Type.Anchored}
+			anchor={Anchor.Top}
+			order={props.order}
+			style={props.style}
+			position={{ left: 0, top: 0, right: 0, height: props.size }}>
+			{props.children}
+		</Space>
+	);
+};
+
+export const RightResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => <Right {...props}>{props.children}</Right>;
+export const Right: React.FC<IAnchorProps> = (props) => {
+	return (
+		<Space
+			id={props.id}
+			type={Type.Anchored}
+			anchor={Anchor.Right}
+			order={props.order}
+			style={props.style}
+			position={{ bottom: 0, top: 0, right: 0, width: props.size }}>
+			{props.children}
+		</Space>
+	);
+};
+
+export const BottomResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => <Bottom {...props}>{props.children}</Bottom>;
+export const Bottom: React.FC<IAnchorProps> = (props) => {
+	return (
+		<Space
+			id={props.id}
+			type={Type.Anchored}
+			anchor={Anchor.Bottom}
+			order={props.order}
+			style={props.style}
+			position={{ bottom: 0, left: 0, right: 0, height: props.size }}>
+			{props.children}
+		</Space>
+	);
+};
+
+export const Fill: React.FC<ICommonProps> = (props) => {
+	return (
+		<Space id={props.id} type={Type.Fill} style={props.style} position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
+			{props.children}
+		</Space>
+	);
+};
+
+export const Fixed: React.FC<IFixedProps> = (props) => {
+	const { width, height } = props;
+	return (
+		<StoreProvider store={createStore()}>
+			<Space id={props.id} type={Type.Fixed} style={props.style} position={{ width: width, height: height }}>
+				{props.children}
+			</Space>
+		</StoreProvider>
+	);
+};
+
+export const ViewPort: React.FC<IViewPortProps> = (props) => {
+	const { left, top, right, bottom } = props;
+	return (
+		<StoreProvider store={createStore()}>
+			<Space
+				id={props.id}
+				type={Type.ViewPort}
+				style={props.style}
+				position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
+				{props.children}
+			</Space>
+		</StoreProvider>
+	);
+};
+
+const Space: React.FC<ISpaceProps> = (props) => {
+	const { id, type, anchor, order, zIndex, position } = props;
+	const space = useSpace(id, type, anchor, order, zIndex, position);
 
 	return (
 		<>
