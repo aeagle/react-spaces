@@ -45,7 +45,7 @@ export interface IPositionalProps {
 	zIndex?: number;
 }
 
-interface ISizeParts {
+interface ISize {
 	size: SizeUnit;
 	adjusted: SizeUnit[];
 	resized: number;
@@ -69,12 +69,12 @@ export interface ISpaceDefinition {
 	children: ISpaceDefinition[];
 	parent: ISpaceDefinition | undefined;
 	store: ISpaceStore;
-	left: ISizeParts;
-	top: ISizeParts;
-	right: ISizeParts;
-	bottom: ISizeParts;
-	width: ISizeParts;
-	height: ISizeParts;
+	left: ISize;
+	top: ISize;
+	right: ISize;
+	bottom: ISize;
+	width: ISize;
+	height: ISize;
 	zIndex: number;
 }
 
@@ -82,7 +82,7 @@ function getSizeString(size: SizeUnit) {
 	return typeof size === "string" ? size : `${size}px`;
 }
 
-function css(size: ISizeParts) {
+function css(size: ISize) {
 	const parts: string[] = [];
 	if (size !== undefined) {
 		parts.push(getSizeString(size.size));
@@ -136,6 +136,7 @@ function createStore(): ISpaceStore {
 	const recalcSpaces = (parent: ISpaceDefinition) => {
 		for (var i = 0, len = parent.children.length; i < len; i++) {
 			const space = parent.children[i];
+			let changed = false;
 
 			if (space.type === Type.Fill) {
 				anchorUpdates(space).forEach((info) => {
@@ -155,8 +156,7 @@ function createStore(): ISpaceStore {
 					});
 
 					if (info.update(adjusted)) {
-						space.update();
-						space.invalid = false;
+						changed = true;
 					}
 				});
 			} else if (space.type === Type.Anchored) {
@@ -176,9 +176,13 @@ function createStore(): ISpaceStore {
 				});
 
 				if (space.adjustEdge(adjusted)) {
-					space.update();
-					space.invalid = false;
+					changed = true;
 				}
+			}
+
+			if (changed) {
+				space.update();
+				space.invalid = false;
 			}
 		}
 	};
@@ -243,6 +247,7 @@ function createStore(): ISpaceStore {
 
 		newSpace.anchoredChildren = (anchor, zIndex) =>
 			newSpace.children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
+
 		newSpace.adjustLeft = (adjusted) => {
 			if (adjustmentsEqual(newSpace.left.adjusted, adjusted)) {
 				return false;
@@ -252,6 +257,7 @@ function createStore(): ISpaceStore {
 			newSpace.left.adjusted = adjusted;
 			return true;
 		};
+
 		newSpace.adjustRight = (adjusted) => {
 			if (adjustmentsEqual(newSpace.right.adjusted, adjusted)) {
 				return false;
@@ -261,6 +267,7 @@ function createStore(): ISpaceStore {
 			newSpace.right.adjusted = adjusted;
 			return true;
 		};
+
 		newSpace.adjustTop = (adjusted) => {
 			if (adjustmentsEqual(newSpace.top.adjusted, adjusted)) {
 				return false;
@@ -270,6 +277,7 @@ function createStore(): ISpaceStore {
 			newSpace.top.adjusted = adjusted;
 			return true;
 		};
+
 		newSpace.adjustBottom = (adjusted) => {
 			if (adjustmentsEqual(newSpace.bottom.adjusted, adjusted)) {
 				return false;
