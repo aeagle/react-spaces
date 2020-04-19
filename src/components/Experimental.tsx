@@ -23,6 +23,16 @@ export interface ISpaceStore {
 	spaces: ISpaceDefinition[];
 	getSpace: (id: string) => ISpaceDefinition | undefined;
 	addSpace: (space: ISpaceDefinition) => void;
+	removeSpace: (space: ISpaceDefinition) => void;
+	createSpace: (
+		update: () => void,
+		parent: ISpaceDefinition | undefined,
+		id: string,
+		type: Type,
+		anchor?: Anchor,
+		order?: number,
+		position?: IPositionalProps,
+	) => ISpaceDefinition;
 }
 
 export interface IPositionalProps {
@@ -68,9 +78,11 @@ export interface ISpaceDefinition {
 	zIndex: number;
 }
 
-const getSizeString = (size: SizeUnit) => (typeof size === "string" ? size : `${size}px`);
+function getSizeString(size: SizeUnit) {
+	return typeof size === "string" ? size : `${size}px`;
+}
 
-const css = (size: ISizeParts) => {
+function css(size: ISizeParts) {
 	const parts: string[] = [];
 	if (size !== undefined) {
 		parts.push(getSizeString(size.size));
@@ -83,7 +95,8 @@ const css = (size: ISizeParts) => {
 	}
 
 	return `calc(${parts.join(" + ")})`;
-};
+}
+
 const anchorUpdates = (space: ISpaceDefinition) => [
 	{
 		anchor: Anchor.Left,
@@ -103,32 +116,22 @@ const anchorUpdates = (space: ISpaceDefinition) => [
 	},
 ];
 
-export function createStore(): ISpaceStore {
+function adjustmentsEqual(item1: SizeUnit[], item2: SizeUnit[]) {
+	if (item1.length !== item2.length) {
+		return false;
+	}
+
+	for (var i = 0, len = item1.length; i < len; i++) {
+		if (item1[i] !== item2[i]) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+function createStore(): ISpaceStore {
 	const spaces: ISpaceDefinition[] = [];
-	let updateId: number | undefined;
-
-	const processUpdates = () => {
-		let updated = 0;
-
-		for (var i = 0, len = spaces.length; i < len; i++) {
-			const space = spaces[i];
-			if (space.invalid) {
-				space.update();
-				space.invalid = false;
-				updated++;
-			}
-		}
-
-		console.log(`Update processed ... (${updated} spaces)`);
-		updateId = undefined;
-	};
-
-	const queueUpdate = () => {
-		if (updateId) {
-			window.clearTimeout(updateId);
-		}
-		updateId = window.setTimeout(processUpdates, 0);
-	};
 
 	const recalcSpaces = (parent: ISpaceDefinition) => {
 		for (var i = 0, len = parent.children.length; i < len; i++) {
@@ -151,7 +154,10 @@ export function createStore(): ISpaceStore {
 						}
 					});
 
-					info.update(adjusted);
+					if (info.update(adjusted)) {
+						space.update();
+						space.invalid = false;
+					}
 				});
 			} else if (space.type === Type.Anchored) {
 				const adjusted: SizeUnit[] = [];
@@ -169,12 +175,15 @@ export function createStore(): ISpaceStore {
 					}
 				});
 
-				space.adjustEdge(adjusted);
+				if (space.adjustEdge(adjusted)) {
+					space.update();
+					space.invalid = false;
+				}
 			}
 		}
 	};
 
-	return {
+	const store: ISpaceStore = {
 		spaces: spaces,
 		getSpace: (id: string) => {
 			return spaces.find((s) => s.id === id);
@@ -186,11 +195,110 @@ export function createStore(): ISpaceStore {
 				space.parent.children.push(space);
 				recalcSpaces(space.parent);
 			}
-
-			queueUpdate();
 		},
+		removeSpace: (space: ISpaceDefinition) => {
+			if (space.parent) {
+				space.parent.children = space.parent.children.filter((s) => s.id !== space.id);
+				recalcSpaces(space.parent);
+			}
+		},
+		createSpace: () => ({} as ISpaceDefinition),
 	};
+
+	store.createSpace = (
+		update: () => void,
+		parent: ISpaceDefinition | undefined,
+		id: string,
+		type: Type,
+		anchor?: Anchor,
+		order?: number,
+		position?: IPositionalProps,
+	) => {
+		const newSpace: ISpaceDefinition = {
+			store: store,
+			parent: parent,
+			update: update,
+			invalid: true,
+			id: id,
+			type: type,
+			anchor: anchor,
+			orientation: anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal,
+			order: order || 0,
+			position: type === Type.ViewPort ? "fixed" : "absolute",
+			children: [],
+			zIndex: (position && position.zIndex) || 0,
+			left: { size: position && position.left, adjusted: [], resized: 0 },
+			right: { size: position && position.right, adjusted: [], resized: 0 },
+			top: { size: position && position.top, adjusted: [], resized: 0 },
+			bottom: { size: position && position.bottom, adjusted: [], resized: 0 },
+			width: { size: position && position.width, adjusted: [], resized: 0 },
+			height: { size: position && position.height, adjusted: [], resized: 0 },
+			adjustLeft: () => false,
+			adjustRight: () => false,
+			adjustTop: () => false,
+			adjustBottom: () => false,
+			adjustEdge: () => false,
+			anchoredChildren: () => [],
+		};
+
+		newSpace.anchoredChildren = (anchor, zIndex) =>
+			newSpace.children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
+		newSpace.adjustLeft = (adjusted) => {
+			if (adjustmentsEqual(newSpace.left.adjusted, adjusted)) {
+				return false;
+			}
+
+			newSpace.invalid = true;
+			newSpace.left.adjusted = adjusted;
+			return true;
+		};
+		newSpace.adjustRight = (adjusted) => {
+			if (adjustmentsEqual(newSpace.right.adjusted, adjusted)) {
+				return false;
+			}
+
+			newSpace.invalid = true;
+			newSpace.right.adjusted = adjusted;
+			return true;
+		};
+		newSpace.adjustTop = (adjusted) => {
+			if (adjustmentsEqual(newSpace.top.adjusted, adjusted)) {
+				return false;
+			}
+
+			newSpace.invalid = true;
+			newSpace.top.adjusted = adjusted;
+			return true;
+		};
+		newSpace.adjustBottom = (adjusted) => {
+			if (adjustmentsEqual(newSpace.bottom.adjusted, adjusted)) {
+				return false;
+			}
+
+			newSpace.invalid = true;
+			newSpace.bottom.adjusted = adjusted;
+			return true;
+		};
+
+		if (type === Type.Anchored) {
+			if (anchor === Anchor.Left) {
+				newSpace.adjustEdge = newSpace.adjustLeft;
+			} else if (anchor === Anchor.Top) {
+				newSpace.adjustEdge = newSpace.adjustTop;
+			} else if (anchor === Anchor.Right) {
+				newSpace.adjustEdge = newSpace.adjustRight;
+			} else if (anchor === Anchor.Bottom) {
+				newSpace.adjustEdge = newSpace.adjustBottom;
+			}
+		}
+
+		return newSpace;
+	};
+
+	return store;
 }
+
+// REACT SPECIFIC
 
 const StoreContext = React.createContext<ISpaceStore | undefined>(undefined);
 const ParentContext = React.createContext<ISpaceDefinition | undefined>(undefined);
@@ -207,78 +315,26 @@ function useForceUpdate() {
 	return update;
 }
 
-const useSpace = (id: string, type: Type, anchor?: Anchor, order?: number, position?: IPositionalProps) => {
+function useSpace(id: string, type: Type, anchor?: Anchor, order?: number, position?: IPositionalProps) {
 	const update = useForceUpdate();
 	const store = React.useContext(StoreContext)!;
 	const parent = React.useContext(ParentContext);
-	const existing = store.getSpace(id);
 
-	if (existing) {
-		return existing;
+	let space = store.getSpace(id);
+
+	if (!space) {
+		space = store.createSpace(update, parent, id, type, anchor, order, position);
+		store.addSpace(space);
 	}
 
-	const newSpace: ISpaceDefinition = {
-		store: store,
-		parent: parent,
-		update: update,
-		invalid: true,
-		id: id,
-		type: type,
-		anchor: anchor,
-		orientation: anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal,
-		order: order || 0,
-		position: type === Type.ViewPort ? "fixed" : "absolute",
-		children: [],
-		zIndex: (position && position.zIndex) || 0,
-		left: { size: position && position.left, adjusted: [], resized: 0 },
-		right: { size: position && position.right, adjusted: [], resized: 0 },
-		top: { size: position && position.top, adjusted: [], resized: 0 },
-		bottom: { size: position && position.bottom, adjusted: [], resized: 0 },
-		width: { size: position && position.width, adjusted: [], resized: 0 },
-		height: { size: position && position.height, adjusted: [], resized: 0 },
-		adjustLeft: () => false,
-		adjustRight: () => false,
-		adjustTop: () => false,
-		adjustBottom: () => false,
-		adjustEdge: () => false,
-		anchoredChildren: () => [],
-	};
+	React.useEffect(() => {
+		return () => {
+			store.removeSpace(space!);
+		};
+	}, []);
 
-	newSpace.anchoredChildren = (anchor, zIndex) =>
-		newSpace.children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
-	newSpace.adjustLeft = (adjusted) => {
-		newSpace.left.adjusted = adjusted;
-		return true;
-	};
-	newSpace.adjustRight = (adjusted) => {
-		newSpace.right.adjusted = adjusted;
-		return true;
-	};
-	newSpace.adjustTop = (adjusted) => {
-		newSpace.top.adjusted = adjusted;
-		return true;
-	};
-	newSpace.adjustBottom = (adjusted) => {
-		newSpace.bottom.adjusted = adjusted;
-		return true;
-	};
-
-	if (type === Type.Anchored) {
-		if (anchor === Anchor.Left) {
-			newSpace.adjustEdge = newSpace.adjustLeft;
-		} else if (anchor === Anchor.Top) {
-			newSpace.adjustEdge = newSpace.adjustTop;
-		} else if (anchor === Anchor.Right) {
-			newSpace.adjustEdge = newSpace.adjustRight;
-		} else if (anchor === Anchor.Bottom) {
-			newSpace.adjustEdge = newSpace.adjustBottom;
-		}
-	}
-
-	store.addSpace(newSpace);
-
-	return newSpace;
-};
+	return space;
+}
 
 interface IAnchorProps {
 	id: string;
@@ -345,7 +401,7 @@ export const Bottom: React.FC<IAnchorProps> = (props) => {
 
 export const Fill: React.FC<{
 	id: string;
-	style: React.CSSProperties;
+	style?: React.CSSProperties;
 }> = (props) => {
 	return (
 		<Space id={props.id} type={Type.Fill} style={props.style} position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
@@ -356,7 +412,7 @@ export const Fill: React.FC<{
 
 export const ViewPort: React.FC<{
 	id: string;
-	style: React.CSSProperties;
+	style?: React.CSSProperties;
 }> = (props) => {
 	return (
 		<StoreProvider store={createStore()}>
@@ -397,5 +453,48 @@ export const Space: React.FC<{
 		<div id={space.id} style={style}>
 			<ParentContext.Provider value={space}>{props.children}</ParentContext.Provider>
 		</div>
+	);
+};
+
+export const Demo: React.FC = () => {
+	const [visible, setVisible] = React.useState(true);
+	return (
+		<ViewPort id="viewport">
+			<Left id="left" size="15%" style={{ backgroundColor: "#ffdddd", padding: 15 }}>
+				Left
+			</Left>
+			<Fill id="main-container">
+				<Top id="top" size="15%" style={{ backgroundColor: "#ddddff", padding: 15 }}>
+					Top
+				</Top>
+				<Fill id="main">
+					{visible && (
+						<Left id="nleft" size="20%" style={{ backgroundColor: "#ddffdd", padding: 15 }}>
+							Left
+						</Left>
+					)}
+					<Fill id="nmain-container">
+						<Top id="ntop" size="20%" style={{ backgroundColor: "#ffdddd", padding: 15 }}>
+							Top
+						</Top>
+						<Fill id="nmain" style={{ backgroundColor: "#ddddff", padding: 15 }}>
+							Fill <button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
+						</Fill>
+						<Bottom id="nbottom" size="20%" style={{ backgroundColor: "#ffdddd", padding: 15 }}>
+							Bottom
+						</Bottom>
+					</Fill>
+					<Right id="nright" size="20%" style={{ backgroundColor: "#ddffdd", padding: 15 }}>
+						Right
+					</Right>
+				</Fill>
+				<Bottom id="bottom" size="15%" style={{ backgroundColor: "#ddddff", padding: 15 }}>
+					Bottom
+				</Bottom>
+			</Fill>
+			<Right id="right" size="15%" style={{ backgroundColor: "#ffdddd", padding: 15 }}>
+				Right
+			</Right>
+		</ViewPort>
 	);
 };

@@ -1,44 +1,10 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
-import { ViewPort, Left, Top, Right, Bottom, Fill, Type, Anchor } from "./Experimental";
+import { Demo } from "./Experimental";
 
 <Meta title="Experimental|Store" />
 
 <Preview>
 	<Story name="Experimental space global store">
-		<ViewPort id="viewport">
-			<Left id="left" size="15%" style={{ backgroundColor: '#ffdddd', padding: 15 }}>
-				Left
-			</Left>
-			<Fill id="main-container">
-				<Top id="top" size="15%" style={{ backgroundColor: '#ddddff', padding: 15 }}>
-					Top	
-				</Top>
-				<Fill id="main">
-					<Left id="nleft" size="20%" style={{ backgroundColor: '#ddffdd', padding: 15 }}>
-						Left
-					</Left>
-					<Fill id="nmain-container">
-						<Top id="ntop" size="20%" style={{ backgroundColor: '#ffdddd', padding: 15 }}>
-							Top	
-						</Top>
-						<Fill id="nmain" style={{ backgroundColor: '#ddddff', padding: 15 }}>
-							Fill
-						</Fill>
-						<Bottom id="nbottom" size="20%" style={{ backgroundColor: '#ffdddd', padding: 15 }}>
-							Bottom	
-						</Bottom>
-					</Fill>
-					<Right id="nright" size="20%" style={{ backgroundColor: '#ddffdd', padding: 15 }}>
-						Right
-					</Right>
-				</Fill>
-				<Bottom id="bottom" size="15%" style={{ backgroundColor: '#ddddff', padding: 15 }}>
-					Bottom	
-				</Bottom>
-			</Fill>
-			<Right id="right" size="15%" style={{ backgroundColor: '#ffdddd', padding: 15 }}>
-				Right
-			</Right>
-		</ViewPort>
+		<Demo />
 	</Story>
 </Preview>
