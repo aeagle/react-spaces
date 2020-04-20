@@ -207,7 +207,9 @@ function createStore(): ISpaceStore {
 				});
 			} else if (space.type === Type.Anchored) {
 				const adjusted: SizeUnit[] = [];
-				const anchoredSpaces = parent.anchoredChildren(space.anchor!, space.zIndex).filter((s) => s.id !== space.id && s.order < space.order);
+				const anchoredSpaces = parent
+					.anchoredChildren(space.anchor!, space.zIndex)
+					.filter((s) => s.id !== space.id && s.order <= space.order);
 
 				anchoredSpaces.forEach((as) => {
 					if (as.orientation === Orientation.Vertical) {
