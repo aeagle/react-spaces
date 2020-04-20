@@ -494,7 +494,6 @@ const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
 		width: css(space.width),
 		height: css(space.height),
 		zIndex: space.zIndex,
-		boxSizing: "border-box",
 	};
 
 	const styles: string[] = [];
@@ -506,9 +505,6 @@ const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
 	}
 	if (style.position) {
 		cssString.push(`position: ${style.position};`);
-	}
-	if (style.boxSizing) {
-		cssString.push(`box-sizing: ${style.boxSizing};`);
 	}
 	if (style.left) {
 		cssString.push(`left: ${style.left};`);
@@ -691,7 +687,7 @@ const Space: React.FC<ISpaceProps> = (props) => {
 			<HeadStyle space={space} />
 			{React.createElement(
 				props.as || "div",
-				{ id: space.id, style: style, className: className, onClick: onClick },
+				{ id: space.id, style: style, className: `spaces-space${className ? ` ${className}` : ""}`, onClick: onClick },
 				<ParentContext.Provider value={space}>
 					<LayerContext.Provider value={undefined}>{children}</LayerContext.Provider>
 				</ParentContext.Provider>,
@@ -707,6 +703,7 @@ const blue = { backgroundColor: "#ddddff", padding: 15 };
 export const Demo: React.FC = () => {
 	const [visible, setVisible] = React.useState(true);
 	const [size, setSize] = React.useState(true);
+	const [side, setSide] = React.useState(true);
 	return (
 		<ViewPort as="main">
 			<Left as="aside" size="15%" style={red}>
@@ -718,11 +715,16 @@ export const Demo: React.FC = () => {
 						Top
 					</Top>
 					<Fill>
-						{visible && (
-							<Left size={size ? "20%" : "25%"} order={0} style={green}>
-								Left 1
-							</Left>
-						)}
+						{visible &&
+							(side ? (
+								<Left size={size ? "20%" : "25%"} order={0} style={green}>
+									Left 1
+								</Left>
+							) : (
+								<Top size={size ? "20%" : "25%"} order={0} style={green}>
+									Top 1
+								</Top>
+							))}
 						<Left size={"20%"} order={1} style={green}>
 							Left 2
 						</Left>
@@ -737,6 +739,9 @@ export const Demo: React.FC = () => {
 								</div>
 								<div>
 									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
+								</div>
+								<div>
+									<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 								</div>
 							</Fill>
 							<Bottom size="20%" style={red}>
