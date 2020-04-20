@@ -69,6 +69,7 @@ export interface ISpaceDefinition {
 	width: ISize;
 	height: ISize;
 	zIndex: number;
+	resizable: boolean;
 }
 
 function getSizeString(size: SizeUnit) {
@@ -228,7 +229,7 @@ function createStore(): ISpaceStore {
 			}
 		},
 		updateSpace: (space, props) => {
-			const { type, anchor, order, zIndex, scrollable, position } = props;
+			const { type, anchor, order, zIndex, scrollable, position, resizable } = props;
 			let changed = false;
 
 			if (space.type !== type) {
@@ -294,6 +295,11 @@ function createStore(): ISpaceStore {
 				changed = true;
 			}
 
+			if (coalesce(space.resizable, false) !== coalesce(resizable, false)) {
+				space.resizable = coalesce(resizable, false)!;
+				changed = true;
+			}
+
 			if (changed) {
 				space.update();
 				if (space.parent) {
@@ -305,7 +311,7 @@ function createStore(): ISpaceStore {
 	};
 
 	store.createSpace = (update: () => void, parent: ISpaceDefinition | undefined, props: ISpaceProps) => {
-		const { id, type, anchor, order, zIndex, scrollable, position } = props;
+		const { id, type, anchor, order, zIndex, scrollable, position, resizable } = props;
 
 		const newSpace: ISpaceDefinition = {
 			store: store,
@@ -320,6 +326,7 @@ function createStore(): ISpaceStore {
 			children: [],
 			zIndex: coalesce(zIndex, 0)!,
 			scrollable: coalesce(scrollable, false)!,
+			resizable: coalesce(resizable, false)!,
 			left: { size: position && position.left, adjusted: [], resized: 0 },
 			right: { size: position && position.right, adjusted: [], resized: 0 },
 			top: { size: position && position.top, adjusted: [], resized: 0 },
@@ -476,6 +483,7 @@ interface ISpaceProps extends ICommonProps {
 	anchor?: Anchor;
 	order?: number;
 	position?: IPositionalProps;
+	resizable?: boolean;
 }
 
 const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
@@ -533,7 +541,11 @@ const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
 	return null;
 };
 
-export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => <Left {...props}>{props.children}</Left>;
+export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => (
+	<Left {...props} resizable={true}>
+		{props.children}
+	</Left>
+);
 export const Left: React.FC<IAnchorProps> = (props) => {
 	return (
 		<Space
@@ -547,13 +559,18 @@ export const Left: React.FC<IAnchorProps> = (props) => {
 			centerContent={props.centerContent}
 			className={props.className}
 			style={props.style}
+			resizable={true}
 			position={{ left: 0, top: 0, bottom: 0, width: props.size }}>
 			{props.children}
 		</Space>
 	);
 };
 
-export const TopResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => <Top {...props}>{props.children}</Top>;
+export const TopResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => (
+	<Top {...props} resizable={true}>
+		{props.children}
+	</Top>
+);
 export const Top: React.FC<IAnchorProps> = (props) => {
 	return (
 		<Space
@@ -567,13 +584,18 @@ export const Top: React.FC<IAnchorProps> = (props) => {
 			centerContent={props.centerContent}
 			className={props.className}
 			style={props.style}
+			resizable={true}
 			position={{ left: 0, top: 0, right: 0, height: props.size }}>
 			{props.children}
 		</Space>
 	);
 };
 
-export const RightResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => <Right {...props}>{props.children}</Right>;
+export const RightResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => (
+	<Right {...props} resizable={true}>
+		{props.children}
+	</Right>
+);
 export const Right: React.FC<IAnchorProps> = (props) => {
 	return (
 		<Space
@@ -587,13 +609,18 @@ export const Right: React.FC<IAnchorProps> = (props) => {
 			centerContent={props.centerContent}
 			className={props.className}
 			style={props.style}
+			resizable={true}
 			position={{ bottom: 0, top: 0, right: 0, width: props.size }}>
 			{props.children}
 		</Space>
 	);
 };
 
-export const BottomResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => <Bottom {...props}>{props.children}</Bottom>;
+export const BottomResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => (
+	<Bottom {...props} resizable={true}>
+		{props.children}
+	</Bottom>
+);
 export const Bottom: React.FC<IAnchorProps> = (props) => {
 	return (
 		<Space
@@ -607,6 +634,7 @@ export const Bottom: React.FC<IAnchorProps> = (props) => {
 			centerContent={props.centerContent}
 			className={props.className}
 			style={props.style}
+			resizable={true}
 			position={{ bottom: 0, left: 0, right: 0, height: props.size }}>
 			{props.children}
 		</Space>
