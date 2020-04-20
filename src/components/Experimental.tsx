@@ -678,11 +678,13 @@ const Space: React.FC<ISpaceProps> = (props) => {
 	return (
 		<>
 			<HeadStyle space={space} />
-			<div id={space.id} style={props.style}>
+			{React.createElement(
+				props.as || "div",
+				{ id: space.id, style: props.style, className: props.className },
 				<ParentContext.Provider value={space}>
 					<LayerContext.Provider value={undefined}>{props.children}</LayerContext.Provider>
-				</ParentContext.Provider>
-			</div>
+				</ParentContext.Provider>,
+			)}
 		</>
 	);
 };
@@ -695,8 +697,8 @@ export const Demo: React.FC = () => {
 	const [visible, setVisible] = React.useState(true);
 	const [size, setSize] = React.useState(true);
 	return (
-		<ViewPort>
-			<Left size="15%" style={red}>
+		<ViewPort as="main">
+			<Left as="aside" size="15%" style={red}>
 				Left
 			</Left>
 			<Fill>
