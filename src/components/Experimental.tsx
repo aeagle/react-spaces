@@ -24,18 +24,9 @@ export enum Orientation {
 export interface ISpaceStore {
 	getSpace: (id: string) => ISpaceDefinition | undefined;
 	addSpace: (space: ISpaceDefinition) => void;
-	updateSpace: (space: ISpaceDefinition, type: Type, anchor?: Anchor, order?: number, zIndex?: number, position?: IPositionalProps) => void;
+	updateSpace: (space: ISpaceDefinition, props: ISpaceProps) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
-	createSpace: (
-		update: () => void,
-		parent: ISpaceDefinition | undefined,
-		id: string,
-		type: Type,
-		anchor?: Anchor,
-		order?: number,
-		zIndex?: number,
-		position?: IPositionalProps,
-	) => ISpaceDefinition;
+	createSpace: (update: () => void, parent: ISpaceDefinition | undefined, props: ISpaceProps) => ISpaceDefinition;
 }
 
 export interface IPositionalProps {
@@ -65,6 +56,7 @@ export interface ISpaceDefinition {
 	type: Type;
 	anchor?: Anchor;
 	orientation: Orientation;
+	scrollable: boolean;
 	order: number;
 	position: "fixed" | "absolute" | "relative";
 	children: ISpaceDefinition[];
@@ -235,7 +227,8 @@ function createStore(): ISpaceStore {
 				recalcSpaces(space.parent);
 			}
 		},
-		updateSpace: (space, type, anchor, order, zIndex, position) => {
+		updateSpace: (space, props) => {
+			const { type, anchor, order, zIndex, scrollable, position } = props;
 			let changed = false;
 
 			if (space.type !== type) {
@@ -244,7 +237,7 @@ function createStore(): ISpaceStore {
 				changed = true;
 			}
 
-			if (space.anchor != anchor) {
+			if (space.anchor !== anchor) {
 				space.anchor = anchor;
 				space.orientation = anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal;
 				changed = true;
@@ -286,13 +279,18 @@ function createStore(): ISpaceStore {
 				changed = true;
 			}
 
-			if (space.order !== (order || 0)) {
-				space.order = order || 0;
+			if (coalesce(space.order, 0) !== coalesce(order, 0)) {
+				space.order = coalesce(order, 0)!;
 				changed = true;
 			}
 
-			if (space.zIndex !== zIndex || 0) {
-				space.zIndex = zIndex || 0;
+			if (coalesce(space.zIndex, 0) !== coalesce(zIndex, 0)) {
+				space.zIndex = coalesce(zIndex, 0)!;
+				changed = true;
+			}
+
+			if (coalesce(space.scrollable, false) !== coalesce(scrollable, false)) {
+				space.scrollable = coalesce(scrollable, false)!;
 				changed = true;
 			}
 
@@ -306,28 +304,22 @@ function createStore(): ISpaceStore {
 		createSpace: () => ({} as ISpaceDefinition),
 	};
 
-	store.createSpace = (
-		update: () => void,
-		parent: ISpaceDefinition | undefined,
-		id: string,
-		type: Type,
-		anchor?: Anchor,
-		order?: number,
-		zIndex?: number,
-		position?: IPositionalProps,
-	) => {
+	store.createSpace = (update: () => void, parent: ISpaceDefinition | undefined, props: ISpaceProps) => {
+		const { id, type, anchor, order, zIndex, scrollable, position } = props;
+
 		const newSpace: ISpaceDefinition = {
 			store: store,
 			parent: parent,
 			update: update,
-			id: id,
+			id: id!,
 			type: type,
 			anchor: anchor,
 			orientation: anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal,
-			order: order || 0,
+			order: coalesce(order, 0)!,
 			position: getPosition(type),
 			children: [],
-			zIndex: zIndex || 0,
+			zIndex: coalesce(zIndex, 0)!,
+			scrollable: coalesce(scrollable, false)!,
 			left: { size: position && position.left, adjusted: [], resized: 0 },
 			right: { size: position && position.right, adjusted: [], resized: 0 },
 			top: { size: position && position.top, adjusted: [], resized: 0 },
@@ -417,20 +409,28 @@ function useForceUpdate() {
 	return update;
 }
 
-function useSpace(id: string | undefined, type: Type, anchor?: Anchor, order?: number, zIndex?: number, position?: IPositionalProps) {
+function useSpace(props: ISpaceProps) {
 	const update = useForceUpdate();
 	const store = React.useContext(StoreContext)!;
 	const parent = React.useContext(ParentContext);
 	const layer = React.useContext(LayerContext);
-	const spaceId = React.useRef(id || `s${shortuuid()}`);
+	const spaceId = React.useRef(props.id || `s${shortuuid()}`);
 
 	let space = store.getSpace(spaceId.current);
 
+	const parsedProps = {
+		...props,
+		...{
+			id: spaceId.current,
+			zIndex: coalesce(props.zIndex, layer),
+		},
+	};
+
 	if (!space) {
-		space = store.createSpace(update, parent, spaceId.current, type, anchor, order, coalesce(layer, zIndex) || 0, position);
+		space = store.createSpace(update, parent, parsedProps);
 		store.addSpace(space);
 	} else {
-		store.updateSpace(space, type, anchor, order, coalesce(layer, zIndex) || 0, position);
+		store.updateSpace(space, parsedProps);
 	}
 
 	React.useEffect(() => {
@@ -449,6 +449,7 @@ interface ICommonProps {
 	as?: string;
 	centerContent?: "none" | "vertical" | "horizontalVertical";
 	zIndex?: number;
+	scrollable?: boolean;
 }
 
 interface IAnchorProps extends ICommonProps {
@@ -494,6 +495,10 @@ const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
 
 	const cssString: string[] = [];
 
+	cssString.push(`display: block;`);
+	if (space.scrollable) {
+		cssString.push(`overflow: auto;`);
+	}
 	if (style.position) {
 		cssString.push(`position: ${style.position};`);
 	}
@@ -536,6 +541,11 @@ export const Left: React.FC<IAnchorProps> = (props) => {
 			type={Type.Anchored}
 			anchor={Anchor.Left}
 			order={props.order}
+			zIndex={props.zIndex}
+			as={props.as}
+			scrollable={props.scrollable}
+			centerContent={props.centerContent}
+			className={props.className}
 			style={props.style}
 			position={{ left: 0, top: 0, bottom: 0, width: props.size }}>
 			{props.children}
@@ -551,6 +561,11 @@ export const Top: React.FC<IAnchorProps> = (props) => {
 			type={Type.Anchored}
 			anchor={Anchor.Top}
 			order={props.order}
+			zIndex={props.zIndex}
+			as={props.as}
+			scrollable={props.scrollable}
+			centerContent={props.centerContent}
+			className={props.className}
 			style={props.style}
 			position={{ left: 0, top: 0, right: 0, height: props.size }}>
 			{props.children}
@@ -566,6 +581,11 @@ export const Right: React.FC<IAnchorProps> = (props) => {
 			type={Type.Anchored}
 			anchor={Anchor.Right}
 			order={props.order}
+			zIndex={props.zIndex}
+			as={props.as}
+			scrollable={props.scrollable}
+			centerContent={props.centerContent}
+			className={props.className}
 			style={props.style}
 			position={{ bottom: 0, top: 0, right: 0, width: props.size }}>
 			{props.children}
@@ -581,6 +601,11 @@ export const Bottom: React.FC<IAnchorProps> = (props) => {
 			type={Type.Anchored}
 			anchor={Anchor.Bottom}
 			order={props.order}
+			zIndex={props.zIndex}
+			as={props.as}
+			scrollable={props.scrollable}
+			centerContent={props.centerContent}
+			className={props.className}
 			style={props.style}
 			position={{ bottom: 0, left: 0, right: 0, height: props.size }}>
 			{props.children}
@@ -590,7 +615,16 @@ export const Bottom: React.FC<IAnchorProps> = (props) => {
 
 export const Fill: React.FC<ICommonProps> = (props) => {
 	return (
-		<Space id={props.id} type={Type.Fill} style={props.style} position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
+		<Space
+			id={props.id}
+			type={Type.Fill}
+			zIndex={props.zIndex}
+			as={props.as}
+			scrollable={props.scrollable}
+			centerContent={props.centerContent}
+			className={props.className}
+			style={props.style}
+			position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
 			{props.children}
 		</Space>
 	);
@@ -600,7 +634,16 @@ export const Fixed: React.FC<IFixedProps> = (props) => {
 	const { width, height } = props;
 	return (
 		<StoreProvider store={createStore()}>
-			<Space id={props.id} type={Type.Fixed} style={props.style} position={{ width: width, height: height }}>
+			<Space
+				id={props.id}
+				type={Type.Fixed}
+				zIndex={props.zIndex}
+				as={props.as}
+				scrollable={props.scrollable}
+				centerContent={props.centerContent}
+				className={props.className}
+				style={props.style}
+				position={{ width: width, height: height }}>
 				{props.children}
 			</Space>
 		</StoreProvider>
@@ -615,6 +658,11 @@ export const ViewPort: React.FC<IViewPortProps> = (props) => {
 				id={props.id}
 				type={Type.ViewPort}
 				style={props.style}
+				zIndex={props.zIndex}
+				as={props.as}
+				scrollable={props.scrollable}
+				centerContent={props.centerContent}
+				className={props.className}
 				position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
 				{props.children}
 			</Space>
@@ -622,15 +670,18 @@ export const ViewPort: React.FC<IViewPortProps> = (props) => {
 	);
 };
 
+export const Layer: React.FC<{ zIndex: number }> = (props) => <LayerContext.Provider value={props.zIndex}>{props.children}</LayerContext.Provider>;
+
 const Space: React.FC<ISpaceProps> = (props) => {
-	const { id, type, anchor, order, zIndex, position } = props;
-	const space = useSpace(id, type, anchor, order, zIndex, position);
+	const space = useSpace(props);
 
 	return (
 		<>
 			<HeadStyle space={space} />
 			<div id={space.id} style={props.style}>
-				<ParentContext.Provider value={space}>{props.children}</ParentContext.Provider>
+				<ParentContext.Provider value={space}>
+					<LayerContext.Provider value={undefined}>{props.children}</LayerContext.Provider>
+				</ParentContext.Provider>
 			</div>
 		</>
 	);
@@ -649,42 +700,56 @@ export const Demo: React.FC = () => {
 				Left
 			</Left>
 			<Fill>
-				<Top size="15%" style={blue}>
-					Top
-				</Top>
-				<Fill>
-					{visible && (
-						<Left size={size ? "20%" : "25%"} order={0} style={green}>
-							Left 1
-						</Left>
-					)}
-					<Left size={"20%"} order={1} style={green}>
-						Left 2
-					</Left>
+				<Layer zIndex={1}>
+					<Top size="15%" style={blue}>
+						Top
+					</Top>
 					<Fill>
-						<Top size="20%" style={red}>
-							Top
-						</Top>
-						<Fill style={blue}>
-							Fill
-							<div>
-								<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
-							</div>
-							<div>
-								<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
-							</div>
+						{visible && (
+							<Left size={size ? "20%" : "25%"} order={0} style={green}>
+								Left 1
+							</Left>
+						)}
+						<Left size={"20%"} order={1} style={green}>
+							Left 2
+						</Left>
+						<Fill>
+							<Top size="20%" style={red}>
+								Top
+							</Top>
+							<Fill style={blue}>
+								Fill
+								<div>
+									<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
+								</div>
+								<div>
+									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
+								</div>
+							</Fill>
+							<Bottom size="20%" style={red}>
+								Bottom
+							</Bottom>
 						</Fill>
-						<Bottom size="20%" style={red}>
-							Bottom
-						</Bottom>
+						<Right size="20%" style={green} scrollable={true}>
+							Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam quasi ipsam autem deserunt facere mollitia asperiores nisi,
+							fugiat iste cumque quo perspiciatis corporis error accusamus placeat eaque minima a, cupiditate voluptatum. Asperiores
+							itaque vitae, maxime maiores iste beatae cumque, ipsum ut laboriosam alias minima ducimus numquam, quas voluptas aliquid
+							omnis cupiditate fuga accusamus nemo fugit at nam reiciendis commodi quo! Odit, totam expedita laboriosam nobis
+							consequatur, aperiam esse laudantium mollitia reprehenderit corporis aut unde cum delectus sed illo reiciendis voluptas
+							eveniet doloribus aspernatur magnam minima, dolorem molestiae culpa! Officiis sit, doloremque veniam asperiores maiores
+							fuga eveniet necessitatibus ratione delectus porro laborum minima sed ipsum aliquid dolorum eos perferendis culpa est
+							totam, saepe sapiente numquam. Eveniet ipsam blanditiis iure a? Magnam quo dicta nihil velit. Fuga sit porro consectetur
+							quidem! Error, dignissimos ipsa? Minus quod nulla libero fuga eligendi, nemo magnam quis. Aspernatur similique tenetur
+							fugit earum distinctio. Officiis laudantium corporis facilis quia tenetur. In tempore vel, optio nihil molestias ab fuga
+							vero esse amet iusto cupiditate hic molestiae suscipit non sint eum ad laudantium. Ducimus eum reiciendis consequuntur,
+							sint deleniti temporibus quod ex aliquid beatae veniam officiis soluta commodi earum explicabo rerum laudantium adipisci
+							dicta veritatis consequatur voluptates maxime fuga.
+						</Right>
 					</Fill>
-					<Right size="20%" style={green}>
-						Right
-					</Right>
-				</Fill>
-				<Bottom size="15%" style={blue}>
-					Bottom
-				</Bottom>
+					<Bottom size="15%" style={blue}>
+						Bottom
+					</Bottom>
+				</Layer>
 			</Fill>
 			<Right size="15%" style={red}>
 				Right
