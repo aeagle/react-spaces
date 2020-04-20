@@ -1,6 +1,7 @@
 import * as React from "react";
 import { SizeUnit } from "../types";
 import * as ReactDOM from "react-dom";
+import "../styles.css";
 
 export enum Type {
 	ViewPort,
@@ -70,6 +71,7 @@ export interface ISpaceDefinition {
 	height: ISize;
 	zIndex: number;
 	resizable: boolean;
+	centerContent: "none" | "vertical" | "horizontalVertical";
 }
 
 function getSizeString(size: SizeUnit) {
@@ -118,6 +120,23 @@ const anchorUpdates = (space: ISpaceDefinition) => [
 	},
 ];
 
+const sizeInfoDefault = (size: SizeUnit) => ({ size: size, adjusted: [], resized: 0 });
+
+const spaceDefaults: Partial<ISpaceDefinition> = {
+	id: "",
+	order: 0,
+	zIndex: 0,
+	scrollable: false,
+	resizable: false,
+	centerContent: "none",
+	adjustLeft: () => false,
+	adjustRight: () => false,
+	adjustTop: () => false,
+	adjustBottom: () => false,
+	adjustEdge: () => false,
+	anchoredChildren: () => [],
+};
+
 function getPosition(type: Type) {
 	if (type === Type.ViewPort) {
 		return "fixed";
@@ -126,6 +145,10 @@ function getPosition(type: Type) {
 		return "relative";
 	}
 	return "absolute";
+}
+
+function getOrientation(anchor: Anchor | undefined) {
+	return anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal;
 }
 
 function adjustmentsEqual(item1: SizeUnit[], item2: SizeUnit[]) {
@@ -229,18 +252,18 @@ function createStore(): ISpaceStore {
 			}
 		},
 		updateSpace: (space, props) => {
-			const { type, anchor, order, zIndex, scrollable, position, resizable } = props;
+			const { type, anchor, order, zIndex, scrollable, position, resizable, centerContent } = props;
 			let changed = false;
 
 			if (space.type !== type) {
 				space.type = type;
-				space.position = type === Type.ViewPort ? "fixed" : "absolute";
+				space.position = getPosition(type);
 				changed = true;
 			}
 
 			if (space.anchor !== anchor) {
 				space.anchor = anchor;
-				space.orientation = anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal;
+				space.orientation = getOrientation(anchor);
 				changed = true;
 
 				if (type === Type.Anchored) {
@@ -280,6 +303,18 @@ function createStore(): ISpaceStore {
 				changed = true;
 			}
 
+			if (space.width.size !== (position && position.width)) {
+				space.width.size = position && position.width;
+				space.width.resized = 0;
+				changed = true;
+			}
+
+			if (space.height.size !== (position && position.height)) {
+				space.height.size = position && position.height;
+				space.height.resized = 0;
+				changed = true;
+			}
+
 			if (coalesce(space.order, 0) !== coalesce(order, 0)) {
 				space.order = coalesce(order, 0)!;
 				changed = true;
@@ -300,6 +335,11 @@ function createStore(): ISpaceStore {
 				changed = true;
 			}
 
+			if (coalesce(space.centerContent, "none") !== coalesce(centerContent, "none")) {
+				space.centerContent = coalesce(centerContent, "none")!;
+				changed = true;
+			}
+
 			if (changed) {
 				space.update();
 				if (space.parent) {
@@ -311,35 +351,28 @@ function createStore(): ISpaceStore {
 	};
 
 	store.createSpace = (update: () => void, parent: ISpaceDefinition | undefined, props: ISpaceProps) => {
-		const { id, type, anchor, order, zIndex, scrollable, position, resizable } = props;
+		const { position, anchor, type, ...commonProps } = props;
 
 		const newSpace: ISpaceDefinition = {
-			store: store,
-			parent: parent,
-			update: update,
-			id: id!,
-			type: type,
-			anchor: anchor,
-			orientation: anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal,
-			order: coalesce(order, 0)!,
-			position: getPosition(type),
-			children: [],
-			zIndex: coalesce(zIndex, 0)!,
-			scrollable: coalesce(scrollable, false)!,
-			resizable: coalesce(resizable, false)!,
-			left: { size: position && position.left, adjusted: [], resized: 0 },
-			right: { size: position && position.right, adjusted: [], resized: 0 },
-			top: { size: position && position.top, adjusted: [], resized: 0 },
-			bottom: { size: position && position.bottom, adjusted: [], resized: 0 },
-			width: { size: position && position.width, adjusted: [], resized: 0 },
-			height: { size: position && position.height, adjusted: [], resized: 0 },
-			adjustLeft: () => false,
-			adjustRight: () => false,
-			adjustTop: () => false,
-			adjustBottom: () => false,
-			adjustEdge: () => false,
-			anchoredChildren: () => [],
-		};
+			...spaceDefaults,
+			...commonProps,
+			...{
+				store: store,
+				parent: parent,
+				children: [],
+				update: update,
+				anchor: anchor,
+				type: type,
+				orientation: getOrientation(anchor),
+				position: getPosition(type),
+				left: sizeInfoDefault(position && position.left),
+				right: sizeInfoDefault(position && position.right),
+				top: sizeInfoDefault(position && position.top),
+				bottom: sizeInfoDefault(position && position.bottom),
+				width: sizeInfoDefault(position && position.width),
+				height: sizeInfoDefault(position && position.height),
+			},
+		} as ISpaceDefinition;
 
 		newSpace.anchoredChildren = (anchor, zIndex) =>
 			newSpace.children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
@@ -449,43 +482,6 @@ function useSpace(props: ISpaceProps) {
 	return space;
 }
 
-interface ICommonProps {
-	id?: string;
-	className?: string;
-	style?: React.CSSProperties;
-	as?: string;
-	centerContent?: "none" | "vertical" | "horizontalVertical";
-	zIndex?: number;
-	scrollable?: boolean;
-}
-
-interface IAnchorProps extends ICommonProps {
-	id?: string;
-	size: SizeUnit;
-	order?: number;
-	resizable?: boolean;
-}
-
-interface IViewPortProps extends ICommonProps {
-	left?: SizeUnit;
-	right?: SizeUnit;
-	top?: SizeUnit;
-	bottom?: SizeUnit;
-}
-
-interface IFixedProps extends ICommonProps {
-	width?: SizeUnit;
-	height: SizeUnit;
-}
-
-interface ISpaceProps extends ICommonProps {
-	type: Type;
-	anchor?: Anchor;
-	order?: number;
-	position?: IPositionalProps;
-	resizable?: boolean;
-}
-
 const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
 	const space = props.space;
 
@@ -501,6 +497,7 @@ const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
 		boxSizing: "border-box",
 	};
 
+	const styles: string[] = [];
 	const cssString: string[] = [];
 
 	cssString.push(`display: block;`);
@@ -535,33 +532,44 @@ const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
 		cssString.push(`z-index: ${style.zIndex};`);
 	}
 	if (cssString.length > 0) {
-		return ReactDOM.createPortal(<style>{`#${space.id} { ${cssString.join(" ")} }`}</style>, window.document.head);
+		styles.push(`#${space.id} { ${cssString.join(" ")} }`);
+	}
+	if (styles.length > 0) {
+		return ReactDOM.createPortal(<style>{styles.join(" ")}</style>, window.document.head);
 	}
 
 	return null;
 };
+
+interface ICommonProps {
+	id?: string;
+	className?: string;
+	style?: React.CSSProperties;
+	as?: string;
+	centerContent?: "none" | "vertical" | "horizontalVertical";
+	zIndex?: number;
+	scrollable?: boolean;
+	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+}
+
+interface IAnchorProps extends ICommonProps {
+	id?: string;
+	size: SizeUnit;
+	order?: number;
+	resizable?: boolean;
+}
 
 export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => (
 	<Left {...props} resizable={true}>
 		{props.children}
 	</Left>
 );
+
 export const Left: React.FC<IAnchorProps> = (props) => {
+	const { size, children, ...commonProps } = props;
 	return (
-		<Space
-			id={props.id}
-			type={Type.Anchored}
-			anchor={Anchor.Left}
-			order={props.order}
-			zIndex={props.zIndex}
-			as={props.as}
-			scrollable={props.scrollable}
-			centerContent={props.centerContent}
-			className={props.className}
-			style={props.style}
-			resizable={true}
-			position={{ left: 0, top: 0, bottom: 0, width: props.size }}>
-			{props.children}
+		<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Left} position={{ left: 0, top: 0, bottom: 0, width: size }}>
+			{children}
 		</Space>
 	);
 };
@@ -571,22 +579,12 @@ export const TopResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) =
 		{props.children}
 	</Top>
 );
+
 export const Top: React.FC<IAnchorProps> = (props) => {
+	const { size, children, ...commonProps } = props;
 	return (
-		<Space
-			id={props.id}
-			type={Type.Anchored}
-			anchor={Anchor.Top}
-			order={props.order}
-			zIndex={props.zIndex}
-			as={props.as}
-			scrollable={props.scrollable}
-			centerContent={props.centerContent}
-			className={props.className}
-			style={props.style}
-			resizable={true}
-			position={{ left: 0, top: 0, right: 0, height: props.size }}>
-			{props.children}
+		<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Top} position={{ left: 0, top: 0, right: 0, height: size }}>
+			{children}
 		</Space>
 	);
 };
@@ -596,22 +594,12 @@ export const RightResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props)
 		{props.children}
 	</Right>
 );
+
 export const Right: React.FC<IAnchorProps> = (props) => {
+	const { size, children, ...commonProps } = props;
 	return (
-		<Space
-			id={props.id}
-			type={Type.Anchored}
-			anchor={Anchor.Right}
-			order={props.order}
-			zIndex={props.zIndex}
-			as={props.as}
-			scrollable={props.scrollable}
-			centerContent={props.centerContent}
-			className={props.className}
-			style={props.style}
-			resizable={true}
-			position={{ bottom: 0, top: 0, right: 0, width: props.size }}>
-			{props.children}
+		<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Right} position={{ bottom: 0, top: 0, right: 0, width: size }}>
+			{children}
 		</Space>
 	);
 };
@@ -621,96 +609,91 @@ export const BottomResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props
 		{props.children}
 	</Bottom>
 );
+
 export const Bottom: React.FC<IAnchorProps> = (props) => {
+	const { size, children, ...commonProps } = props;
 	return (
-		<Space
-			id={props.id}
-			type={Type.Anchored}
-			anchor={Anchor.Bottom}
-			order={props.order}
-			zIndex={props.zIndex}
-			as={props.as}
-			scrollable={props.scrollable}
-			centerContent={props.centerContent}
-			className={props.className}
-			style={props.style}
-			resizable={true}
-			position={{ bottom: 0, left: 0, right: 0, height: props.size }}>
-			{props.children}
+		<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Bottom} position={{ bottom: 0, left: 0, right: 0, height: size }}>
+			{children}
 		</Space>
 	);
 };
 
 export const Fill: React.FC<ICommonProps> = (props) => {
 	return (
-		<Space
-			id={props.id}
-			type={Type.Fill}
-			zIndex={props.zIndex}
-			as={props.as}
-			scrollable={props.scrollable}
-			centerContent={props.centerContent}
-			className={props.className}
-			style={props.style}
-			position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
+		<Space {...props} type={Type.Fill} position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
 			{props.children}
 		</Space>
 	);
 };
 
+interface IFixedProps extends ICommonProps {
+	width?: SizeUnit;
+	height: SizeUnit;
+}
+
 export const Fixed: React.FC<IFixedProps> = (props) => {
-	const { width, height } = props;
+	const { width, height, children, ...commonProps } = props;
 	return (
 		<StoreProvider store={createStore()}>
-			<Space
-				id={props.id}
-				type={Type.Fixed}
-				zIndex={props.zIndex}
-				as={props.as}
-				scrollable={props.scrollable}
-				centerContent={props.centerContent}
-				className={props.className}
-				style={props.style}
-				position={{ width: width, height: height }}>
-				{props.children}
+			<Space {...commonProps} type={Type.Fixed} position={{ width: width, height: height }}>
+				{children}
 			</Space>
 		</StoreProvider>
 	);
 };
 
+interface IViewPortProps extends ICommonProps {
+	left?: SizeUnit;
+	right?: SizeUnit;
+	top?: SizeUnit;
+	bottom?: SizeUnit;
+}
+
 export const ViewPort: React.FC<IViewPortProps> = (props) => {
-	const { left, top, right, bottom } = props;
+	const { left, top, right, bottom, children, ...commonProps } = props;
 	return (
 		<StoreProvider store={createStore()}>
-			<Space
-				id={props.id}
-				type={Type.ViewPort}
-				style={props.style}
-				zIndex={props.zIndex}
-				as={props.as}
-				scrollable={props.scrollable}
-				centerContent={props.centerContent}
-				className={props.className}
-				position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
-				{props.children}
+			<Space {...commonProps} type={Type.ViewPort} position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
+				{children}
 			</Space>
 		</StoreProvider>
 	);
 };
+
+export const Centered: React.FC = (props) => <div className={`spaces-centered`}>{props.children}</div>;
+
+export const CenteredVertically: React.FC = (props) => <div className={`spaces-centered-vertically`}>{props.children}</div>;
 
 export const Layer: React.FC<{ zIndex: number }> = (props) => <LayerContext.Provider value={props.zIndex}>{props.children}</LayerContext.Provider>;
 
+interface ISpaceProps extends ICommonProps {
+	type: Type;
+	anchor?: Anchor;
+	order?: number;
+	position?: IPositionalProps;
+	resizable?: boolean;
+}
+
 const Space: React.FC<ISpaceProps> = (props) => {
+	const { style, className, onClick } = props;
+	let { children } = props;
 	const space = useSpace(props);
+
+	if (props.centerContent === "vertical") {
+		children = <CenteredVertically>{children}</CenteredVertically>;
+	} else if (props.centerContent === "horizontalVertical") {
+		children = <Centered>{children}</Centered>;
+	}
 
 	return (
 		<>
 			<HeadStyle space={space} />
 			{React.createElement(
 				props.as || "div",
-				{ id: space.id, style: props.style, className: props.className },
+				{ id: space.id, style: style, className: className, onClick: onClick },
 				<ParentContext.Provider value={space}>
-					<LayerContext.Provider value={undefined}>{props.children}</LayerContext.Provider>
+					<LayerContext.Provider value={undefined}>{children}</LayerContext.Provider>
 				</ParentContext.Provider>,
 			)}
 		</>
