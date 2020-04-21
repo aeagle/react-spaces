@@ -716,6 +716,7 @@ const Space: React.FC<ISpaceProps> = (props) => {
 	);
 };
 
+const white = { backgroundColor: "#ffffff", padding: 15 };
 const green = { backgroundColor: "#ddffdd", padding: 15 };
 const red = { backgroundColor: "#ffdddd", padding: 15 };
 const blue = { backgroundColor: "#ddddff", padding: 15 };
@@ -752,14 +753,14 @@ export const Demo: React.FC = () => {
 							</Top>
 							<Fill style={blue}>
 								{side ? (
-									<Left size="20%" style={green} centerContent={"horizontalVertical"}>
+									<Left size="20%" style={white} centerContent={"horizontalVertical"}>
 										Left 2
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 										</div>
 									</Left>
 								) : (
-									<Top size="20%" order={0} style={green} centerContent={"horizontalVertical"}>
+									<Top size="20%" style={white} centerContent={"horizontalVertical"}>
 										Top
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
