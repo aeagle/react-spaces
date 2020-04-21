@@ -238,6 +238,8 @@ function removeStyleDefinition(space: ISpaceDefinition) {
 	}
 }
 
+const currentStore = createStore();
+
 function createStore(): ISpaceStore {
 	let spaces: ISpaceDefinition[] = [];
 
@@ -508,13 +510,8 @@ function createStore(): ISpaceStore {
 
 // REACT SPECIFIC
 
-const StoreContext = React.createContext<ISpaceStore | undefined>(undefined);
 const ParentContext = React.createContext<ISpaceDefinition | undefined>(undefined);
 const LayerContext = React.createContext<number | undefined>(undefined);
-
-export const StoreProvider: React.FC<{ store: ISpaceStore }> = (props) => (
-	<StoreContext.Provider value={props.store}>{props.children}</StoreContext.Provider>
-);
 
 function useForceUpdate() {
 	const [, setTick] = React.useState(0);
@@ -526,7 +523,7 @@ function useForceUpdate() {
 
 function useSpace(props: ISpaceProps) {
 	const update = useForceUpdate();
-	const store = React.useContext(StoreContext)!;
+	const store = currentStore;
 	const parent = React.useContext(ParentContext);
 	const layer = React.useContext(LayerContext);
 	const spaceId = React.useRef(props.id || `s${shortuuid()}`);
@@ -544,13 +541,16 @@ function useSpace(props: ISpaceProps) {
 	if (!space) {
 		space = store.createSpace(update, parent, parsedProps);
 		store.addSpace(space);
+		console.log(`adding ${space.type}`);
 	} else {
 		store.updateSpace(space, parsedProps);
+		console.log(`updating ${space.type}`);
 	}
 
 	React.useEffect(() => {
 		return () => {
 			store.removeSpace(space!);
+			console.log(`removing ${space!.type}`);
 		};
 	}, []);
 
@@ -565,11 +565,9 @@ interface IFixedProps extends ICommonProps {
 export const Fixed: React.FC<IFixedProps> = (props) => {
 	const { width, height, children, ...commonProps } = props;
 	return (
-		<StoreProvider store={createStore()}>
-			<Space {...commonProps} type={Type.Fixed} position={{ width: width, height: height }}>
-				{children}
-			</Space>
-		</StoreProvider>
+		<Space {...commonProps} type={Type.Fixed} position={{ width: width, height: height }}>
+			{children}
+		</Space>
 	);
 };
 
@@ -583,11 +581,9 @@ interface IViewPortProps extends ICommonProps {
 export const ViewPort: React.FC<IViewPortProps> = (props) => {
 	const { left, top, right, bottom, children, ...commonProps } = props;
 	return (
-		<StoreProvider store={createStore()}>
-			<Space {...commonProps} type={Type.ViewPort} position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
-				{children}
-			</Space>
-		</StoreProvider>
+		<Space {...commonProps} type={Type.ViewPort} position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
+			{children}
+		</Space>
 	);
 };
 
