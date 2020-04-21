@@ -562,14 +562,11 @@ interface IFixedProps extends ICommonProps {
 	height: SizeUnit;
 }
 
-export const Fixed: React.FC<IFixedProps> = (props) => {
-	const { width, height, children, ...commonProps } = props;
-	return (
-		<Space {...commonProps} type={Type.Fixed} position={{ width: width, height: height }}>
-			{children}
-		</Space>
-	);
-};
+export const Fixed: React.FC<IFixedProps> = ({ width, height, children, ...commonProps }) => (
+	<Space {...commonProps} type={Type.Fixed} position={{ width: width, height: height }}>
+		{children}
+	</Space>
+);
 
 interface IViewPortProps extends ICommonProps {
 	left?: SizeUnit;
@@ -578,14 +575,11 @@ interface IViewPortProps extends ICommonProps {
 	bottom?: SizeUnit;
 }
 
-export const ViewPort: React.FC<IViewPortProps> = (props) => {
-	const { left, top, right, bottom, children, ...commonProps } = props;
-	return (
-		<Space {...commonProps} type={Type.ViewPort} position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
-			{children}
-		</Space>
-	);
-};
+export const ViewPort: React.FC<IViewPortProps> = ({ left, top, right, bottom, children, ...commonProps }) => (
+	<Space {...commonProps} type={Type.ViewPort} position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
+		{children}
+	</Space>
+);
 
 interface ICommonProps {
 	id?: string;
@@ -605,73 +599,59 @@ interface IAnchorProps extends ICommonProps {
 	resizable?: boolean;
 }
 
-export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => (
+export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, ...props }) => (
 	<Left {...props} resizable={true}>
-		{props.children}
+		{children}
 	</Left>
 );
 
-export const Left: React.FC<IAnchorProps> = (props) => {
-	const { size, children, ...commonProps } = props;
-	return (
-		<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Left} position={{ left: 0, top: 0, bottom: 0, width: size }}>
-			{children}
-		</Space>
-	);
-};
+export const Left: React.FC<IAnchorProps> = ({ size, children, ...commonProps }) => (
+	<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Left} position={{ left: 0, top: 0, bottom: 0, width: size }}>
+		{children}
+	</Space>
+);
 
-export const TopResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => (
+export const TopResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, ...props }) => (
 	<Top {...props} resizable={true}>
-		{props.children}
+		{children}
 	</Top>
 );
 
-export const Top: React.FC<IAnchorProps> = (props) => {
-	const { size, children, ...commonProps } = props;
-	return (
-		<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Top} position={{ left: 0, top: 0, right: 0, height: size }}>
-			{children}
-		</Space>
-	);
-};
+export const Top: React.FC<IAnchorProps> = ({ size, children, ...commonProps }) => (
+	<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Top} position={{ left: 0, top: 0, right: 0, height: size }}>
+		{children}
+	</Space>
+);
 
-export const RightResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => (
+export const RightResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, ...props }) => (
 	<Right {...props} resizable={true}>
-		{props.children}
+		{children}
 	</Right>
 );
 
-export const Right: React.FC<IAnchorProps> = (props) => {
-	const { size, children, ...commonProps } = props;
-	return (
-		<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Right} position={{ bottom: 0, top: 0, right: 0, width: size }}>
-			{children}
-		</Space>
-	);
-};
+export const Right: React.FC<IAnchorProps> = ({ size, children, ...commonProps }) => (
+	<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Right} position={{ bottom: 0, top: 0, right: 0, width: size }}>
+		{children}
+	</Space>
+);
 
-export const BottomResizable: React.FC<Omit<IAnchorProps, "resizable">> = (props) => (
+export const BottomResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, ...props }) => (
 	<Bottom {...props} resizable={true}>
-		{props.children}
+		{children}
 	</Bottom>
 );
 
-export const Bottom: React.FC<IAnchorProps> = (props) => {
-	const { size, children, ...commonProps } = props;
-	return (
-		<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Bottom} position={{ bottom: 0, left: 0, right: 0, height: size }}>
-			{children}
-		</Space>
-	);
-};
+export const Bottom: React.FC<IAnchorProps> = ({ size, children, ...commonProps }) => (
+	<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Bottom} position={{ bottom: 0, left: 0, right: 0, height: size }}>
+		{children}
+	</Space>
+);
 
-export const Fill: React.FC<ICommonProps> = (props) => {
-	return (
-		<Space {...props} type={Type.Fill} position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
-			{props.children}
-		</Space>
-	);
-};
+export const Fill: React.FC<ICommonProps> = (props) => (
+	<Space {...props} type={Type.Fill} position={{ left: 0, top: 0, right: 0, bottom: 0 }}>
+		{props.children}
+	</Space>
+);
 
 export const Centered: React.FC = (props) => <div className={`spaces-centered`}>{props.children}</div>;
 
@@ -727,55 +707,55 @@ export const Demo: React.FC = () => {
 	const [side, setSide] = React.useState(true);
 	return (
 		<ViewPort as="main">
-			<Left as="aside" size="15%" style={red}>
-				Left
+			<Left as="aside" size="15%" style={red} centerContent={"horizontalVertical"}>
+				<p>Left</p>
 			</Left>
 			<Fill>
 				<Layer zIndex={1}>
 					<Top size="15%" style={blue} centerContent={"horizontalVertical"}>
-						Top
+						<p>Top</p>
 					</Top>
 					<Fill>
 						{visible && (
 							<Left size={size ? "10%" : "15%"} order={0} style={green} centerContent={"horizontalVertical"}>
-								Left 1
+								<p>Left 1</p>
 								<div>
 									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
 								</div>
 							</Left>
 						)}
 						<Left size={"10%"} order={1} style={red} centerContent={"horizontalVertical"}>
-							Left 2
+							<p>Left 2</p>
 						</Left>
 						<Fill>
 							<Top size="20%" order={1} style={red} centerContent={"horizontalVertical"}>
-								Top 1
+								<p>Top 1</p>
 							</Top>
 							<Fill style={blue}>
 								{side ? (
 									<Left size="20%" style={white} centerContent={"horizontalVertical"}>
-										Left 2
+										<p>Left 2</p>
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 										</div>
 									</Left>
 								) : (
 									<Top size="20%" style={white} centerContent={"horizontalVertical"}>
-										Top
+										<p>Top</p>
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 										</div>
 									</Top>
 								)}
 								<Fill centerContent={"horizontalVertical"}>
-									Fill
+									<p>Fill</p>
 									<div>
 										<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
 									</div>
 								</Fill>
 							</Fill>
 							<Bottom size="20%" style={red} centerContent={"horizontalVertical"}>
-								Bottom
+								<p>Bottom</p>
 							</Bottom>
 						</Fill>
 						<Right size="20%" style={green} scrollable={true}>
@@ -795,12 +775,12 @@ export const Demo: React.FC = () => {
 						</Right>
 					</Fill>
 					<Bottom size="15%" style={blue} centerContent={"horizontalVertical"}>
-						Bottom
+						<p>Bottom</p>
 					</Bottom>
 				</Layer>
 			</Fill>
 			<Right size="15%" style={red} centerContent={"horizontalVertical"}>
-				Right
+				<p>Right</p>
 			</Right>
 		</ViewPort>
 	);
