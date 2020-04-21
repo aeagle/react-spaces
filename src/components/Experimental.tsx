@@ -1,13 +1,12 @@
 import * as React from "react";
 import { SizeUnit } from "../types";
 import "../styles.css";
-import { getSpace } from "src/ISpaceContext";
 
 export enum Type {
-	ViewPort,
-	Fixed,
-	Fill,
-	Anchored,
+	ViewPort = "viewport",
+	Fixed = "fixed",
+	Fill = "fill",
+	Anchored = "anchored",
 }
 
 export enum Anchor {
@@ -28,7 +27,7 @@ export interface ISpaceStore {
 	addSpace: (space: ISpaceDefinition) => void;
 	updateSpace: (space: ISpaceDefinition, props: ISpaceProps) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
-	createSpace: (update: () => void, parent: string | undefined, props: ISpaceProps) => ISpaceDefinition;
+	createSpace: (parent: string | undefined, props: ISpaceProps) => ISpaceDefinition;
 }
 
 export interface IPositionalProps {
@@ -47,7 +46,6 @@ interface ISize {
 }
 
 export interface ISpaceDefinition {
-	update: () => void;
 	adjustLeft: (adjusted: SizeUnit[]) => boolean;
 	adjustRight: (adjusted: SizeUnit[]) => boolean;
 	adjustTop: (adjusted: SizeUnit[]) => boolean;
@@ -62,7 +60,7 @@ export interface ISpaceDefinition {
 	order: number;
 	position: "fixed" | "absolute" | "relative";
 	children: ISpaceDefinition[];
-	parent: string | undefined;
+	parentId: string | undefined;
 	store: ISpaceStore;
 	left: ISize;
 	top: ISize;
@@ -317,8 +315,8 @@ function createStore(): ISpaceStore {
 		addSpace: (space) => {
 			getSpaces().push(space);
 
-			if (space.parent) {
-				const parentSpace = getSpace(space.parent);
+			if (space.parentId) {
+				const parentSpace = getSpace(space.parentId);
 				if (parentSpace) {
 					parentSpace.children.push(space);
 					recalcSpaces(parentSpace);
@@ -330,8 +328,8 @@ function createStore(): ISpaceStore {
 		removeSpace: (space) => {
 			setSpaces(getSpaces().filter((s) => s.id !== space.id));
 
-			if (space.parent) {
-				const parentSpace = getSpace(space.parent);
+			if (space.parentId) {
+				const parentSpace = getSpace(space.parentId);
 				if (parentSpace) {
 					parentSpace.children = parentSpace.children.filter((s) => s.id !== space.id);
 					recalcSpaces(parentSpace);
@@ -430,8 +428,8 @@ function createStore(): ISpaceStore {
 			}
 
 			if (changed) {
-				if (space.parent) {
-					const parentSpace = getSpace(space.parent);
+				if (space.parentId) {
+					const parentSpace = getSpace(space.parentId);
 					if (parentSpace) {
 						recalcSpaces(parentSpace);
 					}
@@ -442,7 +440,7 @@ function createStore(): ISpaceStore {
 		createSpace: () => ({} as ISpaceDefinition),
 	};
 
-	store.createSpace = (update: () => void, parent: string | undefined, props: ISpaceProps) => {
+	store.createSpace = (parentId: string | undefined, props: ISpaceProps) => {
 		const { position, anchor, type, ...commonProps } = props;
 
 		const newSpace: ISpaceDefinition = {
@@ -450,9 +448,8 @@ function createStore(): ISpaceStore {
 			...commonProps,
 			...{
 				store: store,
-				parent: parent,
+				parentId: parentId,
 				children: [],
-				update: update,
 				anchor: anchor,
 				type: type,
 				orientation: getOrientation(anchor),
@@ -528,16 +525,7 @@ function createStore(): ISpaceStore {
 const ParentContext = React.createContext<string | undefined>(undefined);
 const LayerContext = React.createContext<number | undefined>(undefined);
 
-function useForceUpdate() {
-	const [, setTick] = React.useState(0);
-	const update = React.useCallback(() => {
-		setTick((tick) => tick + 1);
-	}, []);
-	return update;
-}
-
 function useSpace(props: ISpaceProps) {
-	const update = useForceUpdate();
 	const store = currentStore;
 	const parent = React.useContext(ParentContext);
 	const layer = React.useContext(LayerContext);
@@ -554,18 +542,15 @@ function useSpace(props: ISpaceProps) {
 	};
 
 	if (!space) {
-		space = store.createSpace(update, parent, parsedProps);
+		space = store.createSpace(parent, parsedProps);
 		store.addSpace(space);
-		console.log(`adding ${space.type}`);
 	} else {
 		store.updateSpace(space, parsedProps);
-		console.log(`updating ${space.type}`);
 	}
 
 	React.useEffect(() => {
 		return () => {
 			store.removeSpace(space!);
-			console.log(`removing ${space!.type}`);
 		};
 	}, []);
 
