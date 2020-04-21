@@ -1,6 +1,7 @@
 import * as React from "react";
 import { SizeUnit } from "../types";
 import "../styles.css";
+import { getSpace } from "src/ISpaceContext";
 
 export enum Type {
 	ViewPort,
@@ -27,7 +28,7 @@ export interface ISpaceStore {
 	addSpace: (space: ISpaceDefinition) => void;
 	updateSpace: (space: ISpaceDefinition, props: ISpaceProps) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
-	createSpace: (update: () => void, parent: ISpaceDefinition | undefined, props: ISpaceProps) => ISpaceDefinition;
+	createSpace: (update: () => void, parent: string | undefined, props: ISpaceProps) => ISpaceDefinition;
 }
 
 export interface IPositionalProps {
@@ -61,7 +62,7 @@ export interface ISpaceDefinition {
 	order: number;
 	position: "fixed" | "absolute" | "relative";
 	children: ISpaceDefinition[];
-	parent: ISpaceDefinition | undefined;
+	parent: string | undefined;
 	store: ISpaceStore;
 	left: ISize;
 	top: ISize;
@@ -246,6 +247,9 @@ function createStore(): ISpaceStore {
 	const setSpaces = (newSpaces: ISpaceDefinition[]) => {
 		spaces = newSpaces;
 	};
+	const getSpace = (id: string) => {
+		return getSpaces().find((s) => s.id === id);
+	};
 	const getSpaces = () => spaces;
 
 	const recalcSpaces = (parent: ISpaceDefinition) => {
@@ -308,25 +312,30 @@ function createStore(): ISpaceStore {
 	};
 
 	const store: ISpaceStore = {
-		getSpaces: () => getSpaces(),
-		getSpace: (id) => {
-			return getSpaces().find((s) => s.id === id);
-		},
+		getSpaces: getSpaces,
+		getSpace: getSpace,
 		addSpace: (space) => {
 			getSpaces().push(space);
 
 			if (space.parent) {
-				space.parent.children.push(space);
-				recalcSpaces(space.parent);
+				const parentSpace = getSpace(space.parent);
+				if (parentSpace) {
+					parentSpace.children.push(space);
+					recalcSpaces(parentSpace);
+				}
 			}
 
 			updateStyleDefinition(space);
 		},
 		removeSpace: (space) => {
+			setSpaces(getSpaces().filter((s) => s.id !== space.id));
+
 			if (space.parent) {
-				setSpaces(getSpaces().filter((s) => s.id !== space.id));
-				space.parent.children = space.parent.children.filter((s) => s.id !== space.id);
-				recalcSpaces(space.parent);
+				const parentSpace = getSpace(space.parent);
+				if (parentSpace) {
+					parentSpace.children = parentSpace.children.filter((s) => s.id !== space.id);
+					recalcSpaces(parentSpace);
+				}
 			}
 
 			removeStyleDefinition(space);
@@ -421,13 +430,19 @@ function createStore(): ISpaceStore {
 			}
 
 			if (changed) {
+				if (space.parent) {
+					const parentSpace = getSpace(space.parent);
+					if (parentSpace) {
+						recalcSpaces(parentSpace);
+					}
+				}
 				updateStyleDefinition(space);
 			}
 		},
 		createSpace: () => ({} as ISpaceDefinition),
 	};
 
-	store.createSpace = (update: () => void, parent: ISpaceDefinition | undefined, props: ISpaceProps) => {
+	store.createSpace = (update: () => void, parent: string | undefined, props: ISpaceProps) => {
 		const { position, anchor, type, ...commonProps } = props;
 
 		const newSpace: ISpaceDefinition = {
@@ -510,7 +525,7 @@ function createStore(): ISpaceStore {
 
 // REACT SPECIFIC
 
-const ParentContext = React.createContext<ISpaceDefinition | undefined>(undefined);
+const ParentContext = React.createContext<string | undefined>(undefined);
 const LayerContext = React.createContext<number | undefined>(undefined);
 
 function useForceUpdate() {
@@ -708,7 +723,7 @@ const Space: React.FC<ISpaceProps> = (props) => {
 					className: `spaces-space${className ? ` ${className}` : ""}`,
 					onClick: onClick,
 				},
-				<ParentContext.Provider value={space}>
+				<ParentContext.Provider value={space.id}>
 					<LayerContext.Provider value={undefined}>{children}</LayerContext.Provider>
 				</ParentContext.Provider>,
 			)}
