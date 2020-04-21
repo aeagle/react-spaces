@@ -1,6 +1,5 @@
 import * as React from "react";
 import { SizeUnit } from "../types";
-import * as ReactDOM from "react-dom";
 import "../styles.css";
 
 export enum Type {
@@ -23,6 +22,7 @@ export enum Orientation {
 }
 
 export interface ISpaceStore {
+	getSpaces: () => ISpaceDefinition[];
 	getSpace: (id: string) => ISpaceDefinition | undefined;
 	addSpace: (space: ISpaceDefinition) => void;
 	updateSpace: (space: ISpaceDefinition, props: ISpaceProps) => void;
@@ -165,10 +165,77 @@ function adjustmentsEqual(item1: SizeUnit[], item2: SizeUnit[]) {
 	return true;
 }
 
+function styleDefinition(space: ISpaceDefinition) {
+	const style: React.CSSProperties = {
+		position: space.position,
+		left: css(space.left),
+		top: css(space.top),
+		right: css(space.right),
+		bottom: css(space.bottom),
+		width: css(space.width),
+		height: css(space.height),
+		zIndex: space.zIndex,
+	};
+
+	const cssString: string[] = [];
+
+	if (space.scrollable) {
+		cssString.push(`overflow: auto;`);
+	}
+	if (style.position) {
+		cssString.push(`position: ${style.position};`);
+	}
+	if (style.left) {
+		cssString.push(`left: ${style.left};`);
+	}
+	if (style.top) {
+		cssString.push(`top: ${style.top};`);
+	}
+	if (style.right) {
+		cssString.push(`right: ${style.right};`);
+	}
+	if (style.bottom) {
+		cssString.push(`bottom: ${style.bottom};`);
+	}
+	if (style.width) {
+		cssString.push(`width: ${style.width};`);
+	}
+	if (style.height) {
+		cssString.push(`height: ${style.height};`);
+	}
+	if (style.zIndex) {
+		cssString.push(`z-index: ${style.zIndex};`);
+	}
+
+	return `#${space.id} { ${cssString.join(" ")} }`;
+}
+
 function shortuuid() {
 	let firstPart = (Math.random() * 46656) | 0;
 	let secondPart = (Math.random() * 46656) | 0;
 	return ("000" + firstPart.toString(36)).slice(-3) + ("000" + secondPart.toString(36)).slice(-3);
+}
+
+function updateStyleDefinition(space: ISpaceDefinition) {
+	const definition = styleDefinition(space);
+	const existing = document.getElementById(`style_${space.id}`);
+	if (existing) {
+		if (existing.innerHTML !== definition) {
+			existing.innerHTML = definition;
+		}
+	} else {
+		const newStyle = document.createElement("style");
+		newStyle.id = `style_${space.id}`;
+		newStyle.innerHTML = definition;
+		document.head.appendChild(newStyle);
+	}
+}
+
+function removeStyleDefinition(space: ISpaceDefinition) {
+	const existing = document.getElementById(`style_${space.id}`);
+	if (existing) {
+		document.head.removeChild(existing);
+	}
 }
 
 function createStore(): ISpaceStore {
@@ -180,6 +247,8 @@ function createStore(): ISpaceStore {
 	const getSpaces = () => spaces;
 
 	const recalcSpaces = (parent: ISpaceDefinition) => {
+		const queuedUpdates: (() => void)[] = [];
+
 		for (var i = 0, len = parent.children.length; i < len; i++) {
 			const space = parent.children[i];
 			let changed = false;
@@ -229,12 +298,15 @@ function createStore(): ISpaceStore {
 			}
 
 			if (changed) {
-				space.update();
+				updateStyleDefinition(space);
 			}
 		}
+
+		return queuedUpdates;
 	};
 
 	const store: ISpaceStore = {
+		getSpaces: () => getSpaces(),
 		getSpace: (id) => {
 			return getSpaces().find((s) => s.id === id);
 		},
@@ -245,6 +317,8 @@ function createStore(): ISpaceStore {
 				space.parent.children.push(space);
 				recalcSpaces(space.parent);
 			}
+
+			updateStyleDefinition(space);
 		},
 		removeSpace: (space) => {
 			if (space.parent) {
@@ -252,6 +326,8 @@ function createStore(): ISpaceStore {
 				space.parent.children = space.parent.children.filter((s) => s.id !== space.id);
 				recalcSpaces(space.parent);
 			}
+
+			removeStyleDefinition(space);
 		},
 		updateSpace: (space, props) => {
 			const { type, anchor, order, zIndex, scrollable, position, resizable, centerContent } = props;
@@ -343,10 +419,7 @@ function createStore(): ISpaceStore {
 			}
 
 			if (changed) {
-				space.update();
-				if (space.parent) {
-					recalcSpaces(space.parent);
-				}
+				updateStyleDefinition(space);
 			}
 		},
 		createSpace: () => ({} as ISpaceDefinition),
@@ -484,59 +557,38 @@ function useSpace(props: ISpaceProps) {
 	return space;
 }
 
-const HeadStyle: React.FC<{ space: ISpaceDefinition }> = (props) => {
-	const space = props.space;
+interface IFixedProps extends ICommonProps {
+	width?: SizeUnit;
+	height: SizeUnit;
+}
 
-	const style: React.CSSProperties = {
-		position: space.position,
-		left: css(space.left),
-		top: css(space.top),
-		right: css(space.right),
-		bottom: css(space.bottom),
-		width: css(space.width),
-		height: css(space.height),
-		zIndex: space.zIndex,
-	};
+export const Fixed: React.FC<IFixedProps> = (props) => {
+	const { width, height, children, ...commonProps } = props;
+	return (
+		<StoreProvider store={createStore()}>
+			<Space {...commonProps} type={Type.Fixed} position={{ width: width, height: height }}>
+				{children}
+			</Space>
+		</StoreProvider>
+	);
+};
 
-	const styles: string[] = [];
-	const cssString: string[] = [];
+interface IViewPortProps extends ICommonProps {
+	left?: SizeUnit;
+	right?: SizeUnit;
+	top?: SizeUnit;
+	bottom?: SizeUnit;
+}
 
-	cssString.push(`display: block;`);
-	if (space.scrollable) {
-		cssString.push(`overflow: auto;`);
-	}
-	if (style.position) {
-		cssString.push(`position: ${style.position};`);
-	}
-	if (style.left) {
-		cssString.push(`left: ${style.left};`);
-	}
-	if (style.top) {
-		cssString.push(`top: ${style.top};`);
-	}
-	if (style.right) {
-		cssString.push(`right: ${style.right};`);
-	}
-	if (style.bottom) {
-		cssString.push(`bottom: ${style.bottom};`);
-	}
-	if (style.width) {
-		cssString.push(`width: ${style.width};`);
-	}
-	if (style.height) {
-		cssString.push(`height: ${style.height};`);
-	}
-	if (style.zIndex) {
-		cssString.push(`z-index: ${style.zIndex};`);
-	}
-	if (cssString.length > 0) {
-		styles.push(`#${space.id} { ${cssString.join(" ")} }`);
-	}
-	if (styles.length > 0) {
-		return ReactDOM.createPortal(<style>{styles.join(" ")}</style>, window.document.head);
-	}
-
-	return null;
+export const ViewPort: React.FC<IViewPortProps> = (props) => {
+	const { left, top, right, bottom, children, ...commonProps } = props;
+	return (
+		<StoreProvider store={createStore()}>
+			<Space {...commonProps} type={Type.ViewPort} position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
+				{children}
+			</Space>
+		</StoreProvider>
+	);
 };
 
 interface ICommonProps {
@@ -625,40 +677,6 @@ export const Fill: React.FC<ICommonProps> = (props) => {
 	);
 };
 
-interface IFixedProps extends ICommonProps {
-	width?: SizeUnit;
-	height: SizeUnit;
-}
-
-export const Fixed: React.FC<IFixedProps> = (props) => {
-	const { width, height, children, ...commonProps } = props;
-	return (
-		<StoreProvider store={createStore()}>
-			<Space {...commonProps} type={Type.Fixed} position={{ width: width, height: height }}>
-				{children}
-			</Space>
-		</StoreProvider>
-	);
-};
-
-interface IViewPortProps extends ICommonProps {
-	left?: SizeUnit;
-	right?: SizeUnit;
-	top?: SizeUnit;
-	bottom?: SizeUnit;
-}
-
-export const ViewPort: React.FC<IViewPortProps> = (props) => {
-	const { left, top, right, bottom, children, ...commonProps } = props;
-	return (
-		<StoreProvider store={createStore()}>
-			<Space {...commonProps} type={Type.ViewPort} position={{ left: left || 0, top: top || 0, right: right || 0, bottom: bottom || 0 }}>
-				{children}
-			</Space>
-		</StoreProvider>
-	);
-};
-
 export const Centered: React.FC = (props) => <div className={`spaces-centered`}>{props.children}</div>;
 
 export const CenteredVertically: React.FC = (props) => <div className={`spaces-centered-vertically`}>{props.children}</div>;
@@ -686,10 +704,14 @@ const Space: React.FC<ISpaceProps> = (props) => {
 
 	return (
 		<>
-			<HeadStyle space={space} />
 			{React.createElement(
 				props.as || "div",
-				{ id: space.id, style: style, className: `spaces-space${className ? ` ${className}` : ""}`, onClick: onClick },
+				{
+					id: space.id,
+					style: style,
+					className: `spaces-space${className ? ` ${className}` : ""}`,
+					onClick: onClick,
+				},
 				<ParentContext.Provider value={space}>
 					<LayerContext.Provider value={undefined}>{children}</LayerContext.Provider>
 				</ParentContext.Provider>,
@@ -713,40 +735,49 @@ export const Demo: React.FC = () => {
 			</Left>
 			<Fill>
 				<Layer zIndex={1}>
-					<Top size="15%" style={blue}>
+					<Top size="15%" style={blue} centerContent={"horizontalVertical"}>
 						Top
 					</Top>
 					<Fill>
-						{visible &&
-							(side ? (
-								<Left size={size ? "20%" : "25%"} order={0} style={green}>
-									Left 1
-								</Left>
-							) : (
-								<Top size={size ? "20%" : "25%"} order={0} style={green}>
-									Top 1
-								</Top>
-							))}
-						<Left size={"20%"} order={1} style={green}>
-							Left 2
-						</Left>
-						<Fill>
-							<Top size="20%" style={red}>
-								Top
-							</Top>
-							<Fill style={blue}>
-								Fill
-								<div>
-									<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
-								</div>
+						{visible && (
+							<Left size={size ? "10%" : "15%"} order={0} style={green} centerContent={"horizontalVertical"}>
+								Left 1
 								<div>
 									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
 								</div>
-								<div>
-									<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
-								</div>
+							</Left>
+						)}
+						<Left size={"10%"} order={1} style={red} centerContent={"horizontalVertical"}>
+							Left 2
+						</Left>
+						<Fill>
+							<Top size="20%" order={1} style={red} centerContent={"horizontalVertical"}>
+								Top 1
+							</Top>
+							<Fill style={blue}>
+								{side ? (
+									<Left size="20%" style={green} centerContent={"horizontalVertical"}>
+										Left 2
+										<div>
+											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
+										</div>
+									</Left>
+								) : (
+									<Top size="20%" order={0} style={green} centerContent={"horizontalVertical"}>
+										Top
+										<div>
+											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
+										</div>
+									</Top>
+								)}
+								<Fill centerContent={"horizontalVertical"}>
+									Fill
+									<div>
+										<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
+									</div>
+								</Fill>
 							</Fill>
-							<Bottom size="20%" style={red}>
+							<Bottom size="20%" style={red} centerContent={"horizontalVertical"}>
 								Bottom
 							</Bottom>
 						</Fill>
@@ -766,12 +797,12 @@ export const Demo: React.FC = () => {
 							dicta veritatis consequatur voluptates maxime fuga.
 						</Right>
 					</Fill>
-					<Bottom size="15%" style={blue}>
+					<Bottom size="15%" style={blue} centerContent={"horizontalVertical"}>
 						Bottom
 					</Bottom>
 				</Layer>
 			</Fill>
-			<Right size="15%" style={red}>
+			<Right size="15%" style={red} centerContent={"horizontalVertical"}>
 				Right
 			</Right>
 		</ViewPort>
