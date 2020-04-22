@@ -57,7 +57,7 @@ export interface IPositionalProps {
 	height?: SizeUnit;
 }
 
-interface ISize {
+export interface ISize {
 	size: SizeUnit;
 	adjusted: SizeUnit[];
 	resized: number;
@@ -119,42 +119,30 @@ export function coalesce<T>(...args: T[]) {
 	return args.find((x) => x !== null && x !== undefined);
 }
 
-const anchorUpdates = (space: ISpaceDefinition) => [
-	{
-		anchor: Anchor.Left,
-		update: space.adjustLeft,
-	},
-	{
-		anchor: Anchor.Top,
-		update: space.adjustTop,
-	},
-	{
-		anchor: Anchor.Right,
-		update: space.adjustRight,
-	},
-	{
-		anchor: Anchor.Bottom,
-		update: space.adjustBottom,
-	},
-];
+function anchorUpdates(space: ISpaceDefinition) {
+	return [
+		{
+			anchor: Anchor.Left,
+			update: space.adjustLeft,
+		},
+		{
+			anchor: Anchor.Top,
+			update: space.adjustTop,
+		},
+		{
+			anchor: Anchor.Right,
+			update: space.adjustRight,
+		},
+		{
+			anchor: Anchor.Bottom,
+			update: space.adjustBottom,
+		},
+	];
+}
 
-const sizeInfoDefault = (size: SizeUnit) => ({ size: size, adjusted: [], resized: 0 });
-
-const spaceDefaults: Partial<ISpaceDefinition> = {
-	id: "",
-	order: 0,
-	zIndex: 0,
-	scrollable: false,
-	resizable: false,
-	centerContent: "none",
-	dimension: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" },
-	adjustLeft: () => false,
-	adjustRight: () => false,
-	adjustTop: () => false,
-	adjustBottom: () => false,
-	adjustEdge: () => false,
-	anchoredChildren: () => [],
-};
+function sizeInfoDefault(size: SizeUnit) {
+	return { size: size, adjusted: [], resized: 0 };
+}
 
 function getPosition(type: Type) {
 	if (type === Type.ViewPort) {
@@ -229,12 +217,6 @@ function styleDefinition(space: ISpaceDefinition) {
 	return `#${space.id} { ${cssString.join(" ")} }`;
 }
 
-export function shortuuid() {
-	let firstPart = (Math.random() * 46656) | 0;
-	let secondPart = (Math.random() * 46656) | 0;
-	return ("000" + firstPart.toString(36)).slice(-3) + ("000" + secondPart.toString(36)).slice(-3);
-}
-
 function updateStyleDefinition(space: ISpaceDefinition) {
 	const definition = styleDefinition(space);
 	const existing = document.getElementById(`style_${space.id}`);
@@ -258,20 +240,42 @@ function removeStyleDefinition(space: ISpaceDefinition) {
 	}
 }
 
+const spaceDefaults: Partial<ISpaceDefinition> = {
+	id: "",
+	order: 0,
+	zIndex: 0,
+	scrollable: false,
+	resizable: false,
+	centerContent: "none",
+	dimension: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" },
+	adjustLeft: () => false,
+	adjustRight: () => false,
+	adjustTop: () => false,
+	adjustBottom: () => false,
+	adjustEdge: () => false,
+	anchoredChildren: () => [],
+};
+
+export function shortuuid() {
+	let firstPart = (Math.random() * 46656) | 0;
+	let secondPart = (Math.random() * 46656) | 0;
+	return ("000" + firstPart.toString(36)).slice(-3) + ("000" + secondPart.toString(36)).slice(-3);
+}
+
 export function createStore(): ISpaceStore {
 	let spaces: ISpaceDefinition[] = [];
 
 	const setSpaces = (newSpaces: ISpaceDefinition[]) => {
 		spaces = newSpaces;
 	};
+
 	const getSpace = (id: string) => {
 		return getSpaces().find((s) => s.id === id);
 	};
+
 	const getSpaces = () => spaces;
 
 	const recalcSpaces = (parent: ISpaceDefinition) => {
-		const queuedUpdates: (() => void)[] = [];
-
 		for (var i = 0, len = parent.children.length; i < len; i++) {
 			const space = parent.children[i];
 			let changed = false;
@@ -324,8 +328,6 @@ export function createStore(): ISpaceStore {
 				updateStyleDefinition(space);
 			}
 		}
-
-		return queuedUpdates;
 	};
 
 	const store: ISpaceStore = {
