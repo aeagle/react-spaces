@@ -1,8 +1,6 @@
 import * as React from "react";
 import { CSSProperties } from "react";
-import { Centered } from "../Centered";
-import { Info } from "../SpaceInfo";
-import { Fixed, Top, Fill, LeftResizable, Right, BottomResizable } from "../Experimental";
+import { Info, Fixed, Top, Fill, LeftResizable, Right, BottomResizable, Centered } from "../Experimental";
 import { CenterType } from "../../types";
 import "./Utils.scss";
 
