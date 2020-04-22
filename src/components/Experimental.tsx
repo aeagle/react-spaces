@@ -1,6 +1,6 @@
 import * as React from "react";
-import { SizeUnit } from "../types";
 import "../styles.css";
+import { ResizeSensor } from "css-element-queries";
 
 export enum Type {
 	ViewPort = "viewport",
@@ -20,6 +20,8 @@ export enum Orientation {
 	Horizontal,
 	Vertical,
 }
+
+export type SizeUnit = number | string | undefined;
 
 export interface ISpaceStore {
 	getSpaces: () => ISpaceDefinition[];
@@ -70,6 +72,7 @@ export interface ISpaceDefinition {
 	height: ISize;
 	zIndex: number;
 	resizable: boolean;
+	dimension: DOMRect;
 	centerContent: "none" | "vertical" | "horizontalVertical";
 }
 
@@ -128,6 +131,7 @@ const spaceDefaults: Partial<ISpaceDefinition> = {
 	scrollable: false,
 	resizable: false,
 	centerContent: "none",
+	dimension: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" },
 	adjustLeft: () => false,
 	adjustRight: () => false,
 	adjustTop: () => false,
@@ -218,6 +222,7 @@ function shortuuid() {
 function updateStyleDefinition(space: ISpaceDefinition) {
 	const definition = styleDefinition(space);
 	const existing = document.getElementById(`style_${space.id}`);
+
 	if (existing) {
 		if (existing.innerHTML !== definition) {
 			existing.innerHTML = definition;
@@ -523,6 +528,7 @@ function createStore(): ISpaceStore {
 // REACT SPECIFIC
 
 const ParentContext = React.createContext<string | undefined>(undefined);
+const DOMRectContext = React.createContext<DOMRect | undefined>(undefined);
 const LayerContext = React.createContext<number | undefined>(undefined);
 
 function useSpace(props: ISpaceProps) {
@@ -557,6 +563,18 @@ function useSpace(props: ISpaceProps) {
 	return space;
 }
 
+interface ICommonProps {
+	id?: string;
+	className?: string;
+	style?: React.CSSProperties;
+	as?: string;
+	centerContent?: "none" | "vertical" | "horizontalVertical";
+	zIndex?: number;
+	scrollable?: boolean;
+	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	trackSize?: boolean;
+}
+
 interface IFixedProps extends ICommonProps {
 	width?: SizeUnit;
 	height: SizeUnit;
@@ -580,17 +598,6 @@ export const ViewPort: React.FC<IViewPortProps> = ({ left, top, right, bottom, c
 		{children}
 	</Space>
 );
-
-interface ICommonProps {
-	id?: string;
-	className?: string;
-	style?: React.CSSProperties;
-	as?: string;
-	centerContent?: "none" | "vertical" | "horizontalVertical";
-	zIndex?: number;
-	scrollable?: boolean;
-	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-}
 
 interface IAnchorProps extends ICommonProps {
 	id?: string;
@@ -671,6 +678,44 @@ const Space: React.FC<ISpaceProps> = (props) => {
 	const { style, className, onClick } = props;
 	let { children } = props;
 	const space = useSpace(props);
+	const elementRef = React.useRef<HTMLElement>();
+	const resizeSensor = React.useRef<ResizeSensor>();
+	const [domRect, setDomRect] = React.useState<DOMRect>();
+
+	React.useEffect(() => {
+		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
+		space.dimension = {
+			...rect,
+			...{
+				left: Math.floor(rect.left),
+				top: Math.floor(rect.top),
+				right: Math.floor(rect.right),
+				bottom: Math.floor(rect.bottom),
+				width: Math.floor(rect.width),
+				height: Math.floor(rect.height),
+				x: Math.floor(rect.x),
+				y: Math.floor(rect.y),
+			},
+		};
+		setDomRect(space.dimension);
+
+		if (props.trackSize) {
+			resizeSensor.current = new ResizeSensor(elementRef.current!, (size) => {
+				space.dimension = {
+					...rect,
+					...{
+						width: Math.floor(size.width),
+						height: Math.floor(size.height),
+					},
+				};
+				setDomRect(space.dimension);
+			});
+		}
+
+		return () => {
+			resizeSensor.current && resizeSensor.current.detach();
+		};
+	}, []);
 
 	if (props.centerContent === "vertical") {
 		children = <CenteredVertically>{children}</CenteredVertically>;
@@ -684,16 +729,33 @@ const Space: React.FC<ISpaceProps> = (props) => {
 				props.as || "div",
 				{
 					id: space.id,
+					ref: elementRef,
 					style: style,
 					className: `spaces-space${className ? ` ${className}` : ""}`,
 					onClick: onClick,
 				},
 				<ParentContext.Provider value={space.id}>
-					<LayerContext.Provider value={undefined}>{children}</LayerContext.Provider>
+					<LayerContext.Provider value={undefined}>
+						<DOMRectContext.Provider value={domRect}>{children}</DOMRectContext.Provider>
+					</LayerContext.Provider>
 				</ParentContext.Provider>,
 			)}
 		</>
 	);
+};
+
+interface ISpaceInfoProps {
+	children: (info: DOMRect) => JSX.Element;
+}
+
+export const Info: React.FC<ISpaceInfoProps> = (props) => {
+	const domRect = React.useContext(DOMRectContext);
+
+	if (domRect) {
+		return props.children(domRect);
+	}
+
+	return props.children({ left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" });
 };
 
 const white = { backgroundColor: "#ffffff", padding: 15 };
@@ -707,58 +769,58 @@ export const Demo: React.FC = () => {
 	const [side, setSide] = React.useState(true);
 	return (
 		<ViewPort as="main">
-			<Left as="aside" size="15%" style={red} centerContent={"horizontalVertical"}>
-				<p>Left</p>
+			<Left as="aside" size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+				{description("Left")}
 			</Left>
 			<Fill>
 				<Layer zIndex={1}>
-					<Top size="15%" style={blue} centerContent={"horizontalVertical"}>
-						<p>Top</p>
+					<Top size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
+						{description("Top")}
 					</Top>
 					<Fill>
 						{visible && (
-							<Left size={size ? "10%" : "15%"} order={0} style={green} centerContent={"horizontalVertical"}>
-								<p>Left 1</p>
+							<Left size={size ? "10%" : "15%"} order={0} style={green} centerContent={"horizontalVertical"} trackSize={true}>
+								{description("Left 1")}
 								<div>
 									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
 								</div>
 							</Left>
 						)}
-						<Left size={"10%"} order={1} style={red} centerContent={"horizontalVertical"}>
-							<p>Left 2</p>
+						<Left size={"10%"} order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
+							{description("Left 2")}
 						</Left>
 						<Fill>
-							<Top size="20%" order={1} style={red} centerContent={"horizontalVertical"}>
-								<p>Top 1</p>
+							<Top size="20%" order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
+								{description("Top 1")}
 							</Top>
 							<Fill style={blue}>
 								{side ? (
-									<Left size="20%" style={white} centerContent={"horizontalVertical"}>
-										<p>Left 2</p>
+									<Left size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
+										{description("Left 2")}
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 										</div>
 									</Left>
 								) : (
-									<Top size="20%" style={white} centerContent={"horizontalVertical"}>
-										<p>Top</p>
+									<Top size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
+										{description("Top")}
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 										</div>
 									</Top>
 								)}
-								<Fill centerContent={"horizontalVertical"}>
-									<p>Fill</p>
+								<Fill centerContent={"horizontalVertical"} trackSize={true}>
+									{description("Fill")}
 									<div>
 										<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
 									</div>
 								</Fill>
 							</Fill>
-							<Bottom size="20%" style={red} centerContent={"horizontalVertical"}>
-								<p>Bottom</p>
+							<Bottom size="20%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+								{description("Bottom")}
 							</Bottom>
 						</Fill>
-						<Right size="20%" style={green} scrollable={true}>
+						<Right size="20%" style={green} scrollable={true} trackSize={true}>
 							Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam quasi ipsam autem deserunt facere mollitia asperiores nisi,
 							fugiat iste cumque quo perspiciatis corporis error accusamus placeat eaque minima a, cupiditate voluptatum. Asperiores
 							itaque vitae, maxime maiores iste beatae cumque, ipsum ut laboriosam alias minima ducimus numquam, quas voluptas aliquid
@@ -774,14 +836,26 @@ export const Demo: React.FC = () => {
 							dicta veritatis consequatur voluptates maxime fuga.
 						</Right>
 					</Fill>
-					<Bottom size="15%" style={blue} centerContent={"horizontalVertical"}>
-						<p>Bottom</p>
+					<Bottom size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
+						{description("Bottom")}
 					</Bottom>
 				</Layer>
 			</Fill>
-			<Right size="15%" style={red} centerContent={"horizontalVertical"}>
-				<p>Right</p>
+			<Right size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+				{description("Right")}
 			</Right>
 		</ViewPort>
 	);
 };
+
+const description = (text: string) => (
+	<Info>
+		{(info) => (
+			<p>
+				{text}
+				<br />
+				{info.width}px x {info.height}px
+			</p>
+		)}
+	</Info>
+);
