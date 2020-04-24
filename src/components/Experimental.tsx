@@ -13,8 +13,11 @@ function useSpace(props: ISpaceProps) {
 	const parent = React.useContext(ParentContext);
 	const layer = React.useContext(LayerContext);
 	const spaceId = React.useRef(props.id || `s${shortuuid()}`);
+	const elementRef = React.useRef<HTMLElement>();
+	const resizeSensor = React.useRef<ResizeSensor>();
+	const [domRect, setDomRect] = React.useState<DOMRect>();
 
-	let space = store.getSpace(spaceId.current);
+	let space = store.getSpace(spaceId.current)!;
 
 	const parsedProps = {
 		...props,
@@ -31,13 +34,82 @@ function useSpace(props: ISpaceProps) {
 		store.updateSpace(space, parsedProps);
 	}
 
+	let resizeHandle: React.ReactNode = null;
+	if (props.position && props.position.rightResizable) {
+		resizeHandle = (
+			<div
+				style={{ width: 6 }}
+				className={`spaces-resize-handle resize-right`}
+				onMouseDown={(e) => store.startMouseResize("right", space, space.width, elementRef.current!, e)}
+				// onTouchStart={(e) => startTouchResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType)}
+			/>
+		);
+	} else if (props.position && props.position.leftResizable) {
+		resizeHandle = (
+			<div
+				style={{ width: 6 }}
+				className={`spaces-resize-handle resize-left`}
+				onMouseDown={(e) => store.startMouseResize("left", space, space.width, elementRef.current!, e)}
+				// onTouchStart={(e) => startTouchResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType)}
+			/>
+		);
+	} else if (props.position && props.position.topResizable) {
+		resizeHandle = (
+			<div
+				style={{ height: 6 }}
+				className={`spaces-resize-handle resize-top`}
+				onMouseDown={(e) => store.startMouseResize("top", space, space.height, elementRef.current!, e)}
+				// onTouchStart={(e) => startTouchResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType)}
+			/>
+		);
+	} else if (props.position && props.position.bottomResizable) {
+		resizeHandle = (
+			<div
+				style={{ height: 6 }}
+				className={`spaces-resize-handle resize-bottom`}
+				onMouseDown={(e) => store.startMouseResize("bottom", space, space.height, elementRef.current!, e)}
+				// onTouchStart={(e) => startTouchResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType)}
+			/>
+		);
+	}
+
 	React.useEffect(() => {
+		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
+		space!.dimension = {
+			...rect,
+			...{
+				left: Math.floor(rect.left),
+				top: Math.floor(rect.top),
+				right: Math.floor(rect.right),
+				bottom: Math.floor(rect.bottom),
+				width: Math.floor(rect.width),
+				height: Math.floor(rect.height),
+				x: Math.floor(rect.x),
+				y: Math.floor(rect.y),
+			},
+		};
+		setDomRect(space!.dimension);
+
+		if (props.trackSize) {
+			resizeSensor.current = new ResizeSensor(elementRef.current!, (size) => {
+				space!.dimension = {
+					...rect,
+					...{
+						width: Math.floor(size.width),
+						height: Math.floor(size.height),
+					},
+				};
+				setDomRect(space!.dimension);
+			});
+		}
+
 		return () => {
+			resizeSensor.current && resizeSensor.current.detach();
 			store.removeSpace(space!);
 		};
 	}, []);
 
-	return space;
+	return { space: space, resizeHandle: resizeHandle, domRect: domRect, elementRef: elementRef };
 }
 
 interface IFixedProps extends ICommonProps {
@@ -77,8 +149,12 @@ export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ child
 	</Left>
 );
 
-export const Left: React.FC<IAnchorProps> = ({ size, children, ...commonProps }) => (
-	<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Left} position={{ left: 0, top: 0, bottom: 0, width: size }}>
+export const Left: React.FC<IAnchorProps> = ({ size, children, resizable, ...commonProps }) => (
+	<Space
+		{...commonProps}
+		type={Type.Anchored}
+		anchor={Anchor.Left}
+		position={{ left: 0, top: 0, bottom: 0, rightResizable: resizable, width: size }}>
 		{children}
 	</Space>
 );
@@ -89,8 +165,12 @@ export const TopResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ childr
 	</Top>
 );
 
-export const Top: React.FC<IAnchorProps> = ({ size, children, ...commonProps }) => (
-	<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Top} position={{ left: 0, top: 0, right: 0, height: size }}>
+export const Top: React.FC<IAnchorProps> = ({ size, children, resizable, ...commonProps }) => (
+	<Space
+		{...commonProps}
+		type={Type.Anchored}
+		anchor={Anchor.Top}
+		position={{ left: 0, top: 0, right: 0, bottomResizable: resizable, height: size }}>
 		{children}
 	</Space>
 );
@@ -101,8 +181,12 @@ export const RightResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ chil
 	</Right>
 );
 
-export const Right: React.FC<IAnchorProps> = ({ size, children, ...commonProps }) => (
-	<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Right} position={{ bottom: 0, top: 0, right: 0, width: size }}>
+export const Right: React.FC<IAnchorProps> = ({ size, children, resizable, ...commonProps }) => (
+	<Space
+		{...commonProps}
+		type={Type.Anchored}
+		anchor={Anchor.Right}
+		position={{ bottom: 0, top: 0, right: 0, leftResizable: resizable, width: size }}>
 		{children}
 	</Space>
 );
@@ -113,8 +197,12 @@ export const BottomResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ chi
 	</Bottom>
 );
 
-export const Bottom: React.FC<IAnchorProps> = ({ size, children, ...commonProps }) => (
-	<Space {...commonProps} type={Type.Anchored} anchor={Anchor.Bottom} position={{ bottom: 0, left: 0, right: 0, height: size }}>
+export const Bottom: React.FC<IAnchorProps> = ({ size, children, resizable, ...commonProps }) => (
+	<Space
+		{...commonProps}
+		type={Type.Anchored}
+		anchor={Anchor.Bottom}
+		position={{ bottom: 0, left: 0, right: 0, topResizable: resizable, height: size }}>
 		{children}
 	</Space>
 );
@@ -134,45 +222,7 @@ export const Layer: React.FC<{ zIndex: number }> = (props) => <LayerContext.Prov
 const Space: React.FC<ISpaceProps> = (props) => {
 	const { style, className, onClick } = props;
 	let { children } = props;
-	const space = useSpace(props);
-	const elementRef = React.useRef<HTMLElement>();
-	const resizeSensor = React.useRef<ResizeSensor>();
-	const [domRect, setDomRect] = React.useState<DOMRect>();
-
-	React.useEffect(() => {
-		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
-		space.dimension = {
-			...rect,
-			...{
-				left: Math.floor(rect.left),
-				top: Math.floor(rect.top),
-				right: Math.floor(rect.right),
-				bottom: Math.floor(rect.bottom),
-				width: Math.floor(rect.width),
-				height: Math.floor(rect.height),
-				x: Math.floor(rect.x),
-				y: Math.floor(rect.y),
-			},
-		};
-		setDomRect(space.dimension);
-
-		if (props.trackSize) {
-			resizeSensor.current = new ResizeSensor(elementRef.current!, (size) => {
-				space.dimension = {
-					...rect,
-					...{
-						width: Math.floor(size.width),
-						height: Math.floor(size.height),
-					},
-				};
-				setDomRect(space.dimension);
-			});
-		}
-
-		return () => {
-			resizeSensor.current && resizeSensor.current.detach();
-		};
-	}, []);
+	const { space, domRect, elementRef, resizeHandle } = useSpace(props);
 
 	if (props.centerContent === "vertical") {
 		children = <CenteredVertically>{children}</CenteredVertically>;
@@ -193,6 +243,7 @@ const Space: React.FC<ISpaceProps> = (props) => {
 				},
 				<ParentContext.Provider value={space.id}>
 					<LayerContext.Provider value={undefined}>
+						{resizeHandle}
 						<DOMRectContext.Provider value={domRect}>{children}</DOMRectContext.Provider>
 					</LayerContext.Provider>
 				</ParentContext.Provider>,
@@ -226,45 +277,45 @@ export const Demo: React.FC = () => {
 	const [side, setSide] = React.useState(true);
 	return (
 		<ViewPort as="main">
-			<Left as="aside" size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+			<LeftResizable as="aside" size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
 				{description("Left")}
-			</Left>
+			</LeftResizable>
 			<Fill>
 				<Layer zIndex={1}>
-					<Top size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
+					<TopResizable size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
 						{description("Top")}
-					</Top>
+					</TopResizable>
 					<Fill>
 						{visible && (
-							<Left size={size ? "10%" : "15%"} order={0} style={green} centerContent={"horizontalVertical"} trackSize={true}>
+							<LeftResizable size={size ? "10%" : "15%"} order={0} style={green} centerContent={"horizontalVertical"} trackSize={true}>
 								{description("Left 1")}
 								<div>
 									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
 								</div>
-							</Left>
+							</LeftResizable>
 						)}
-						<Left size={"10%"} order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
+						<LeftResizable size={"10%"} order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
 							{description("Left 2")}
-						</Left>
+						</LeftResizable>
 						<Fill>
-							<Top size="20%" order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
+							<TopResizable size="20%" order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
 								{description("Top 1")}
-							</Top>
+							</TopResizable>
 							<Fill style={blue}>
 								{side ? (
-									<Left size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
+									<LeftResizable size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
 										{description("Left 2")}
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 										</div>
-									</Left>
+									</LeftResizable>
 								) : (
-									<Top size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
+									<TopResizable size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
 										{description("Top")}
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 										</div>
-									</Top>
+									</TopResizable>
 								)}
 								<Fill centerContent={"horizontalVertical"} trackSize={true}>
 									{description("Fill")}
@@ -273,11 +324,11 @@ export const Demo: React.FC = () => {
 									</div>
 								</Fill>
 							</Fill>
-							<Bottom size="20%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+							<BottomResizable size="20%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
 								{description("Bottom")}
-							</Bottom>
+							</BottomResizable>
 						</Fill>
-						<Right size="20%" style={green} scrollable={true} trackSize={true}>
+						<RightResizable size="20%" style={green} scrollable={true} trackSize={true}>
 							Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam quasi ipsam autem deserunt facere mollitia asperiores nisi,
 							fugiat iste cumque quo perspiciatis corporis error accusamus placeat eaque minima a, cupiditate voluptatum. Asperiores
 							itaque vitae, maxime maiores iste beatae cumque, ipsum ut laboriosam alias minima ducimus numquam, quas voluptas aliquid
@@ -291,16 +342,16 @@ export const Demo: React.FC = () => {
 							vero esse amet iusto cupiditate hic molestiae suscipit non sint eum ad laudantium. Ducimus eum reiciendis consequuntur,
 							sint deleniti temporibus quod ex aliquid beatae veniam officiis soluta commodi earum explicabo rerum laudantium adipisci
 							dicta veritatis consequatur voluptates maxime fuga.
-						</Right>
+						</RightResizable>
 					</Fill>
-					<Bottom size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
+					<BottomResizable size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
 						{description("Bottom")}
-					</Bottom>
+					</BottomResizable>
 				</Layer>
 			</Fill>
-			<Right size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+			<RightResizable size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
 				{description("Right")}
-			</Right>
+			</RightResizable>
 		</ViewPort>
 	);
 };
