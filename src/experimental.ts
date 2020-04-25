@@ -1,5 +1,6 @@
-//export * from "./components/ClearFix";
 export {
+	AnchorType,
+	CenterType,
 	Fill,
 	Left,
 	Right,
@@ -8,9 +9,16 @@ export {
 	LeftResizable,
 	RightResizable,
 	TopResizable,
-	BottomResizable /*Positioned, Custom*/,
+	BottomResizable,
+	Positioned,
+	Custom,
+	Fixed,
+	ViewPort,
+	Layer,
+	Centered,
+	CenteredVertically,
 } from "./components/experimental";
 
 //export { useParentSpace } from "./hooks/useParentSpace";
 
-//export { CenterType, AnchorType, ResizeType, ISpaceInfo, IParentSpace, IPosition } from "./types";
+//export { ResizeType, ISpaceInfo, IParentSpace, IPosition } from "./types";

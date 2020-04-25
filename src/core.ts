@@ -1,6 +1,7 @@
 import { ISpaceDefinition, SizeUnit, Anchor, Type, Orientation, ISpaceStore, ISpaceProps } from "./core-types";
 import { EndEvent, MoveEvent, createResize } from "./core-resizing";
 import { updateStyleDefinition, removeStyleDefinition, coalesce, adjustmentsEqual } from "./core-utils";
+import { CenterType } from "./types";
 
 const spaceDefaults: Partial<ISpaceDefinition> = {
 	id: "",
@@ -254,8 +255,8 @@ export function createStore(): ISpaceStore {
 				changed = true;
 			}
 
-			if (coalesce(space.centerContent, "none") !== coalesce(centerContent, "none")) {
-				space.centerContent = coalesce(centerContent, "none")!;
+			if (coalesce(space.centerContent, CenterType.None) !== coalesce(centerContent, CenterType.None)) {
+				space.centerContent = coalesce(centerContent, CenterType.None)!;
 				changed = true;
 			}
 

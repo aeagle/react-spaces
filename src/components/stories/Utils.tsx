@@ -13,8 +13,8 @@ import {
 	Layer,
 	TopResizable,
 	RightResizable,
+	CenterType,
 } from "../experimental";
-import { CenterType } from "../../types";
 import "./Utils.scss";
 
 export const CommonHeader = () => (
@@ -204,54 +204,54 @@ export const DemoExperimental: React.FC = () => {
 	const [side, setSide] = React.useState(true);
 	return (
 		<ViewPort as="main">
-			<LeftResizable as="aside" size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+			<LeftResizable as="aside" size="15%" style={red} trackSize={true}>
 				{description("Left")}
 			</LeftResizable>
 			<Fill>
 				<Layer zIndex={1}>
-					<TopResizable size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
+					<TopResizable size="15%" style={blue} trackSize={true}>
 						{description("Top")}
 					</TopResizable>
 					<Fill>
 						{visible && (
-							<LeftResizable size={size ? "10%" : "15%"} order={0} style={green} centerContent={"horizontalVertical"} trackSize={true}>
+							<LeftResizable size={size ? "10%" : "15%"} order={0} style={green} trackSize={true}>
 								{description("Left 1")}
 								<div>
 									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
 								</div>
 							</LeftResizable>
 						)}
-						<LeftResizable size={"10%"} order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
+						<LeftResizable size={"10%"} order={1} style={red} trackSize={true}>
 							{description("Left 2")}
 						</LeftResizable>
 						<Fill>
-							<TopResizable size="20%" order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
+							<TopResizable size="20%" order={1} style={red} trackSize={true}>
 								{description("Top 1")}
 							</TopResizable>
 							<Fill style={blue}>
 								{side ? (
-									<LeftResizable size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
+									<LeftResizable size="20%" style={white} trackSize={true}>
 										{description("Left 2")}
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 										</div>
 									</LeftResizable>
 								) : (
-									<TopResizable size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
+									<TopResizable size="20%" style={white} trackSize={true}>
 										{description("Top")}
 										<div>
 											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
 										</div>
 									</TopResizable>
 								)}
-								<Fill centerContent={"horizontalVertical"} trackSize={true}>
+								<Fill trackSize={true}>
 									{description("Fill")}
 									<div>
 										<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
 									</div>
 								</Fill>
 							</Fill>
-							<BottomResizable size="20%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+							<BottomResizable size="20%" style={red} trackSize={true}>
 								{description("Bottom")}
 							</BottomResizable>
 						</Fill>
@@ -259,12 +259,12 @@ export const DemoExperimental: React.FC = () => {
 							{lorem}
 						</RightResizable>
 					</Fill>
-					<BottomResizable size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
+					<BottomResizable size="15%" style={blue} trackSize={true}>
 						{description("Bottom")}
 					</BottomResizable>
 				</Layer>
 			</Fill>
-			<RightResizable size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+			<RightResizable size="15%" style={red} trackSize={true}>
 				{description("Right")}
 			</RightResizable>
 		</ViewPort>

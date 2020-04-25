@@ -1,19 +1,22 @@
-import { ISpaceProps } from "../../core-types";
+import { ISpaceProps, CenterType } from "../../core-types";
 import { useSpace, ParentContext, LayerContext, DOMRectContext } from "../../core-react";
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
 
-export const Space: React.FC<ISpaceProps> = (props) => {
-	const { style, className, onClick } = props;
-	let { children } = props;
-	const { space, domRect, elementRef, resizeHandles } = useSpace(props);
-
-	if (props.centerContent === "vertical") {
-		children = <CenteredVertically>{children}</CenteredVertically>;
-	} else if (props.centerContent === "horizontalVertical") {
-		children = <Centered>{children}</Centered>;
+function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
+	switch (centerType) {
+		case CenterType.Vertical:
+			return <CenteredVertically>{children}</CenteredVertically>;
+		case CenterType.HorizontalVertical:
+			return <Centered>{children}</Centered>;
 	}
+	return children;
+}
+
+export const Space: React.FC<ISpaceProps> = (props) => {
+	const { style, className, onClick, children } = props;
+	const { space, domRect, elementRef, resizeHandles } = useSpace(props);
 
 	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
 
@@ -26,6 +29,8 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 		//...(isResizable(props) && props.scrollable ? userClasses.map((c) => `${c}-container`) : userClasses),
 		...userClasses,
 	].filter((c) => c);
+
+	const centeredContent = applyCentering(children, props.centerContent);
 
 	return (
 		<>
@@ -43,7 +48,7 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 						{resizeHandles.map((r) => (
 							<div {...r} />
 						))}
-						<DOMRectContext.Provider value={domRect}>{children}</DOMRectContext.Provider>
+						<DOMRectContext.Provider value={domRect}>{centeredContent}</DOMRectContext.Provider>
 					</LayerContext.Provider>
 				</ParentContext.Provider>,
 			)}

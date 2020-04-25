@@ -2,7 +2,9 @@ export enum Type {
 	ViewPort = "viewport",
 	Fixed = "fixed",
 	Fill = "fill",
+	Positioned = "positioned",
 	Anchored = "anchored",
+	Custom = "custom",
 }
 
 export enum Anchor {
@@ -21,12 +23,18 @@ export type SizeUnit = number | string | undefined;
 
 export type ResizeType = "left" | "right" | "top" | "bottom";
 
+export enum CenterType {
+	None = "none",
+	Vertical = "vertical",
+	HorizontalVertical = "horizontalVertical",
+}
+
 export interface ICommonProps {
 	id?: string;
 	className?: string;
 	style?: React.CSSProperties;
 	as?: string;
-	centerContent?: "none" | "vertical" | "horizontalVertical";
+	centerContent?: CenterType;
 	zIndex?: number;
 	scrollable?: boolean;
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
@@ -53,16 +61,16 @@ export interface ISpaceStore {
 }
 
 export interface IPositionalProps {
-	left?: SizeUnit;
+	left?: SizeUnit | undefined;
 	leftResizable?: boolean;
-	top?: SizeUnit;
+	top?: SizeUnit | undefined;
 	topResizable?: boolean;
-	right?: SizeUnit;
+	right?: SizeUnit | undefined;
 	rightResizable?: boolean;
-	bottom?: SizeUnit;
+	bottom?: SizeUnit | undefined;
 	bottomResizable?: boolean;
-	width?: SizeUnit;
-	height?: SizeUnit;
+	width?: SizeUnit | undefined;
+	height?: SizeUnit | undefined;
 }
 
 export interface ISize {
