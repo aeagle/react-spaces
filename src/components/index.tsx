@@ -9,4 +9,4 @@ export * from "./Layer";
 export * from "./Positioned";
 export * from "./SpaceInfo";
 export * from "./ViewPort";
-export { CenterType } from "../core-types";
+export { AnchorType, CenterType } from "../core-types";
