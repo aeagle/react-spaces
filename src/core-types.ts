@@ -57,8 +57,8 @@ export interface ICommonProps {
 	centerContent?: CenterType;
 	zIndex?: number;
 	scrollable?: boolean;
-	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 	trackSize?: boolean;
+	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
 export interface ISpaceProps extends ICommonProps {
@@ -66,6 +66,9 @@ export interface ISpaceProps extends ICommonProps {
 	anchor?: Anchor;
 	order?: number;
 	position?: IPositionalProps;
+	handleSize?: number;
+	minimumSize?: number;
+	maximumSize?: number;
 }
 
 export interface ISpaceStore {
@@ -128,6 +131,8 @@ export interface ISpaceDefinition {
 	dimension: DOMRect;
 	centerContent: "none" | "vertical" | "horizontalVertical";
 	resizing: boolean;
+	minimumSize?: number;
+	maximumSize?: number;
 }
 
 export const publicProps = {

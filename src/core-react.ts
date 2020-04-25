@@ -57,7 +57,7 @@ export function useSpace(props: ISpaceProps) {
 		store.updateSpace(space, parsedProps);
 	}
 
-	const resizeHandles = useSpaceResizeHandles(store, space, props.position, elementRef);
+	const resizeHandles = useSpaceResizeHandles(store, space, props.position, elementRef, props.handleSize);
 
 	React.useEffect(() => {
 		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
@@ -111,13 +111,15 @@ export function useSpaceResizeHandles(
 	space: ISpaceDefinition,
 	position: IPositionalProps | undefined,
 	elementRef: React.MutableRefObject<HTMLElement | undefined>,
+	handleSize?: number,
 ) {
 	const resizeHandles: IResizeHandleProps[] = [];
+	const resizeHandleSize = coalesce(handleSize, 5);
 
 	if (position && position.rightResizable) {
 		resizeHandles.push({
 			key: "right",
-			style: { width: 6 },
+			style: { width: resizeHandleSize },
 			className: `spaces-resize-handle resize-right`,
 			onMouseDown: (e) => store.startMouseResize("right", space, space.width, elementRef.current!, e),
 			onTouchStart: (e) => store.startTouchResize("right", space, space.width, elementRef.current!, e),
@@ -127,7 +129,7 @@ export function useSpaceResizeHandles(
 	if (position && position.leftResizable) {
 		resizeHandles.push({
 			key: "left",
-			style: { width: 6 },
+			style: { width: resizeHandleSize },
 			className: `spaces-resize-handle resize-left`,
 			onMouseDown: (e) => store.startMouseResize("left", space, space.width, elementRef.current!, e),
 			onTouchStart: (e) => store.startTouchResize("left", space, space.width, elementRef.current!, e),
@@ -137,7 +139,7 @@ export function useSpaceResizeHandles(
 	if (position && position.topResizable) {
 		resizeHandles.push({
 			key: "top",
-			style: { height: 6 },
+			style: { height: resizeHandleSize },
 			className: `spaces-resize-handle resize-top`,
 			onMouseDown: (e) => store.startMouseResize("top", space, space.height, elementRef.current!, e),
 			onTouchStart: (e) => store.startTouchResize("top", space, space.height, elementRef.current!, e),
@@ -147,7 +149,7 @@ export function useSpaceResizeHandles(
 	if (position && position.bottomResizable) {
 		resizeHandles.push({
 			key: "bottom",
-			style: { height: 6 },
+			style: { height: resizeHandleSize },
 			className: `spaces-resize-handle resize-bottom`,
 			onMouseDown: (e) => store.startMouseResize("bottom", space, space.height, elementRef.current!, e),
 			onTouchStart: (e) => store.startTouchResize("bottom", space, space.height, elementRef.current!, e),

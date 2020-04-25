@@ -81,7 +81,7 @@
 	box-sizing: border-box;
 }
 
-.spaces-space.scrollable .spaces-space-inner, 
+.spaces-space.scrollable .spaces-space-inner,
 .spaces-space.scrollable-a {
 	overflow: auto;
 	touch-action: auto;

@@ -1,6 +1,6 @@
 import { SyntheticEvent } from "react";
 import { ISpaceDefinition, ISize, ResizeType, Orientation, ISpaceStore } from "./core-types";
-import { throttle } from "./core-utils";
+import { throttle, coalesce } from "./core-utils";
 
 const RESIZE_THROTTLE = 5;
 
@@ -79,8 +79,8 @@ export function createResize(store: ISpaceStore) {
 			const coords = getCoords(e);
 			const originalMouseX = resizeType === "left" ? coords.x + targetSize.resized : coords.x - targetSize.resized;
 			const originalMouseY = resizeType === "top" ? coords.y + targetSize.resized : coords.y - targetSize.resized;
-			const minimumAdjust = 20 /*coalesce(props.minimumSize, 20)*/ - size + targetSize.resized;
-			const maximumAdjust = undefined; //props.maximumSize ? props.maximumSize - size + space.adjustedSize : undefined;
+			const minimumAdjust = coalesce(space.minimumSize, 20)! - size + targetSize.resized;
+			const maximumAdjust = space.maximumSize ? space.maximumSize - size + targetSize.resized : undefined;
 
 			let lastX = 0;
 			let lastY = 0;
