@@ -1,4 +1,4 @@
-import { ICommonProps, Type } from "../../core-types";
+import { ICommonProps, Type } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 

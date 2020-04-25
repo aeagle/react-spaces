@@ -14,7 +14,7 @@ import {
 	TopResizable,
 	RightResizable,
 	CenterType,
-} from "../experimental";
+} from "..";
 import "./Utils.scss";
 
 export const CommonHeader = () => (

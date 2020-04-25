@@ -4,6 +4,7 @@ import resolve from "rollup-plugin-node-resolve";
 import babel from "rollup-plugin-babel";
 import sourcemaps from "rollup-plugin-sourcemaps";
 import postcss from "rollup-plugin-postcss";
+import { uglify } from "rollup-plugin-uglify";
 import pkg from "./package.json";
 
 const commonPlugins = [typescript({ typescript: require("typescript"), sourceMap: true }), resolve(), commonjs(), sourcemaps()];
@@ -21,6 +22,7 @@ const targets = [
 			}),
 			...commonPlugins,
 			babel({ exclude: "node_modules/**" }),
+			uglify(),
 		],
 	},
 	{
@@ -48,6 +50,7 @@ const targets = [
 			}),
 			...commonPlugins,
 			babel({ exclude: "node_modules/**" }),
+			uglify(),
 		],
 	},
 	{
@@ -71,14 +74,6 @@ export default [
 		...{
 			input: "src/index.ts",
 			output: { ...t.output, ...{ sourcemap: true } },
-			external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
-		},
-	})),
-	...targets.map((t) => ({
-		...t,
-		...{
-			input: "src/experimental.ts",
-			output: { ...t.output, ...{ file: t.output.file.replace("dist", "dist/experimental"), sourcemap: true } },
 			external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
 		},
 	})),

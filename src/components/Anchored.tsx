@@ -1,4 +1,4 @@
-import { ICommonProps, SizeUnit, Type, Anchor } from "../../core-types";
+import { ICommonProps, SizeUnit, Type, Anchor } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 

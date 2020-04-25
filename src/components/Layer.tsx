@@ -1,10 +1,4 @@
 import * as React from "react";
-import { SpaceLayerContext } from "./Contexts";
+import { LayerContext } from "../core-react";
 
-interface IProps {
-	zIndex: number;
-}
-
-export const Layer: React.FC<IProps> = (props) => {
-	return <SpaceLayerContext.Provider value={props.zIndex}>{props.children}</SpaceLayerContext.Provider>;
-};
+export const Layer: React.FC<{ zIndex: number }> = (props) => <LayerContext.Provider value={props.zIndex}>{props.children}</LayerContext.Provider>;
