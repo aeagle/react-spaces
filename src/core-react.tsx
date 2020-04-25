@@ -1,6 +1,6 @@
+import * as React from "react";
 import { createStore } from "./core";
 import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps } from "./core-types";
-import * as React from "react";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 

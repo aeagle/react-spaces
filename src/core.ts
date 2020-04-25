@@ -18,7 +18,7 @@ const spaceDefaults: Partial<ISpaceDefinition> = {
 	anchoredChildren: () => [],
 };
 
-export function getPosition(type: Type) {
+function getPosition(type: Type) {
 	if (type === Type.ViewPort) {
 		return "fixed";
 	}
@@ -28,11 +28,11 @@ export function getPosition(type: Type) {
 	return "absolute";
 }
 
-export function getOrientation(anchor: Anchor | undefined) {
+function getOrientation(anchor: Anchor | undefined) {
 	return anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal;
 }
 
-export function anchorUpdates(space: ISpaceDefinition) {
+function anchorUpdates(space: ISpaceDefinition) {
 	return [
 		{
 			anchor: Anchor.Left,
@@ -53,7 +53,7 @@ export function anchorUpdates(space: ISpaceDefinition) {
 	];
 }
 
-export function sizeInfoDefault(size: SizeUnit) {
+function sizeInfoDefault(size: SizeUnit) {
 	return { size: size, adjusted: [], resized: 0 };
 }
 
