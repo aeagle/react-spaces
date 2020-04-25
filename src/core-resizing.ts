@@ -1,6 +1,6 @@
 import { SyntheticEvent } from "react";
-import { throttle } from "./throttle";
 import { ISpaceDefinition, ISize, ResizeType, Orientation, ISpaceStore } from "./core-types";
+import { throttle } from "./core-utils";
 
 const RESIZE_THROTTLE = 5;
 
