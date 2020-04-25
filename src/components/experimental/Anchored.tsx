@@ -3,10 +3,13 @@ import * as React from "react";
 import { Space } from "./Space";
 
 interface IAnchorProps extends ICommonProps {
-	id?: string;
 	size: SizeUnit;
 	order?: number;
 	resizable?: boolean;
+	handleSize?: number;
+	overlayHandle?: boolean;
+	minimumSize?: number;
+	maximumSize?: number;
 }
 
 export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, ...props }) => (
