@@ -45,10 +45,12 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 				},
 				<ParentContext.Provider value={space.id}>
 					<LayerContext.Provider value={undefined}>
-						{resizeHandles.map((r) => (
-							<div {...r} />
-						))}
-						<DOMRectContext.Provider value={domRect}>{centeredContent}</DOMRectContext.Provider>
+						<DOMRectContext.Provider value={domRect}>
+							{resizeHandles.map((r) => (
+								<div {...r} />
+							))}
+							{centeredContent}
+						</DOMRectContext.Provider>
 					</LayerContext.Provider>
 				</ParentContext.Provider>,
 			)}

@@ -12,10 +12,10 @@ interface IAnchorProps extends ICommonProps {
 	maximumSize?: number;
 }
 
-export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, ...props }) => (
-	<Left {...props} resizable={true}>
+export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, size, ...props }) => (
+	<Space {...props} type={Type.Anchored} anchor={Anchor.Left} position={{ left: 0, top: 0, bottom: 0, rightResizable: true, width: size }}>
 		{children}
-	</Left>
+	</Space>
 );
 
 export const Left: React.FC<IAnchorProps> = ({ size, children, resizable, ...commonProps }) => (
@@ -28,10 +28,10 @@ export const Left: React.FC<IAnchorProps> = ({ size, children, resizable, ...com
 	</Space>
 );
 
-export const TopResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, ...props }) => (
-	<Top {...props} resizable={true}>
+export const TopResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, size, ...props }) => (
+	<Space {...props} type={Type.Anchored} anchor={Anchor.Top} position={{ left: 0, top: 0, right: 0, bottomResizable: true, height: size }}>
 		{children}
-	</Top>
+	</Space>
 );
 
 export const Top: React.FC<IAnchorProps> = ({ size, children, resizable, ...commonProps }) => (
@@ -44,10 +44,10 @@ export const Top: React.FC<IAnchorProps> = ({ size, children, resizable, ...comm
 	</Space>
 );
 
-export const RightResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, ...props }) => (
-	<Right {...props} resizable={true}>
+export const RightResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, size, ...props }) => (
+	<Space {...props} type={Type.Anchored} anchor={Anchor.Right} position={{ bottom: 0, top: 0, right: 0, leftResizable: true, width: size }}>
 		{children}
-	</Right>
+	</Space>
 );
 
 export const Right: React.FC<IAnchorProps> = ({ size, children, resizable, ...commonProps }) => (
@@ -60,10 +60,10 @@ export const Right: React.FC<IAnchorProps> = ({ size, children, resizable, ...co
 	</Space>
 );
 
-export const BottomResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, ...props }) => (
-	<Bottom {...props} resizable={true}>
+export const BottomResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, size, ...props }) => (
+	<Space {...props} type={Type.Anchored} anchor={Anchor.Bottom} position={{ bottom: 0, left: 0, right: 0, topResizable: true, height: size }}>
 		{children}
-	</Bottom>
+	</Space>
 );
 
 export const Bottom: React.FC<IAnchorProps> = ({ size, children, resizable, ...commonProps }) => (

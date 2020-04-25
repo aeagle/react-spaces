@@ -40,7 +40,7 @@ export const Custom: React.FC<ICustomProps> = ({
 	resizable,
 	...props
 }) => {
-	let position: IPositionalProps = { left: left, top: top, right: right, bottom: bottom, width: width, height: height };
+	let position: IPositionalProps;
 	let type = Type.Positioned;
 	let anchorType: Anchor | undefined = undefined;
 
@@ -65,6 +65,8 @@ export const Custom: React.FC<ICustomProps> = ({
 			position = { left: 0, top: 0, bottom: 0, right: 0, width: undefined, height: undefined };
 			type = Type.Fill;
 		}
+	} else {
+		position = { left: left, top: top, right: right, bottom: bottom, width: width, height: height };
 	}
 
 	return (
