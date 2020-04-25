@@ -3,6 +3,7 @@ import { createStore } from "./core";
 import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps } from "./core-types";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
+import { CSSProperties } from "react";
 
 export const ParentContext = React.createContext<string | undefined>(undefined);
 export const DOMRectContext = React.createContext<DOMRect | undefined>(undefined);
@@ -85,60 +86,60 @@ export function useSpace(props: ISpaceProps) {
 	return { space: space, resizeHandles: resizeHandles, domRect: domRect, elementRef: elementRef };
 }
 
+interface IResizeHandleProps {
+	key: string | number;
+	style: CSSProperties;
+	className: string;
+	onMouseDown: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onTouchStart: (e: React.TouchEvent<HTMLElement>) => void;
+}
+
 export function useSpaceResizeHandles(
 	store: ISpaceStore,
 	space: ISpaceDefinition,
 	position: IPositionalProps | undefined,
 	elementRef: React.MutableRefObject<HTMLElement | undefined>,
 ) {
-	const resizeHandles: React.ReactNode[] = [];
+	const resizeHandles: IResizeHandleProps[] = [];
 
 	if (position && position.rightResizable) {
-		resizeHandles.push(
-			<div
-				key={"right"}
-				style={{ width: 6 }}
-				className={`spaces-resize-handle resize-right`}
-				onMouseDown={(e) => store.startMouseResize("right", space, space.width, elementRef.current!, e)}
-				onTouchStart={(e) => store.startTouchResize("right", space, space.width, elementRef.current!, e)}
-			/>,
-		);
+		resizeHandles.push({
+			key: "right",
+			style: { width: 6 },
+			className: `spaces-resize-handle resize-right`,
+			onMouseDown: (e) => store.startMouseResize("right", space, space.width, elementRef.current!, e),
+			onTouchStart: (e) => store.startTouchResize("right", space, space.width, elementRef.current!, e),
+		});
 	}
 
 	if (position && position.leftResizable) {
-		resizeHandles.push(
-			<div
-				key={"left"}
-				style={{ width: 6 }}
-				className={`spaces-resize-handle resize-left`}
-				onMouseDown={(e) => store.startMouseResize("left", space, space.width, elementRef.current!, e)}
-				onTouchStart={(e) => store.startTouchResize("left", space, space.width, elementRef.current!, e)}
-			/>,
-		);
+		resizeHandles.push({
+			key: "left",
+			style: { width: 6 },
+			className: `spaces-resize-handle resize-left`,
+			onMouseDown: (e) => store.startMouseResize("left", space, space.width, elementRef.current!, e),
+			onTouchStart: (e) => store.startTouchResize("left", space, space.width, elementRef.current!, e),
+		});
 	}
 
 	if (position && position.topResizable) {
-		resizeHandles.push(
-			<div
-				key={"top"}
-				style={{ height: 6 }}
-				className={`spaces-resize-handle resize-top`}
-				onMouseDown={(e) => store.startMouseResize("top", space, space.height, elementRef.current!, e)}
-				onTouchStart={(e) => store.startTouchResize("top", space, space.height, elementRef.current!, e)}
-			/>,
-		);
+		resizeHandles.push({
+			key: "top",
+			style: { height: 6 },
+			className: `spaces-resize-handle resize-top`,
+			onMouseDown: (e) => store.startMouseResize("top", space, space.height, elementRef.current!, e),
+			onTouchStart: (e) => store.startTouchResize("top", space, space.height, elementRef.current!, e),
+		});
 	}
 
 	if (position && position.bottomResizable) {
-		resizeHandles.push(
-			<div
-				key={"bottom"}
-				style={{ height: 6 }}
-				className={`spaces-resize-handle resize-bottom`}
-				onMouseDown={(e) => store.startMouseResize("bottom", space, space.height, elementRef.current!, e)}
-				onTouchStart={(e) => store.startTouchResize("bottom", space, space.height, elementRef.current!, e)}
-			/>,
-		);
+		resizeHandles.push({
+			key: "bottom",
+			style: { height: 6 },
+			className: `spaces-resize-handle resize-bottom`,
+			onMouseDown: (e) => store.startMouseResize("bottom", space, space.height, elementRef.current!, e),
+			onTouchStart: (e) => store.startTouchResize("bottom", space, space.height, elementRef.current!, e),
+		});
 	}
 
 	return resizeHandles;

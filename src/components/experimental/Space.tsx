@@ -15,6 +15,18 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 		children = <Centered>{children}</Centered>;
 	}
 
+	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
+
+	const outerClasses = [
+		...[
+			"spaces-space",
+			//props.scrollable ? (isResizable(props) ? "scrollable" : "scrollable-a") : undefined,
+			space.children.find((s) => s.resizing) ? " spaces-resizing" : undefined,
+		],
+		//...(isResizable(props) && props.scrollable ? userClasses.map((c) => `${c}-container`) : userClasses),
+		...userClasses,
+	].filter((c) => c);
+
 	return (
 		<>
 			{React.createElement(
@@ -23,12 +35,14 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 					id: space.id,
 					ref: elementRef,
 					style: style,
-					className: `spaces-space${className ? ` ${className}` : ""}${space.children.find((s) => s.resizing) ? " spaces-resizing" : ""}`,
+					className: outerClasses.join(" "),
 					onClick: onClick,
 				},
 				<ParentContext.Provider value={space.id}>
 					<LayerContext.Provider value={undefined}>
-						{resizeHandles.map((r) => r)}
+						{resizeHandles.map((r) => (
+							<div {...r} />
+						))}
 						<DOMRectContext.Provider value={domRect}>{children}</DOMRectContext.Provider>
 					</LayerContext.Provider>
 				</ParentContext.Provider>,
