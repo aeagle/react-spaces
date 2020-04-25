@@ -176,7 +176,7 @@ export function createStore(): ISpaceStore {
 			updateStyleDefinition(space);
 		},
 		updateSpace: (space, props) => {
-			const { type, anchor, order, zIndex, scrollable, position, centerContent } = props;
+			const { type, anchor, order, zIndex, scrollable, position, centerContent, minimumSize, maximumSize } = props;
 			let changed = false;
 
 			if (space.type !== type) {
@@ -251,6 +251,16 @@ export function createStore(): ISpaceStore {
 
 			if (coalesce(space.scrollable, false) !== coalesce(scrollable, false)) {
 				space.scrollable = coalesce(scrollable, false)!;
+				changed = true;
+			}
+
+			if (space.minimumSize !== minimumSize) {
+				space.minimumSize = minimumSize;
+				changed = true;
+			}
+
+			if (space.maximumSize !== maximumSize) {
+				space.maximumSize = maximumSize;
 				changed = true;
 			}
 
