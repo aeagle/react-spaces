@@ -1,6 +1,19 @@
 import * as React from "react";
 import { CSSProperties } from "react";
-import { Info, Fixed, Top, Fill, LeftResizable, Right, BottomResizable, Centered } from "../Experimental";
+import {
+	Info,
+	Fixed,
+	ViewPort,
+	Top,
+	Fill,
+	LeftResizable,
+	Right,
+	BottomResizable,
+	Centered,
+	Layer,
+	TopResizable,
+	RightResizable,
+} from "../Experimental";
 import { CenterType } from "../../types";
 import "./Utils.scss";
 
@@ -185,6 +198,80 @@ export const DemoUI = () => {
 	);
 };
 
+export const DemoExperimental: React.FC = () => {
+	const [visible, setVisible] = React.useState(true);
+	const [size, setSize] = React.useState(true);
+	const [side, setSide] = React.useState(true);
+	return (
+		<ViewPort as="main">
+			<LeftResizable as="aside" size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+				{description("Left")}
+			</LeftResizable>
+			<Fill>
+				<Layer zIndex={1}>
+					<TopResizable size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
+						{description("Top")}
+					</TopResizable>
+					<Fill>
+						{visible && (
+							<LeftResizable size={size ? "10%" : "15%"} order={0} style={green} centerContent={"horizontalVertical"} trackSize={true}>
+								{description("Left 1")}
+								<div>
+									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
+								</div>
+							</LeftResizable>
+						)}
+						<LeftResizable size={"10%"} order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
+							{description("Left 2")}
+						</LeftResizable>
+						<Fill>
+							<TopResizable size="20%" order={1} style={red} centerContent={"horizontalVertical"} trackSize={true}>
+								{description("Top 1")}
+							</TopResizable>
+							<Fill style={blue}>
+								{side ? (
+									<LeftResizable size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
+										{description("Left 2")}
+										<div>
+											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
+										</div>
+									</LeftResizable>
+								) : (
+									<TopResizable size="20%" style={white} centerContent={"horizontalVertical"} trackSize={true}>
+										{description("Top")}
+										<div>
+											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
+										</div>
+									</TopResizable>
+								)}
+								<Fill centerContent={"horizontalVertical"} trackSize={true}>
+									{description("Fill")}
+									<div>
+										<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
+									</div>
+								</Fill>
+							</Fill>
+							<BottomResizable size="20%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+								{description("Bottom")}
+							</BottomResizable>
+						</Fill>
+						<RightResizable size="20%" style={green} scrollable={true} trackSize={true}>
+							{lorem}
+						</RightResizable>
+					</Fill>
+					<BottomResizable size="15%" style={blue} centerContent={"horizontalVertical"} trackSize={true}>
+						{description("Bottom")}
+					</BottomResizable>
+				</Layer>
+			</Fill>
+			<RightResizable size="15%" style={red} centerContent={"horizontalVertical"} trackSize={true}>
+				{description("Right")}
+			</RightResizable>
+		</ViewPort>
+	);
+};
+
+const white = { backgroundColor: "#ffffff", padding: 15 };
 export const blue: CSSProperties = { backgroundColor: "rgb(224, 238, 238, 0.7)" };
 export const red: CSSProperties = { backgroundColor: "rgb(238, 224, 224, 0.7)" };
 export const green: CSSProperties = { backgroundColor: "rgb(224, 238, 224, 0.7)" };
