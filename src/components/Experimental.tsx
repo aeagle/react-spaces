@@ -8,8 +8,17 @@ const DOMRectContext = React.createContext<DOMRect | undefined>(undefined);
 const LayerContext = React.createContext<number | undefined>(undefined);
 const currentStore = createStore();
 
+function useForceUpdate() {
+	const [, setTick] = React.useState(0);
+	const update = React.useCallback(() => {
+		setTick((tick) => tick + 1);
+	}, []);
+	return update;
+}
+
 function useSpace(props: ISpaceProps) {
 	const store = currentStore;
+	const update = useForceUpdate();
 	const parent = React.useContext(ParentContext);
 	const layer = React.useContext(LayerContext);
 	const spaceId = React.useRef(props.id || `s${shortuuid()}`);
@@ -28,7 +37,7 @@ function useSpace(props: ISpaceProps) {
 	};
 
 	if (!space) {
-		space = store.createSpace(parent, parsedProps);
+		space = store.createSpace(parent, parsedProps, update);
 		store.addSpace(space);
 	} else {
 		store.updateSpace(space, parsedProps);
@@ -238,7 +247,7 @@ const Space: React.FC<ISpaceProps> = (props) => {
 					id: space.id,
 					ref: elementRef,
 					style: style,
-					className: `spaces-space${className ? ` ${className}` : ""}`,
+					className: `spaces-space${className ? ` ${className}` : ""}${space.children.find((s) => s.resizing) ? " spaces-resizing" : ""}`,
 					onClick: onClick,
 				},
 				<ParentContext.Provider value={space.id}>

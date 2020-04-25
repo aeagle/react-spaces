@@ -1,7 +1,7 @@
 import { SyntheticEvent } from "react";
 import { throttle } from "./throttle";
 
-const RESIZE_THROTTLE = 0;
+const RESIZE_THROTTLE = 5;
 
 export enum Type {
 	ViewPort = "viewport",
@@ -58,7 +58,6 @@ export interface ISpaceProps extends ICommonProps {
 	anchor?: Anchor;
 	order?: number;
 	position?: IPositionalProps;
-	resizable?: boolean;
 }
 
 export interface ISpaceStore {
@@ -67,7 +66,7 @@ export interface ISpaceStore {
 	addSpace: (space: ISpaceDefinition) => void;
 	updateSpace: (space: ISpaceDefinition, props: ISpaceProps) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
-	createSpace: (parent: string | undefined, props: ISpaceProps) => ISpaceDefinition;
+	createSpace: (parent: string | undefined, props: ISpaceProps, update: () => void) => ISpaceDefinition;
 	startMouseResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, element: HTMLElement, e: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -91,6 +90,8 @@ export interface ISize {
 }
 
 export interface ISpaceDefinition {
+	update: () => void;
+	updateParent: () => void;
 	adjustLeft: (adjusted: SizeUnit[]) => boolean;
 	adjustRight: (adjusted: SizeUnit[]) => boolean;
 	adjustTop: (adjusted: SizeUnit[]) => boolean;
@@ -114,9 +115,9 @@ export interface ISpaceDefinition {
 	width: ISize;
 	height: ISize;
 	zIndex: number;
-	resizable: boolean;
 	dimension: DOMRect;
 	centerContent: "none" | "vertical" | "horizontalVertical";
+	resizing: boolean;
 }
 
 function getSizeString(size: SizeUnit) {
@@ -276,7 +277,7 @@ const spaceDefaults: Partial<ISpaceDefinition> = {
 	order: 0,
 	zIndex: 0,
 	scrollable: false,
-	resizable: false,
+	resizing: false,
 	centerContent: "none",
 	dimension: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" },
 	adjustLeft: () => false,
@@ -373,8 +374,8 @@ export function createStore(): ISpaceStore {
 		}
 	};
 
-	function resizeEnd(resizeType: ResizeType, element: HTMLElement) {
-		const currentRect = element.getBoundingClientRect();
+	function resizeEnd(space: ISpaceDefinition, resizeType: ResizeType, element: HTMLElement) {
+		//const currentRect = element.getBoundingClientRect();
 		// props.onResizeEnd &&
 		// 	props.onResizeEnd(Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height));
 	}
@@ -408,10 +409,10 @@ export function createStore(): ISpaceStore {
 
 			if (adjustment !== targetSize.resized) {
 				targetSize.resized = adjustment;
-				updateStyleDefinition(space);
 				if (parent) {
 					recalcSpaces(parent);
 				}
+				updateStyleDefinition(space);
 			}
 		}
 	}
@@ -433,9 +434,8 @@ export function createStore(): ISpaceStore {
 		// 	}
 		// }
 
-		// if (parentContext) {
-		// 	parentContext.updateResizing(true);
-		// }
+		space.resizing = true;
+		space.updateParent();
 
 		var rect = element.getBoundingClientRect();
 		var size = space.orientation === Orientation.Horizontal ? rect.width : rect.height;
@@ -470,11 +470,10 @@ export function createStore(): ISpaceStore {
 			window.removeEventListener(moveEvent, withPreventDefault as EventListener);
 			window.removeEventListener(endEvent, removeListener);
 
-			// if (parentContext) {
-			// 	parentContext.updateResizing(false);
-			// }
+			space.resizing = false;
+			space.updateParent();
 
-			resizeEnd(resizeType, element /*, onResizeEnd */);
+			resizeEnd(space, resizeType, element /*, onResizeEnd */);
 		};
 
 		window.addEventListener(moveEvent, withPreventDefault as EventListener);
@@ -512,7 +511,7 @@ export function createStore(): ISpaceStore {
 			removeStyleDefinition(space);
 		},
 		updateSpace: (space, props) => {
-			const { type, anchor, order, zIndex, scrollable, position, resizable, centerContent } = props;
+			const { type, anchor, order, zIndex, scrollable, position, centerContent } = props;
 			let changed = false;
 
 			if (space.type !== type) {
@@ -590,11 +589,6 @@ export function createStore(): ISpaceStore {
 				changed = true;
 			}
 
-			if (coalesce(space.resizable, false) !== coalesce(resizable, false)) {
-				space.resizable = coalesce(resizable, false)!;
-				changed = true;
-			}
-
 			if (coalesce(space.centerContent, "none") !== coalesce(centerContent, "none")) {
 				space.centerContent = coalesce(centerContent, "none")!;
 				changed = true;
@@ -619,7 +613,7 @@ export function createStore(): ISpaceStore {
 		},
 	};
 
-	store.createSpace = (parentId: string | undefined, props: ISpaceProps) => {
+	store.createSpace = (parentId: string | undefined, props: ISpaceProps, update: () => void) => {
 		const { position, anchor, type, ...commonProps } = props;
 
 		const newSpace: ISpaceDefinition = {
@@ -627,6 +621,15 @@ export function createStore(): ISpaceStore {
 			...commonProps,
 			...{
 				store: store,
+				update: update,
+				updateParent: () => {
+					if (parentId) {
+						const parentSpace = store.getSpace(parentId);
+						if (parentSpace) {
+							parentSpace.update();
+						}
+					}
+				},
 				parentId: parentId,
 				children: [],
 				anchor: anchor,
