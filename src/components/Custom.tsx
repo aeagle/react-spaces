@@ -1,13 +1,6 @@
-import { ICommonProps, Type, SizeUnit, IPositionalProps, Anchor } from "../core-types";
+import { ICommonProps, Type, SizeUnit, IPositionalProps, Anchor, AnchorType } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
-
-export enum AnchorType {
-	Left = "anchor-left",
-	Right = "anchor-right",
-	Top = "anchor-top",
-	Bottom = "anchor-bottom",
-}
 
 interface ICustomProps extends ICommonProps {
 	left?: SizeUnit | undefined;

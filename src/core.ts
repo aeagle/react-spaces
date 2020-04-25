@@ -1,7 +1,6 @@
-import { ISpaceDefinition, SizeUnit, Anchor, Type, Orientation, ISpaceStore, ISpaceProps } from "./core-types";
+import { ISpaceDefinition, SizeUnit, Anchor, Type, Orientation, ISpaceStore, ISpaceProps, CenterType } from "./core-types";
 import { EndEvent, MoveEvent, createResize } from "./core-resizing";
 import { updateStyleDefinition, removeStyleDefinition, coalesce, adjustmentsEqual } from "./core-utils";
-import { CenterType } from "./types";
 
 const spaceDefaults: Partial<ISpaceDefinition> = {
 	id: "",

@@ -10,6 +10,18 @@ export const DOMRectContext = React.createContext<DOMRect | undefined>(undefined
 export const LayerContext = React.createContext<number | undefined>(undefined);
 export const currentStore = createStore();
 
+export interface IReactEvents {
+	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onDoubleClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onMouseDown?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onMouseEnter?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onMouseLeave?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onMouseMove?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onTouchStart?: (event: React.TouchEvent<HTMLElement>) => void;
+	onTouchMove?: (event: React.TouchEvent<HTMLElement>) => void;
+	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
+}
+
 export function useForceUpdate() {
 	const [, setTick] = React.useState(0);
 	const update = React.useCallback(() => {
