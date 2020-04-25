@@ -13,7 +13,7 @@ import {
 	Layer,
 	TopResizable,
 	RightResizable,
-} from "../Experimental";
+} from "../experimental";
 import { CenterType } from "../../types";
 import "./Utils.scss";
 
