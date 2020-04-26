@@ -1,35 +1,26 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "outDir": "./dist/",
-    "sourceMap": true,
-    "module": "esnext",
-    "target": "es5",
-    "lib": ["es6", "dom"],
-    "jsx": "react",
-    "moduleResolution": "node",
-    "rootDir": "src",
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "importHelpers": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "declaration": true,
-    "typeRoots": ["node_modules/@types", "typings"]
-  },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts"
-  ]
+	"compilerOptions": {
+		"baseUrl": ".",
+		"outDir": "./dist/",
+		"sourceMap": true,
+		"module": "esnext",
+		"target": "es5",
+		"lib": ["es6", "dom"],
+		"jsx": "react",
+		"moduleResolution": "node",
+		"rootDir": "src",
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitAny": true,
+		"importHelpers": true,
+		"strictNullChecks": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"noUnusedLocals": true,
+		"declaration": true,
+		"typeRoots": ["node_modules/@types", "typings"],
+		"esModuleInterop": true
+	},
+	"include": ["./src/**/*"],
+	"exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest", "src/setupTests.ts"]
 }
