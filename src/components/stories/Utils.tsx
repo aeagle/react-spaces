@@ -37,13 +37,15 @@ export const CommonHeader = () => (
 
 export const PropsTable: React.FC = (props) => (
 	<table className="sbdocs sbdocs-table properties-table css-lckf62">
-		<tr>
-			<th>Property</th>
-			<th>Type</th>
-			<th>Default value</th>
-			<th>Description</th>
-		</tr>
-		{props.children}
+		<tbody>
+			<tr>
+				<th>Property</th>
+				<th>Type</th>
+				<th>Default value</th>
+				<th>Description</th>
+			</tr>
+			{props.children}
+		</tbody>
 	</table>
 );
 
