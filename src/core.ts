@@ -1,4 +1,4 @@
-import { ISpaceDefinition, SizeUnit, Anchor, Type, Orientation, ISpaceStore, ISpaceProps, CenterType } from "./core-types";
+import { ISpaceDefinition, SizeUnit, AnchorType, Type, Orientation, ISpaceStore, ISpaceProps, CenterType } from "./core-types";
 import { EndEvent, MoveEvent, createResize } from "./core-resizing";
 import { updateStyleDefinition, removeStyleDefinition, coalesce, adjustmentsEqual } from "./core-utils";
 
@@ -28,26 +28,26 @@ function getPosition(type: Type) {
 	return "absolute";
 }
 
-function getOrientation(anchor: Anchor | undefined) {
-	return anchor === Anchor.Bottom || anchor === Anchor.Top ? Orientation.Vertical : Orientation.Horizontal;
+function getOrientation(anchor: AnchorType | undefined) {
+	return anchor === AnchorType.Bottom || anchor === AnchorType.Top ? Orientation.Vertical : Orientation.Horizontal;
 }
 
 function anchorUpdates(space: ISpaceDefinition) {
 	return [
 		{
-			anchor: Anchor.Left,
+			anchor: AnchorType.Left,
 			update: space.adjustLeft,
 		},
 		{
-			anchor: Anchor.Top,
+			anchor: AnchorType.Top,
 			update: space.adjustTop,
 		},
 		{
-			anchor: Anchor.Right,
+			anchor: AnchorType.Right,
 			update: space.adjustRight,
 		},
 		{
-			anchor: Anchor.Bottom,
+			anchor: AnchorType.Bottom,
 			update: space.adjustBottom,
 		},
 	];
@@ -191,13 +191,13 @@ export function createStore(): ISpaceStore {
 				changed = true;
 
 				if (type === Type.Anchored) {
-					if (anchor === Anchor.Left) {
+					if (anchor === AnchorType.Left) {
 						space.adjustEdge = space.adjustLeft;
-					} else if (anchor === Anchor.Top) {
+					} else if (anchor === AnchorType.Top) {
 						space.adjustEdge = space.adjustTop;
-					} else if (anchor === Anchor.Right) {
+					} else if (anchor === AnchorType.Right) {
 						space.adjustEdge = space.adjustRight;
-					} else if (anchor === Anchor.Bottom) {
+					} else if (anchor === AnchorType.Bottom) {
 						space.adjustEdge = space.adjustBottom;
 					}
 				}
@@ -358,13 +358,13 @@ export function createStore(): ISpaceStore {
 		};
 
 		if (type === Type.Anchored) {
-			if (anchor === Anchor.Left) {
+			if (anchor === AnchorType.Left) {
 				newSpace.adjustEdge = newSpace.adjustLeft;
-			} else if (anchor === Anchor.Top) {
+			} else if (anchor === AnchorType.Top) {
 				newSpace.adjustEdge = newSpace.adjustTop;
-			} else if (anchor === Anchor.Right) {
+			} else if (anchor === AnchorType.Right) {
 				newSpace.adjustEdge = newSpace.adjustRight;
-			} else if (anchor === Anchor.Bottom) {
+			} else if (anchor === AnchorType.Bottom) {
 				newSpace.adjustEdge = newSpace.adjustBottom;
 			}
 		}

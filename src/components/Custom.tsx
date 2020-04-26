@@ -1,4 +1,4 @@
-import { ICommonProps, Type, SizeUnit, IPositionalProps, Anchor, AnchorType } from "../core-types";
+import { ICommonProps, Type, SizeUnit, IPositionalProps, AnchorType } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 
@@ -27,33 +27,28 @@ export const Custom: React.FC<ICustomProps> = ({
 	bottom,
 	width,
 	height,
-	anchor,
 	anchorSize,
+	anchor,
 	isPositioned,
 	resizable,
 	...props
 }) => {
 	let position: IPositionalProps;
 	let type = Type.Positioned;
-	let anchorType: Anchor | undefined = undefined;
 
 	if (!isPositioned) {
 		if (anchor === AnchorType.Left) {
 			position = { left: 0, top: 0, bottom: 0, width: anchorSize, right: undefined, rightResizable: resizable };
 			type = Type.Anchored;
-			anchorType = Anchor.Left;
 		} else if (anchor === AnchorType.Right) {
 			position = { right: 0, top: 0, bottom: 0, width: anchorSize, left: undefined, leftResizable: resizable };
 			type = Type.Anchored;
-			anchorType = Anchor.Right;
 		} else if (anchor === AnchorType.Top) {
 			position = { left: 0, top: 0, right: 0, height: anchorSize, bottom: undefined, bottomResizable: resizable };
 			type = Type.Anchored;
-			anchorType = Anchor.Top;
 		} else if (anchor === AnchorType.Bottom) {
 			position = { left: 0, bottom: 0, right: 0, height: anchorSize, top: undefined, topResizable: resizable };
 			type = Type.Anchored;
-			anchorType = Anchor.Bottom;
 		} else {
 			position = { left: 0, top: 0, bottom: 0, right: 0, width: undefined, height: undefined };
 			type = Type.Fill;
@@ -63,7 +58,7 @@ export const Custom: React.FC<ICustomProps> = ({
 	}
 
 	return (
-		<Space {...props} anchor={anchorType} type={type} position={position}>
+		<Space {...props} type={type} anchor={anchor} position={position}>
 			{children}
 		</Space>
 	);

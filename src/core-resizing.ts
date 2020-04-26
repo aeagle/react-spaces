@@ -33,11 +33,11 @@ export function createResize(store: ISpaceStore) {
 		customResizeHandler?: (resizeDelta: IResizeChange) => void,
 	) {
 		const adjustmentX = Math.min(
-			Math.max(resizeType === "left" ? originalX - x : x - originalX, minimumAdjust),
+			Math.max(resizeType === ResizeType.Left ? originalX - x : x - originalX, minimumAdjust),
 			maximumAdjust === undefined ? 999999 : maximumAdjust,
 		);
 		const adjustmentY = Math.min(
-			Math.max(resizeType === "top" ? originalY - y : y - originalY, minimumAdjust),
+			Math.max(resizeType === ResizeType.Top ? originalY - y : y - originalY, minimumAdjust),
 			maximumAdjust === undefined ? 999999 : maximumAdjust,
 		);
 
@@ -77,8 +77,8 @@ export function createResize(store: ISpaceStore) {
 			var rect = element.getBoundingClientRect();
 			var size = space.orientation === Orientation.Horizontal ? rect.width : rect.height;
 			const coords = getCoords(e);
-			const originalMouseX = resizeType === "left" ? coords.x + targetSize.resized : coords.x - targetSize.resized;
-			const originalMouseY = resizeType === "top" ? coords.y + targetSize.resized : coords.y - targetSize.resized;
+			const originalMouseX = ResizeType.Left ? coords.x + targetSize.resized : coords.x - targetSize.resized;
+			const originalMouseY = ResizeType.Top ? coords.y + targetSize.resized : coords.y - targetSize.resized;
 			const minimumAdjust = coalesce(space.minimumSize, 20)! - size + targetSize.resized;
 			const maximumAdjust = space.maximumSize ? space.maximumSize - size + targetSize.resized : undefined;
 

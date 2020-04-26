@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createStore } from "./core";
-import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps } from "./core-types";
+import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType } from "./core-types";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import { CSSProperties } from "react";
@@ -121,8 +121,8 @@ export function useSpaceResizeHandles(
 			key: "right",
 			style: { width: resizeHandleSize },
 			className: `spaces-resize-handle resize-right`,
-			onMouseDown: (e) => store.startMouseResize("right", space, space.width, elementRef.current!, e),
-			onTouchStart: (e) => store.startTouchResize("right", space, space.width, elementRef.current!, e),
+			onMouseDown: (e) => store.startMouseResize(ResizeType.Right, space, space.width, elementRef.current!, e),
+			onTouchStart: (e) => store.startTouchResize(ResizeType.Right, space, space.width, elementRef.current!, e),
 		});
 	}
 
@@ -131,8 +131,8 @@ export function useSpaceResizeHandles(
 			key: "left",
 			style: { width: resizeHandleSize },
 			className: `spaces-resize-handle resize-left`,
-			onMouseDown: (e) => store.startMouseResize("left", space, space.width, elementRef.current!, e),
-			onTouchStart: (e) => store.startTouchResize("left", space, space.width, elementRef.current!, e),
+			onMouseDown: (e) => store.startMouseResize(ResizeType.Left, space, space.width, elementRef.current!, e),
+			onTouchStart: (e) => store.startTouchResize(ResizeType.Left, space, space.width, elementRef.current!, e),
 		});
 	}
 
@@ -141,8 +141,8 @@ export function useSpaceResizeHandles(
 			key: "top",
 			style: { height: resizeHandleSize },
 			className: `spaces-resize-handle resize-top`,
-			onMouseDown: (e) => store.startMouseResize("top", space, space.height, elementRef.current!, e),
-			onTouchStart: (e) => store.startTouchResize("top", space, space.height, elementRef.current!, e),
+			onMouseDown: (e) => store.startMouseResize(ResizeType.Top, space, space.height, elementRef.current!, e),
+			onTouchStart: (e) => store.startTouchResize(ResizeType.Top, space, space.height, elementRef.current!, e),
 		});
 	}
 
@@ -151,8 +151,8 @@ export function useSpaceResizeHandles(
 			key: "bottom",
 			style: { height: resizeHandleSize },
 			className: `spaces-resize-handle resize-bottom`,
-			onMouseDown: (e) => store.startMouseResize("bottom", space, space.height, elementRef.current!, e),
-			onTouchStart: (e) => store.startTouchResize("bottom", space, space.height, elementRef.current!, e),
+			onMouseDown: (e) => store.startMouseResize(ResizeType.Bottom, space, space.height, elementRef.current!, e),
+			onTouchStart: (e) => store.startTouchResize(ResizeType.Bottom, space, space.height, elementRef.current!, e),
 		});
 	}
 

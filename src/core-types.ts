@@ -1,16 +1,5 @@
 import * as PropTypes from "prop-types";
 
-// export enum ResizeType {
-// 	Left = "resize-left",
-// 	Right = "resize-right",
-// 	Top = "resize-top",
-// 	Bottom = "resize-bottom",
-// 	NW = "resize-nw",
-// 	NE = "resize-ne",
-// 	SW = "resize-sw",
-// 	SE = "resize-se",
-// }
-
 export enum Type {
 	ViewPort = "viewport",
 	Fixed = "fixed",
@@ -18,13 +7,6 @@ export enum Type {
 	Positioned = "positioned",
 	Anchored = "anchored",
 	Custom = "custom",
-}
-
-export enum Anchor {
-	Left,
-	Top,
-	Right,
-	Bottom,
 }
 
 export enum AnchorType {
@@ -41,7 +23,16 @@ export enum Orientation {
 
 export type SizeUnit = number | string | undefined;
 
-export type ResizeType = "left" | "right" | "top" | "bottom";
+export enum ResizeType {
+	Left = "resize-left",
+	Right = "resize-right",
+	Top = "resize-top",
+	Bottom = "resize-bottom",
+	NW = "resize-nw",
+	NE = "resize-ne",
+	SW = "resize-sw",
+	SE = "resize-se",
+}
 
 export enum CenterType {
 	None = "none",
@@ -63,7 +54,7 @@ export interface ICommonProps {
 
 export interface ISpaceProps extends ICommonProps {
 	type: Type;
-	anchor?: Anchor;
+	anchor?: AnchorType;
 	order?: number;
 	position?: IPositionalProps;
 	handleSize?: number;
@@ -110,10 +101,10 @@ export interface ISpaceDefinition {
 	adjustTop: (adjusted: SizeUnit[]) => boolean;
 	adjustBottom: (adjusted: SizeUnit[]) => boolean;
 	adjustEdge: (adjusted: SizeUnit[]) => boolean;
-	anchoredChildren: (anchor: Anchor, zIndex: number) => ISpaceDefinition[];
+	anchoredChildren: (anchor: AnchorType, zIndex: number) => ISpaceDefinition[];
 	id: string;
 	type: Type;
-	anchor?: Anchor;
+	anchor?: AnchorType;
 	orientation: Orientation;
 	scrollable: boolean;
 	order: number;
