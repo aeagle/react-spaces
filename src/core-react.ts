@@ -1,14 +1,34 @@
 import * as React from "react";
 import { createStore } from "./core";
-import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType } from "./core-types";
+import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType, CenterType } from "./core-types";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import { CSSProperties } from "react";
+import * as PropTypes from "prop-types";
 
 export const ParentContext = React.createContext<string | undefined>(undefined);
 export const DOMRectContext = React.createContext<DOMRect | undefined>(undefined);
 export const LayerContext = React.createContext<number | undefined>(undefined);
 export const currentStore = createStore();
+
+export const commonProps = {
+	id: PropTypes.string,
+	className: PropTypes.string,
+	style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+	as: PropTypes.string,
+	centerContent: PropTypes.oneOf([CenterType.None, CenterType.Vertical, CenterType.HorizontalVertical]),
+	zIndex: PropTypes.number,
+	scrollable: PropTypes.bool,
+	trackSize: PropTypes.bool,
+	onClick: PropTypes.func,
+	onMouseDown: PropTypes.func,
+	onMouseEnter: PropTypes.func,
+	onMouseLeave: PropTypes.func,
+	onMouseMove: PropTypes.func,
+	onTouchStart: PropTypes.func,
+	onTouchMove: PropTypes.func,
+	onTouchEnd: PropTypes.func,
+};
 
 export interface IReactEvents {
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;

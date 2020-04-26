@@ -1,5 +1,3 @@
-import * as PropTypes from "prop-types";
-
 export enum Type {
 	ViewPort = "viewport",
 	Fixed = "fixed",
@@ -130,57 +128,3 @@ export interface ISpaceDefinition {
 	minimumSize?: number;
 	maximumSize?: number;
 }
-
-export const publicProps = {
-	id: PropTypes.string,
-	className: PropTypes.string,
-	style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-	scrollable: PropTypes.bool,
-	trackSize: PropTypes.bool,
-	centerContent: PropTypes.oneOf([CenterType.None, CenterType.Vertical, CenterType.HorizontalVertical]),
-	as: PropTypes.string,
-	zIndex: PropTypes.number,
-	onClick: PropTypes.func,
-	onMouseDown: PropTypes.func,
-	onMouseEnter: PropTypes.func,
-	onMouseLeave: PropTypes.func,
-	onMouseMove: PropTypes.func,
-	onTouchStart: PropTypes.func,
-	onTouchMove: PropTypes.func,
-	onTouchEnd: PropTypes.func,
-};
-
-export const privateProps = {
-	isPositioned: PropTypes.bool,
-	anchorSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	anchor: PropTypes.oneOf([AnchorType.Bottom, AnchorType.Left, AnchorType.Right, AnchorType.Top]),
-	resizable: PropTypes.bool,
-	order: PropTypes.number,
-	topMost: PropTypes.bool,
-};
-
-export const anchoredProps = {
-	size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-	order: PropTypes.number,
-};
-
-export const resizableProps = {
-	handleSize: PropTypes.number,
-	overlayHandle: PropTypes.bool,
-	minimumSize: PropTypes.number,
-	maximumSize: PropTypes.number,
-	onResizeStart: PropTypes.func,
-	onResizeEnd: PropTypes.func,
-};
-
-export const positionedProps = {
-	left: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	right: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	resizable: PropTypes.bool,
-};
-
-export const allProps = { ...publicProps, ...privateProps, ...resizableProps, ...positionedProps };

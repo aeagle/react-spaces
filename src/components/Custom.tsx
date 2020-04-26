@@ -1,6 +1,8 @@
 import { ICommonProps, Type, SizeUnit, IPositionalProps, AnchorType } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
+import * as PropTypes from "prop-types";
+import { commonProps } from "../core-react";
 
 interface ICustomProps extends ICommonProps {
 	left?: SizeUnit | undefined;
@@ -17,6 +19,8 @@ interface ICustomProps extends ICommonProps {
 	overlayHandle?: boolean;
 	minimumSize?: number;
 	maximumSize?: number;
+	onResizeStart?: () => void | boolean;
+	onResizeEnd?: (newSize: SizeUnit) => void;
 }
 
 export const Custom: React.FC<ICustomProps> = ({
@@ -62,4 +66,25 @@ export const Custom: React.FC<ICustomProps> = ({
 			{children}
 		</Space>
 	);
+};
+
+Custom.propTypes = {
+	...commonProps,
+	...{
+		left: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		right: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		isPositioned: PropTypes.bool,
+		anchor: PropTypes.oneOf([AnchorType.Left, AnchorType.Top, AnchorType.Right, AnchorType.Bottom]),
+		anchorSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		resizable: PropTypes.bool,
+		handleSize: PropTypes.number,
+		minimumSize: PropTypes.number,
+		maximumSize: PropTypes.number,
+		onResizeStart: PropTypes.func,
+		onResizeEnd: PropTypes.func,
+	},
 };

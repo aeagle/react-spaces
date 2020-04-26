@@ -1,6 +1,8 @@
 import { ICommonProps, Type, SizeUnit } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
+import * as PropTypes from "prop-types";
+import { commonProps } from "../core-react";
 
 interface IViewPortProps extends ICommonProps {
 	left?: SizeUnit;
@@ -14,3 +16,13 @@ export const ViewPort: React.FC<IViewPortProps> = ({ left, top, right, bottom, c
 		{children}
 	</Space>
 );
+
+ViewPort.propTypes = {
+	...commonProps,
+	...{
+		left: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		right: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	},
+};
