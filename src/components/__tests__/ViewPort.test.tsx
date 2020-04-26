@@ -20,6 +20,17 @@ test("ViewPort default has correct styles", async () => {
 	expect(style.height).toBe("");
 });
 
+test("ViewPort with offsets has correct styles", async () => {
+	const { container } = render(<ViewPort id="test" left={10} top={20} right={30} bottom={40} />);
+	const sut = container.querySelector("#test");
+	const style = window.getComputedStyle(sut!);
+
+	expect(style.left).toBe("10px");
+	expect(style.top).toBe("20px");
+	expect(style.right).toBe("30px");
+	expect(style.bottom).toBe("40px");
+});
+
 test("ViewPort with class has correct class", async () => {
 	const { container } = render(<ViewPort id="test" className={"custom-class"} />);
 	const sut = container.querySelector("#test");
