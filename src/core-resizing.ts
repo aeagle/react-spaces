@@ -112,6 +112,7 @@ export function createResize(store: ISpaceStore) {
 					const currentRect = space.element.getBoundingClientRect();
 					space.onResizeEnd(
 						Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height),
+						currentRect as DOMRect,
 					);
 				}
 			};

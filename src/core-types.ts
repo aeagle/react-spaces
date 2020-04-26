@@ -61,7 +61,7 @@ export interface ISpaceProps extends ICommonProps {
 	minimumSize?: number | undefined;
 	maximumSize?: number | undefined;
 	onResizeStart?: (() => void | boolean) | undefined;
-	onResizeEnd?: ((newSize: SizeUnit) => void) | undefined;
+	onResizeEnd?: ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
 }
 
 export interface ISpaceStore {
@@ -105,7 +105,7 @@ export interface ISpaceDefinition {
 	adjustEdge: (adjusted: SizeUnit[]) => boolean;
 	anchoredChildren: (anchor: AnchorType, zIndex: number) => ISpaceDefinition[];
 	onResizeStart?: (() => void | boolean) | undefined;
-	onResizeEnd?: ((newSize: SizeUnit) => void) | undefined;
+	onResizeEnd?: ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
 	element: HTMLElement;
 	id: string;
 	type: Type;
