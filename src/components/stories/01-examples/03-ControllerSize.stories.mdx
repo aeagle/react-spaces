@@ -11,10 +11,10 @@ import { CommonHeader } from "../Utils";
 
 ## Resizable space with state controlled size
 
-Example of resizable space with state controlled size. By default the size of a resizable
-space is uncontrolled. Therefore the initial size passed is is only the initial size of
-a space. To keep the size of a space controlled with state you need to use the
-onResizeEnd event.
+By default the size of a resizable space is uncontrolled. Therefore the initial size passed is is 
+only the initial size of a space and React Spaces deals with any resizing. To keep the size of a 
+space controlled in state you need to use the onResizeEnd event to set the new size of a space
+after a resize back to a state value.
 
 <Preview>
 	<Story name="Controlled size">
