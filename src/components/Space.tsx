@@ -18,6 +18,10 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 	const { style, className, onClick, children } = props;
 	const { space, domRect, elementRef, resizeHandles } = useSpace(props);
 
+	React.useEffect(() => {
+		space.element = elementRef.current!;
+	}, []);
+
 	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
 
 	const outerClasses = [

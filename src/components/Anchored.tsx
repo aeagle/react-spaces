@@ -10,6 +10,8 @@ interface IAnchorProps extends ICommonProps {
 	overlayHandle?: boolean;
 	minimumSize?: number;
 	maximumSize?: number;
+	onResizeStart?: () => void | boolean;
+	onResizeEnd?: (newSize: SizeUnit) => void;
 }
 
 export const LeftResizable: React.FC<Omit<IAnchorProps, "resizable">> = ({ children, size, ...props }) => (

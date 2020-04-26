@@ -1,5 +1,6 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
+import { action } from '@storybook/addon-actions';
 import { ViewPort, BottomResizable } from "../../";
 import { green, description, lorem } from "../Utils";
 import { CommonHeader, PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../Utils";
@@ -17,7 +18,7 @@ Anchored resizable space on the bottom edge of it's parent.
 <Preview>
 	<Story name="Default (%)">
 		<ViewPort>
-			<BottomResizable style={green} size="50%" trackSize={true}>
+			<BottomResizable style={green} size="50%" trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Bottom resizable")}
 			</BottomResizable>
 		</ViewPort>

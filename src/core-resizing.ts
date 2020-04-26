@@ -59,26 +59,25 @@ export function createResize(store: ISpaceStore) {
 			e: T,
 			space: ISpaceDefinition,
 			targetSize: ISize,
-			element: HTMLElement,
 			endEvent: EndEvent,
 			moveEvent: MoveEvent,
 			getCoords: (event: T) => { x: number; y: number },
 		) {
-			// if (props.onResizeStart) {
-			// 	const result = props.onResizeStart();
-			// 	if (typeof result === "boolean" && !result) {
-			// 		return;
-			// 	}
-			// }
+			if (space.onResizeStart) {
+				const result = space.onResizeStart();
+				if (typeof result === "boolean" && !result) {
+					return;
+				}
+			}
 
 			space.resizing = true;
 			space.updateParent();
 
-			var rect = element.getBoundingClientRect();
+			var rect = space.element.getBoundingClientRect();
 			var size = space.orientation === Orientation.Horizontal ? rect.width : rect.height;
 			const coords = getCoords(e);
-			const originalMouseX = ResizeType.Left ? coords.x + targetSize.resized : coords.x - targetSize.resized;
-			const originalMouseY = ResizeType.Top ? coords.y + targetSize.resized : coords.y - targetSize.resized;
+			const originalMouseX = resizeType === ResizeType.Left ? coords.x + targetSize.resized : coords.x - targetSize.resized;
+			const originalMouseY = resizeType === ResizeType.Top ? coords.y + targetSize.resized : coords.y - targetSize.resized;
 			const minimumAdjust = coalesce(space.minimumSize, 20)! - size + targetSize.resized;
 			const maximumAdjust = space.maximumSize ? space.maximumSize - size + targetSize.resized : undefined;
 
@@ -109,9 +108,12 @@ export function createResize(store: ISpaceStore) {
 				space.resizing = false;
 				space.updateParent();
 
-				//const currentRect = element.getBoundingClientRect();
-				// props.onResizeEnd &&
-				// 	props.onResizeEnd(Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height));
+				if (space.onResizeEnd) {
+					const currentRect = space.element.getBoundingClientRect();
+					space.onResizeEnd(
+						Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height),
+					);
+				}
 			};
 
 			window.addEventListener(moveEvent, withPreventDefault as EventListener);

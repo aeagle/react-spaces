@@ -54,12 +54,14 @@ export interface ICommonProps {
 
 export interface ISpaceProps extends ICommonProps {
 	type: Type;
-	anchor?: AnchorType;
-	order?: number;
-	position?: IPositionalProps;
-	handleSize?: number;
-	minimumSize?: number;
-	maximumSize?: number;
+	anchor?: AnchorType | undefined;
+	order?: number | undefined;
+	position?: IPositionalProps | undefined;
+	handleSize?: number | undefined;
+	minimumSize?: number | undefined;
+	maximumSize?: number | undefined;
+	onResizeStart?: (() => void | boolean) | undefined;
+	onResizeEnd?: ((newSize: SizeUnit) => void) | undefined;
 }
 
 export interface ISpaceStore {
@@ -70,8 +72,8 @@ export interface ISpaceStore {
 	updateStyles: (space: ISpaceDefinition) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
 	createSpace: (parent: string | undefined, props: ISpaceProps, update: () => void) => ISpaceDefinition;
-	startMouseResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, element: HTMLElement, e: React.MouseEvent<HTMLElement>) => void;
-	startTouchResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, element: HTMLElement, e: React.TouchEvent<HTMLElement>) => void;
+	startMouseResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, event: React.MouseEvent<HTMLElement>) => void;
+	startTouchResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, event: React.TouchEvent<HTMLElement>) => void;
 }
 
 export interface IPositionalProps {
@@ -102,6 +104,9 @@ export interface ISpaceDefinition {
 	adjustBottom: (adjusted: SizeUnit[]) => boolean;
 	adjustEdge: (adjusted: SizeUnit[]) => boolean;
 	anchoredChildren: (anchor: AnchorType, zIndex: number) => ISpaceDefinition[];
+	onResizeStart?: (() => void | boolean) | undefined;
+	onResizeEnd?: ((newSize: SizeUnit) => void) | undefined;
+	element: HTMLElement;
 	id: string;
 	type: Type;
 	anchor?: AnchorType;

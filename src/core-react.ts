@@ -57,7 +57,7 @@ export function useSpace(props: ISpaceProps) {
 		store.updateSpace(space, parsedProps);
 	}
 
-	const resizeHandles = useSpaceResizeHandles(store, space, props.position, elementRef, props.handleSize);
+	const resizeHandles = useSpaceResizeHandles(store, space, props.position, props.handleSize);
 
 	React.useEffect(() => {
 		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
@@ -106,13 +106,7 @@ interface IResizeHandleProps {
 	onTouchStart: (e: React.TouchEvent<HTMLElement>) => void;
 }
 
-export function useSpaceResizeHandles(
-	store: ISpaceStore,
-	space: ISpaceDefinition,
-	position: IPositionalProps | undefined,
-	elementRef: React.MutableRefObject<HTMLElement | undefined>,
-	handleSize?: number,
-) {
+export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinition, position: IPositionalProps | undefined, handleSize?: number) {
 	const resizeHandles: IResizeHandleProps[] = [];
 	const resizeHandleSize = coalesce(handleSize, 5);
 
@@ -121,8 +115,8 @@ export function useSpaceResizeHandles(
 			key: "right",
 			style: { width: resizeHandleSize },
 			className: `spaces-resize-handle resize-right`,
-			onMouseDown: (e) => store.startMouseResize(ResizeType.Right, space, space.width, elementRef.current!, e),
-			onTouchStart: (e) => store.startTouchResize(ResizeType.Right, space, space.width, elementRef.current!, e),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Right, space, space.width, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, space.width, event),
 		});
 	}
 
@@ -131,8 +125,8 @@ export function useSpaceResizeHandles(
 			key: "left",
 			style: { width: resizeHandleSize },
 			className: `spaces-resize-handle resize-left`,
-			onMouseDown: (e) => store.startMouseResize(ResizeType.Left, space, space.width, elementRef.current!, e),
-			onTouchStart: (e) => store.startTouchResize(ResizeType.Left, space, space.width, elementRef.current!, e),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Left, space, space.width, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, space.width, event),
 		});
 	}
 
@@ -141,8 +135,8 @@ export function useSpaceResizeHandles(
 			key: "top",
 			style: { height: resizeHandleSize },
 			className: `spaces-resize-handle resize-top`,
-			onMouseDown: (e) => store.startMouseResize(ResizeType.Top, space, space.height, elementRef.current!, e),
-			onTouchStart: (e) => store.startTouchResize(ResizeType.Top, space, space.height, elementRef.current!, e),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Top, space, space.height, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, space.height, event),
 		});
 	}
 
@@ -151,8 +145,8 @@ export function useSpaceResizeHandles(
 			key: "bottom",
 			style: { height: resizeHandleSize },
 			className: `spaces-resize-handle resize-bottom`,
-			onMouseDown: (e) => store.startMouseResize(ResizeType.Bottom, space, space.height, elementRef.current!, e),
-			onTouchStart: (e) => store.startTouchResize(ResizeType.Bottom, space, space.height, elementRef.current!, e),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, space.height, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, space.height, event),
 		});
 	}
 
