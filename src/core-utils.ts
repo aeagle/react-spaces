@@ -30,6 +30,10 @@ export function css(size: ISize) {
 		return undefined;
 	}
 
+	if (parts.length === 1) {
+		return parts[0];
+	}
+
 	return `calc(${parts.join(" + ")})`;
 }
 
