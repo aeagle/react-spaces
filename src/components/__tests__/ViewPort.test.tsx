@@ -31,9 +31,25 @@ test("ViewPort with offsets has correct styles", async () => {
 	expect(style.bottom).toBe("40px");
 });
 
-test("ViewPort with class has correct class", async () => {
+test("ViewPort with class applied", async () => {
 	const { container } = render(<ViewPort id="test" className={"custom-class"} />);
 	const sut = container.querySelector("#test");
 
 	expect(sut!.className).toBe("spaces-space custom-class");
+});
+
+test("ViewPort with style applied", async () => {
+	const { container } = render(<ViewPort id="test" style={{ backgroundColor: "red" }} />);
+	const sut = container.querySelector("#test");
+	const style = window.getComputedStyle(sut!);
+
+	expect(style.backgroundColor).toBe("red");
+});
+
+test("ViewPort scrollable applied", async () => {
+	const { container } = render(<ViewPort id="test" scrollable={true} />);
+	const sut = container.querySelector("#test");
+	const style = window.getComputedStyle(sut!);
+
+	expect(style.overflow).toBe("auto");
 });
