@@ -95,7 +95,7 @@ test("Bottom stacked has correct styles", async () => {
 	expect(style1.left).toBe("0px");
 	expect(style1.top).toBe("");
 	expect(style1.right).toBe("0px");
-	expect(style1.bottom).toBe("calc(10px + 0px)");
+	expect(style1.bottom).toBe("calc(0px + 10px)");
 	expect(style1.width).toBe("");
 	expect(style1.height).toBe("10px");
 });
@@ -123,7 +123,7 @@ test("Bottom stacked reversed has correct styles", async () => {
 	expect(style1.left).toBe("0px");
 	expect(style1.top).toBe("");
 	expect(style1.right).toBe("0px");
-	expect(style1.bottom).toBe("calc(10px + 0px)");
+	expect(style1.bottom).toBe("calc(0px + 10px)");
 	expect(style1.width).toBe("");
 	expect(style1.height).toBe("10px");
 });

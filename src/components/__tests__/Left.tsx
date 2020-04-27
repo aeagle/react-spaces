@@ -92,7 +92,7 @@ test("Left stacked has correct styles", async () => {
 	const sut1 = container.querySelector("#test1")!;
 	const style1 = window.getComputedStyle(sut1);
 
-	expect(style1.left).toBe("calc(10px + 0px)");
+	expect(style1.left).toBe("calc(0px + 10px)");
 	expect(style1.top).toBe("0px");
 	expect(style1.right).toBe("");
 	expect(style1.bottom).toBe("0px");
@@ -120,7 +120,7 @@ test("Left stacked reversed has correct styles", async () => {
 	const sut1 = container.querySelector("#test1")!;
 	const style1 = window.getComputedStyle(sut1);
 
-	expect(style1.left).toBe("calc(10px + 0px)");
+	expect(style1.left).toBe("calc(0px + 10px)");
 	expect(style1.top).toBe("0px");
 	expect(style1.right).toBe("");
 	expect(style1.bottom).toBe("0px");

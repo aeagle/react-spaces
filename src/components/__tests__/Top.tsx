@@ -93,7 +93,7 @@ test("Top stacked has correct styles", async () => {
 	const style1 = window.getComputedStyle(sut1);
 
 	expect(style1.left).toBe("0px");
-	expect(style1.top).toBe("calc(10px + 0px)");
+	expect(style1.top).toBe("calc(0px + 10px)");
 	expect(style1.right).toBe("0px");
 	expect(style1.bottom).toBe("");
 	expect(style1.width).toBe("");
@@ -121,9 +121,9 @@ test("Top stacked reversed has correct styles", async () => {
 	const style1 = window.getComputedStyle(sut1);
 
 	expect(style1.left).toBe("0px");
-	expect(style1.top).toBe("calc(10px + 0px)");
+	expect(style1.top).toBe("calc(0px + 10px)");
 	expect(style1.right).toBe("0px");
-	expect(style1.bottom).toBe("0px");
+	expect(style1.bottom).toBe("");
 	expect(style1.width).toBe("");
 	expect(style1.height).toBe("10px");
 });
