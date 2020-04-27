@@ -7,8 +7,8 @@ afterEach(cleanup);
 
 test("Fixed default has correct styles", async () => {
 	const { container } = render(<Fixed id="test" height={10} />);
-	const sut = container.querySelector("#test");
-	const style = window.getComputedStyle(sut!);
+	const sut = container.querySelector("#test")!;
+	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");
 	expect(style.position).toBe("relative");
@@ -18,12 +18,13 @@ test("Fixed default has correct styles", async () => {
 	expect(style.bottom).toBe("");
 	expect(style.width).toBe("");
 	expect(style.height).toBe("10px");
+	expect(sut.nodeName).toBe("DIV");
 });
 
 test("Fixed with width and height has correct styles", async () => {
 	const { container } = render(<Fixed id="test" width={10} height={20} />);
-	const sut = container.querySelector("#test");
-	const style = window.getComputedStyle(sut!);
+	const sut = container.querySelector("#test")!;
+	const style = window.getComputedStyle(sut);
 
 	expect(style.left).toBe("");
 	expect(style.top).toBe("");
@@ -54,4 +55,11 @@ test("Fixed scrollable applied", async () => {
 	const style = window.getComputedStyle(sut!);
 
 	expect(style.overflow).toBe("auto");
+});
+
+test("Fixed as applied", async () => {
+	const { container } = render(<Fixed id="test" height={20} as="main" />);
+	const sut = container.querySelector("#test")!;
+
+	expect(sut.nodeName).toBe("MAIN");
 });

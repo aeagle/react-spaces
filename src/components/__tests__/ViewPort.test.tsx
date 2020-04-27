@@ -7,8 +7,8 @@ afterEach(cleanup);
 
 test("ViewPort default has correct styles", async () => {
 	const { container } = render(<ViewPort id="test" />);
-	const sut = container.querySelector("#test");
-	const style = window.getComputedStyle(sut!);
+	const sut = container.querySelector("#test")!;
+	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");
 	expect(style.position).toBe("fixed");
@@ -18,6 +18,7 @@ test("ViewPort default has correct styles", async () => {
 	expect(style.bottom).toBe("0px");
 	expect(style.width).toBe("");
 	expect(style.height).toBe("");
+	expect(sut.nodeName).toBe("DIV");
 });
 
 test("ViewPort with offsets has correct styles", async () => {
@@ -52,4 +53,11 @@ test("ViewPort scrollable applied", async () => {
 	const style = window.getComputedStyle(sut!);
 
 	expect(style.overflow).toBe("auto");
+});
+
+test("ViewPort as applied", async () => {
+	const { container } = render(<ViewPort id="test" as="main" />);
+	const sut = container.querySelector("#test")!;
+
+	expect(sut.nodeName).toBe("MAIN");
 });
