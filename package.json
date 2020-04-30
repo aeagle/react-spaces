@@ -50,9 +50,8 @@
 		"awesome-typescript-loader": "^5.2.1",
 		"babel-loader": "^8.0.6",
 		"babel-plugin-external-helpers": "^6.22.0",
-		"cssstyle": "2.2.0",
+		"cssstyle": "^2.3.0",
 		"jest": "^25.4.0",
-		"jsdom": "^16.2.2",
 		"node-sass": "^4.13.1",
 		"prettier": "^1.19.1",
 		"react": "^16.13.1",
@@ -74,12 +73,16 @@
 		"tslib": "^1.10.0",
 		"typescript": "^3.5.3"
 	},
+	"resolutions": {
+		"cssstyle": "2.3.0"
+	},
 	"peerDependencies": {
 		"react": "^16.8.0",
 		"react-dom": "^16.8.0",
 		"prop-types": "^15.7.2"
 	},
 	"scripts": {
+		"preinstall": "npx npm-force-resolutions",
 		"start": "rollup -c -w",
 		"build": "npm run build:prod",
 		"build:prod": "rollup -c",
