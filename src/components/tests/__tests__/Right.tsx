@@ -1,9 +1,7 @@
 import * as React from "react";
-import { render, cleanup } from "@testing-library/react";
+import { cleanup } from "@testing-library/react";
 import { Right } from "../../Anchored";
-import "@testing-library/jest-dom/extend-expect";
-import { ViewPort } from "../../ViewPort";
-import { commonPropsTests } from "../Common";
+import { commonPropsTests, commonAnchorTests } from "../Common";
 
 afterEach(cleanup);
 
@@ -17,58 +15,10 @@ commonPropsTests("Right", <Right size={50} />, {
 	height: "",
 });
 
-test("Right stacked has correct styles", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Right id="test" size={10} order={0} />
-			<Right id="test1" size={10} order={1} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test")!;
-	const style = window.getComputedStyle(sut);
-
-	expect(style.left).toBe("");
-	expect(style.top).toBe("0px");
-	expect(style.right).toBe("0px");
-	expect(style.bottom).toBe("0px");
-	expect(style.width).toBe("10px");
-	expect(style.height).toBe("");
-
-	const sut1 = container.querySelector("#test1")!;
-	const style1 = window.getComputedStyle(sut1);
-
-	expect(style1.left).toBe("");
-	expect(style1.top).toBe("0px");
-	expect(style1.right).toBe("calc(0px + 10px)");
-	expect(style1.bottom).toBe("0px");
-	expect(style1.width).toBe("10px");
-	expect(style1.height).toBe("");
-});
-
-test("Right stacked reversed has correct styles", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Right id="test1" size={10} order={1} />
-			<Right id="test" size={10} order={0} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test")!;
-	const style = window.getComputedStyle(sut);
-
-	expect(style.left).toBe("");
-	expect(style.top).toBe("0px");
-	expect(style.right).toBe("0px");
-	expect(style.bottom).toBe("0px");
-	expect(style.width).toBe("10px");
-	expect(style.height).toBe("");
-
-	const sut1 = container.querySelector("#test1")!;
-	const style1 = window.getComputedStyle(sut1);
-
-	expect(style1.left).toBe("");
-	expect(style1.top).toBe("0px");
-	expect(style1.right).toBe("calc(0px + 10px)");
-	expect(style1.bottom).toBe("0px");
-	expect(style1.width).toBe("10px");
-	expect(style1.height).toBe("");
-});
+commonAnchorTests(
+	"Right",
+	<Right size={50} />,
+	(style) => style.width,
+	(style) => style.right,
+	(style) => style.left,
+);

@@ -2,6 +2,7 @@ import * as React from "react";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { ViewPort } from "../ViewPort";
+import { drag } from "./TestUtils";
 
 const mutateComponent = (component: React.ReactNode, newProps: Object) => {
 	return React.cloneElement(component as React.DetailedReactHTMLElement<any, HTMLElement>, newProps);
@@ -49,5 +50,129 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 		const sut = container.querySelector("#test")!;
 
 		expect(sut.nodeName).toBe("MAIN");
+	});
+};
+
+export const commonAnchorTests = (
+	name: string,
+	component: React.ReactNode,
+	size: (style: CSSStyleDeclaration) => string | null,
+	edge: (style: CSSStyleDeclaration) => string | null,
+	oppositeEdge: (style: CSSStyleDeclaration) => string | null,
+) => {
+	test(`${name} stacked has correct styles`, async () => {
+		const { container } = render(
+			<ViewPort>
+				{mutateComponent(component, { id: "test", size: 50, order: 0 })}
+				{mutateComponent(component, { id: "test1", size: 100, order: 1 })}
+			</ViewPort>,
+		);
+
+		const sut = container.querySelector("#test")!;
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("50px");
+		expect(edge(style)).toBe("0px");
+		expect(oppositeEdge(style)).toBe("");
+
+		const sut1 = container.querySelector("#test1")!;
+		const style1 = window.getComputedStyle(sut1);
+		expect(size(style1)).toBe("100px");
+		expect(edge(style1)).toBe("calc(0px + 50px)");
+		expect(oppositeEdge(style1)).toBe("");
+	});
+
+	test(`${name} stacked DOM reversed has correct styles`, async () => {
+		const { container } = render(
+			<ViewPort>
+				{mutateComponent(component, { id: "test1", size: 100, order: 1 })}
+				{mutateComponent(component, { id: "test", size: 50, order: 0 })}
+			</ViewPort>,
+		);
+
+		const sut = container.querySelector("#test")!;
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("50px");
+		expect(edge(style)).toBe("0px");
+		expect(oppositeEdge(style)).toBe("");
+
+		const sut1 = container.querySelector("#test1")!;
+		const style1 = window.getComputedStyle(sut1);
+		expect(size(style1)).toBe("100px");
+		expect(edge(style1)).toBe("calc(0px + 50px)");
+		expect(oppositeEdge(style1)).toBe("");
+	});
+};
+
+export const commonResizableTests = (
+	name: string,
+	component: React.ReactNode,
+	size: (style: CSSStyleDeclaration) => string | null,
+	edge: (style: CSSStyleDeclaration) => string | null,
+	oppositeEdge: (style: CSSStyleDeclaration) => string | null,
+	horizontal: boolean,
+	negate: boolean,
+) => {
+	test(`${name} after resize has correct styles`, async () => {
+		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test" })}</ViewPort>);
+		const sut = container.querySelector("#test")!;
+		const resizeHandle = container.querySelector("#test .spaces-resize-handle")!;
+
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			horizontal ? (negate ? -100 : 100) : 0,
+			horizontal ? 0 : negate ? -100 : 100,
+		);
+
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("calc(50px + 100px)");
+	});
+
+	test(`${name} subsequent resize has correct styles`, async () => {
+		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test" })}</ViewPort>);
+		const sut = container.querySelector("#test")!;
+		const resizeHandle = container.querySelector("#test .spaces-resize-handle")!;
+
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			horizontal ? (negate ? -100 : 100) : 0,
+			horizontal ? 0 : negate ? -100 : 100,
+		);
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			horizontal ? (negate ? 100 : -100) : 0,
+			horizontal ? 0 : negate ? 100 : -100,
+		);
+
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("50px");
+	});
+
+	test(`${name} resize then props size change has correct styles`, async () => {
+		const { container, rerender } = render(<ViewPort>{mutateComponent(component, { id: "test", size: 50 })}</ViewPort>);
+		const sut = container.querySelector("#test")!;
+		const resizeHandle = container.querySelector("#test .spaces-resize-handle")!;
+
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			horizontal ? (negate ? -100 : 100) : 0,
+			horizontal ? 0 : negate ? -100 : 100,
+		);
+
+		rerender(<ViewPort>{mutateComponent(component, { id: "test", size: 150 })}</ViewPort>);
+
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("150px");
 	});
 };

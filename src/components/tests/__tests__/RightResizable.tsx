@@ -1,34 +1,34 @@
 import * as React from "react";
 import { cleanup } from "@testing-library/react";
-import { LeftResizable } from "../../Anchored";
+import { RightResizable } from "../../Anchored";
 import { commonPropsTests, commonAnchorTests, commonResizableTests } from "../Common";
 
 afterEach(cleanup);
 
-commonPropsTests("LeftResizable", <LeftResizable size={50} />, {
+commonPropsTests("RightResizable", <RightResizable size={50} />, {
 	position: "absolute",
-	left: "0px",
+	left: "",
 	top: "0px",
-	right: "",
+	right: "0px",
 	bottom: "0px",
 	width: "50px",
 	height: "",
 });
 
 commonAnchorTests(
-	"LeftResizable",
-	<LeftResizable size={50} />,
+	"RightResizable",
+	<RightResizable size={50} />,
 	(style) => style.width,
-	(style) => style.left,
 	(style) => style.right,
+	(style) => style.left,
 );
 
 commonResizableTests(
-	"LeftResizable",
-	<LeftResizable size={50} />,
+	"RightResizable",
+	<RightResizable size={50} />,
 	(style) => style.width,
-	(style) => style.left,
 	(style) => style.right,
+	(style) => style.left,
 	true,
-	false,
+	true,
 );
