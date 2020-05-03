@@ -374,15 +374,15 @@ export function createStore(): ISpaceStore {
 
 	store.startMouseResize = (resizeType, space, size, event) => {
 		resize.startResize(resizeType, event, space, size, EndEvent.Mouse, MoveEvent.Mouse, (e) => ({
-			x: e.pageX,
-			y: e.pageY,
+			x: e.clientX,
+			y: e.clientY,
 		}));
 	};
 
 	store.startTouchResize = (resizeType, space, size, event) => {
 		resize.startResize(resizeType, event, space, size, EndEvent.Touch, MoveEvent.Touch, (e) => ({
-			x: e.touches[0].pageX,
-			y: e.touches[0].pageY,
+			x: e.touches[0].clientX,
+			y: e.touches[0].clientY,
 		}));
 	};
 

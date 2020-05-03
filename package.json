@@ -52,6 +52,7 @@
 		"babel-plugin-external-helpers": "^6.22.0",
 		"cssstyle": "^2.3.0",
 		"jest": "^25.4.0",
+		"jest-expect-message": "^1.0.2",
 		"node-sass": "^4.13.1",
 		"prettier": "^1.19.1",
 		"react": "^16.13.1",

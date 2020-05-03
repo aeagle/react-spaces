@@ -21,6 +21,6 @@
 		"typeRoots": ["node_modules/@types", "typings"],
 		"esModuleInterop": true
 	},
-	"include": ["./src/**/*"],
+	"include": ["./src/**/*", "@types/global.d.ts"],
 	"exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest", "src/setupTests.ts"]
 }

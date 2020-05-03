@@ -24,32 +24,37 @@ export function createResize(store: ISpaceStore) {
 		space: ISpaceDefinition,
 		targetSize: ISize,
 		resizeType: ResizeType,
+		startSize: number,
 		originalX: number,
 		originalY: number,
 		x: number,
 		y: number,
 		minimumAdjust: number,
 		maximumAdjust: number | undefined,
-		customResizeHandler?: (resizeDelta: IResizeChange) => void,
 	) {
-		const adjustmentX = Math.min(
-			Math.max(resizeType === ResizeType.Left ? originalX - x : x - originalX, minimumAdjust),
-			maximumAdjust === undefined ? 999999 : maximumAdjust,
-		);
-		const adjustmentY = Math.min(
-			Math.max(resizeType === ResizeType.Top ? originalY - y : y - originalY, minimumAdjust),
-			maximumAdjust === undefined ? 999999 : maximumAdjust,
-		);
+		let adjustment =
+			startSize +
+			(space.orientation === Orientation.Horizontal
+				? resizeType === ResizeType.Left
+					? originalX - x
+					: x - originalX
+				: resizeType === ResizeType.Top
+				? originalY - y
+				: y - originalY);
 
-		if (customResizeHandler) {
-			customResizeHandler({ x: adjustmentX, y: adjustmentY });
+		if (adjustment < minimumAdjust) {
+			adjustment = minimumAdjust;
 		} else {
-			const adjustment = space.orientation === Orientation.Horizontal ? adjustmentX : adjustmentY;
-
-			if (adjustment !== targetSize.resized) {
-				targetSize.resized = adjustment;
-				store.updateStyles(space);
+			if (maximumAdjust) {
+				if (adjustment > maximumAdjust) {
+					adjustment = maximumAdjust;
+				}
 			}
+		}
+
+		if (adjustment !== targetSize.resized) {
+			targetSize.resized = adjustment;
+			store.updateStyles(space);
 		}
 	}
 
@@ -73,11 +78,10 @@ export function createResize(store: ISpaceStore) {
 			space.resizing = true;
 			space.updateParent();
 
-			var rect = space.element.getBoundingClientRect();
-			var size = space.orientation === Orientation.Horizontal ? rect.width : rect.height;
-			const coords = getCoords(e);
-			const originalMouseX = resizeType === ResizeType.Left ? coords.x + targetSize.resized : coords.x - targetSize.resized;
-			const originalMouseY = resizeType === ResizeType.Top ? coords.y + targetSize.resized : coords.y - targetSize.resized;
+			const rect = space.element.getBoundingClientRect();
+			const size = space.orientation === Orientation.Horizontal ? rect.width : rect.height;
+			const originalCoords = getCoords(e);
+			const startSize = targetSize.resized;
 			const minimumAdjust = coalesce(space.minimumSize, 20)! - size + targetSize.resized;
 			const maximumAdjust = space.maximumSize ? space.maximumSize - size + targetSize.resized : undefined;
 
@@ -86,7 +90,7 @@ export function createResize(store: ISpaceStore) {
 			let moved = false;
 
 			const resize = (x: number, y: number) =>
-				onResize(space, targetSize, resizeType, originalMouseX, originalMouseY, x, y, minimumAdjust, maximumAdjust);
+				onResize(space, targetSize, resizeType, startSize, originalCoords.x, originalCoords.y, x, y, minimumAdjust, maximumAdjust);
 
 			const withPreventDefault = (e: T) => {
 				moved = true;

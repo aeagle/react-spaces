@@ -1,76 +1,21 @@
 import * as React from "react";
 import { render, cleanup } from "@testing-library/react";
-import { Fill } from "../Fill";
-import { Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable } from "../Anchored";
+import { Fill } from "../../Fill";
+import { Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable } from "../../Anchored";
 import "@testing-library/jest-dom/extend-expect";
-import { ViewPort } from "../ViewPort";
+import { ViewPort } from "../../ViewPort";
+import { commonPropsTests } from "../Common";
 
 afterEach(cleanup);
 
-test("Fill default has correct styles", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Fill id="test" />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test")!;
-	const style = window.getComputedStyle(sut);
-
-	expect(style.display).toBe("block");
-	expect(style.position).toBe("absolute");
-	expect(style.left).toBe("0px");
-	expect(style.top).toBe("0px");
-	expect(style.right).toBe("0px");
-	expect(style.bottom).toBe("0px");
-	expect(style.width).toBe("");
-	expect(style.height).toBe("");
-	expect(sut.nodeName).toBe("DIV");
-});
-
-test("Fill with class applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Fill id="test" className={"custom-class"} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test");
-
-	expect(sut!.className).toBe("spaces-space custom-class");
-});
-
-test("Fill with style applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Fill id="test" style={{ backgroundColor: "red" }} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test");
-	const style = window.getComputedStyle(sut!);
-
-	expect(style.backgroundColor).toBe("red");
-});
-
-test("Fill scrollable applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Fill id="test" scrollable={true} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test");
-	const style = window.getComputedStyle(sut!);
-
-	expect(style.overflow).toBe("auto");
-});
-
-test("Fill as applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Fill id="test" as="main" />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test")!;
-
-	expect(sut.nodeName).toBe("MAIN");
+commonPropsTests("Fill", <Fill />, {
+	position: "absolute",
+	left: "0px",
+	top: "0px",
+	right: "0px",
+	bottom: "0px",
+	width: "",
+	height: "",
 });
 
 test("Fill with Left has correct styles", async () => {

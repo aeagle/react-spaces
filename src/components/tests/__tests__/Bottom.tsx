@@ -1,75 +1,20 @@
 import * as React from "react";
 import { render, cleanup } from "@testing-library/react";
-import { Bottom } from "../Anchored";
+import { Bottom } from "../../Anchored";
 import "@testing-library/jest-dom/extend-expect";
-import { ViewPort } from "../ViewPort";
+import { ViewPort } from "../../ViewPort";
+import { commonPropsTests } from "../Common";
 
 afterEach(cleanup);
 
-test("Bottom default has correct styles", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Bottom id="test" size={10} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test")!;
-	const style = window.getComputedStyle(sut);
-
-	expect(style.display).toBe("block");
-	expect(style.position).toBe("absolute");
-	expect(style.left).toBe("0px");
-	expect(style.top).toBe("");
-	expect(style.right).toBe("0px");
-	expect(style.bottom).toBe("0px");
-	expect(style.width).toBe("");
-	expect(style.height).toBe("10px");
-	expect(sut.nodeName).toBe("DIV");
-});
-
-test("Bottom with class applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Bottom id="test" size={10} className={"custom-class"} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test");
-
-	expect(sut!.className).toBe("spaces-space custom-class");
-});
-
-test("Bottom with style applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Bottom id="test" size={10} style={{ backgroundColor: "red" }} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test");
-	const style = window.getComputedStyle(sut!);
-
-	expect(style.backgroundColor).toBe("red");
-});
-
-test("Bottom scrollable applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Bottom id="test" size={10} scrollable={true} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test");
-	const style = window.getComputedStyle(sut!);
-
-	expect(style.overflow).toBe("auto");
-});
-
-test("Bottom as applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Bottom id="test" size={10} as="main" />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test")!;
-
-	expect(sut.nodeName).toBe("MAIN");
+commonPropsTests("Bottom", <Bottom size={50} />, {
+	position: "absolute",
+	left: "0px",
+	top: "",
+	right: "0px",
+	bottom: "0px",
+	width: "",
+	height: "50px",
 });
 
 test("Bottom stacked has correct styles", async () => {

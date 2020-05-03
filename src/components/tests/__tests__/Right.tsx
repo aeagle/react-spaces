@@ -1,75 +1,20 @@
 import * as React from "react";
 import { render, cleanup } from "@testing-library/react";
-import { Right } from "../Anchored";
+import { Right } from "../../Anchored";
 import "@testing-library/jest-dom/extend-expect";
-import { ViewPort } from "../ViewPort";
+import { ViewPort } from "../../ViewPort";
+import { commonPropsTests } from "../Common";
 
 afterEach(cleanup);
 
-test("Right default has correct styles", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Right id="test" size={10} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test")!;
-	const style = window.getComputedStyle(sut);
-
-	expect(style.display).toBe("block");
-	expect(style.position).toBe("absolute");
-	expect(style.left).toBe("");
-	expect(style.top).toBe("0px");
-	expect(style.right).toBe("0px");
-	expect(style.bottom).toBe("0px");
-	expect(style.width).toBe("10px");
-	expect(style.height).toBe("");
-	expect(sut.nodeName).toBe("DIV");
-});
-
-test("Right with class applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Right id="test" size={10} className={"custom-class"} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test");
-
-	expect(sut!.className).toBe("spaces-space custom-class");
-});
-
-test("Right with style applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Right id="test" size={10} style={{ backgroundColor: "red" }} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test");
-	const style = window.getComputedStyle(sut!);
-
-	expect(style.backgroundColor).toBe("red");
-});
-
-test("Right scrollable applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Right id="test" size={10} scrollable={true} />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test");
-	const style = window.getComputedStyle(sut!);
-
-	expect(style.overflow).toBe("auto");
-});
-
-test("Right as applied", async () => {
-	const { container } = render(
-		<ViewPort>
-			<Right id="test" size={10} as="main" />
-		</ViewPort>,
-	);
-	const sut = container.querySelector("#test")!;
-
-	expect(sut.nodeName).toBe("MAIN");
+commonPropsTests("Right", <Right size={50} />, {
+	position: "absolute",
+	left: "",
+	top: "0px",
+	right: "0px",
+	bottom: "0px",
+	width: "50px",
+	height: "",
 });
 
 test("Right stacked has correct styles", async () => {
