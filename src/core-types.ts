@@ -38,7 +38,19 @@ export enum CenterType {
 	HorizontalVertical = "horizontalVertical",
 }
 
-export interface ICommonProps {
+export interface IPassThroughEvents {
+	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onDoubleClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onMouseDown?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onMouseEnter?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onMouseLeave?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onMouseMove?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	onTouchStart?: (event: React.TouchEvent<HTMLElement>) => void;
+	onTouchMove?: (event: React.TouchEvent<HTMLElement>) => void;
+	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
+}
+
+export interface ICommonProps extends IPassThroughEvents {
 	id?: string;
 	className?: string;
 	style?: React.CSSProperties;
@@ -47,7 +59,6 @@ export interface ICommonProps {
 	zIndex?: number;
 	scrollable?: boolean;
 	trackSize?: boolean;
-	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
 export interface ISpaceProps extends ICommonProps {

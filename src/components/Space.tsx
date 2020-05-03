@@ -15,7 +15,20 @@ function applyCentering(children: React.ReactNode, centerType: CenterType | unde
 }
 
 export const Space: React.FC<ISpaceProps> = (props) => {
-	const { style, className, onClick, children } = props;
+	const {
+		style,
+		className,
+		onClick,
+		onDoubleClick,
+		onMouseDown,
+		onMouseEnter,
+		onMouseLeave,
+		onMouseMove,
+		onTouchStart,
+		onTouchMove,
+		onTouchEnd,
+		children,
+	} = props;
 	const { space, domRect, elementRef, resizeHandles } = useSpace(props);
 
 	React.useEffect(() => {
@@ -46,6 +59,14 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 					style: style,
 					className: outerClasses.join(" "),
 					onClick: onClick,
+					onDoubleClick: onDoubleClick,
+					onMouseDown: onMouseDown,
+					onMouseEnter: onMouseEnter,
+					onMouseLeave: onMouseLeave,
+					onMouseMove: onMouseMove,
+					onTouchStart: onTouchStart,
+					onTouchMove: onTouchMove,
+					onTouchEnd: onTouchEnd,
 				},
 				<ParentContext.Provider value={space.id}>
 					<LayerContext.Provider value={undefined}>
