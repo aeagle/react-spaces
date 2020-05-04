@@ -1,4 +1,5 @@
 import "../styles.css";
+
 export * from "./Anchored";
 export * from "./Centered";
 export * from "./CenteredVertically";
@@ -9,4 +10,4 @@ export * from "./Layer";
 export * from "./Positioned";
 export * from "./SpaceInfo";
 export * from "./ViewPort";
-export { AnchorType, CenterType } from "../core-types";
+export { AnchorType, CenterType, IPosition } from "../core-types";

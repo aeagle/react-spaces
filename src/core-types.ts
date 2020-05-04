@@ -85,17 +85,20 @@ export interface ISpaceStore {
 	startTouchResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, event: React.TouchEvent<HTMLElement>) => void;
 }
 
-export interface IPositionalProps {
+export interface IPosition {
 	left?: SizeUnit | undefined;
-	leftResizable?: boolean;
 	top?: SizeUnit | undefined;
-	topResizable?: boolean;
 	right?: SizeUnit | undefined;
-	rightResizable?: boolean;
 	bottom?: SizeUnit | undefined;
-	bottomResizable?: boolean;
 	width?: SizeUnit | undefined;
 	height?: SizeUnit | undefined;
+}
+
+export interface IPositionalProps extends IPosition {
+	leftResizable?: boolean;
+	topResizable?: boolean;
+	rightResizable?: boolean;
+	bottomResizable?: boolean;
 }
 
 export interface ISize {
