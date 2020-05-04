@@ -149,12 +149,12 @@ export const ResizableProps = () => (
 		<Prop name="maximumSize" type="number" description="Constrains resizing of the space to a maximum size." />
 		<Prop
 			name="onResizeStart"
-			type="() => boolean"
+			type="() => boolean | void"
 			description="Triggered when a resize starts. Returning false from the event handler cancels the resize."
 		/>
 		<Prop
 			name="onResizeEnd"
-			type="(newSize: number) => void"
+			type="(newSize: number, newRect: DOMRect) => void"
 			description="Triggered when a resize ends. The final size in pixels of the space in after the resize is passed as the first parameter."
 		/>
 	</>

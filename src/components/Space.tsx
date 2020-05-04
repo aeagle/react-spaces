@@ -29,6 +29,19 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 		onTouchEnd,
 		children,
 	} = props;
+
+	const events = {
+		onClick: onClick,
+		onDoubleClick: onDoubleClick,
+		onMouseDown: onMouseDown,
+		onMouseEnter: onMouseEnter,
+		onMouseLeave: onMouseLeave,
+		onMouseMove: onMouseMove,
+		onTouchStart: onTouchStart,
+		onTouchMove: onTouchMove,
+		onTouchEnd: onTouchEnd,
+	};
+
 	const { space, domRect, elementRef, resizeHandles } = useSpace(props);
 
 	React.useEffect(() => {
@@ -37,15 +50,9 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 
 	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
 
-	const outerClasses = [
-		...[
-			"spaces-space",
-			//props.scrollable ? (isResizable(props) ? "scrollable" : "scrollable-a") : undefined,
-			space.children.find((s) => s.resizing) ? " spaces-resizing" : undefined,
-		],
-		//...(isResizable(props) && props.scrollable ? userClasses.map((c) => `${c}-container`) : userClasses),
-		...userClasses,
-	].filter((c) => c);
+	const outerClasses = [...["spaces-space", space.children.find((s) => s.resizing) ? "spaces-resizing" : undefined], ...userClasses].filter(
+		(c) => c,
+	);
 
 	const centeredContent = applyCentering(children, props.centerContent);
 
@@ -54,30 +61,24 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 			{React.createElement(
 				props.as || "div",
 				{
-					id: space.id,
-					ref: elementRef,
-					style: style,
-					className: outerClasses.join(" "),
-					onClick: onClick,
-					onDoubleClick: onDoubleClick,
-					onMouseDown: onMouseDown,
-					onMouseEnter: onMouseEnter,
-					onMouseLeave: onMouseLeave,
-					onMouseMove: onMouseMove,
-					onTouchStart: onTouchStart,
-					onTouchMove: onTouchMove,
-					onTouchEnd: onTouchEnd,
+					...{
+						id: space.id,
+						ref: elementRef,
+						className: outerClasses.join(" "),
+						style: style,
+					},
+					...events,
 				},
-				<ParentContext.Provider value={space.id}>
-					<LayerContext.Provider value={undefined}>
-						<DOMRectContext.Provider value={domRect}>
-							{resizeHandles.map((r) => (
-								<div {...r} />
-							))}
-							{centeredContent}
-						</DOMRectContext.Provider>
-					</LayerContext.Provider>
-				</ParentContext.Provider>,
+				<>
+					{resizeHandles.map((r) => (
+						<div {...r} />
+					))}
+					<ParentContext.Provider value={space.id}>
+						<LayerContext.Provider value={undefined}>
+							<DOMRectContext.Provider value={domRect}>{centeredContent}</DOMRectContext.Provider>
+						</LayerContext.Provider>
+					</ParentContext.Provider>
+				</>,
 			)}
 		</>
 	);

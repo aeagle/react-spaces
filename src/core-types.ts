@@ -66,6 +66,7 @@ export interface ISpaceProps extends ICommonProps {
 	anchor?: AnchorType | undefined;
 	order?: number | undefined;
 	position?: IPositionalProps | undefined;
+	overlayHandle?: boolean | undefined;
 	handleSize?: number | undefined;
 	minimumSize?: number | undefined;
 	maximumSize?: number | undefined;
