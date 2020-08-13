@@ -2,7 +2,7 @@ import { SyntheticEvent } from "react";
 import { ISpaceDefinition, ISize, ResizeType, Orientation, ISpaceStore } from "./core-types";
 import { throttle, coalesce } from "./core-utils";
 
-const RESIZE_THROTTLE = 5;
+const RESIZE_THROTTLE = 0;
 
 export enum MoveEvent {
 	Mouse = "mousemove",
@@ -99,7 +99,7 @@ export function createResize(store: ISpaceStore) {
 				lastY = newCoords.y;
 				e.preventDefault();
 
-				throttle(resize, RESIZE_THROTTLE)(lastX, lastY);
+				throttle((x, y) => window.requestAnimationFrame(() => resize(x, y)), RESIZE_THROTTLE)(lastX, lastY);
 			};
 
 			const removeListener = () => {
