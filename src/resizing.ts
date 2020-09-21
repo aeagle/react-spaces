@@ -1,4 +1,4 @@
-import { ResizeType, AllProps, AnchorToResizeTypeMap, ISpace, IPosition } from "./types";
+import { ResizeType, AllProps, AnchorToResizeTypeMap, ISpace } from "./types";
 import { isHorizontalSpace, coalesce } from "./utils";
 import { ISpaceContext, updateSpace } from "./ISpaceContext";
 import { throttle } from "./throttle";
@@ -29,7 +29,7 @@ export function startTouchResize(
 	element: HTMLElement | undefined,
 	resizeType?: ResizeType,
 	customResizeHandler?: (resizeDelta: IResizeChange) => void,
-	onResizeEnd?: (size: number, position: IPosition) => void,
+	onResizeEnd?: (newSize: number) => void,
 ) {
 	return startResize(
 		e,
@@ -57,7 +57,7 @@ export function startMouseResize(
 	element: HTMLElement | undefined,
 	resizeType?: ResizeType,
 	customResizeHandler?: (resizeDelta: IResizeChange) => void,
-	onResizeEnd?: (size: number, position: IPosition) => void,
+	onResizeEnd?: (newSize: number) => void,
 ) {
 	return startResize(
 		e,
@@ -77,10 +77,10 @@ export function startMouseResize(
 	);
 }
 
-function resizeEnd(props: AllProps, resizeType: ResizeType, element: HTMLElement, onResizeEnd?: (size: number, position: IPosition) => void) {
+function resizeEnd(resizeType: ResizeType, element: HTMLElement, onResizeEnd?: (newSize: number) => void) {
 	const currentRect = element.getBoundingClientRect();
-	props.onResizeEnd &&
-		props.onResizeEnd(Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height));
+	onResizeEnd &&
+		onResizeEnd(Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height));
 }
 
 function onResize(
@@ -127,7 +127,7 @@ function startResize<T extends SyntheticEvent<HTMLElement> | MouseEvent | TouchE
 	getCoords: (event: T) => { x: number; y: number },
 	resizeType?: ResizeType,
 	customResizeHandler?: (resizeDelta: IResizeChange) => void,
-	onResizeEnd?: (size: number, position: IPosition) => void,
+	onResizeEnd?: (newSize: number) => void,
 ) {
 	const type = resizeType || (props.anchor ? AnchorToResizeTypeMap[props.anchor] : undefined);
 	if (element && parentContext && (props.resizable || props.isPositioned) && type) {
@@ -178,7 +178,7 @@ function startResize<T extends SyntheticEvent<HTMLElement> | MouseEvent | TouchE
 				parentContext.updateResizing(false);
 			}
 
-			resizeEnd(props, type, element, onResizeEnd);
+			resizeEnd(type, element, onResizeEnd);
 		};
 
 		window.addEventListener(moveEvent, withPreventDefault as EventListener);

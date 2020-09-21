@@ -7,11 +7,7 @@ export interface ISpaceContext {
 	updateChildren: (children: ISpace[]) => void;
 	updateResizing: (state: boolean) => void;
 	startMouseDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>, onDragEnd?: (info: IPosition) => void) => void;
-	startMouseResize: (
-		e: React.MouseEvent<HTMLElement, MouseEvent>,
-		resizeType: ResizeType,
-		onResizeEnd?: (size: number, position: IPosition) => void,
-	) => void;
+	startMouseResize: (e: React.MouseEvent<HTMLElement, MouseEvent>, resizeType: ResizeType, onResizeEnd?: (newSize: number) => void) => void;
 }
 
 const recalcSpaces = (spaces: ISpace[]) => {
@@ -115,11 +111,7 @@ export const createSpaceContext = (
 	updateChildren: (children: ISpace[]) => void,
 	updateResizing: (state: boolean) => void,
 	startMouseDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>, onDragEnd?: (info: IPosition) => void) => void,
-	startMouseResize: (
-		e: React.MouseEvent<HTMLElement, MouseEvent>,
-		resizeType: ResizeType,
-		onResizeEnd?: (size: number, position: IPosition) => void,
-	) => void,
+	startMouseResize: (e: React.MouseEvent<HTMLElement, MouseEvent>, resizeType: ResizeType, onResizeEnd?: (newSize: number) => void) => void,
 	parent?: ISpaceContext | null,
 ) => {
 	const context: ISpaceContext = {

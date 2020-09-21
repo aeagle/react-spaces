@@ -18,7 +18,7 @@ Anchored resizable space on the left edge of it's parent.
 <Preview>
 	<Story name="Default (%)">
 		<ViewPort>
-			<LeftResizable style={green} size="50%" trackSize={true}>
+			<LeftResizable style={green} size="50%" trackSize={true} onResizeStart={() => console.log("Resize Started")} onResizeEnd={newSize => {console.log("newSize after resizeEnd: ", newSize)}}>
 				{description("Left resizable")}
 			</LeftResizable>
 		</ViewPort>

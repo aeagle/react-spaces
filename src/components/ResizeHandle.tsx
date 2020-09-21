@@ -13,6 +13,8 @@ interface IProps {
 	parentContext: ISpaceContext | undefined;
 	space: ISpace;
 	spaceElement: HTMLElement | undefined;
+	onResizeStart?: () => boolean | void;
+	onResizeEnd?: (newSize: number) => void;
 }
 
 export const ResizeHandle: React.FC<IProps> = (props) => {
@@ -25,8 +27,12 @@ export const ResizeHandle: React.FC<IProps> = (props) => {
 			<div
 				style={{ width: width, height: height }}
 				className={`spaces-resize-handle ${AnchorToResizeTypeMap[props.anchor]}`}
-				onMouseDown={(e) => startMouseResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType)}
-				onTouchStart={(e) => startTouchResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType)}
+				onMouseDown={(e) =>
+					startMouseResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType, undefined, props.onResizeEnd)
+				}
+				onTouchStart={(e) =>
+					startTouchResize(e, props.parentContext, props.space, props, props.spaceElement, resizeType, undefined, props.onResizeEnd)
+				}
 			/>
 		);
 	}
