@@ -49,11 +49,7 @@ export interface IReactEvents {
 
 export interface IParentSpace {
 	startMouseDrag: (e: React.MouseEvent<HTMLElement, MouseEvent>, onDragEnd?: (position: IPosition) => void) => void;
-	startMouseResize: (
-		e: React.MouseEvent<HTMLElement, MouseEvent>,
-		resizeType: ResizeType,
-		onResizeEnd?: (size: number, position: IPosition) => void,
-	) => void;
+	startMouseResize: (e: React.MouseEvent<HTMLElement, MouseEvent>, resizeType: ResizeType, onResizeEnd?: (newSize: number) => void) => void;
 }
 
 export interface IPosition {
