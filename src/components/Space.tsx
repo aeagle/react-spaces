@@ -145,6 +145,8 @@ export const SpaceInternal: React.FC<AllProps> = React.memo((props) => {
 						spaceElement={spaceElement.current}
 						minimumSize={props.minimumSize}
 						maximumSize={props.maximumSize}
+						onResizeStart={props.onResizeStart}
+						onResizeEnd={props.onResizeEnd}
 					/>
 					<div className={innerClasses.join(" ")} style={innerStyle}>
 						<SpaceContext.Provider value={currentContext}>
@@ -176,6 +178,8 @@ export const SpaceInternal: React.FC<AllProps> = React.memo((props) => {
 						spaceElement={spaceElement.current}
 						minimumSize={props.minimumSize}
 						maximumSize={props.maximumSize}
+						onResizeStart={props.onResizeStart}
+						onResizeEnd={props.onResizeEnd}
 					/>
 					<SpaceContext.Provider value={currentContext}>
 						<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
