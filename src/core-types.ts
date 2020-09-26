@@ -142,4 +142,8 @@ export interface ISpaceDefinition {
 	resizing: boolean;
 	minimumSize?: number;
 	maximumSize?: number;
+	canResizeTop: boolean;
+	canResizeLeft: boolean;
+	canResizeRight: boolean;
+	canResizeBottom: boolean;
 }

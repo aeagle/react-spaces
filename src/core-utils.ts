@@ -1,4 +1,4 @@
-import { ISpaceDefinition, SizeUnit, ISize } from "./core-types";
+import { ISpaceDefinition, SizeUnit, ISize, Type } from "./core-types";
 
 export function shortuuid() {
 	let firstPart = (Math.random() * 46656) | 0;
@@ -10,9 +10,9 @@ export function getSizeString(size: SizeUnit) {
 	return typeof size === "string" ? size : `${size}px`;
 }
 
-export function css(size: ISize) {
+export function css(size: ISize, dontAddCalc?: boolean) {
 	if (size.size === 0 && size.adjusted.length === 0 && size.resized === 0) {
-		return `0`;
+		return `0px`;
 	}
 
 	const parts: string[] = [];
@@ -32,6 +32,10 @@ export function css(size: ISize) {
 
 	if (parts.length === 1) {
 		return parts[0];
+	}
+
+	if (dontAddCalc) {
+		return parts.join(" + ");
 	}
 
 	return `calc(${parts.join(" + ")})`;
@@ -72,6 +76,8 @@ export function throttle<F extends (...args: any) => any>(callback: F, limit: nu
 }
 
 export function styleDefinition(space: ISpaceDefinition) {
+	const cssElements: string[] = [];
+
 	const style: React.CSSProperties = {
 		position: space.position,
 		left: css(space.left),
@@ -114,7 +120,31 @@ export function styleDefinition(space: ISpaceDefinition) {
 		cssString.push(`z-index: ${style.zIndex};`);
 	}
 
-	return `#${space.id} { ${cssString.join(" ")} }`;
+	if (cssString.length > 0) {
+		cssElements.push(`#${space.id} { ${cssString.join(" ")} }`);
+	}
+
+	if (space.canResizeLeft) {
+		cssElements.push(`#${space.id}-t { left: calc(${css(space.left, true)} + ${css(space.width, true)} - 15px); }`);
+		cssElements.push(`#${space.id}-m { left: calc(${css(space.left, true)} + ${css(space.width, true)} - 1px); }`);
+	}
+
+	if (space.canResizeTop) {
+		cssElements.push(`#${space.id}-t { top: calc(${css(space.top, true)} + ${css(space.height, true)} - 15px); }`);
+		cssElements.push(`#${space.id}-m { top: calc(${css(space.top, true)} + ${css(space.height, true)} - 1px); }`);
+	}
+
+	if (space.canResizeRight) {
+		cssElements.push(`#${space.id}-t { right: calc(${css(space.right, true)} + ${css(space.width, true)} - 15px); }`);
+		cssElements.push(`#${space.id}-m { right: calc(${css(space.right, true)} + ${css(space.width, true)} - 1px); }`);
+	}
+
+	if (space.canResizeBottom) {
+		cssElements.push(`#${space.id}-t { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - 15px); }`);
+		cssElements.push(`#${space.id}-m { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - 1px); }`);
+	}
+
+	return cssElements.join(" ");
 }
 
 export function updateStyleDefinition(space: ISpaceDefinition) {

@@ -177,6 +177,11 @@ export function createStore(): ISpaceStore {
 		},
 		updateSpace: (space, props) => {
 			const { type, anchor, order, zIndex, scrollable, position, centerContent, minimumSize, maximumSize } = props;
+			const canResizeLeft = (position && position.rightResizable) || false;
+			const canResizeRight = (position && position.leftResizable) || false;
+			const canResizeTop = (position && position.bottomResizable) || false;
+			const canResizeBottom = (position && position.topResizable) || false;
+
 			let changed = false;
 
 			if (space.type !== type) {
@@ -269,6 +274,26 @@ export function createStore(): ISpaceStore {
 				changed = true;
 			}
 
+			if (space.canResizeBottom !== canResizeBottom) {
+				space.canResizeBottom = canResizeBottom;
+				changed = true;
+			}
+
+			if (space.canResizeTop !== canResizeTop) {
+				space.canResizeTop = canResizeTop;
+				changed = true;
+			}
+
+			if (space.canResizeLeft !== canResizeLeft) {
+				space.canResizeLeft = canResizeLeft;
+				changed = true;
+			}
+
+			if (space.canResizeRight !== canResizeRight) {
+				space.canResizeRight = canResizeRight;
+				changed = true;
+			}
+
 			if (changed) {
 				if (space.parentId) {
 					const parentSpace = getSpace(space.parentId);
@@ -288,6 +313,10 @@ export function createStore(): ISpaceStore {
 
 	store.createSpace = (parentId: string | undefined, props: ISpaceProps, update: () => void) => {
 		const { position, anchor, type, ...commonProps } = props;
+		const canResizeLeft = (position && position.rightResizable) || false;
+		const canResizeRight = (position && position.leftResizable) || false;
+		const canResizeTop = (position && position.bottomResizable) || false;
+		const canResizeBottom = (position && position.topResizable) || false;
 
 		const newSpace: ISpaceDefinition = {
 			...spaceDefaults,
@@ -315,6 +344,10 @@ export function createStore(): ISpaceStore {
 				bottom: sizeInfoDefault(position && position.bottom),
 				width: sizeInfoDefault(position && position.width),
 				height: sizeInfoDefault(position && position.height),
+				canResizeLeft: canResizeLeft,
+				canResizeRight: canResizeRight,
+				canResizeTop: canResizeTop,
+				canResizeBottom: canResizeBottom,
 			},
 		} as ISpaceDefinition;
 

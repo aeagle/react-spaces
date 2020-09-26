@@ -33,32 +33,53 @@
 	touch-action: none;
 }
 
+.spaces-touch-handle {
+	position: absolute;
+	z-index: 9998;
+}
+
 .spaces-resize-handle.resize-left {
 	top: 0;
 	bottom: 0;
-	left: 0;
 	cursor: w-resize;
+}
+
+.spaces-touch-handle.resize-left {
+	top: 0;
+	bottom: 0;
 }
 
 .spaces-resize-handle.resize-right {
 	top: 0;
 	bottom: 0;
-	right: 0;
 	cursor: e-resize;
 }
 
-.spaces-resize-handle.resize-top {
+.spaces-touch-handle.resize-right {
 	top: 0;
+	bottom: 0;
+}
+
+.spaces-resize-handle.resize-top {
 	left: 0;
 	right: 0;
 	cursor: n-resize;
 }
 
+.spaces-touch-handle.resize-top {
+	left: 0;
+	right: 0;
+}
+
 .spaces-resize-handle.resize-bottom {
-	bottom: 0;
 	left: 0;
 	right: 0;
 	cursor: s-resize;
+}
+
+.spaces-touch-handle.resize-bottom {
+	left: 0;
+	right: 0;
 }
 
 .spaces-space {

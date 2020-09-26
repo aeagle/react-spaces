@@ -58,6 +58,12 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 
 	return (
 		<>
+			{resizeHandles.touchHandles.map((r) => (
+				<div {...r} />
+			))}
+			{resizeHandles.mouseHandles.map((r) => (
+				<div {...r} />
+			))}
 			{React.createElement(
 				props.as || "div",
 				{
@@ -70,9 +76,6 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 					...events,
 				},
 				<>
-					{resizeHandles.map((r) => (
-						<div {...r} />
-					))}
 					<ParentContext.Provider value={space.id}>
 						<LayerContext.Provider value={undefined}>
 							<DOMRectContext.Provider value={domRect}>{centeredContent}</DOMRectContext.Provider>
