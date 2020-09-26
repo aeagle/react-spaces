@@ -30,7 +30,7 @@ Anchored resizable space on the bottom edge of it's parent.
 <Preview>
 	<Story name="Default (px)">
 		<ViewPort>
-			<BottomResizable style={green} size={300} trackSize={true}>
+			<BottomResizable style={green} size={300} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Bottom resizable")}
 			</BottomResizable>
 		</ViewPort>
@@ -42,7 +42,7 @@ Anchored resizable space on the bottom edge of it's parent.
 <Preview>
 	<Story name="With resize constraints">
 		<ViewPort>
-			<BottomResizable style={green} size={300} trackSize={true} minimumSize={150} maximumSize={450}>
+			<BottomResizable style={green} size={300} trackSize={true} minimumSize={150} maximumSize={450} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Bottom resizable")}
 			</BottomResizable>
 		</ViewPort>
@@ -54,7 +54,7 @@ Anchored resizable space on the bottom edge of it's parent.
 <Preview>
 	<Story name="Scrollable">
 		<ViewPort>
-			<BottomResizable style={green} size={300} scrollable={true}>
+			<BottomResizable style={green} size={300} scrollable={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{lorem}
 			</BottomResizable>
 		</ViewPort>
