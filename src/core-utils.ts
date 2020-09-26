@@ -87,6 +87,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 	if (space.scrollable) {
 		cssString.push(`overflow: auto;`);
+		cssString.push(`touch-action: auto;`);
 	}
 	if (style.position) {
 		cssString.push(`position: ${style.position};`);
