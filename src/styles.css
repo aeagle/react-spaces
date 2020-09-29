@@ -31,11 +31,14 @@
 	position: absolute;
 	z-index: 9999;
 	touch-action: none;
+	background: transparent;
 }
 
 .spaces-touch-handle {
 	position: absolute;
 	z-index: 9998;
+	pointer-events: all;
+	background: transparent;
 }
 
 .spaces-resize-handle.resize-left {

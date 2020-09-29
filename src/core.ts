@@ -10,6 +10,9 @@ const spaceDefaults: Partial<ISpaceDefinition> = {
 	resizing: false,
 	centerContent: "none",
 	dimension: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" },
+	handleSize: 2,
+	touchHandleSize: 30,
+	overlayHandle: true,
 	adjustLeft: () => false,
 	adjustRight: () => false,
 	adjustTop: () => false,
@@ -176,7 +179,20 @@ export function createStore(): ISpaceStore {
 			updateStyleDefinition(space);
 		},
 		updateSpace: (space, props) => {
-			const { type, anchor, order, zIndex, scrollable, position, centerContent, minimumSize, maximumSize } = props;
+			const {
+				type,
+				anchor,
+				order,
+				zIndex,
+				scrollable,
+				position,
+				centerContent,
+				minimumSize,
+				maximumSize,
+				handleSize,
+				touchHandleSize,
+				overlayHandle,
+			} = props;
 			const canResizeLeft = (position && position.rightResizable) || false;
 			const canResizeRight = (position && position.leftResizable) || false;
 			const canResizeTop = (position && position.bottomResizable) || false;
@@ -271,6 +287,21 @@ export function createStore(): ISpaceStore {
 
 			if (coalesce(space.centerContent, CenterType.None) !== coalesce(centerContent, CenterType.None)) {
 				space.centerContent = coalesce(centerContent, CenterType.None)!;
+				changed = true;
+			}
+
+			if (space.handleSize !== handleSize) {
+				space.handleSize = handleSize || spaceDefaults.handleSize!;
+				changed = true;
+			}
+
+			if (space.touchHandleSize !== touchHandleSize) {
+				space.touchHandleSize = touchHandleSize || spaceDefaults.touchHandleSize!;
+				changed = true;
+			}
+
+			if (space.overlayHandle !== overlayHandle) {
+				space.overlayHandle = overlayHandle || spaceDefaults.overlayHandle!;
 				changed = true;
 			}
 

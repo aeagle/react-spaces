@@ -1,4 +1,5 @@
 import { SyntheticEvent } from "react";
+import ReactDOM from "react-dom";
 import { ISpaceDefinition, ISize, ResizeType, Orientation, ISpaceStore } from "./core-types";
 import { throttle, coalesce } from "./core-utils";
 
@@ -75,12 +76,13 @@ export function createResize(store: ISpaceStore) {
 				}
 			}
 
+			const originalCoords = getCoords(e);
+
 			space.resizing = true;
 			space.updateParent();
 
 			const rect = space.element.getBoundingClientRect();
 			const size = space.orientation === Orientation.Horizontal ? rect.width : rect.height;
-			const originalCoords = getCoords(e);
 			const startSize = targetSize.resized;
 			const minimumAdjust = coalesce(space.minimumSize, 20)! - size + targetSize.resized;
 			const maximumAdjust = space.maximumSize ? space.maximumSize - size + targetSize.resized : undefined;
@@ -105,6 +107,11 @@ export function createResize(store: ISpaceStore) {
 			const removeListener = () => {
 				if (moved) {
 					resize(lastX, lastY);
+				} else {
+					// if (elementsUnderneathPointer && elementsUnderneathPointer.length > 1) {
+					// 	const target = elementsUnderneathPointer[1] as any;
+					// 	target.submitMessage(e);
+					// }
 				}
 				window.removeEventListener(moveEvent, withPreventDefault as EventListener);
 				window.removeEventListener(endEvent, removeListener);
@@ -123,7 +130,7 @@ export function createResize(store: ISpaceStore) {
 
 			window.addEventListener(moveEvent, withPreventDefault as EventListener);
 			window.addEventListener(endEvent, removeListener);
-			e.preventDefault();
+			//e.preventDefault();
 		},
 	};
 }

@@ -68,6 +68,7 @@ export interface ISpaceProps extends ICommonProps {
 	position?: IPositionalProps | undefined;
 	overlayHandle?: boolean | undefined;
 	handleSize?: number | undefined;
+	touchHandleSize?: number | undefined;
 	minimumSize?: number | undefined;
 	maximumSize?: number | undefined;
 	onResizeStart?: (() => void | boolean) | undefined;
@@ -142,6 +143,9 @@ export interface ISpaceDefinition {
 	resizing: boolean;
 	minimumSize?: number;
 	maximumSize?: number;
+	handleSize: number;
+	touchHandleSize: number;
+	overlayHandle: boolean;
 	canResizeTop: boolean;
 	canResizeLeft: boolean;
 	canResizeRight: boolean;
