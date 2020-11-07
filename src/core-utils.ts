@@ -1,4 +1,4 @@
-import { ISpaceDefinition, SizeUnit, ISize, Type } from "./core-types";
+import { ISpaceDefinition, SizeUnit, ISize } from "./core-types";
 
 export function shortuuid() {
 	let firstPart = (Math.random() * 46656) | 0;
