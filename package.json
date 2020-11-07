@@ -76,7 +76,6 @@
 		"start": "rollup -c -w",
 		"build": "npm run build:prod",
 		"build:prod": "rollup -c",
-		"publish:alpha": "npm publish --tag alpha",
 		"storybook": "start-storybook -p 6006",
 		"build-storybook": "build-storybook"
 	},
