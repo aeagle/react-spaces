@@ -15,21 +15,13 @@ steps:
 - script: |
     npm install
     npm run build
-  displayName: 'npm install and build'
+    npm run build-storybook
+  displayName: 'NPM install and build'
 
-- task: Npm@1
+- task: CopyFiles@2
+  displayName: Move storybook package json
   inputs:
-    command: 'install'
-    customEndpoint: 'NPM'
-
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    customCommand: 'run build'
-    customEndpoint: 'NPM'
-
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    customCommand: 'run build-storybook'
-    customEndpoint: 'NPM'
+    SourceFolder: '.storybook'
+    Contents: 'package.json'
+    TargetFolder: 'storybook-static'
+    OverWrite: true
