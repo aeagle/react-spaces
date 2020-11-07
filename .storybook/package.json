@@ -1,0 +1,26 @@
+{
+	"name": "react-spaces-storybook",
+	"version": "0.1.26",
+	"files": [
+		"**/*.*"
+	],
+	"repository": "github:aeagle/react-spaces",
+	"author": {
+		"name": "Allan Eagle",
+		"url": "https://www.allaneagle.com"
+	},
+	"bugs": "https://github.com/aeagle/react-spaces/issues",
+	"homepage": "https://www.allaneagle.com/projects/react-spaces",
+	"keywords": [
+		"react",
+		"reactjs",
+		"reactjs components",
+		"component library",
+		"components",
+		"web",
+		"web ui",
+		"javascript library"
+	],
+	"license": "MIT",
+	"description": "Storybook documentation for react-spaces"
+}
