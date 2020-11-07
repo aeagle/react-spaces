@@ -25,3 +25,16 @@ steps:
     Contents: 'package.json'
     TargetFolder: 'storybook-static'
     OverWrite: true
+
+- task: Npm@1
+  displayName: Publish react-spaces-storybook
+  inputs:
+    command: 'publish'
+    workingDir: 'storybook-static'
+    publishEndpoint: 'NPM'
+
+- task: Npm@1
+  displayName: Publish react-spaces
+  inputs:
+    command: 'publish'
+    publishEndpoint: 'NPM'
