@@ -3,9 +3,6 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-trigger:
-- master
-
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -19,3 +16,20 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+    customEndpoint: 'NPM'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'run build'
+    customEndpoint: 'NPM'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'run build-storybook'
+    customEndpoint: 'NPM'
