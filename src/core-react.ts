@@ -9,6 +9,7 @@ import * as PropTypes from "prop-types";
 export const ParentContext = React.createContext<string | undefined>(undefined);
 export const DOMRectContext = React.createContext<DOMRect | undefined>(undefined);
 export const LayerContext = React.createContext<number | undefined>(undefined);
+export const OptionsContext = React.createContext<IReactSpacesOptions>({});
 export const currentStore = createStore();
 
 export const commonProps = {
@@ -29,6 +30,10 @@ export const commonProps = {
 	onTouchMove: PropTypes.func,
 	onTouchEnd: PropTypes.func,
 };
+
+export interface IReactSpacesOptions {
+	debug?: boolean
+}
 
 export interface IReactEvents {
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
@@ -55,17 +60,22 @@ export function useSpace(props: ISpaceProps) {
 	const update = useForceUpdate();
 	const parent = React.useContext(ParentContext);
 	const layer = React.useContext(LayerContext);
-	const spaceId = React.useRef(props.id || `s${shortuuid()}`);
+	const { debug } = React.useContext(OptionsContext);
+	const [spaceId] = React.useState(props.id || `s${shortuuid()}`);
 	const elementRef = React.useRef<HTMLElement>();
 	const resizeSensor = React.useRef<ResizeSensor>();
 	const [domRect, setDomRect] = React.useState<DOMRect>();
 
-	let space = store.getSpace(spaceId.current)!;
+	let space = store.getSpace(spaceId)!;
+
+	if (debug) {
+		console.table(store.getSpaces());
+	}
 
 	const parsedProps = {
 		...props,
 		...{
-			id: spaceId.current,
+			id: spaceId,
 			zIndex: coalesce(props.zIndex, layer),
 		},
 	};

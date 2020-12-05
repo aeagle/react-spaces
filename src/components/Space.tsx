@@ -3,6 +3,7 @@ import { useSpace, ParentContext, LayerContext, DOMRectContext } from "../core-r
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
+import { shortuuid } from "../core-utils";
 
 function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
 	switch (centerType) {
@@ -14,7 +15,17 @@ function applyCentering(children: React.ReactNode, centerType: CenterType | unde
 	return children;
 }
 
-export const Space: React.FC<ISpaceProps> = (props) => {
+export class Space extends React.Component<ISpaceProps> {
+	public render() {
+		return <SpaceInner {...this.props} wrapperInstance={this} />;
+	}
+}
+
+const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) => {
+	if (!props.id && !props.wrapperInstance["_react_spaces_uniqueid"]) {
+		props.wrapperInstance["_react_spaces_uniqueid"] = `s${shortuuid()}`;
+	}
+
 	const {
 		style,
 		className,
@@ -42,7 +53,10 @@ export const Space: React.FC<ISpaceProps> = (props) => {
 		onTouchEnd: onTouchEnd,
 	};
 
-	const { space, domRect, elementRef, resizeHandles } = useSpace(props);
+	const { space, domRect, elementRef, resizeHandles } = useSpace({
+		...props,
+		...{ id: props.id || props.wrapperInstance["_react_spaces_uniqueid"] },
+	});
 
 	React.useEffect(() => {
 		space.element = elementRef.current!;

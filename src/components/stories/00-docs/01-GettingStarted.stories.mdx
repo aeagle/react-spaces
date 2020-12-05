@@ -1,6 +1,6 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
 import { CommonHeader, DemoUI } from "../Utils";
-import { CenterType, ViewPort, Fixed, Top, Right, LeftResizable, BottomResizable, Fill } from "../../";
+import { CenterType, ViewPort, Fixed, Top, Right, LeftResizable, BottomResizable, Fill, Options } from "../../";
 
 <CommonHeader />
 
@@ -47,14 +47,16 @@ lines and text alignment have been added specifically for this example. In pract
 have any visual element, padding or margins leaving it up to you to fill them or style them however
 you want.*
 
-<Fixed style={{ outline: '1px solid black' }} height={400}>
-	<LeftResizable style={{ borderRight: '1px dashed black' }} size="25%" centerContent={CenterType.HorizontalVertical}>
-		Sidebar
-	</LeftResizable>
-	<Fill centerContent={CenterType.HorizontalVertical}>
-		Main content
-	</Fill>
-</Fixed>
+<React.StrictMode>
+	<Fixed style={{ outline: '1px solid black' }} height={400}>
+		<LeftResizable style={{ borderRight: '1px dashed black' }} size="25%" centerContent={CenterType.HorizontalVertical}>
+			Sidebar
+		</LeftResizable>
+		<Fill centerContent={CenterType.HorizontalVertical}>
+			Main content
+		</Fill>
+	</Fixed>
+</React.StrictMode>
 
 Notice how the fill space automatically adjusts it's size when the left resizable space is resized with 
 the mouse.
@@ -85,19 +87,21 @@ const App = () => (
 
 Here we have added additional nested spaces inside the original `<Fill />` space to achieve this:
 
-<Fixed style={{ outline: '1px solid black' }} height={400}>
-	<LeftResizable style={{ borderRight: '1px dashed black' }} size="25%" centerContent={CenterType.HorizontalVertical}>
-		Sidebar
-	</LeftResizable>
-	<Fill>
-		<Fill centerContent={CenterType.HorizontalVertical}>
-			Main content
+<React.StrictMode>
+	<Fixed style={{ outline: '1px solid black' }} height={400}>
+		<LeftResizable style={{ borderRight: '1px dashed black' }} size="25%" centerContent={CenterType.HorizontalVertical}>
+			Sidebar
+		</LeftResizable>
+		<Fill>
+			<Fill centerContent={CenterType.HorizontalVertical}>
+				Main content
+			</Fill>
+			<BottomResizable style={{ borderTop: '1px dashed black' }} size={100} centerContent={CenterType.HorizontalVertical}>
+				Bottom area
+			</BottomResizable>
 		</Fill>
-		<BottomResizable style={{ borderTop: '1px dashed black' }} size={100} centerContent={CenterType.HorizontalVertical}>
-			Bottom area
-		</BottomResizable>
-	</Fill>
-</Fixed>
+	</Fixed>
+</React.StrictMode>
 
 We can add further nested spaces to add elements like title bars into different areas.
 
@@ -136,28 +140,30 @@ const App = () => (
 
 Now we have something like below:
 
-<Fixed style={{ outline: '1px solid black' }} height={400}>
-	<Top style={{ borderBottom: '1px dashed black', padding: 5 }} order={1} size={25} centerContent={CenterType.Vertical}>
-		Title
-	</Top>
-	<Top style={{ borderBottom: '1px dashed black', padding: 5 }} order={2} size={25} centerContent={CenterType.Vertical}>
-		Menu bar
-	</Top>
-	<Fill>
-		<LeftResizable style={{ borderRight: '1px dashed black' }} size="25%">
-			<Top style={{ borderBottom: '1px dashed black', padding: 5 }} size={25} centerContent={CenterType.Vertical}>Sidebar title</Top>
-			<Fill centerContent={CenterType.HorizontalVertical}>Sidebar</Fill>
-		</LeftResizable>
+<React.StrictMode>
+	<Fixed style={{ outline: '1px solid black' }} height={400}>
+		<Top style={{ borderBottom: '1px dashed black', padding: 5 }} order={1} size={25} centerContent={CenterType.Vertical}>
+			Title
+		</Top>
+		<Top style={{ borderBottom: '1px dashed black', padding: 5 }} order={2} size={25} centerContent={CenterType.Vertical}>
+			Menu bar
+		</Top>
 		<Fill>
-			<Fill centerContent={CenterType.HorizontalVertical}>
-				Main content
+			<LeftResizable style={{ borderRight: '1px dashed black' }} size="25%">
+				<Top style={{ borderBottom: '1px dashed black', padding: 5 }} size={25} centerContent={CenterType.Vertical}>Sidebar title</Top>
+				<Fill centerContent={CenterType.HorizontalVertical}>Sidebar</Fill>
+			</LeftResizable>
+			<Fill>
+				<Fill centerContent={CenterType.HorizontalVertical}>
+					Main content
+				</Fill>
+				<BottomResizable style={{ borderTop: '1px dashed black' }} size={100} centerContent={CenterType.HorizontalVertical}>
+					Bottom area
+				</BottomResizable>
 			</Fill>
-			<BottomResizable style={{ borderTop: '1px dashed black' }} size={100} centerContent={CenterType.HorizontalVertical}>
-				Bottom area
-			</BottomResizable>
 		</Fill>
-	</Fill>
-</Fixed>
+	</Fixed>
+</React.StrictMode>
 
 ### Introducing simple interactivity
 

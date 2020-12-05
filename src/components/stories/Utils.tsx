@@ -1,5 +1,6 @@
 import * as React from "react";
 import { CSSProperties } from "react";
+import { shortuuid } from "../../core-utils";
 import {
 	Info,
 	Fixed,
@@ -164,39 +165,41 @@ export const DemoUI = () => {
 	const [sidebarExpanded, setSidebarExpanded] = React.useState(true);
 
 	return (
-		<Fixed style={{ outline: "1px solid black" }} height={400}>
-			<Top style={{ borderBottom: "1px dashed black", padding: 5 }} order={1} size={25} centerContent={CenterType.Vertical}>
-				Title
-			</Top>
-			<Top style={{ borderBottom: "1px dashed black", padding: 5 }} order={2} size={25} centerContent={CenterType.Vertical}>
-				Menu bar
-			</Top>
-			<Fill>
-				<LeftResizable style={{ borderRight: "1px dashed black", transition: "width 0.5s ease" }} size={sidebarExpanded ? 200 : 25}>
-					<Top style={{ borderBottom: "1px dashed black" }} size={25}>
-						{sidebarExpanded && (
-							<Fill style={{ padding: 5 }} centerContent={CenterType.Vertical}>
-								Sidebar title
-							</Fill>
-						)}
-						<Right
-							style={{ borderLeft: "1px dashed black", backgroundColor: "yellow", cursor: "pointer" }}
-							size={25}
-							onClick={() => setSidebarExpanded((prev) => !prev)}
-							centerContent={CenterType.HorizontalVertical}>
-							<i className={"fa fa-arrow-" + (sidebarExpanded ? "left" : "right")} />
-						</Right>
-					</Top>
-					{sidebarExpanded && <Fill centerContent={CenterType.HorizontalVertical}>Sidebar</Fill>}
-				</LeftResizable>
-				<Fill style={{ borderRight: "1px dashed black", transition: "left 0.5s ease" }}>
-					<Fill centerContent={CenterType.HorizontalVertical}>Main content</Fill>
-					<BottomResizable style={{ borderTop: "1px dashed black" }} size={100} centerContent={CenterType.HorizontalVertical}>
-						Bottom area
-					</BottomResizable>
+		<React.StrictMode>
+			<Fixed style={{ outline: "1px solid black" }} height={400}>
+				<Top style={{ borderBottom: "1px dashed black", padding: 5 }} order={1} size={25} centerContent={CenterType.Vertical}>
+					Title
+				</Top>
+				<Top style={{ borderBottom: "1px dashed black", padding: 5 }} order={2} size={25} centerContent={CenterType.Vertical}>
+					Menu bar
+				</Top>
+				<Fill>
+					<LeftResizable style={{ borderRight: "1px dashed black", transition: "width 0.5s ease" }} size={sidebarExpanded ? 200 : 25}>
+						<Top style={{ borderBottom: "1px dashed black" }} size={25}>
+							{sidebarExpanded && (
+								<Fill style={{ padding: 5 }} centerContent={CenterType.Vertical}>
+									Sidebar title
+								</Fill>
+							)}
+							<Right
+								style={{ borderLeft: "1px dashed black", backgroundColor: "yellow", cursor: "pointer" }}
+								size={25}
+								onClick={() => setSidebarExpanded((prev) => !prev)}
+								centerContent={CenterType.HorizontalVertical}>
+								<i className={"fa fa-arrow-" + (sidebarExpanded ? "left" : "right")} />
+							</Right>
+						</Top>
+						{sidebarExpanded && <Fill centerContent={CenterType.HorizontalVertical}>Sidebar</Fill>}
+					</LeftResizable>
+					<Fill style={{ borderRight: "1px dashed black", transition: "left 0.5s ease" }}>
+						<Fill centerContent={CenterType.HorizontalVertical}>Main content</Fill>
+						<BottomResizable style={{ borderTop: "1px dashed black" }} size={100} centerContent={CenterType.HorizontalVertical}>
+							Bottom area
+						</BottomResizable>
+					</Fill>
 				</Fill>
-			</Fill>
-		</Fixed>
+			</Fixed>
+		</React.StrictMode>
 	);
 };
 

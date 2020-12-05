@@ -1,5 +1,4 @@
 import { SyntheticEvent } from "react";
-import ReactDOM from "react-dom";
 import { ISpaceDefinition, ISize, ResizeType, Orientation, ISpaceStore } from "./core-types";
 import { throttle, coalesce } from "./core-utils";
 
