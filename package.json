@@ -27,7 +27,8 @@
 	"license": "MIT",
 	"description": "An easy to understand and nestable layout system, React Spaces allow you to divide a page or container into anchored, scrollable and resizable spaces enabling you to build desktop type user interfaces in the browser.",
 	"dependencies": {
-		"css-element-queries": "^1.2.1"
+		"css-element-queries": "^1.2.1",
+		"prop-types": "^15.7.2"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.5.5",
@@ -77,8 +78,7 @@
 	},
 	"peerDependencies": {
 		"react": "^16.8.0",
-		"react-dom": "^16.8.0",
-		"prop-types": "^15.7.2"
+		"react-dom": "^16.8.0"
 	},
 	"scripts": {
 		"preinstall": "npx npm-force-resolutions",
