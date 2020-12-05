@@ -16,39 +16,41 @@ Examples of nested spaces.
 
 <Preview>
 	<Story name="Non-resizable">
-		<ViewPort>
-			<Left size="20%" style={green}>
-				{description("Left")}
-			</Left>
-			<Fill style={green}>
-				<Top size="20%" style={red}>
-					{description("Top")}
-				</Top>
+		<React.StrictMode>
+			<ViewPort>
+				<Left size="20%" style={green}>
+					{description("Left")}
+				</Left>
 				<Fill style={green}>
-					<Left size="20%" style={blue}>
-						{description("Left")}
-					</Left>
+					<Top size="20%" style={red}>
+						{description("Top")}
+					</Top>
 					<Fill style={green}>
-						<Top size="20%" style={green}>
-							{description("Top")}
-						</Top>
-						<Fill style={red}>{description("Fill")}</Fill>
-						<Bottom size="20%" style={green}>
-							{description("Bottom")}
-						</Bottom>
+						<Left size="20%" style={blue}>
+							{description("Left")}
+						</Left>
+						<Fill style={green}>
+							<Top size="20%" style={green}>
+								{description("Top")}
+							</Top>
+							<Fill style={red}>{description("Fill")}</Fill>
+							<Bottom size="20%" style={green}>
+								{description("Bottom")}
+							</Bottom>
+						</Fill>
+						<Right size="20%" style={blue}>
+							{description("Right")}
+						</Right>
 					</Fill>
-					<Right size="20%" style={blue}>
-						{description("Right")}
-					</Right>
+					<Bottom size="20%" style={red}>
+						{description("Bottom")}
+					</Bottom>
 				</Fill>
-				<Bottom size="20%" style={red}>
-					{description("Bottom")}
-				</Bottom>
-			</Fill>
-			<Right size="20%" style={green}>
-				{description("Right")}
-			</Right>
-		</ViewPort>
+				<Right size="20%" style={green}>
+					{description("Right")}
+				</Right>
+			</ViewPort>
+		</React.StrictMode>
 	</Story>
 </Preview>
 
@@ -56,40 +58,42 @@ Examples of nested spaces.
 
 <Preview>
 	<Story name="Resizable">
-		<ViewPort>
-			<LeftResizable size="20%" style={green} trackSize={true}>
-				{description("Left")}
-			</LeftResizable>
-			<Fill style={green}>
-				<TopResizable size="20%" style={red} trackSize={true}>
-					{description("Top")}
-				</TopResizable>
-				<Fill style={green} trackSize={true}>
-					<LeftResizable size="20%" style={blue} trackSize={true}>
-						{description("Left")}
-					</LeftResizable>
-					<Fill style={green}>
-						<TopResizable size="20%" style={green} trackSize={true}>
-							{description("Top")}
-						</TopResizable>
-						<Fill style={red} trackSize={true}>
-							{description("Fill")}
+		<React.StrictMode>
+			<ViewPort>
+				<LeftResizable size="20%" style={green} trackSize={true}>
+					{description("Left")}
+				</LeftResizable>
+				<Fill style={green}>
+					<TopResizable size="20%" style={red} trackSize={true}>
+						{description("Top")}
+					</TopResizable>
+					<Fill style={green} trackSize={true}>
+						<LeftResizable size="20%" style={blue} trackSize={true}>
+							{description("Left")}
+						</LeftResizable>
+						<Fill style={green}>
+							<TopResizable size="20%" style={green} trackSize={true}>
+								{description("Top")}
+							</TopResizable>
+							<Fill style={red} trackSize={true}>
+								{description("Fill")}
+							</Fill>
+							<BottomResizable size="20%" style={green} trackSize={true}>
+								{description("Bottom")}
+							</BottomResizable>
 						</Fill>
-						<BottomResizable size="20%" style={green} trackSize={true}>
-							{description("Bottom")}
-						</BottomResizable>
+						<RightResizable size="20%" style={blue} trackSize={true}>
+							{description("Right")}
+						</RightResizable>
 					</Fill>
-					<RightResizable size="20%" style={blue} trackSize={true}>
-						{description("Right")}
-					</RightResizable>
+					<BottomResizable size="20%" style={red} trackSize={true}>
+						{description("Bottom")}
+					</BottomResizable>
 				</Fill>
-				<BottomResizable size="20%" style={red} trackSize={true}>
-					{description("Bottom")}
-				</BottomResizable>
-			</Fill>
-			<RightResizable size="20%" style={green} trackSize={true}>
-				{description("Right")}
-			</RightResizable>
-		</ViewPort>
+				<RightResizable size="20%" style={green} trackSize={true}>
+					{description("Right")}
+				</RightResizable>
+			</ViewPort>`
+		</React.StrictMode>
 	</Story>
 </Preview>

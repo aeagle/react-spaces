@@ -22,12 +22,14 @@ after a resize back to a state value.
 			() => {
 				const [ size, setSize ] = React.useState("15%");
 				return (
-					<ViewPort>
-						<LeftResizable size={size} style={red} trackSize={true} onResizeEnd={(newSize) => setSize(newSize)}>
-							{description("Left")}
-						</LeftResizable>
-						<Fill style={green} trackSize={true}>{description("Fill")}</Fill>
-					</ViewPort>
+					<React.StrictMode>
+						<ViewPort>
+							<LeftResizable size={size} style={red} trackSize={true} onResizeEnd={(newSize) => setSize(newSize)}>
+								{description("Left")}
+							</LeftResizable>
+							<Fill style={green} trackSize={true}>{description("Fill")}</Fill>
+						</ViewPort>
+					</React.StrictMode>
 				)
 			}
 		}
@@ -43,12 +45,14 @@ You can cancel a resize by returning `false` from a onResizeStart event handler.
 		{
 			() => {
 				return (
-					<ViewPort>
-						<LeftResizable size="15%" style={red} trackSize={true} onResizeStart={() => false}>
-							{description("Left")}
-						</LeftResizable>
-						<Fill style={green} trackSize={true}>{description("Fill")}</Fill>
-					</ViewPort>
+					<React.StrictMode>
+						<ViewPort>
+							<LeftResizable size="15%" style={red} trackSize={true} onResizeStart={() => false}>
+								{description("Left")}
+							</LeftResizable>
+							<Fill style={green} trackSize={true}>{description("Fill")}</Fill>
+						</ViewPort>
+					</React.StrictMode>
 				)
 			}
 		}
