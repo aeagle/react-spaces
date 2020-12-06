@@ -131,7 +131,6 @@ export function useSpace(props: ISpaceProps) {
 interface IResizeHandleProps {
 	id?: string;
 	key: string | number;
-	style: CSSProperties;
 	className?: string;
 	onMouseDown: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 	onTouchStart: (e: React.TouchEvent<HTMLElement>) => void;
@@ -140,14 +139,11 @@ interface IResizeHandleProps {
 export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinition, position: IPositionalProps | undefined) {
 	const mouseHandles: IResizeHandleProps[] = [];
 	const touchHandles: IResizeHandleProps[] = [];
-	const handleSize = space.handleSize;
-	const touchHandleSize = space.touchHandleSize;
 
 	if (position && position.rightResizable) {
 		mouseHandles.push({
 			id: `${space.id}-m`,
 			key: "right",
-			style: { width: handleSize },
 			className: `spaces-resize-handle resize-right`,
 			onMouseDown: (event) => store.startMouseResize(ResizeType.Right, space, space.width, event),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, space.width, event),
@@ -155,7 +151,6 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 		touchHandles.push({
 			id: `${space.id}-t`,
 			key: "right",
-			style: { width: touchHandleSize },
 			className: `spaces-touch-handle resize-right`,
 			onMouseDown: (event) => event.preventDefault(),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, space.width, event),
@@ -166,7 +161,6 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 		mouseHandles.push({
 			id: `${space.id}-m`,
 			key: "left",
-			style: { width: handleSize },
 			className: `spaces-resize-handle resize-left`,
 			onMouseDown: (event) => store.startMouseResize(ResizeType.Left, space, space.width, event),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, space.width, event),
@@ -174,7 +168,6 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 		touchHandles.push({
 			id: `${space.id}-t`,
 			key: "left",
-			style: { width: touchHandleSize },
 			className: `spaces-touch-handle resize-left`,
 			onMouseDown: (event) => event.preventDefault(),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, space.width, event),
@@ -185,7 +178,6 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 		mouseHandles.push({
 			id: `${space.id}-m`,
 			key: "top",
-			style: { height: handleSize },
 			className: `spaces-resize-handle resize-top`,
 			onMouseDown: (event) => store.startMouseResize(ResizeType.Top, space, space.height, event),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, space.height, event),
@@ -193,7 +185,6 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 		touchHandles.push({
 			id: `${space.id}-t`,
 			key: "top",
-			style: { height: touchHandleSize },
 			className: `spaces-touch-handle resize-top`,
 			onMouseDown: (event) => event.preventDefault(),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, space.height, event),
@@ -205,14 +196,12 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 			id: `${space.id}-m`,
 			key: "bottom",
 			className: `spaces-resize-handle resize-bottom`,
-			style: { height: handleSize },
 			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, space.height, event),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, space.height, event),
 		});
 		touchHandles.push({
 			id: `${space.id}-t`,
 			key: "bottom",
-			style: { height: touchHandleSize },
 			className: `spaces-touch-handle resize-bottom`,
 			onMouseDown: (event) => event.preventDefault(),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, space.height, event),

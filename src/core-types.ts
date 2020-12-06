@@ -32,6 +32,12 @@ export enum ResizeType {
 	SE = "resize-se",
 }
 
+export enum ResizeHandlePlacement {
+	OverlayInside = "overlay-inside",
+	Inside = "inside",
+	OverlayBoundary = "overlay-boundary"
+}
+
 export enum CenterType {
 	None = "none",
 	Vertical = "vertical",
@@ -66,8 +72,8 @@ export interface ISpaceProps extends ICommonProps {
 	anchor?: AnchorType | undefined;
 	order?: number | undefined;
 	position?: IPositionalProps | undefined;
-	overlayHandle?: boolean | undefined;
 	handleSize?: number | undefined;
+	handlePlacement?: ResizeHandlePlacement;
 	touchHandleSize?: number | undefined;
 	minimumSize?: number | undefined;
 	maximumSize?: number | undefined;
@@ -145,7 +151,7 @@ export interface ISpaceDefinition {
 	maximumSize?: number;
 	handleSize: number;
 	touchHandleSize: number;
-	overlayHandle: boolean;
+	handlePlacement: ResizeHandlePlacement;
 	canResizeTop: boolean;
 	canResizeLeft: boolean;
 	canResizeRight: boolean;

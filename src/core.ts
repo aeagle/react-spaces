@@ -1,4 +1,4 @@
-import { ISpaceDefinition, SizeUnit, AnchorType, Type, Orientation, ISpaceStore, ISpaceProps, CenterType } from "./core-types";
+import { ISpaceDefinition, SizeUnit, AnchorType, Type, Orientation, ISpaceStore, ISpaceProps, CenterType, ResizeHandlePlacement } from "./core-types";
 import { EndEvent, MoveEvent, createResize } from "./core-resizing";
 import { updateStyleDefinition, removeStyleDefinition, coalesce, adjustmentsEqual } from "./core-utils";
 
@@ -12,7 +12,7 @@ const spaceDefaults: Partial<ISpaceDefinition> = {
 	dimension: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" },
 	handleSize: 5,
 	touchHandleSize: 30,
-	overlayHandle: true,
+	handlePlacement: ResizeHandlePlacement.OverlayInside,
 	adjustLeft: () => false,
 	adjustRight: () => false,
 	adjustTop: () => false,
@@ -191,7 +191,7 @@ export function createStore(): ISpaceStore {
 				maximumSize,
 				handleSize,
 				touchHandleSize,
-				overlayHandle,
+				handlePlacement
 			} = props;
 			const canResizeLeft = (position && position.rightResizable) || false;
 			const canResizeRight = (position && position.leftResizable) || false;
@@ -300,8 +300,8 @@ export function createStore(): ISpaceStore {
 				changed = true;
 			}
 
-			if (space.overlayHandle !== overlayHandle) {
-				space.overlayHandle = overlayHandle || spaceDefaults.overlayHandle!;
+			if (space.handlePlacement !== handlePlacement) {
+				space.handlePlacement = handlePlacement || spaceDefaults.handlePlacement!;
 				changed = true;
 			}
 

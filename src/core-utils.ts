@@ -1,4 +1,4 @@
-import { ISpaceDefinition, SizeUnit, ISize } from "./core-types";
+import { ISpaceDefinition, SizeUnit, ISize, ResizeHandlePlacement } from "./core-types";
 
 export function shortuuid() {
 	let firstPart = (Math.random() * 46656) | 0;
@@ -124,27 +124,40 @@ export function styleDefinition(space: ISpaceDefinition) {
 		cssElements.push(`#${space.id} { ${cssString.join(" ")} }`);
 	}
 
-	const handleSize = space.handleSize / 2;
-	const touchHandleSize = space.touchHandleSize / 2;
+	let handleOffset = 0;
+	let touchHandleOffset = 0;
+
+	switch (space.handlePlacement)
+	{
+		case ResizeHandlePlacement.Inside:
+		case ResizeHandlePlacement.OverlayInside:
+			handleOffset = space.handleSize;
+			touchHandleOffset = space.touchHandleSize;
+			break;
+		case ResizeHandlePlacement.OverlayBoundary:
+			handleOffset = space.handleSize / 2;
+			touchHandleOffset = space.touchHandleSize / 2;
+			break;
+	}
 
 	if (space.canResizeLeft) {
-		cssElements.push(`#${space.id}-t { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${touchHandleSize}px); }`);
-		cssElements.push(`#${space.id}-m { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleSize}px); }`);
+		cssElements.push(`#${space.id}-t { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${touchHandleOffset}px); width: ${space.touchHandleSize}px; }`);
+		cssElements.push(`#${space.id}-m { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${space.handleSize}px; }`);
 	}
 
 	if (space.canResizeTop) {
-		cssElements.push(`#${space.id}-t { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${touchHandleSize}px); }`);
-		cssElements.push(`#${space.id}-m { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleSize}px); }`);
+		cssElements.push(`#${space.id}-t { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${touchHandleOffset}px); height: ${space.touchHandleSize}px; }`);
+		cssElements.push(`#${space.id}-m { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${space.handleSize}px; }`);
 	}
 
 	if (space.canResizeRight) {
-		cssElements.push(`#${space.id}-t { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${touchHandleSize}px); }`);
-		cssElements.push(`#${space.id}-m { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleSize}px); }`);
+		cssElements.push(`#${space.id}-t { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${touchHandleOffset}px); width: ${space.touchHandleSize}px; }`);
+		cssElements.push(`#${space.id}-m { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${space.handleSize}px; }`);
 	}
 
 	if (space.canResizeBottom) {
-		cssElements.push(`#${space.id}-t { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${touchHandleSize}px); }`);
-		cssElements.push(`#${space.id}-m { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleSize}px); }`);
+		cssElements.push(`#${space.id}-t { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${touchHandleOffset}px); height: ${space.touchHandleSize}px; }`);
+		cssElements.push(`#${space.id}-m { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${space.handleSize}px; }`);
 	}
 
 	return cssElements.join(" ");
