@@ -3,7 +3,6 @@ import { createStore } from "./core";
 import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType, CenterType } from "./core-types";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
-import { CSSProperties } from "react";
 import * as PropTypes from "prop-types";
 
 export const ParentContext = React.createContext<string | undefined>(undefined);
