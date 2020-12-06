@@ -10,7 +10,7 @@ const spaceDefaults: Partial<ISpaceDefinition> = {
 	resizing: false,
 	centerContent: "none",
 	dimension: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" },
-	handleSize: 2,
+	handleSize: 5,
 	touchHandleSize: 30,
 	overlayHandle: true,
 	adjustLeft: () => false,
