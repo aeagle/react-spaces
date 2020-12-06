@@ -124,71 +124,40 @@ export const SpaceInternal: React.FC<AllProps> = React.memo((props) => {
 		onDoubleClick: props.onDoubleClick,
 	};
 
-	return props.resizable && props.scrollable
-		? React.createElement(
-				props.as || "div",
-				{
-					...{
-						id: space.id,
-						ref: spaceElement,
-						className: outerClasses.join(" "),
-					},
-					...passThroughEvents,
-				},
-				<>
-					<HeadStyles spaces={currentContext.children} />
-					<ResizeHandle
-						resizable={props.resizable}
-						anchor={props.anchor}
-						parentContext={parentContext}
-						space={space}
-						spaceElement={spaceElement.current}
-						minimumSize={props.minimumSize}
-						maximumSize={props.maximumSize}
-						onResizeStart={props.onResizeStart}
-						onResizeEnd={props.onResizeEnd}
-					/>
-					<div className={innerClasses.join(" ")} style={innerStyle}>
-						<SpaceContext.Provider value={currentContext}>
-							<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
-								{children}
-							</SpaceInfoContext.Provider>
-						</SpaceContext.Provider>
-					</div>
-				</>,
-		  )
-		: React.createElement(
-				props.as || "div",
-				{
-					...{
-						id: space.id,
-						ref: spaceElement,
-						className: outerClasses.join(" "),
-						style: innerStyle,
-					},
-					...passThroughEvents,
-				},
-				<>
-					<HeadStyles spaces={currentContext.children} />
-					<ResizeHandle
-						resizable={props.resizable}
-						anchor={props.anchor}
-						parentContext={parentContext}
-						space={space}
-						handleSize={handleSize}
-						spaceElement={spaceElement.current}
-						minimumSize={props.minimumSize}
-						maximumSize={props.maximumSize}
-						onResizeStart={props.onResizeStart}
-						onResizeEnd={props.onResizeEnd}
-					/>
-					<SpaceContext.Provider value={currentContext}>
-						<SpaceInfoContext.Provider value={{ width: Math.floor(currentSize.width), height: Math.floor(currentSize.height) }}>
-							{children}
-						</SpaceInfoContext.Provider>
-					</SpaceContext.Provider>
-				</>,
-		  );
+	const width = Math.floor(currentSize.width);
+	const height = Math.floor(currentSize.height);
+
+	return React.createElement(
+		props.as || "div",
+		{
+			...{
+				id: space.id,
+				ref: spaceElement,
+				className: outerClasses.join(" "),
+			},
+			...passThroughEvents,
+		},
+		<>
+			<HeadStyles spaces={currentContext.children} />
+			<ResizeHandle
+				resizable={props.resizable}
+				anchor={props.anchor}
+				parentContext={parentContext}
+				space={space}
+				spaceElement={spaceElement.current}
+				handleSize={handleSize}
+				minimumSize={props.minimumSize}
+				maximumSize={props.maximumSize}
+				onResizeStart={props.onResizeStart}
+				onResizeEnd={props.onResizeEnd}
+			/>
+			<div className={innerClasses.join(" ")} style={innerStyle}>
+				<SpaceContext.Provider value={currentContext}>
+					<SpaceInfoContext.Provider value={{ width: width, height: height }}>{children}</SpaceInfoContext.Provider>
+				</SpaceContext.Provider>
+			</div>
+		</>,
+	);
 });
 
 SpaceInternal.propTypes = allProps;
