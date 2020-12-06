@@ -175,6 +175,7 @@ export const SpaceInternal: React.FC<AllProps> = React.memo((props) => {
 						anchor={props.anchor}
 						parentContext={parentContext}
 						space={space}
+						handleSize={handleSize}
 						spaceElement={spaceElement.current}
 						minimumSize={props.minimumSize}
 						maximumSize={props.maximumSize}
