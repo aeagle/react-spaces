@@ -125,39 +125,37 @@ export function styleDefinition(space: ISpaceDefinition) {
 	}
 
 	let handleOffset = 0;
-	let touchHandleOffset = 0;
+	const touchHandleSize = (space.touchHandleSize / 2) - (space.handleSize / 2);
 
 	switch (space.handlePlacement)
 	{
 		case ResizeHandlePlacement.Inside:
 		case ResizeHandlePlacement.OverlayInside:
 			handleOffset = space.handleSize;
-			touchHandleOffset = space.touchHandleSize;
 			break;
 		case ResizeHandlePlacement.OverlayBoundary:
 			handleOffset = space.handleSize / 2;
-			touchHandleOffset = space.touchHandleSize / 2;
 			break;
 	}
 
 	if (space.canResizeLeft) {
-		cssElements.push(`#${space.id}-t { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${touchHandleOffset}px); width: ${space.touchHandleSize}px; }`);
 		cssElements.push(`#${space.id}-m { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${space.handleSize}px; }`);
+		cssElements.push(`#${space.id}-m:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
 	}
 
 	if (space.canResizeTop) {
-		cssElements.push(`#${space.id}-t { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${touchHandleOffset}px); height: ${space.touchHandleSize}px; }`);
 		cssElements.push(`#${space.id}-m { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${space.handleSize}px; }`);
+		cssElements.push(`#${space.id}-m:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
 	}
 
 	if (space.canResizeRight) {
-		cssElements.push(`#${space.id}-t { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${touchHandleOffset}px); width: ${space.touchHandleSize}px; }`);
 		cssElements.push(`#${space.id}-m { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${space.handleSize}px; }`);
+		cssElements.push(`#${space.id}-m:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
 	}
 
 	if (space.canResizeBottom) {
-		cssElements.push(`#${space.id}-t { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${touchHandleOffset}px); height: ${space.touchHandleSize}px; }`);
 		cssElements.push(`#${space.id}-m { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${space.handleSize}px; }`);
+		cssElements.push(`#${space.id}-m:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
 	}
 
 	return cssElements.join(" ");

@@ -30,8 +30,26 @@
 .spaces-resize-handle {
 	position: absolute;
 	z-index: 9999;
-	touch-action: none;
 	background: transparent;
+}
+
+.spaces-resize-handle:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+}
+
+.spaces-resize-handle:after {
+	cursor: default;
+	content: '';
+	position: absolute;
+	background-color: blue;
+	opacity: 0.2;
+	z-index: 1;
 }
 
 .spaces-touch-handle {
@@ -44,6 +62,9 @@
 .spaces-resize-handle.resize-left {
 	top: 0;
 	bottom: 0;
+}
+
+.spaces-resize-handle.resize-left:before {
 	cursor: w-resize;
 }
 
@@ -55,6 +76,9 @@
 .spaces-resize-handle.resize-right {
 	top: 0;
 	bottom: 0;
+}
+
+.spaces-resize-handle.resize-right:before {
 	cursor: e-resize;
 }
 
@@ -66,6 +90,9 @@
 .spaces-resize-handle.resize-top {
 	left: 0;
 	right: 0;
+}
+
+.spaces-resize-handle.resize-top:before {
 	cursor: n-resize;
 }
 
@@ -77,6 +104,9 @@
 .spaces-resize-handle.resize-bottom {
 	left: 0;
 	right: 0;
+}
+
+.spaces-resize-handle.resize-bottom:before {
 	cursor: s-resize;
 }
 
@@ -86,7 +116,6 @@
 }
 
 .spaces-space {
-	position: absolute;
 	overflow: hidden;
 	touch-action: none;
 	box-sizing: border-box;

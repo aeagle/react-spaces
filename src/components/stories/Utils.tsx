@@ -140,6 +140,7 @@ export const ResizableProps = () => (
 	<>
 		<PropsHeader>Resizable properties</PropsHeader>
 		<Prop name="handleSize" type="number" default="5" description="Size of the resize handle in pixels." />
+<Prop name="touchHandleSize" type="number" default="5" description={<>An optional handle size that can be used to make the handle area bigger for touches. This extends outside the dimensions of the resize handle. <strong>NOTE: You should ensure that you try not to place clickable elements underneath this extended handle area as the handle area will block interaction with that element.</strong></>} />
 		<Prop
 			name="handlePlacement"
 			type="ResizeHandlePlacement.OverlayInside ('overlay-inside'), ResizeHandlePlacement.Inside ('inside'), ResizeHandlePlacement.OverlayBoundary ('overlay-boundary')"

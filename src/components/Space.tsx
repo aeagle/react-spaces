@@ -88,9 +88,6 @@ const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) =
 
 	return (
 		<>
-			{resizeHandles.touchHandles.map((r) => (
-				<div {...r} />
-			))}
 			{resizeHandles.mouseHandles.map((r) => (
 				<div {...r} />
 			))}

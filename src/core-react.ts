@@ -137,7 +137,6 @@ interface IResizeHandleProps {
 
 export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinition, position: IPositionalProps | undefined) {
 	const mouseHandles: IResizeHandleProps[] = [];
-	const touchHandles: IResizeHandleProps[] = [];
 
 	if (position && position.rightResizable) {
 		mouseHandles.push({
@@ -145,13 +144,6 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 			key: "right",
 			className: `spaces-resize-handle resize-right`,
 			onMouseDown: (event) => store.startMouseResize(ResizeType.Right, space, space.width, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, space.width, event),
-		});
-		touchHandles.push({
-			id: `${space.id}-t`,
-			key: "right",
-			className: `spaces-touch-handle resize-right`,
-			onMouseDown: (event) => event.preventDefault(),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, space.width, event),
 		});
 	}
@@ -164,13 +156,6 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 			onMouseDown: (event) => store.startMouseResize(ResizeType.Left, space, space.width, event),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, space.width, event),
 		});
-		touchHandles.push({
-			id: `${space.id}-t`,
-			key: "left",
-			className: `spaces-touch-handle resize-left`,
-			onMouseDown: (event) => event.preventDefault(),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, space.width, event),
-		});
 	}
 
 	if (position && position.topResizable) {
@@ -179,13 +164,6 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 			key: "top",
 			className: `spaces-resize-handle resize-top`,
 			onMouseDown: (event) => store.startMouseResize(ResizeType.Top, space, space.height, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, space.height, event),
-		});
-		touchHandles.push({
-			id: `${space.id}-t`,
-			key: "top",
-			className: `spaces-touch-handle resize-top`,
-			onMouseDown: (event) => event.preventDefault(),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, space.height, event),
 		});
 	}
@@ -198,17 +176,9 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, space.height, event),
 			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, space.height, event),
 		});
-		touchHandles.push({
-			id: `${space.id}-t`,
-			key: "bottom",
-			className: `spaces-touch-handle resize-bottom`,
-			onMouseDown: (event) => event.preventDefault(),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, space.height, event),
-		});
 	}
 
 	return {
-		mouseHandles,
-		touchHandles,
+		mouseHandles
 	};
 }
