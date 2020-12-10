@@ -23,7 +23,7 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Package versions (please complete the following information**
+**Package versions (please complete the following information):**
  - React version: [e.g. 16.13.1]
  - React spaces version: [e.g. 0.1.29]
 
