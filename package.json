@@ -1,6 +1,6 @@
 {
 	"name": "react-spaces",
-	"version": "0.2.0-beta.5",
+	"version": "0.2.0-beta.6",
 	"main": "dist/index.js",
 	"module": "dist/es/index.js",
 	"types": "dist/index.d.ts",
@@ -81,7 +81,6 @@
 		"react-dom": "^16.8.0"
 	},
 	"scripts": {
-		"preinstall": "npx npm-force-resolutions",
 		"start": "rollup -c -w",
 		"build": "npm run build:prod",
 		"build:prod": "rollup -c",
