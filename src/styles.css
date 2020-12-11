@@ -34,7 +34,7 @@
 }
 
 .spaces-resize-handle:before {
-	content: '';
+	content: "";
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -44,11 +44,8 @@
 }
 
 .spaces-resize-handle:after {
-	cursor: default;
-	content: '';
+	content: "";
 	position: absolute;
-	background-color: blue;
-	opacity: 0.2;
 	z-index: 1;
 }
 

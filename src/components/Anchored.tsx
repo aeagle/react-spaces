@@ -1,4 +1,4 @@
-import { ICommonProps, SizeUnit, Type, AnchorType } from "../core-types";
+import { ICommonProps, SizeUnit, Type, AnchorType, ResizeHandlePlacement } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 import * as PropTypes from "prop-types";
@@ -9,7 +9,7 @@ interface IAnchorProps extends ICommonProps {
 	order?: number;
 	resizable?: boolean;
 	handleSize?: number;
-	overlayHandle?: boolean;
+	handlePlacement?: ResizeHandlePlacement;
 	minimumSize?: number;
 	maximumSize?: number;
 	onResizeStart?: () => void | boolean;
@@ -23,7 +23,7 @@ export const anchoredProps = {
 		order: PropTypes.number,
 		resizable: PropTypes.bool,
 		handleSize: PropTypes.number,
-		overlayHandle: PropTypes.bool,
+		handlePlacement: PropTypes.oneOf([ResizeHandlePlacement.Inside, ResizeHandlePlacement.OverlayBoundary, ResizeHandlePlacement.OverlayInside]),
 		minimumSize: PropTypes.number,
 		maximumSize: PropTypes.number,
 		onResizeStart: PropTypes.func,
@@ -37,7 +37,7 @@ export const resizableProps = {
 		size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 		order: PropTypes.number,
 		handleSize: PropTypes.number,
-		overlayHandle: PropTypes.bool,
+		handlePlacement: PropTypes.oneOf([ResizeHandlePlacement.Inside, ResizeHandlePlacement.OverlayBoundary, ResizeHandlePlacement.OverlayInside]),
 		minimumSize: PropTypes.number,
 		maximumSize: PropTypes.number,
 		onResizeStart: PropTypes.func,

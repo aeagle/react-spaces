@@ -382,8 +382,13 @@ export function createStore(): ISpaceStore {
 			},
 		} as ISpaceDefinition;
 
-		newSpace.anchoredChildren = (anchor, zIndex) =>
-			newSpace.children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
+		newSpace.anchoredChildren = (anchor, zIndex) => {
+			const children = newSpace.children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
+			const orderedChildren = children.filter(c => c.order !== undefined);
+			const unorderedChildren = children.filter(c => c.order === undefined);
+			var maxOrder = orderedChildren.length > 0 ? orderedChildren.map(a => a.order).reduce((a, b) => Math.max(a, b)) : 0;
+			return [...orderedChildren, ...unorderedChildren.map((c, idx) => ({...c, ...{ order: maxOrder + idx + 1 }}))];
+		}
 
 		newSpace.adjustLeft = (adjusted) => {
 			if (adjustmentsEqual(newSpace.left.adjusted, adjusted)) {
