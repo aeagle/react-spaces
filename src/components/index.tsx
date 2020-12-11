@@ -11,4 +11,4 @@ export * from "./Positioned";
 export * from "./SpaceInfo";
 export * from "./ViewPort";
 export * from "./Options";
-export { AnchorType, CenterType, IPosition } from "../core-types";
+export { ResizeHandlePlacement, AnchorType, CenterType, IPosition } from "../core-types";
