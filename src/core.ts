@@ -4,7 +4,6 @@ import { updateStyleDefinition, removeStyleDefinition, coalesce, adjustmentsEqua
 
 const spaceDefaults: Partial<ISpaceDefinition> = {
 	id: "",
-	order: 0,
 	zIndex: 0,
 	scrollable: false,
 	resizing: false,
@@ -20,6 +19,8 @@ const spaceDefaults: Partial<ISpaceDefinition> = {
 	adjustEdge: () => false,
 	anchoredChildren: () => [],
 };
+
+const anchorTypes = [AnchorType.Left, AnchorType.Top, AnchorType.Right, AnchorType.Bottom];
 
 function getPosition(type: Type) {
 	if (type === Type.ViewPort) {
@@ -74,14 +75,37 @@ export function createStore(): ISpaceStore {
 	const getSpaces = () => spaces;
 
 	const recalcSpaces = (parent: ISpaceDefinition) => {
-		for (var i = 0, len = parent.children.length; i < len; i++) {
-			const space = parent.children[i];
+		const onlyUnique = (value: number, index: number, self: number[]) => {
+			return self.indexOf(value) === index;
+		};
+
+		const addDefaultOrders = (spaces: ISpaceDefinition[]) => {
+			let result: ISpaceDefinition[] = [];
+
+			anchorTypes.forEach((t) => {
+				const anchoredSpaces = spaces.filter((s) => s.anchor !== undefined && s.anchor === t);
+				const zIndices = anchoredSpaces.map((s) => s.zIndex).filter(onlyUnique);
+				zIndices.forEach((i) => {
+					const anchoredSpacesInLayer = anchoredSpaces.filter((s) => s.zIndex === i);
+					const orderedSpaces = anchoredSpacesInLayer.filter((c) => c.order !== undefined);
+					const unorderedSpaces = anchoredSpacesInLayer.filter((c) => c.order === undefined);
+					var maxOrder = orderedSpaces.length > 0 ? orderedSpaces.map((a) => a.order!).reduce((a, b) => Math.max(a, b)) : 0;
+					result = [...result, ...[...orderedSpaces, ...unorderedSpaces.map((c, idx) => ({ ...c, ...{ order: maxOrder + idx + 1 } }))]];
+				});
+			});
+
+			return [...result, ...spaces.filter((s) => s.anchor === undefined)];
+		};
+
+		const orderedSpaces = addDefaultOrders(parent.children);
+		for (var i = 0, len = orderedSpaces.length; i < len; i++) {
+			const space = orderedSpaces[i];
 			let changed = false;
 
 			if (space.type === Type.Fill) {
 				anchorUpdates(space).forEach((info) => {
 					const adjusted: SizeUnit[] = [];
-					const anchoredSpaces = parent.anchoredChildren(info.anchor, space.zIndex);
+					const anchoredSpaces = parent.anchoredChildren(orderedSpaces, info.anchor, space.zIndex);
 
 					anchoredSpaces.forEach((as) => {
 						if (as.orientation === Orientation.Vertical) {
@@ -108,8 +132,8 @@ export function createStore(): ISpaceStore {
 			} else if (space.type === Type.Anchored) {
 				const adjusted: SizeUnit[] = [];
 				const anchoredSpaces = parent
-					.anchoredChildren(space.anchor!, space.zIndex)
-					.filter((s) => s.id !== space.id && s.order <= space.order);
+					.anchoredChildren(orderedSpaces, space.anchor!, space.zIndex)
+					.filter((s) => s.id !== space.id && s.order! <= space.order!);
 
 				anchoredSpaces.forEach((as) => {
 					if (as.orientation === Orientation.Vertical) {
@@ -191,7 +215,7 @@ export function createStore(): ISpaceStore {
 				maximumSize,
 				handleSize,
 				touchHandleSize,
-				handlePlacement
+				handlePlacement,
 			} = props;
 			const canResizeLeft = (position && position.rightResizable) || false;
 			const canResizeRight = (position && position.leftResizable) || false;
@@ -382,13 +406,9 @@ export function createStore(): ISpaceStore {
 			},
 		} as ISpaceDefinition;
 
-		newSpace.anchoredChildren = (anchor, zIndex) => {
-			const children = newSpace.children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
-			const orderedChildren = children.filter(c => c.order !== undefined);
-			const unorderedChildren = children.filter(c => c.order === undefined);
-			var maxOrder = orderedChildren.length > 0 ? orderedChildren.map(a => a.order).reduce((a, b) => Math.max(a, b)) : 0;
-			return [...orderedChildren, ...unorderedChildren.map((c, idx) => ({...c, ...{ order: maxOrder + idx + 1 }}))];
-		}
+		newSpace.anchoredChildren = (children, anchor, zIndex) => {
+			return children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
+		};
 
 		newSpace.adjustLeft = (adjusted) => {
 			if (adjustmentsEqual(newSpace.left.adjusted, adjusted)) {

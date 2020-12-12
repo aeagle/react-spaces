@@ -1,12 +1,12 @@
 import * as React from "react";
 import { CSSProperties } from "react";
-import { shortuuid } from "../../core-utils";
 import {
 	Info,
 	Fixed,
 	ViewPort,
 	Top,
 	Fill,
+	Left,
 	LeftResizable,
 	Right,
 	BottomResizable,
@@ -204,7 +204,7 @@ export const DemoUI = () => {
 	);
 };
 
-export const DemoExperimental: React.FC = () => {
+export const StateDriven: React.FC = () => {
 	const [visible, setVisible] = React.useState(true);
 	const [size, setSize] = React.useState(true);
 	const [side, setSide] = React.useState(true);
@@ -276,6 +276,15 @@ export const DemoExperimental: React.FC = () => {
 		</ViewPort>
 	);
 };
+
+export const AnchoredDefaultOrdering = () => {
+	return <ViewPort as="main">
+		<Left size="25%" style={blue} centerContent={CenterType.HorizontalVertical}>Left 1</Left>
+		<Left size="25%" style={green} centerContent={CenterType.HorizontalVertical}>Left 2</Left>
+		<Left size="25%" style={red} centerContent={CenterType.HorizontalVertical}>Left 3</Left>
+		<Fill style={blue} centerContent={CenterType.HorizontalVertical}>Fill</Fill>
+	</ViewPort>
+}
 
 const white = { backgroundColor: "#ffffff", padding: 15 };
 export const blue: CSSProperties = { backgroundColor: "rgb(224, 238, 238, 0.7)" };

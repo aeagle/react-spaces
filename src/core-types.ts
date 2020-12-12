@@ -35,7 +35,7 @@ export enum ResizeType {
 export enum ResizeHandlePlacement {
 	OverlayInside = "overlay-inside",
 	Inside = "inside",
-	OverlayBoundary = "overlay-boundary"
+	OverlayBoundary = "overlay-boundary",
 }
 
 export enum CenterType {
@@ -123,7 +123,7 @@ export interface ISpaceDefinition {
 	adjustTop: (adjusted: SizeUnit[]) => boolean;
 	adjustBottom: (adjusted: SizeUnit[]) => boolean;
 	adjustEdge: (adjusted: SizeUnit[]) => boolean;
-	anchoredChildren: (anchor: AnchorType, zIndex: number) => ISpaceDefinition[];
+	anchoredChildren: (children: ISpaceDefinition[], anchor: AnchorType, zIndex: number) => ISpaceDefinition[];
 	onResizeStart?: (() => void | boolean) | undefined;
 	onResizeEnd?: ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
 	element: HTMLElement;
@@ -132,7 +132,7 @@ export interface ISpaceDefinition {
 	anchor?: AnchorType;
 	orientation: Orientation;
 	scrollable: boolean;
-	order: number;
+	order?: number;
 	position: "fixed" | "absolute" | "relative";
 	children: ISpaceDefinition[];
 	parentId: string | undefined;
