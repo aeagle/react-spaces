@@ -91,10 +91,6 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 	const cssString: string[] = [];
 
-	if (space.scrollable) {
-		cssString.push(`overflow: auto;`);
-		cssString.push(`touch-action: auto;`);
-	}
 	if (style.position) {
 		cssString.push(`position: ${style.position};`);
 	}
@@ -124,11 +120,14 @@ export function styleDefinition(space: ISpaceDefinition) {
 		cssElements.push(`#${space.id} { ${cssString.join(" ")} }`);
 	}
 
-	let handleOffset = 0;
-	const touchHandleSize = (space.touchHandleSize / 2) - (space.handleSize / 2);
+	if (space.scrollable) {
+		cssElements.push(`#${space.id} > .spaces-space-inner { overflow: auto; touch-action: auto; }`);
+	}
 
-	switch (space.handlePlacement)
-	{
+	let handleOffset = 0;
+	const touchHandleSize = space.touchHandleSize / 2 - space.handleSize / 2;
+
+	switch (space.handlePlacement) {
 		case ResizeHandlePlacement.Inside:
 		case ResizeHandlePlacement.OverlayInside:
 			handleOffset = space.handleSize;
@@ -139,22 +138,34 @@ export function styleDefinition(space: ISpaceDefinition) {
 	}
 
 	if (space.canResizeLeft) {
-		cssElements.push(`#${space.id}-m { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${space.handleSize}px; }`);
+		cssElements.push(
+			`#${space.id}-m { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${space.handleSize}px; }`,
+		);
 		cssElements.push(`#${space.id}-m:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
 	}
 
 	if (space.canResizeTop) {
-		cssElements.push(`#${space.id}-m { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${space.handleSize}px; }`);
+		cssElements.push(
+			`#${space.id}-m { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${space.handleSize}px; }`,
+		);
 		cssElements.push(`#${space.id}-m:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
 	}
 
 	if (space.canResizeRight) {
-		cssElements.push(`#${space.id}-m { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${space.handleSize}px; }`);
+		cssElements.push(
+			`#${space.id}-m { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${
+				space.handleSize
+			}px; }`,
+		);
 		cssElements.push(`#${space.id}-m:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
 	}
 
 	if (space.canResizeBottom) {
-		cssElements.push(`#${space.id}-m { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${space.handleSize}px; }`);
+		cssElements.push(
+			`#${space.id}-m { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${
+				space.handleSize
+			}px; }`,
+		);
 		cssElements.push(`#${space.id}-m:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
 	}
 
