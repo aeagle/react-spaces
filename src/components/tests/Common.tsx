@@ -28,26 +28,26 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", className: "custom-class" })}</ViewPort>);
 
 		// assert
-		const sut = container.querySelector("#test");
-		expect(sut!.className).toBe("spaces-space custom-class");
+		const sut = container.querySelector("#test .spaces-space-inner")!;
+		expect(sut.className).toBe("spaces-space-inner custom-class");
 	});
 
 	test(`${name} with class change applied`, async () => {
 		// arrange
 		const { container, rerender } = render(<ViewPort>{mutateComponent(component, { id: "test", className: "custom-class" })}</ViewPort>);
-		const sut = container.querySelector("#test");
+		const sut = container.querySelector("#test .spaces-space-inner")!;
 
 		// act
 		rerender(<ViewPort>{mutateComponent(component, { id: "test", className: "different-custom-class" })}</ViewPort>);
 
 		//assert
-		expect(sut!.className).toBe("spaces-space different-custom-class");
+		expect(sut.className).toBe("spaces-space-inner different-custom-class");
 	});
 
 	test(`${name} with style applied`, async () => {
 		// arrange, act
 		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", style: { backgroundColor: "red" } })}</ViewPort>);
-		const sut = container.querySelector("#test");
+		const sut = container.querySelector("#test .spaces-space-inner");
 
 		// assert
 		const style = window.getComputedStyle(sut!);
@@ -57,7 +57,7 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 	test(`${name} with style change applied`, async () => {
 		// arrange
 		const { container, rerender } = render(<ViewPort>{mutateComponent(component, { id: "test", style: { backgroundColor: "red" } })}</ViewPort>);
-		const sut = container.querySelector("#test");
+		const sut = container.querySelector("#test .spaces-space-inner");
 
 		// act
 		rerender(<ViewPort>{mutateComponent(component, { id: "test", style: { backgroundColor: "green" } })}</ViewPort>);
@@ -70,7 +70,7 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 	test(`${name} scrollable applied`, async () => {
 		// arrange, act
 		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", scrollable: true })}</ViewPort>);
-		const sut = container.querySelector("#test");
+		const sut = container.querySelector("#test .spaces-space-inner");
 
 		// assert
 		const style = window.getComputedStyle(sut!);
@@ -80,7 +80,7 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 	test(`${name} scrollable change applied`, async () => {
 		// arrange
 		const { container, rerender } = render(<ViewPort>{mutateComponent(component, { id: "test", scrollable: false })}</ViewPort>);
-		const sut = container.querySelector("#test");
+		const sut = container.querySelector("#test .spaces-space-inner");
 
 		// act
 		rerender(<ViewPort>{mutateComponent(component, { id: "test", scrollable: true })}</ViewPort>);
@@ -192,7 +192,7 @@ export const commonResizableTests = (
 		// arrange
 		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test" })}</ViewPort>);
 		const sut = container.querySelector("#test")!;
-		const resizeHandle = container.querySelector("#test .spaces-resize-handle")!;
+		const resizeHandle = container.querySelector(".spaces-resize-handle")!;
 
 		// act
 		drag(
@@ -213,7 +213,7 @@ export const commonResizableTests = (
 		// arrange
 		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test" })}</ViewPort>);
 		const sut = container.querySelector("#test")!;
-		const resizeHandle = container.querySelector("#test .spaces-resize-handle")!;
+		const resizeHandle = container.querySelector(".spaces-resize-handle")!;
 
 		// act
 		drag(
@@ -242,7 +242,7 @@ export const commonResizableTests = (
 		// arrange
 		const { container, rerender } = render(<ViewPort>{mutateComponent(component, { id: "test", size: 50 })}</ViewPort>);
 		const sut = container.querySelector("#test")!;
-		const resizeHandle = container.querySelector("#test .spaces-resize-handle")!;
+		const resizeHandle = container.querySelector(".spaces-resize-handle")!;
 
 		// act
 		drag(
