@@ -1,15 +1,13 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
-import { ViewPort } from "../../ViewPort";
-import { Centered } from "../../Centered";
-import { Positioned } from "../../Space";
-import { useParentSpace } from "../../../hooks/useParentSpace";
+import { ViewPort, Centered, Positioned } from "../../";
+//import { useParentSpace } from "../../../hooks/useParentSpace";
 import { green, description } from "../Utils";
 import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
 
 <CommonHeader />
 
-<Meta title="Components|Positioned" component={Positioned} />
+<Meta title="Components/Positioned" component={Positioned} />
 
 ## Positioned
 
@@ -45,12 +43,12 @@ Absolutely positioned space within it's parent.
 	<Story name="With drag handle">
 		{() => {
 			const DragHandle = () => {
-				const parent = useParentSpace();
+				//const parent = useParentSpace();
 				return (
 					<Centered>
-						<button onMouseDown={(e) => parent.startMouseDrag(e)}>
+						{/* <button onMouseDown={(e) => parent.startMouseDrag(e)}>
 							Drag handle
-						</button>
+						</button> */}
 					</Centered>
 				)
 			}

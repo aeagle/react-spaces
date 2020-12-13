@@ -1,13 +1,13 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
-import { ViewPort } from "../../ViewPort";
-import { RightResizable } from "../../Space";
+import { action } from '@storybook/addon-actions';
+import { ViewPort, RightResizable } from "../../";
 import { green, description, lorem } from "../Utils";
 import { CommonHeader, PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../Utils";
 
 <CommonHeader />
 
-<Meta title="Components|RightResizable" component={RightResizable} />
+<Meta title="Components/RightResizable" component={RightResizable} />
 
 ## RightResizable
 
@@ -18,7 +18,7 @@ Anchored resizable space on the right edge of it's parent.
 <Preview>
 	<Story name="Default (%)">
 		<ViewPort>
-			<RightResizable style={green} size="50%" trackSize={true}>
+			<RightResizable style={green} size="50%" trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>
@@ -30,7 +30,7 @@ Anchored resizable space on the right edge of it's parent.
 <Preview>
 	<Story name="Default (px)">
 		<ViewPort>
-			<RightResizable style={green} size={300} trackSize={true}>
+			<RightResizable style={green} size={300} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>
@@ -42,7 +42,7 @@ Anchored resizable space on the right edge of it's parent.
 <Preview>
 	<Story name="With resize constraints">
 		<ViewPort>
-			<RightResizable style={green} size={300} trackSize={true} minimumSize={150} maximumSize={450}>
+			<RightResizable style={green} size={300} trackSize={true} minimumSize={150} maximumSize={450} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>
@@ -54,7 +54,7 @@ Anchored resizable space on the right edge of it's parent.
 <Preview>
 	<Story name="Scrollable">
 		<ViewPort>
-			<RightResizable style={green} size={300} scrollable={true}>
+			<RightResizable style={green} size={300} scrollable={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{lorem}
 			</RightResizable>
 		</ViewPort>

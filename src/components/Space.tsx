@@ -1,163 +1,114 @@
+import { ISpaceProps, CenterType, ResizeHandlePlacement, AnchorType } from "../core-types";
+import { useSpace, ParentContext, LayerContext, DOMRectContext } from "../core-react";
 import * as React from "react";
-import {
-	IPublicProps,
-	IAnchoredProps,
-	AnchorType,
-	IResizableProps,
-	AllProps,
-	IPositionedProps,
-	CenterType,
-	publicProps,
-	anchoredProps,
-	resizableProps,
-	positionedProps,
-	allProps,
-	ResizeType,
-	AnchorToResizeTypeMap,
-} from "../types";
-import { SpaceContext, SpaceInfoContext } from "./Contexts";
-import { CenteredVertically, Centered } from "./Centered";
-import { useSpace } from "../hooks/useSpace";
-import { HeadStyles } from "./HeadStyles";
-import { ResizeHandle } from "./ResizeHandle";
-import "../styles.css";
+import { Centered } from "./Centered";
+import { CenteredVertically } from "./CenteredVertically";
+import { shortuuid } from "../core-utils";
 
-export const Fill: React.FC<IPublicProps> = (props) => <SpaceInternal {...props} isPositioned={false} />;
-Fill.propTypes = publicProps;
+function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
+	switch (centerType) {
+		case CenterType.Vertical:
+			return <CenteredVertically>{children}</CenteredVertically>;
+		case CenterType.HorizontalVertical:
+			return <Centered>{children}</Centered>;
+	}
+	return children;
+}
 
-export const Top: React.FC<IPublicProps & IAnchoredProps> = (props) => (
-	<SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Top} anchorSize={props.size} />
-);
-Top.propTypes = { ...publicProps, ...anchoredProps };
+export class Space extends React.Component<ISpaceProps> {
+	public render() {
+		return <SpaceInner {...this.props} wrapperInstance={this} />;
+	}
+}
 
-export const Left: React.FC<IPublicProps & IAnchoredProps> = (props) => (
-	<SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Left} anchorSize={props.size} />
-);
-Left.propTypes = { ...publicProps, ...anchoredProps };
-
-export const Bottom: React.FC<IPublicProps & IAnchoredProps> = (props) => (
-	<SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Bottom} anchorSize={props.size} />
-);
-Bottom.propTypes = { ...publicProps, ...anchoredProps };
-
-export const Right: React.FC<IPublicProps & IAnchoredProps> = (props) => (
-	<SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Right} anchorSize={props.size} />
-);
-Right.propTypes = { ...publicProps, ...anchoredProps };
-
-export const TopResizable: React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => (
-	<SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Top} anchorSize={props.size} resizable={true} />
-);
-TopResizable.propTypes = { ...publicProps, ...anchoredProps, ...resizableProps };
-
-export const LeftResizable: React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => (
-	<SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Left} anchorSize={props.size} resizable={true} />
-);
-LeftResizable.propTypes = { ...publicProps, ...anchoredProps, ...resizableProps };
-
-export const BottomResizable: React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => (
-	<SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Bottom} anchorSize={props.size} resizable={true} />
-);
-BottomResizable.propTypes = { ...publicProps, ...anchoredProps, ...resizableProps };
-
-export const RightResizable: React.FC<IPublicProps & IAnchoredProps & IResizableProps> = (props) => (
-	<SpaceInternal {...props} isPositioned={false} anchor={AnchorType.Right} anchorSize={props.size} resizable={true} />
-);
-RightResizable.propTypes = { ...publicProps, ...anchoredProps, ...resizableProps };
-
-export const Positioned: React.FC<IPublicProps & IResizableProps & IPositionedProps> = (props) => <SpaceInternal {...props} isPositioned={true} />;
-Positioned.propTypes = { ...publicProps, ...resizableProps, ...positionedProps };
-
-export const Custom: React.FC<AllProps> = (props) => <SpaceInternal {...props} />;
-Custom.propTypes = allProps;
-
-const isResizable = (props: AllProps) => props.resizable && props.anchor;
-
-export const SpaceInternal: React.FC<AllProps> = React.memo((props) => {
-	const spaceElement = React.useRef<HTMLElement>();
-	const { space, parentContext, currentContext, currentSize, resizing } = useSpace(props, spaceElement);
-
-	const overlayHandle = props.overlayHandle !== undefined ? props.overlayHandle : true;
-	const handleSize = props.handleSize === undefined ? 5 : props.handleSize;
-	const resizeType: ResizeType | undefined = props.anchor ? AnchorToResizeTypeMap[props.anchor] : undefined;
-
-	const innerStyle = {
-		...props.style,
-		...{
-			left: resizeType === ResizeType.Left && !overlayHandle ? handleSize : undefined,
-			top: resizeType === ResizeType.Top && !overlayHandle ? handleSize : undefined,
-			right: resizeType === ResizeType.Right && !overlayHandle ? handleSize : undefined,
-			bottom: resizeType === ResizeType.Bottom && !overlayHandle ? handleSize : undefined,
-		},
-	};
-
-	const userClasses = props.className ? props.className.split(" ").map((c) => c.trim()) : [];
-
-	const outerClasses = [
-		...[
-			"spaces-space",
-			props.scrollable ? (isResizable(props) ? "scrollable" : "scrollable-a") : undefined,
-			resizing ? "spaces-resizing" : undefined,
-		],
-		...(isResizable(props) && props.scrollable ? userClasses.map((c) => `${c}-container`) : userClasses),
-	].filter((c) => c);
-
-	const innerClasses = ["spaces-space-inner", ...userClasses].filter((c) => c);
-
-	let children = props.children;
-
-	if (props.centerContent === CenterType.Vertical) {
-		children = <CenteredVertically>{children}</CenteredVertically>;
-	} else if (props.centerContent === CenterType.HorizontalVertical) {
-		children = <Centered>{children}</Centered>;
+const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) => {
+	if (!props.id && !props.wrapperInstance["_react_spaces_uniqueid"]) {
+		props.wrapperInstance["_react_spaces_uniqueid"] = `s${shortuuid()}`;
 	}
 
-	const passThroughEvents = {
-		onMouseDown: props.onMouseDown,
-		onMouseEnter: props.onMouseEnter,
-		onMouseLeave: props.onMouseLeave,
-		onMouseMove: props.onMouseMove,
-		onTouchStart: props.onTouchStart,
-		onTouchMove: props.onTouchMove,
-		onTouchEnd: props.onTouchEnd,
-		onClick: props.onClick,
-		onDoubleClick: props.onDoubleClick,
+	const {
+		style,
+		className,
+		onClick,
+		onDoubleClick,
+		onMouseDown,
+		onMouseEnter,
+		onMouseLeave,
+		onMouseMove,
+		onTouchStart,
+		onTouchMove,
+		onTouchEnd,
+		children,
+	} = props;
+
+	const events = {
+		onClick: onClick,
+		onDoubleClick: onDoubleClick,
+		onMouseDown: onMouseDown,
+		onMouseEnter: onMouseEnter,
+		onMouseLeave: onMouseLeave,
+		onMouseMove: onMouseMove,
+		onTouchStart: onTouchStart,
+		onTouchMove: onTouchMove,
+		onTouchEnd: onTouchEnd,
 	};
 
-	const width = Math.floor(currentSize.width);
-	const height = Math.floor(currentSize.height);
+	const { space, domRect, elementRef, resizeHandles } = useSpace({
+		...props,
+		...{ id: props.id || props.wrapperInstance["_react_spaces_uniqueid"] },
+	});
 
-	return React.createElement(
-		props.as || "div",
-		{
+	React.useEffect(() => {
+		space.element = elementRef.current!;
+	}, []);
+
+	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
+
+	const outerClasses = [
+		...["spaces-space", space.children.find((s) => s.resizing) ? "spaces-resizing" : undefined],
+		...userClasses.map((c) => `${c}-container`),
+	].filter((c) => c);
+
+	const innerClasses = [...["spaces-space-inner"], ...userClasses];
+
+	let innerStyle = style;
+	if (space.handlePlacement === ResizeHandlePlacement.Inside) {
+		innerStyle = {
+			...style,
 			...{
-				id: space.id,
-				ref: spaceElement,
-				className: outerClasses.join(" "),
+				left: space.anchor === AnchorType.Right ? space.handleSize : undefined,
+				right: space.anchor === AnchorType.Left ? space.handleSize : undefined,
+				top: space.anchor === AnchorType.Bottom ? space.handleSize : undefined,
+				bottom: space.anchor === AnchorType.Top ? space.handleSize : undefined,
 			},
-			...passThroughEvents,
-		},
-		<>
-			<HeadStyles spaces={currentContext.children} />
-			<ResizeHandle
-				resizable={props.resizable}
-				anchor={props.anchor}
-				parentContext={parentContext}
-				space={space}
-				spaceElement={spaceElement.current}
-				handleSize={handleSize}
-				minimumSize={props.minimumSize}
-				maximumSize={props.maximumSize}
-				onResizeStart={props.onResizeStart}
-				onResizeEnd={props.onResizeEnd}
-			/>
-			<div className={innerClasses.join(" ")} style={innerStyle}>
-				<SpaceContext.Provider value={currentContext}>
-					<SpaceInfoContext.Provider value={{ width: width, height: height }}>{children}</SpaceInfoContext.Provider>
-				</SpaceContext.Provider>
-			</div>
-		</>,
-	);
-});
+		};
+	}
 
-SpaceInternal.propTypes = allProps;
+	const centeredContent = applyCentering(children, props.centerContent);
+
+	return (
+		<>
+			{resizeHandles.mouseHandles.map((r) => (
+				<div {...r} />
+			))}
+			{React.createElement(
+				props.as || "div",
+				{
+					...{
+						id: space.id,
+						ref: elementRef,
+						className: outerClasses.join(" "),
+					},
+					...events,
+				},
+				<div className={innerClasses.join(" ")} style={innerStyle}>
+					<ParentContext.Provider value={space.id}>
+						<LayerContext.Provider value={undefined}>
+							<DOMRectContext.Provider value={domRect}>{centeredContent}</DOMRectContext.Provider>
+						</LayerContext.Provider>
+					</ParentContext.Provider>
+				</div>,
+			)}
+		</>
+	);
+};

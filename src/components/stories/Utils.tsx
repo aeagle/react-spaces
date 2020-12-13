@@ -1,10 +1,21 @@
 import * as React from "react";
 import { CSSProperties } from "react";
-import { Centered } from "../Centered";
-import { Info } from "../SpaceInfo";
-import { Fixed } from "../Fixed";
-import { Top, Fill, LeftResizable, Right, BottomResizable } from "../Space";
-import { CenterType } from "../../types";
+import {
+	Info,
+	Fixed,
+	ViewPort,
+	Top,
+	Fill,
+	Left,
+	LeftResizable,
+	Right,
+	BottomResizable,
+	Centered,
+	Layer,
+	TopResizable,
+	RightResizable,
+	CenterType,
+} from "..";
 import "./Utils.scss";
 
 export const CommonHeader = () => (
@@ -27,13 +38,15 @@ export const CommonHeader = () => (
 
 export const PropsTable: React.FC = (props) => (
 	<table className="sbdocs sbdocs-table properties-table css-lckf62">
-		<tr>
-			<th>Property</th>
-			<th>Type</th>
-			<th>Default value</th>
-			<th>Description</th>
-		</tr>
-		{props.children}
+		<tbody>
+			<tr>
+				<th>Property</th>
+				<th>Type</th>
+				<th>Default value</th>
+				<th>Description</th>
+			</tr>
+			{props.children}
+		</tbody>
 	</table>
 );
 
@@ -75,7 +88,7 @@ export const StandardProps = () => (
 		/>
 		<Prop
 			name="centerContent"
-			type="CenterType.Vertical or CenterType.HorizontalVertical or 'vertical' or 'horizontalVertical'"
+			type="CenterType.Vertical ('vertical'), CenterType.HorizontalVertical ('horizontalVertical')"
 			description="Apply centering to children."
 		/>
 		<Prop name="className" type="string" description="A class name to apply to the space element." />
@@ -128,21 +141,36 @@ export const ResizableProps = () => (
 		<PropsHeader>Resizable properties</PropsHeader>
 		<Prop name="handleSize" type="number" default="5" description="Size of the resize handle in pixels." />
 		<Prop
-			name="overlayHandle"
-			type="boolean"
-			default="true"
-			description="Determines method of placement of the resize handle. By default the handle is placed over the space. When set to false, the space resize handle sits next to the space reducing the size of the space."
+			name="touchHandleSize"
+			type="number"
+			default="5"
+			description={
+				<>
+					An optional handle size that can be used to make the handle area bigger for touches. This extends outside the dimensions of the
+					resize handle.{" "}
+					<strong>
+						NOTE: You should ensure that you try not to place clickable elements underneath this extended handle area as the handle area
+						will block interaction with that element.
+					</strong>
+				</>
+			}
+		/>
+		<Prop
+			name="handlePlacement"
+			type="ResizeHandlePlacement.OverlayInside ('overlay-inside'), ResizeHandlePlacement.Inside ('inside'), ResizeHandlePlacement.OverlayBoundary ('overlay-boundary')"
+			default="overlay-inside"
+			description="Determines method of placement of the resize handle. By default the handle is placed overlays content inside the space ('overlay'). Other options are to take up space within the space ('inside') or to be overlayed in the middle of the boundary of the space and neighbouring spaces ('overlay-boundary')"
 		/>
 		<Prop name="minimumSize" type="number" description="Constrains resizing of the space to a minimum size." />
 		<Prop name="maximumSize" type="number" description="Constrains resizing of the space to a maximum size." />
 		<Prop
 			name="onResizeStart"
-			type="() => boolean"
+			type="() => boolean | void"
 			description="Triggered when a resize starts. Returning false from the event handler cancels the resize."
 		/>
 		<Prop
 			name="onResizeEnd"
-			type="(newSize: number) => void"
+			type="(newSize: number, newRect: DOMRect) => void"
 			description="Triggered when a resize ends. The final size in pixels of the space in after the resize is passed as the first parameter."
 		/>
 	</>
@@ -152,42 +180,193 @@ export const DemoUI = () => {
 	const [sidebarExpanded, setSidebarExpanded] = React.useState(true);
 
 	return (
-		<Fixed style={{ outline: "1px solid black" }} height={400}>
-			<Top style={{ borderBottom: "1px dashed black", padding: 5 }} order={1} size={25} centerContent={CenterType.Vertical}>
-				Title
-			</Top>
-			<Top style={{ borderBottom: "1px dashed black", padding: 5 }} order={2} size={25} centerContent={CenterType.Vertical}>
-				Menu bar
-			</Top>
-			<Fill>
-				<LeftResizable style={{ borderRight: "1px dashed black", transition: "width 0.5s ease" }} size={sidebarExpanded ? 200 : 25}>
-					<Top style={{ borderBottom: "1px dashed black" }} size={25}>
-						{sidebarExpanded && (
-							<Fill style={{ padding: 5 }} centerContent={CenterType.Vertical}>
-								Sidebar title
-							</Fill>
-						)}
-						<Right
-							style={{ borderLeft: "1px dashed black", backgroundColor: "yellow", cursor: "pointer" }}
-							size={25}
-							onClick={() => setSidebarExpanded((prev) => !prev)}
-							centerContent={CenterType.HorizontalVertical}>
-							<i className={"fa fa-arrow-" + (sidebarExpanded ? "left" : "right")} />
-						</Right>
-					</Top>
-					{sidebarExpanded && <Fill centerContent={CenterType.HorizontalVertical}>Sidebar</Fill>}
-				</LeftResizable>
-				<Fill style={{ borderRight: "1px dashed black", transition: "left 0.5s ease" }}>
-					<Fill centerContent={CenterType.HorizontalVertical}>Main content</Fill>
-					<BottomResizable style={{ borderTop: "1px dashed black" }} size={100} centerContent={CenterType.HorizontalVertical}>
-						Bottom area
-					</BottomResizable>
+		<React.StrictMode>
+			<Fixed style={{ outline: "1px solid black" }} height={400}>
+				<Top style={{ borderBottom: "1px dashed black", padding: 5 }} order={1} size={25} centerContent={CenterType.Vertical}>
+					Title
+				</Top>
+				<Top style={{ borderBottom: "1px dashed black", padding: 5 }} order={2} size={25} centerContent={CenterType.Vertical}>
+					Menu bar
+				</Top>
+				<Fill>
+					<LeftResizable style={{ borderRight: "1px dashed black", transition: "width 0.5s ease" }} size={sidebarExpanded ? 200 : 25}>
+						<Top style={{ borderBottom: "1px dashed black" }} size={25}>
+							{sidebarExpanded && (
+								<Fill style={{ padding: 5 }} centerContent={CenterType.Vertical}>
+									Sidebar title
+								</Fill>
+							)}
+							<Right
+								style={{ borderLeft: "1px dashed black", backgroundColor: "yellow", cursor: "pointer" }}
+								size={25}
+								onClick={() => setSidebarExpanded((prev) => !prev)}
+								centerContent={CenterType.HorizontalVertical}>
+								<i className={"fa fa-arrow-" + (sidebarExpanded ? "left" : "right")} />
+							</Right>
+						</Top>
+						{sidebarExpanded && <Fill centerContent={CenterType.HorizontalVertical}>Sidebar</Fill>}
+					</LeftResizable>
+					<Fill style={{ borderRight: "1px dashed black", transition: "left 0.5s ease" }}>
+						<Fill centerContent={CenterType.HorizontalVertical}>Main content</Fill>
+						<BottomResizable style={{ borderTop: "1px dashed black" }} size={100} centerContent={CenterType.HorizontalVertical}>
+							Bottom area
+						</BottomResizable>
+					</Fill>
 				</Fill>
-			</Fill>
-		</Fixed>
+			</Fixed>
+		</React.StrictMode>
 	);
 };
 
+export const StateDriven: React.FC = () => {
+	const [visible, setVisible] = React.useState(true);
+	const [size, setSize] = React.useState(true);
+	const [side, setSide] = React.useState(true);
+	return (
+		<ViewPort as="main">
+			<LeftResizable as="aside" size="15%" style={red} trackSize={true}>
+				{description("Left")}
+			</LeftResizable>
+			<Fill>
+				<Layer zIndex={1}>
+					<TopResizable size="15%" style={blue} trackSize={true}>
+						{description("Top")}
+					</TopResizable>
+					<Fill>
+						{visible && (
+							<LeftResizable size={size ? "10%" : "15%"} order={0} style={green} trackSize={true}>
+								{description("Left 1")}
+								<div>
+									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
+								</div>
+							</LeftResizable>
+						)}
+						<LeftResizable size={"10%"} order={1} style={red} trackSize={true}>
+							{description("Left 2")}
+						</LeftResizable>
+						<Fill>
+							<TopResizable size="20%" order={1} style={red} trackSize={true}>
+								{description("Top 1")}
+							</TopResizable>
+							<Fill style={blue}>
+								{side ? (
+									<LeftResizable size="20%" style={white} trackSize={true}>
+										{description("Left 2")}
+										<div>
+											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
+										</div>
+									</LeftResizable>
+								) : (
+									<TopResizable size="20%" style={white} trackSize={true}>
+										{description("Top")}
+										<div>
+											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
+										</div>
+									</TopResizable>
+								)}
+								<Fill trackSize={true}>
+									{description("Fill")}
+									<div>
+										<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
+									</div>
+								</Fill>
+							</Fill>
+							<BottomResizable size="20%" style={red} trackSize={true}>
+								{description("Bottom")}
+							</BottomResizable>
+						</Fill>
+						<RightResizable size="20%" style={green} scrollable={true} trackSize={true}>
+							{lorem}
+						</RightResizable>
+					</Fill>
+					<BottomResizable size="15%" style={blue} trackSize={true}>
+						{description("Bottom")}
+					</BottomResizable>
+				</Layer>
+			</Fill>
+			<RightResizable size="15%" style={red} trackSize={true}>
+				{description("Right")}
+			</RightResizable>
+		</ViewPort>
+	);
+};
+
+export const AnchoredDefaultOrdering = () => {
+	return (
+		<ViewPort as="main">
+			<Left size="25%" style={blue} centerContent={CenterType.HorizontalVertical}>
+				Left 1
+			</Left>
+			<Left size="25%" style={green} centerContent={CenterType.HorizontalVertical}>
+				Left 2
+			</Left>
+			<Left size="25%" style={red} centerContent={CenterType.HorizontalVertical}>
+				Left 3
+			</Left>
+			<Fill style={blue} centerContent={CenterType.HorizontalVertical}>
+				Fill
+			</Fill>
+		</ViewPort>
+	);
+};
+
+export const SpaceDemoStacked1 = () => (
+	<>
+		<Fixed height={400}>
+			<LeftResizable trackSize={true} handleSize={30} size="10%" order={1} style={{ backgroundColor: "#e0eee0" }}>
+				{Description("Left 1", "L1")}
+			</LeftResizable>
+			<LeftResizable trackSize={true} handleSize={30} size="10%" order={2} style={{ backgroundColor: "#e0eeee" }}>
+				{Description("Left 2", "L2")}
+			</LeftResizable>
+			<Fill trackSize={true} style={{ backgroundColor: "#eee0e0" }}>
+				{Description("Fill", "F")}
+			</Fill>
+			<RightResizable trackSize={true} handleSize={30} size="10%" order={2} style={{ backgroundColor: "#e0eeee" }}>
+				{Description("Right 2", "R2")}
+			</RightResizable>
+			<RightResizable trackSize={true} handleSize={30} size="10%" order={1} style={{ backgroundColor: "#e0eee0" }}>
+				{Description("Right 1", "R1")}
+			</RightResizable>
+		</Fixed>
+		<Fixed height={400}>
+			<LeftResizable trackSize={true} handleSize={30} size="10%" order={1} style={{ backgroundColor: "#e0eee0" }}>
+				{Description("Left 1", "L1")}
+			</LeftResizable>
+			<LeftResizable trackSize={true} handleSize={30} size="10%" order={2} style={{ backgroundColor: "#e0eeee" }}>
+				{Description("Left 2", "L2")}
+			</LeftResizable>
+			<Fill trackSize={true} style={{ backgroundColor: "#eee0e0" }}>
+				{Description("Fill", "F")}
+			</Fill>
+			<RightResizable trackSize={true} handleSize={30} size="10%" order={2} style={{ backgroundColor: "#e0eeee" }}>
+				{Description("Right 2", "R2")}
+			</RightResizable>
+			<RightResizable trackSize={true} handleSize={30} size="10%" order={1} style={{ backgroundColor: "#e0eee0" }}>
+				{Description("Right 1", "R1")}
+			</RightResizable>
+		</Fixed>
+	</>
+);
+
+const Description = (desc: string, mobileDesc: string) => (
+	<Centered>
+		<span className="description">
+			<strong className="desc">{desc}</strong>
+			<strong className="mobileDesc">{mobileDesc}</strong>
+			<br />
+			<Info>
+				{(info) => (
+					<span>
+						{info.width.toFixed()} x {info.height.toFixed()}
+					</span>
+				)}
+			</Info>
+		</span>
+	</Centered>
+);
+
+const white = { backgroundColor: "#ffffff", padding: 15 };
 export const blue: CSSProperties = { backgroundColor: "rgb(224, 238, 238, 0.7)" };
 export const red: CSSProperties = { backgroundColor: "rgb(238, 224, 224, 0.7)" };
 export const green: CSSProperties = { backgroundColor: "rgb(224, 238, 224, 0.7)" };

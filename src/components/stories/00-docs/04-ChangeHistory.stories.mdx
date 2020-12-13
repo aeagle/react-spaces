@@ -3,9 +3,18 @@ import { CommonHeader } from "../Utils";
 
 <CommonHeader />
 
-<Meta title="React Spaces|Change history" />
+<Meta title="React Spaces/Change history" />
 
 ## Change history
+
+### 0.2.0
+
+- Rewrote core state management for all spaces using global state (issue #69)
+- Moved space dynamic styling updates from React managed with a React portal to direct DOM manipulation
+- Added JEST testing for core space behaviour (issue #71)
+- Added DOMRect as second parameter to `onResizeEnd` callback
+- Fixed "Cannot update a component from inside the function body of a different component" from latest version of React - 16.3.0 (issue #64)
+- Fixed issue where changing space anchors in the same parent 'ate' space incorrectly from a `<Fill />` space (issue #52)
 
 ### 0.1.29
 
