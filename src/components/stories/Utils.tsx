@@ -140,7 +140,21 @@ export const ResizableProps = () => (
 	<>
 		<PropsHeader>Resizable properties</PropsHeader>
 		<Prop name="handleSize" type="number" default="5" description="Size of the resize handle in pixels." />
-<Prop name="touchHandleSize" type="number" default="5" description={<>An optional handle size that can be used to make the handle area bigger for touches. This extends outside the dimensions of the resize handle. <strong>NOTE: You should ensure that you try not to place clickable elements underneath this extended handle area as the handle area will block interaction with that element.</strong></>} />
+		<Prop
+			name="touchHandleSize"
+			type="number"
+			default="5"
+			description={
+				<>
+					An optional handle size that can be used to make the handle area bigger for touches. This extends outside the dimensions of the
+					resize handle.{" "}
+					<strong>
+						NOTE: You should ensure that you try not to place clickable elements underneath this extended handle area as the handle area
+						will block interaction with that element.
+					</strong>
+				</>
+			}
+		/>
 		<Prop
 			name="handlePlacement"
 			type="ResizeHandlePlacement.OverlayInside ('overlay-inside'), ResizeHandlePlacement.Inside ('inside'), ResizeHandlePlacement.OverlayBoundary ('overlay-boundary')"
@@ -278,13 +292,79 @@ export const StateDriven: React.FC = () => {
 };
 
 export const AnchoredDefaultOrdering = () => {
-	return <ViewPort as="main">
-		<Left size="25%" style={blue} centerContent={CenterType.HorizontalVertical}>Left 1</Left>
-		<Left size="25%" style={green} centerContent={CenterType.HorizontalVertical}>Left 2</Left>
-		<Left size="25%" style={red} centerContent={CenterType.HorizontalVertical}>Left 3</Left>
-		<Fill style={blue} centerContent={CenterType.HorizontalVertical}>Fill</Fill>
-	</ViewPort>
-}
+	return (
+		<ViewPort as="main">
+			<Left size="25%" style={blue} centerContent={CenterType.HorizontalVertical}>
+				Left 1
+			</Left>
+			<Left size="25%" style={green} centerContent={CenterType.HorizontalVertical}>
+				Left 2
+			</Left>
+			<Left size="25%" style={red} centerContent={CenterType.HorizontalVertical}>
+				Left 3
+			</Left>
+			<Fill style={blue} centerContent={CenterType.HorizontalVertical}>
+				Fill
+			</Fill>
+		</ViewPort>
+	);
+};
+
+export const SpaceDemoStacked1 = () => (
+	<>
+		<Fixed height={400}>
+			<LeftResizable trackSize={true} handleSize={30} size="10%" order={1} style={{ backgroundColor: "#e0eee0" }}>
+				{Description("Left 1", "L1")}
+			</LeftResizable>
+			<LeftResizable trackSize={true} handleSize={30} size="10%" order={2} style={{ backgroundColor: "#e0eeee" }}>
+				{Description("Left 2", "L2")}
+			</LeftResizable>
+			<Fill trackSize={true} style={{ backgroundColor: "#eee0e0" }}>
+				{Description("Fill", "F")}
+			</Fill>
+			<RightResizable trackSize={true} handleSize={30} size="10%" order={2} style={{ backgroundColor: "#e0eeee" }}>
+				{Description("Right 2", "R2")}
+			</RightResizable>
+			<RightResizable trackSize={true} handleSize={30} size="10%" order={1} style={{ backgroundColor: "#e0eee0" }}>
+				{Description("Right 1", "R1")}
+			</RightResizable>
+		</Fixed>
+		<Fixed height={400}>
+			<LeftResizable trackSize={true} handleSize={30} size="10%" order={1} style={{ backgroundColor: "#e0eee0" }}>
+				{Description("Left 1", "L1")}
+			</LeftResizable>
+			<LeftResizable trackSize={true} handleSize={30} size="10%" order={2} style={{ backgroundColor: "#e0eeee" }}>
+				{Description("Left 2", "L2")}
+			</LeftResizable>
+			<Fill trackSize={true} style={{ backgroundColor: "#eee0e0" }}>
+				{Description("Fill", "F")}
+			</Fill>
+			<RightResizable trackSize={true} handleSize={30} size="10%" order={2} style={{ backgroundColor: "#e0eeee" }}>
+				{Description("Right 2", "R2")}
+			</RightResizable>
+			<RightResizable trackSize={true} handleSize={30} size="10%" order={1} style={{ backgroundColor: "#e0eee0" }}>
+				{Description("Right 1", "R1")}
+			</RightResizable>
+		</Fixed>
+	</>
+);
+
+const Description = (desc: string, mobileDesc: string) => (
+	<Centered>
+		<span className="description">
+			<strong className="desc">{desc}</strong>
+			<strong className="mobileDesc">{mobileDesc}</strong>
+			<br />
+			<Info>
+				{(info) => (
+					<span>
+						{info.width.toFixed()} x {info.height.toFixed()}
+					</span>
+				)}
+			</Info>
+		</span>
+	</Centered>
+);
 
 const white = { backgroundColor: "#ffffff", padding: 15 };
 export const blue: CSSProperties = { backgroundColor: "rgb(224, 238, 238, 0.7)" };
