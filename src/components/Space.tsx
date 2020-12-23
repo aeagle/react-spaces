@@ -1,4 +1,4 @@
-import { ISpaceProps, CenterType, ResizeHandlePlacement, AnchorType } from "../core-types";
+import { ISpaceProps, CenterType, ResizeHandlePlacement, AnchorType, Type } from "../core-types";
 import { useSpace, ParentContext, LayerContext, DOMRectContext } from "../core-react";
 import * as React from "react";
 import { Centered } from "./Centered";
@@ -66,6 +66,8 @@ const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) =
 
 	const outerClasses = [
 		...["spaces-space", space.children.find((s) => s.resizing) ? "spaces-resizing" : undefined],
+		...[space.type === Type.Fixed ? "spaces-fixedsize-layout" : undefined],
+		...[space.type === Type.ViewPort ? "spaces-fullpage-layout" : undefined],
 		...userClasses.map((c) => `${c}-container`),
 	].filter((c) => c);
 

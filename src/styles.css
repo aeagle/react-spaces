@@ -18,13 +18,9 @@
 }
 
 .spaces-fixedsize-layout {
-	overflow: hidden;
-	position: relative;
 }
 
 .spaces-fullpage-layout {
-	position: fixed;
-	overflow: hidden;
 }
 
 .spaces-resize-handle {
