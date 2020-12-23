@@ -1,5 +1,5 @@
 import { SyntheticEvent } from "react";
-import { ISpaceDefinition, ISize, ResizeType, Orientation, ISpaceStore } from "./core-types";
+import { ISpaceDefinition, ISize, ResizeType, Orientation, ISpaceStore, OnResizeEnd } from "./core-types";
 import { throttle, coalesce } from "./core-utils";
 
 const RESIZE_THROTTLE = 0;
@@ -67,6 +67,7 @@ export function createResize(store: ISpaceStore) {
 			endEvent: EndEvent,
 			moveEvent: MoveEvent,
 			getCoords: (event: T) => { x: number; y: number },
+			onResizeEnd?: OnResizeEnd,
 		) {
 			if (space.onResizeStart) {
 				const result = space.onResizeStart();
@@ -118,9 +119,10 @@ export function createResize(store: ISpaceStore) {
 				space.resizing = false;
 				space.updateParent();
 
-				if (space.onResizeEnd) {
+				const resizeEnd = onResizeEnd || space.onResizeEnd;
+				if (resizeEnd) {
 					const currentRect = space.element.getBoundingClientRect();
-					space.onResizeEnd(
+					resizeEnd(
 						Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height),
 						currentRect as DOMRect,
 					);

@@ -1,6 +1,7 @@
 import { ISpaceDefinition, SizeUnit, AnchorType, Type, Orientation, ISpaceStore, ISpaceProps, CenterType, ResizeHandlePlacement } from "./core-types";
 import { EndEvent, MoveEvent, createResize } from "./core-resizing";
 import { updateStyleDefinition, removeStyleDefinition, coalesce, adjustmentsEqual } from "./core-utils";
+import { createDrag } from "./core-dragging";
 
 const spaceDefaults: Partial<ISpaceDefinition> = {
 	id: "",
@@ -251,36 +252,42 @@ export function createStore(): ISpaceStore {
 			if (space.left.size !== (position && position.left)) {
 				space.left.size = position && position.left;
 				space.left.resized = 0;
+				space.left.adjusted = [];
 				changed = true;
 			}
 
 			if (space.right.size !== (position && position.right)) {
 				space.right.size = position && position.right;
 				space.right.resized = 0;
+				space.right.adjusted = [];
 				changed = true;
 			}
 
 			if (space.top.size !== (position && position.top)) {
 				space.top.size = position && position.top;
 				space.top.resized = 0;
+				space.top.adjusted = [];
 				changed = true;
 			}
 
 			if (space.bottom.size !== (position && position.bottom)) {
 				space.bottom.size = position && position.bottom;
 				space.bottom.resized = 0;
+				space.bottom.adjusted = [];
 				changed = true;
 			}
 
 			if (space.width.size !== (position && position.width)) {
 				space.width.size = position && position.width;
 				space.width.resized = 0;
+				space.width.adjusted = [];
 				changed = true;
 			}
 
 			if (space.height.size !== (position && position.height)) {
 				space.height.size = position && position.height;
 				space.height.resized = 0;
+				space.height.adjusted = [];
 				changed = true;
 			}
 
@@ -362,9 +369,11 @@ export function createStore(): ISpaceStore {
 		createSpace: () => ({} as ISpaceDefinition),
 		startMouseResize: () => null,
 		startTouchResize: () => null,
+		startMouseDrag: () => null,
 	};
 
 	const resize = createResize(store);
+	const drag = createDrag(store);
 
 	store.createSpace = (parentId: string | undefined, props: ISpaceProps, update: () => void) => {
 		const { position, anchor, type, ...commonProps } = props;
@@ -461,18 +470,40 @@ export function createStore(): ISpaceStore {
 		return newSpace;
 	};
 
-	store.startMouseResize = (resizeType, space, size, event) => {
-		resize.startResize(resizeType, event, space, size, EndEvent.Mouse, MoveEvent.Mouse, (e) => ({
-			x: e.clientX,
-			y: e.clientY,
-		}));
+	store.startMouseResize = (resizeType, space, size, event, onResizeEnd) => {
+		resize.startResize(
+			resizeType,
+			event,
+			space,
+			size,
+			EndEvent.Mouse,
+			MoveEvent.Mouse,
+			(e) => ({
+				x: e.clientX,
+				y: e.clientY,
+			}),
+			onResizeEnd,
+		);
 	};
 
-	store.startTouchResize = (resizeType, space, size, event) => {
-		resize.startResize(resizeType, event, space, size, EndEvent.Touch, MoveEvent.Touch, (e) => ({
-			x: e.touches[0].clientX,
-			y: e.touches[0].clientY,
-		}));
+	store.startTouchResize = (resizeType, space, size, event, onResizeEnd) => {
+		resize.startResize(
+			resizeType,
+			event,
+			space,
+			size,
+			EndEvent.Touch,
+			MoveEvent.Touch,
+			(e) => ({
+				x: e.touches[0].clientX,
+				y: e.touches[0].clientY,
+			}),
+			onResizeEnd,
+		);
+	};
+
+	store.startMouseDrag = (space, event, onDragEnd) => {
+		drag.startMouseDrag(event, space, onDragEnd);
 	};
 
 	return store;

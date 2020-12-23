@@ -1,3 +1,8 @@
+export type ResizeMouseEvent = React.MouseEvent<HTMLElement, MouseEvent>;
+export type OnResizeStart = (() => void | boolean) | undefined;
+export type OnResizeEnd = ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
+export type OnDragEnd = (position: IPosition) => void;
+
 export enum Type {
 	ViewPort = "viewport",
 	Fixed = "fixed",
@@ -77,8 +82,8 @@ export interface ISpaceProps extends ICommonProps {
 	touchHandleSize?: number | undefined;
 	minimumSize?: number | undefined;
 	maximumSize?: number | undefined;
-	onResizeStart?: (() => void | boolean) | undefined;
-	onResizeEnd?: ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
+	onResizeStart?: OnResizeStart;
+	onResizeEnd?: OnResizeEnd;
 }
 
 export interface ISpaceStore {
@@ -89,8 +94,21 @@ export interface ISpaceStore {
 	updateStyles: (space: ISpaceDefinition) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
 	createSpace: (parent: string | undefined, props: ISpaceProps, update: () => void) => ISpaceDefinition;
-	startMouseResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, event: React.MouseEvent<HTMLElement>) => void;
-	startTouchResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, event: React.TouchEvent<HTMLElement>) => void;
+	startMouseResize: (
+		resizeType: ResizeType,
+		space: ISpaceDefinition,
+		size: ISize,
+		event: React.MouseEvent<HTMLElement>,
+		onResizeEnd?: OnResizeEnd,
+	) => void;
+	startTouchResize: (
+		resizeType: ResizeType,
+		space: ISpaceDefinition,
+		size: ISize,
+		event: React.TouchEvent<HTMLElement>,
+		onResizeEnd?: OnResizeEnd,
+	) => void;
+	startMouseDrag: (space: ISpaceDefinition, event: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
 }
 
 export interface IPosition {
@@ -124,8 +142,8 @@ export interface ISpaceDefinition {
 	adjustBottom: (adjusted: SizeUnit[]) => boolean;
 	adjustEdge: (adjusted: SizeUnit[]) => boolean;
 	anchoredChildren: (children: ISpaceDefinition[], anchor: AnchorType, zIndex: number) => ISpaceDefinition[];
-	onResizeStart?: (() => void | boolean) | undefined;
-	onResizeEnd?: ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
+	onResizeStart?: OnResizeStart;
+	onResizeEnd?: OnResizeEnd;
 	element: HTMLElement;
 	id: string;
 	type: Type;
@@ -156,4 +174,11 @@ export interface ISpaceDefinition {
 	canResizeLeft: boolean;
 	canResizeRight: boolean;
 	canResizeBottom: boolean;
+}
+
+export interface ISpaceContext {
+	size: DOMRect;
+	layer: number;
+	startMouseDrag: (e: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
+	startMouseResize: (e: ResizeMouseEvent, resizeType: ResizeType, onResizeEnd?: OnResizeEnd) => void;
 }

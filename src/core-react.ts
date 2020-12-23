@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createStore } from "./core";
-import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType, CenterType } from "./core-types";
+import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType, CenterType, ISpaceContext } from "./core-types";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import * as PropTypes from "prop-types";
@@ -31,7 +31,7 @@ export const commonProps = {
 };
 
 export interface IReactSpacesOptions {
-	debug?: boolean
+	debug?: boolean;
 }
 
 export interface IReactEvents {
@@ -179,6 +179,27 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 	}
 
 	return {
-		mouseHandles
+		mouseHandles,
 	};
+}
+
+export function useCurrentSpace() {
+	const store = currentStore;
+	const spaceId = React.useContext(ParentContext);
+	const domRect = React.useContext(DOMRectContext);
+	const layer = React.useContext(LayerContext);
+	const space = spaceId ? store.getSpace(spaceId) : undefined;
+
+	const defaults = { width: 0, height: 0, x: 0, y: 0 };
+	const size = {
+		...domRect,
+		...defaults,
+	};
+
+	return {
+		size: size,
+		layer: layer || 0,
+		startMouseDrag: (e, onDragEnd) => (space ? store.startMouseDrag(space, e, onDragEnd) : null),
+		startMouseResize: (e, resizeType, onResizeEnd) => (space ? store.startMouseResize(resizeType, space, space.width, e, onResizeEnd) : null),
+	} as ISpaceContext;
 }

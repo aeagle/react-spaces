@@ -1,7 +1,7 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, Centered, Positioned } from "../../";
-//import { useParentSpace } from "../../../hooks/useParentSpace";
+import { useCurrentSpace } from "../../../core-react";
 import { green, description } from "../Utils";
 import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
 
@@ -43,12 +43,12 @@ Absolutely positioned space within it's parent.
 	<Story name="With drag handle">
 		{() => {
 			const DragHandle = () => {
-				//const parent = useParentSpace();
+				const space = useCurrentSpace();
 				return (
 					<Centered>
-						{/* <button onMouseDown={(e) => parent.startMouseDrag(e)}>
+						<button onMouseDown={(e) => space.startMouseDrag(e)}>
 							Drag handle
-						</button> */}
+						</button>
 					</Centered>
 				)
 			}
@@ -66,10 +66,10 @@ Absolutely positioned space within it's parent.
 <Story name="Properties">
 	<PropsTable>
 		<PropsHeader>Positioned properties</PropsHeader>
-		<Prop name="bottom" type="number | string" description="Bottom offset from viewport edge." />
-		<Prop name="left" type="number | string" description="Left offset from viewport edge" />
-		<Prop name="right" type="number | string" description="Right offset from viewport edge" />
-		<Prop name="top" type="number | string" description="Top offset from viewport edge" />
+		<Prop name="bottom" type="number | string" description="Bottom offset from edge of parent space." />
+		<Prop name="left" type="number | string" description="Left offset from edge of parent space." />
+		<Prop name="right" type="number | string" description="Right offset from edge of parent space." />
+		<Prop name="top" type="number | string" description="Top offset from edge of parent space." />
 		<Prop name="width" type="number | string" description="Width of space" />
 		<Prop name="height" type="number | string" description="Height of space" />
 		<StandardProps />
