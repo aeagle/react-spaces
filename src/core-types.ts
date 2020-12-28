@@ -94,20 +94,8 @@ export interface ISpaceStore {
 	updateStyles: (space: ISpaceDefinition) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
 	createSpace: (parent: string | undefined, props: ISpaceProps, update: () => void) => ISpaceDefinition;
-	startMouseResize: (
-		resizeType: ResizeType,
-		space: ISpaceDefinition,
-		size: ISize,
-		event: React.MouseEvent<HTMLElement>,
-		onResizeEnd?: OnResizeEnd,
-	) => void;
-	startTouchResize: (
-		resizeType: ResizeType,
-		space: ISpaceDefinition,
-		size: ISize,
-		event: React.TouchEvent<HTMLElement>,
-		onResizeEnd?: OnResizeEnd,
-	) => void;
+	startMouseResize: (resizeType: ResizeType, space: ISpaceDefinition, event: React.MouseEvent<HTMLElement>, onResizeEnd?: OnResizeEnd) => void;
+	startTouchResize: (resizeType: ResizeType, space: ISpaceDefinition, event: React.TouchEvent<HTMLElement>, onResizeEnd?: OnResizeEnd) => void;
 	startMouseDrag: (space: ISpaceDefinition, event: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
 }
 
@@ -180,5 +168,4 @@ export interface ISpaceContext {
 	size: DOMRect;
 	layer: number;
 	startMouseDrag: (e: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
-	startMouseResize: (e: ResizeMouseEvent, resizeType: ResizeType, onResizeEnd?: OnResizeEnd) => void;
 }

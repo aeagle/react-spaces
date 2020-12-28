@@ -1,6 +1,7 @@
 import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, Centered, Positioned } from "../../";
+import { ResizeType } from "../../../core-types";
 import { useCurrentSpace } from "../../../core-react";
 import { green, description } from "../Utils";
 import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
@@ -40,7 +41,7 @@ Absolutely positioned space within it's parent.
 ### Allowing repositioning by dragging with a drag handle
 
 <Preview>
-	<Story name="With drag handle">
+	<Story name="With drag handle (width/height specified)">
 		{() => {
 			const DragHandle = () => {
 				const space = useCurrentSpace();
@@ -55,6 +56,54 @@ Absolutely positioned space within it's parent.
 			return <ViewPort>
 				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true}>
 					<DragHandle />
+				</Positioned>
+			</ViewPort>
+		}}
+	</Story>
+</Preview>
+
+<Preview>
+	<Story name="With drag handle (top/right/bottom/left specified)">
+		{() => {
+			const DragHandle = () => {
+				const space = useCurrentSpace();
+				return (
+					<Centered>
+						<button onMouseDown={(e) => space.startMouseDrag(e)}>
+							Drag handle
+						</button>
+					</Centered>
+				)
+			}
+			return <ViewPort>
+				<Positioned style={green} left={200} top={200} right={200} bottom={200} trackSize={true}>
+					<DragHandle />
+				</Positioned>
+			</ViewPort>
+		}}
+	</Story>
+</Preview>
+
+### Allowing resizing from each side
+
+<Preview>
+	<Story name="With resize handles (width/height specified)">
+		{() => {
+			return <ViewPort>
+				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right ]}>
+					{description("Positioned")}
+				</Positioned>
+			</ViewPort>
+		}}
+	</Story>
+</Preview>
+
+<Preview>
+	<Story name="With resize handles (top/right/bottom/left specified)">
+		{() => {
+			return <ViewPort>
+				<Positioned style={green} left={200} top={200} right={200} bottom={200} trackSize={true} resizable={[ ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right ]}>
+					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
 		}}

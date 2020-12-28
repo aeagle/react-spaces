@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createStore } from "./core";
-import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType, CenterType, ISpaceContext } from "./core-types";
+import { ISpaceProps, ISpaceStore, ISpaceDefinition, ResizeType, CenterType, ISpaceContext } from "./core-types";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import * as PropTypes from "prop-types";
@@ -86,7 +86,7 @@ export function useSpace(props: ISpaceProps) {
 		store.updateSpace(space, parsedProps);
 	}
 
-	const resizeHandles = useSpaceResizeHandles(store, space, props.position);
+	const resizeHandles = useSpaceResizeHandles(store, space);
 
 	React.useEffect(() => {
 		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
@@ -135,46 +135,46 @@ interface IResizeHandleProps {
 	onTouchStart: (e: React.TouchEvent<HTMLElement>) => void;
 }
 
-export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinition, position: IPositionalProps | undefined) {
+export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinition) {
 	const mouseHandles: IResizeHandleProps[] = [];
 
-	if (position && position.rightResizable) {
+	if (space.canResizeLeft) {
 		mouseHandles.push({
-			id: `${space.id}-m`,
-			key: "right",
-			className: `spaces-resize-handle resize-right`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Right, space, space.width, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, space.width, event),
-		});
-	}
-
-	if (position && position.leftResizable) {
-		mouseHandles.push({
-			id: `${space.id}-m`,
+			id: `${space.id}-ml`,
 			key: "left",
 			className: `spaces-resize-handle resize-left`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Left, space, space.width, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, space.width, event),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Left, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, event),
 		});
 	}
 
-	if (position && position.topResizable) {
+	if (space.canResizeRight) {
 		mouseHandles.push({
-			id: `${space.id}-m`,
+			id: `${space.id}-mr`,
+			key: "right",
+			className: `spaces-resize-handle resize-right`,
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Right, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, event),
+		});
+	}
+
+	if (space.canResizeTop) {
+		mouseHandles.push({
+			id: `${space.id}-mt`,
 			key: "top",
 			className: `spaces-resize-handle resize-top`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Top, space, space.height, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, space.height, event),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Top, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, event),
 		});
 	}
 
-	if (position && position.bottomResizable) {
+	if (space.canResizeBottom) {
 		mouseHandles.push({
-			id: `${space.id}-m`,
+			id: `${space.id}-mb`,
 			key: "bottom",
 			className: `spaces-resize-handle resize-bottom`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, space.height, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, space.height, event),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, event),
 		});
 	}
 
@@ -200,6 +200,5 @@ export function useCurrentSpace() {
 		size: size,
 		layer: layer || 0,
 		startMouseDrag: (e, onDragEnd) => (space ? store.startMouseDrag(space, e, onDragEnd) : null),
-		startMouseResize: (e, resizeType, onResizeEnd) => (space ? store.startMouseResize(resizeType, space, space.width, e, onResizeEnd) : null),
 	} as ISpaceContext;
 }

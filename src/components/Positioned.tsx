@@ -1,4 +1,4 @@
-import { ICommonProps, Type, SizeUnit } from "../core-types";
+import { ICommonProps, Type, SizeUnit, ResizeType } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 import * as PropTypes from "prop-types";
@@ -11,14 +11,32 @@ interface IPositionedProps extends ICommonProps {
 	bottom?: SizeUnit;
 	width?: SizeUnit;
 	height?: SizeUnit;
-	resizable?: boolean;
+	resizable?: ResizeType[];
 }
 
-export const Positioned: React.FC<IPositionedProps> = ({ left, top, right, bottom, width, height, resizable, ...props }) => (
-	<Space {...props} type={Type.Positioned} position={{ left: left, top: top, right: right, bottom: bottom, width: width, height: height }}>
-		{props.children}
-	</Space>
-);
+export const Positioned: React.FC<IPositionedProps> = ({ left, top, right, bottom, width, height, resizable, ...props }) => {
+	const resizeTypes = resizable || [];
+
+	return (
+		<Space
+			{...props}
+			type={Type.Positioned}
+			position={{
+				left: left,
+				leftResizable: resizeTypes.includes(ResizeType.Left),
+				top: top,
+				topResizable: resizeTypes.includes(ResizeType.Top),
+				right: right,
+				rightResizable: resizeTypes.includes(ResizeType.Right),
+				bottom: bottom,
+				bottomResizable: resizeTypes.includes(ResizeType.Bottom),
+				width: width,
+				height: height,
+			}}>
+			{props.children}
+		</Space>
+	);
+};
 
 Positioned.propTypes = {
 	...commonProps,
@@ -29,6 +47,6 @@ Positioned.propTypes = {
 		bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		resizable: PropTypes.bool,
+		resizable: PropTypes.array,
 	},
 };

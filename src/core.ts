@@ -470,12 +470,11 @@ export function createStore(): ISpaceStore {
 		return newSpace;
 	};
 
-	store.startMouseResize = (resizeType, space, size, event, onResizeEnd) => {
+	store.startMouseResize = (resizeType, space, event, onResizeEnd) => {
 		resize.startResize(
-			resizeType,
 			event,
+			resizeType,
 			space,
-			size,
 			EndEvent.Mouse,
 			MoveEvent.Mouse,
 			(e) => ({
@@ -486,12 +485,11 @@ export function createStore(): ISpaceStore {
 		);
 	};
 
-	store.startTouchResize = (resizeType, space, size, event, onResizeEnd) => {
+	store.startTouchResize = (resizeType, space, event, onResizeEnd) => {
 		resize.startResize(
-			resizeType,
 			event,
+			resizeType,
 			space,
-			size,
 			EndEvent.Touch,
 			MoveEvent.Touch,
 			(e) => ({
