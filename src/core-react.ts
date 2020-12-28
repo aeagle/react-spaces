@@ -200,5 +200,6 @@ export function useCurrentSpace() {
 		size: size,
 		layer: layer || 0,
 		startMouseDrag: (e, onDragEnd) => (space ? store.startMouseDrag(space, e, onDragEnd) : null),
+		forceUpdate: () => (space ? store.updateStyles(space) : null),
 	} as ISpaceContext;
 }

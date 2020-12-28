@@ -23,14 +23,12 @@ function customSizeHoriz(space: ISpaceDefinition, adjust: number) {
 	if (space.width.size) {
 		space.width.resized = -adjust;
 	}
-	return true;
 }
 
 function customSizeVert(space: ISpaceDefinition, adjust: number) {
 	if (space.height.size) {
 		space.height.resized = -adjust;
 	}
-	return true;
 }
 
 function getCustomSizing(resizeType: ResizeType, space: ISpaceDefinition) {
@@ -98,7 +96,7 @@ export function createResize(store: ISpaceStore) {
 		y: number,
 		minimumAdjust: number,
 		maximumAdjust: number | undefined,
-		customAdjust?: (adjustment: number) => boolean,
+		customAdjust?: (adjustment: number) => void,
 	) {
 		let adjustment =
 			startSize +
@@ -152,7 +150,7 @@ export function createResize(store: ISpaceStore) {
 			const resizeType = getResizeType(resizeHandleType, space);
 			const customAdjust = getCustomSizing(resizeHandleType, space);
 			const targetSize = getTargetSize(resizeHandleType, space);
-			const customOriginal = getCustomOriginal(resizeHandleType, space);
+			const customOriginal = getCustomOriginal(resizeHandleType, space) - targetSize.resized;
 
 			space.resizing = true;
 			space.updateParent();

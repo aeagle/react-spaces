@@ -12,6 +12,8 @@ interface IPositionedProps extends ICommonProps {
 	width?: SizeUnit;
 	height?: SizeUnit;
 	resizable?: ResizeType[];
+	onResizeStart?: () => void | boolean;
+	onResizeEnd?: (newSize: SizeUnit) => void;
 }
 
 export const Positioned: React.FC<IPositionedProps> = ({ left, top, right, bottom, width, height, resizable, ...props }) => {

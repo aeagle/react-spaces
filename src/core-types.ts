@@ -168,4 +168,5 @@ export interface ISpaceContext {
 	size: DOMRect;
 	layer: number;
 	startMouseDrag: (e: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
+	forceUpdate: () => void;
 }
