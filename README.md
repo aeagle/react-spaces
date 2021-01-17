@@ -2,7 +2,9 @@
 
 ![NPM](https://img.shields.io/npm/v/react-spaces.svg) ![Azure Pipelines](https://allan-eagle.visualstudio.com/All%20projects/_apis/build/status/aeagle.react-spaces?branchName=master)
 
-An easy to understand and nestable layout system, React Spaces allow you to divide a page or container into anchored, scrollable and resizable spaces enabling you to build desktop/mobile type user interfaces in the browser. Spaces are intended to be the reusable foundational blocks for laying out a UI.
+An easy to understand and nestable layout system, React Spaces allow you to divide a page or container into anchored, scrollable and resizable spaces enabling you to build desktop/mobile type user interfaces in the browser. 
+
+Rather than a library of visual UI components, Spaces are intended to be the reusable foundational blocks for laying out a UI which responds neatly to view port resizes leaving you to fill them with whatever components you want.
 
 - No styling to achieve simple or complex layouts.
 - Spaces know how to behave in relation to each other and resize accordingly.
