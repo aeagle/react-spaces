@@ -1,18 +1,8 @@
 import { SyntheticEvent } from "react";
-import { ISpaceDefinition, ISize, ResizeType, ISpaceStore, OnResizeEnd, Type } from "./core-types";
+import { ISpaceDefinition, ISize, ResizeType, ISpaceStore, OnResizeEnd, Type, EndEvent, MoveEvent } from "./core-types";
 import { throttle, coalesce } from "./core-utils";
 
 const RESIZE_THROTTLE = 0;
-
-export enum MoveEvent {
-	Mouse = "mousemove",
-	Touch = "touchmove",
-}
-
-export enum EndEvent {
-	Mouse = "mouseup",
-	Touch = "touchend",
-}
 
 export interface IResizeChange {
 	x: number;
@@ -194,11 +184,6 @@ export function createResize(store: ISpaceStore) {
 			const removeListener = () => {
 				if (moved) {
 					resize(lastX, lastY);
-				} else {
-					// if (elementsUnderneathPointer && elementsUnderneathPointer.length > 1) {
-					// 	const target = elementsUnderneathPointer[1] as any;
-					// 	target.submitMessage(e);
-					// }
 				}
 				window.removeEventListener(moveEvent, withPreventDefault as EventListener);
 				window.removeEventListener(endEvent, removeListener);
@@ -218,7 +203,6 @@ export function createResize(store: ISpaceStore) {
 
 			window.addEventListener(moveEvent, withPreventDefault as EventListener);
 			window.addEventListener(endEvent, removeListener);
-			//e.preventDefault();
 		},
 	};
 }

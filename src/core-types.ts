@@ -49,6 +49,16 @@ export enum CenterType {
 	HorizontalVertical = "horizontalVertical",
 }
 
+export enum MoveEvent {
+	Mouse = "mousemove",
+	Touch = "touchmove",
+}
+
+export enum EndEvent {
+	Mouse = "mouseup",
+	Touch = "touchend",
+}
+
 export interface IPassThroughEvents {
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 	onDoubleClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
@@ -97,6 +107,7 @@ export interface ISpaceStore {
 	startMouseResize: (resizeType: ResizeType, space: ISpaceDefinition, event: React.MouseEvent<HTMLElement>, onResizeEnd?: OnResizeEnd) => void;
 	startTouchResize: (resizeType: ResizeType, space: ISpaceDefinition, event: React.TouchEvent<HTMLElement>, onResizeEnd?: OnResizeEnd) => void;
 	startMouseDrag: (space: ISpaceDefinition, event: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
+	startTouchDrag: (space: ISpaceDefinition, event: TouchEvent, onDragEnd?: OnDragEnd) => void;
 }
 
 export interface IPosition {
@@ -168,5 +179,6 @@ export interface ISpaceContext {
 	size: DOMRect;
 	layer: number;
 	startMouseDrag: (e: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
+	startTouchDrag: (e: TouchEvent, onDragEnd?: OnDragEnd) => void;
 	forceUpdate: () => void;
 }

@@ -1,4 +1,5 @@
-import { ISpaceDefinition, ISpaceStore, IPosition } from "./core-types";
+import { SyntheticEvent } from "react";
+import { ISpaceDefinition, ISpaceStore, IPosition, EndEvent, MoveEvent } from "./core-types";
 import { throttle } from "./core-utils";
 
 export function createDrag(store: ISpaceStore) {
@@ -21,32 +22,40 @@ export function createDrag(store: ISpaceStore) {
 	}
 
 	return {
-		startMouseDrag(e: React.MouseEvent<HTMLElement, MouseEvent>, space: ISpaceDefinition, onDragEnd?: (position: IPosition) => void) {
+		startDrag<T extends SyntheticEvent<HTMLElement> | MouseEvent | TouchEvent>(
+			e: T,
+			space: ISpaceDefinition,
+			endEvent: EndEvent,
+			moveEvent: MoveEvent,
+			getCoords: (event: T) => { x: number; y: number },
+			onDragEnd?: (position: IPosition) => void,
+		) {
 			if (space.element) {
+				const coords = getCoords(e);
 				const adjustedLeft = space.left.adjusted.length === 0 ? 0 : (space.left.adjusted[0] as number);
 				const adjustedTop = space.top.adjusted.length === 0 ? 0 : (space.top.adjusted[0] as number);
-				const originalMouseX = e.pageX - adjustedLeft;
-				const originalMouseY = e.pageY - adjustedTop;
+				const originalMouseX = coords.x - adjustedLeft;
+				const originalMouseY = coords.y - adjustedTop;
 				let lastX = 0;
 				let lastY = 0;
 				let moved = false;
 
 				const mouseMove = (x: number, y: number) => onMove(space, originalMouseX, originalMouseY, x, y);
 				const throttledMouseMove = throttle<typeof mouseMove>(mouseMove, 5);
-				const withPreventDefault = (e: MouseEvent) => {
+				const withPreventDefault = (e: T) => {
 					moved = true;
-					lastX = e.pageX;
-					lastY = e.pageY;
+					const newCoords = getCoords(e);
+					lastX = newCoords.x;
+					lastY = newCoords.y;
 					e.preventDefault();
-					e.stopImmediatePropagation();
 					throttledMouseMove(lastX, lastY);
 				};
 				const removeListener = () => {
 					if (moved) {
 						mouseMove(lastX, lastY);
 					}
-					window.removeEventListener("mousemove", withPreventDefault);
-					window.removeEventListener("mouseup", removeListener);
+					window.removeEventListener(moveEvent, withPreventDefault as EventListener);
+					window.removeEventListener(endEvent, removeListener);
 
 					if (onDragEnd) {
 						const info = (({ left, top, right, bottom, width, height }) => ({ left, top, right, bottom, width, height }))(
@@ -55,8 +64,8 @@ export function createDrag(store: ISpaceStore) {
 						onDragEnd(info);
 					}
 				};
-				window.addEventListener("mousemove", withPreventDefault);
-				window.addEventListener("mouseup", removeListener);
+				window.addEventListener(moveEvent, withPreventDefault as EventListener);
+				window.addEventListener(endEvent, removeListener);
 				e.preventDefault();
 				e.stopPropagation();
 			}

@@ -47,14 +47,14 @@ Absolutely positioned space within it's parent.
 				const space = useCurrentSpace();
 				return (
 					<Centered>
-						<button onMouseDown={(e) => space.startMouseDrag(e)}>
+						<button onMouseDown={space.startMouseDrag} onTouchStart={space.startTouchDrag}>
 							Drag handle
 						</button>
 					</Centered>
 				)
 			}
 			return <ViewPort>
-				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true}>
+				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right ]}>
 					<DragHandle />
 				</Positioned>
 			</ViewPort>
@@ -69,14 +69,14 @@ Absolutely positioned space within it's parent.
 				const space = useCurrentSpace();
 				return (
 					<Centered>
-						<button onMouseDown={(e) => space.startMouseDrag(e)}>
+						<button onMouseDown={space.startMouseDrag} onTouchStart={space.startTouchDrag}>
 							Drag handle
 						</button>
 					</Centered>
 				)
 			}
 			return <ViewPort>
-				<Positioned style={green} left={200} top={200} right={200} bottom={200} trackSize={true}>
+				<Positioned style={green} left={200} top={200} right={200} bottom={200} trackSize={true} resizable={[ ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right ]}>
 					<DragHandle />
 				</Positioned>
 			</ViewPort>

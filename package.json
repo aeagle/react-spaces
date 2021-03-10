@@ -31,7 +31,7 @@
 		"prop-types": "^15.7.2"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.5.5",
+		"@babel/core": "^7.13.10",
 		"@storybook/addon-actions": "^6.1.11",
 		"@storybook/addon-docs": "^6.1.11",
 		"@storybook/addon-knobs": "^6.1.11",
@@ -70,8 +70,8 @@
 		"sass-loader": "^8.0.2",
 		"ts-jest": "^25.4.0",
 		"ts-loader": "^6.2.1",
-		"tslib": "^1.10.0",
-		"typescript": "^3.5.3"
+		"tslib": "^1.14.1",
+		"typescript": "^3.9.9"
 	},
 	"resolutions": {
 		"cssstyle": "2.3.0"

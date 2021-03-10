@@ -1,5 +1,17 @@
-import { ISpaceDefinition, SizeUnit, AnchorType, Type, Orientation, ISpaceStore, ISpaceProps, CenterType, ResizeHandlePlacement } from "./core-types";
-import { EndEvent, MoveEvent, createResize } from "./core-resizing";
+import {
+	ISpaceDefinition,
+	SizeUnit,
+	AnchorType,
+	Type,
+	Orientation,
+	EndEvent,
+	MoveEvent,
+	ISpaceStore,
+	ISpaceProps,
+	CenterType,
+	ResizeHandlePlacement,
+} from "./core-types";
+import { createResize } from "./core-resizing";
 import { updateStyleDefinition, removeStyleDefinition, coalesce, adjustmentsEqual } from "./core-utils";
 import { createDrag } from "./core-dragging";
 
@@ -370,6 +382,7 @@ export function createStore(): ISpaceStore {
 		startMouseResize: () => null,
 		startTouchResize: () => null,
 		startMouseDrag: () => null,
+		startTouchDrag: () => null,
 	};
 
 	const resize = createResize(store);
@@ -501,7 +514,31 @@ export function createStore(): ISpaceStore {
 	};
 
 	store.startMouseDrag = (space, event, onDragEnd) => {
-		drag.startMouseDrag(event, space, onDragEnd);
+		drag.startDrag(
+			event,
+			space,
+			EndEvent.Mouse,
+			MoveEvent.Mouse,
+			(e) => ({
+				x: e.pageX,
+				y: e.pageY,
+			}),
+			onDragEnd,
+		);
+	};
+
+	store.startTouchDrag = (space, event, onDragEnd) => {
+		drag.startDrag(
+			event,
+			space,
+			EndEvent.Touch,
+			MoveEvent.Touch,
+			(e) => ({
+				x: e.touches[0].pageX,
+				y: e.touches[0].pageY,
+			}),
+			onDragEnd,
+		);
 	};
 
 	return store;

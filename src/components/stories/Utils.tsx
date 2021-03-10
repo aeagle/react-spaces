@@ -1,21 +1,7 @@
 import * as React from "react";
 import { CSSProperties } from "react";
-import {
-	Info,
-	Fixed,
-	ViewPort,
-	Top,
-	Fill,
-	Left,
-	LeftResizable,
-	Right,
-	BottomResizable,
-	Centered,
-	Layer,
-	TopResizable,
-	RightResizable,
-	CenterType,
-} from "..";
+import { Info, Fixed, ViewPort, Top, Fill, Left, LeftResizable, Right, BottomResizable, Centered, Layer, TopResizable, RightResizable } from "..";
+import { CenterType } from "../../core-types";
 import "./Utils.scss";
 
 export const CommonHeader = () => (
