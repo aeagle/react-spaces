@@ -2,7 +2,13 @@
 
 ![NPM](https://img.shields.io/npm/v/react-spaces.svg) ![Azure Pipelines](https://allan-eagle.visualstudio.com/All%20projects/_apis/build/status/aeagle.react-spaces?branchName=master)
 
-React Spaces allow you to divide a page or container HTML element into spaces. These spaces know how to behave in relation to each other and can also be divided into further nested spaces.
+An easy to understand and nestable layout system, React Spaces allow you to divide a page or container into anchored, scrollable and resizable spaces enabling you to build desktop/mobile type user interfaces in the browser. 
+
+Rather than a library of visual UI components, Spaces are intended to be the reusable foundational blocks for laying out a UI which responds neatly to view port resizes leaving you to fill them with whatever components you want.
+
+- No styling to achieve simple or complex layouts.
+- Spaces know how to behave in relation to each other and resize accordingly.
+- Spaces don't have any visual element to them (even padding or margins). You can fill them with whatever you want.
 
 **Version 0.2.0 release - read [release notes here](https://www.allaneagle.com/react-spaces/release-0.2.0).**
 
@@ -48,11 +54,12 @@ Layers allow you to create layers within a parent space, for example:
 
 ```html
 <ViewPort>
-	<Layer zIndex="{0}"> <LeftResizable size="20%" /> // floating sidebar </Layer>
-
-	<Layer zIndex="{1}">
-		<Fill />
-	</Layer>
+  <Layer zIndex="{0}">
+    <LeftResizable size="20%" /> // floating sidebar
+  </Layer>
+  <Layer zIndex="{1}">
+    <Fill />
+  </Layer>
 </ViewPort>
 ```
 
