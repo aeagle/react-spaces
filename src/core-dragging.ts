@@ -8,6 +8,15 @@ export function createDrag(store: ISpaceStore) {
 
 		space.left.adjusted = [adjustmentX];
 		space.top.adjusted = [adjustmentY];
+
+		if (space.right.size) {
+			space.right.adjusted = [-adjustmentX];
+		}
+
+		if (space.bottom.size) {
+			space.bottom.adjusted = [-adjustmentY];
+		}
+
 		store.updateStyles(space);
 	}
 
