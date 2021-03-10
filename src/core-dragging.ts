@@ -1,5 +1,5 @@
 import { SyntheticEvent } from "react";
-import { ISpaceDefinition, ISpaceStore, IPosition, EndEvent, MoveEvent } from "./core-types";
+import { ISpaceDefinition, ISpaceStore, EndEvent, MoveEvent, OnDragEnd } from "./core-types";
 import { throttle } from "./core-utils";
 
 export function createDrag(store: ISpaceStore) {
@@ -28,7 +28,7 @@ export function createDrag(store: ISpaceStore) {
 			endEvent: EndEvent,
 			moveEvent: MoveEvent,
 			getCoords: (event: T) => { x: number; y: number },
-			onDragEnd?: (position: IPosition) => void,
+			onDragEnd?: OnDragEnd,
 		) {
 			if (space.element) {
 				const coords = getCoords(e);
@@ -42,14 +42,17 @@ export function createDrag(store: ISpaceStore) {
 
 				const mouseMove = (x: number, y: number) => onMove(space, originalMouseX, originalMouseY, x, y);
 				const throttledMouseMove = throttle<typeof mouseMove>(mouseMove, 5);
+
 				const withPreventDefault = (e: T) => {
 					moved = true;
 					const newCoords = getCoords(e);
 					lastX = newCoords.x;
 					lastY = newCoords.y;
 					e.preventDefault();
+
 					throttledMouseMove(lastX, lastY);
 				};
+
 				const removeListener = () => {
 					if (moved) {
 						mouseMove(lastX, lastY);
@@ -66,8 +69,6 @@ export function createDrag(store: ISpaceStore) {
 				};
 				window.addEventListener(moveEvent, withPreventDefault as EventListener);
 				window.addEventListener(endEvent, removeListener);
-				e.preventDefault();
-				e.stopPropagation();
 			}
 		},
 	};
