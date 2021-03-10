@@ -42,19 +42,19 @@ export const Custom: React.FC<ICustomProps> = ({
 
 	if (!isPositioned) {
 		if (anchor === AnchorType.Left) {
-			position = { left: 0, top: 0, bottom: 0, width: anchorSize, right: undefined, rightResizable: resizable };
+			position = { left: 0, top: 0, bottom: 0, width: anchorSize, rightResizable: resizable };
 			type = Type.Anchored;
 		} else if (anchor === AnchorType.Right) {
-			position = { right: 0, top: 0, bottom: 0, width: anchorSize, left: undefined, leftResizable: resizable };
+			position = { right: 0, top: 0, bottom: 0, width: anchorSize, leftResizable: resizable };
 			type = Type.Anchored;
 		} else if (anchor === AnchorType.Top) {
-			position = { left: 0, top: 0, right: 0, height: anchorSize, bottom: undefined, bottomResizable: resizable };
+			position = { left: 0, top: 0, right: 0, height: anchorSize, bottomResizable: resizable };
 			type = Type.Anchored;
 		} else if (anchor === AnchorType.Bottom) {
-			position = { left: 0, bottom: 0, right: 0, height: anchorSize, top: undefined, topResizable: resizable };
+			position = { left: 0, bottom: 0, right: 0, height: anchorSize, topResizable: resizable };
 			type = Type.Anchored;
 		} else {
-			position = { left: 0, top: 0, bottom: 0, right: 0, width: undefined, height: undefined };
+			position = { left: 0, top: 0, bottom: 0, right: 0 };
 			type = Type.Fill;
 		}
 	} else {
