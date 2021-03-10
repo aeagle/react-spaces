@@ -33,11 +33,11 @@
 	"devDependencies": {
 		"@babel/core": "^7.13.10",
 		"@storybook/addon-actions": "^6.1.11",
-		"@storybook/addon-docs": "^6.1.11",
+		"@storybook/addon-docs": "^6.1.21",
 		"@storybook/addon-knobs": "^6.1.11",
 		"@storybook/addon-links": "^6.1.11",
 		"@storybook/addons": "^6.1.11",
-		"@storybook/react": "^6.1.11",
+		"@storybook/react": "^6.1.21",
 		"@testing-library/jest-dom": "^5.5.0",
 		"@testing-library/react": "^10.0.3",
 		"@types/jest": "^24.0.15",
