@@ -20,6 +20,7 @@ export const commonProps = {
 	zIndex: PropTypes.number,
 	scrollable: PropTypes.bool,
 	trackSize: PropTypes.bool,
+	allowOverflow: PropTypes.bool,
 	onClick: PropTypes.func,
 	onMouseDown: PropTypes.func,
 	onMouseEnter: PropTypes.func,

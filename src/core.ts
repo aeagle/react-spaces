@@ -20,6 +20,7 @@ const spaceDefaults: Partial<ISpaceDefinition> = {
 	zIndex: 0,
 	scrollable: false,
 	resizing: false,
+	allowOverflow: false,
 	centerContent: "none",
 	dimension: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" },
 	handleSize: 5,
@@ -229,6 +230,7 @@ export function createStore(): ISpaceStore {
 				handleSize,
 				touchHandleSize,
 				handlePlacement,
+				allowOverflow,
 			} = props;
 			const canResizeLeft = (position && position.rightResizable) || false;
 			const canResizeRight = (position && position.leftResizable) || false;
@@ -365,6 +367,11 @@ export function createStore(): ISpaceStore {
 
 			if (space.canResizeRight !== canResizeRight) {
 				space.canResizeRight = canResizeRight;
+				changed = true;
+			}
+
+			if (space.allowOverflow !== allowOverflow) {
+				space.allowOverflow = allowOverflow || spaceDefaults.allowOverflow!;
 				changed = true;
 			}
 
@@ -520,8 +527,8 @@ export function createStore(): ISpaceStore {
 			EndEvent.Mouse,
 			MoveEvent.Mouse,
 			(e) => ({
-				x: e.pageX,
-				y: e.pageY,
+				x: e.clientX,
+				y: e.clientY,
 			}),
 			onDragEnd,
 		);
@@ -534,8 +541,8 @@ export function createStore(): ISpaceStore {
 			EndEvent.Touch,
 			MoveEvent.Touch,
 			(e) => ({
-				x: e.touches[0].pageX,
-				y: e.touches[0].pageY,
+				x: e.touches[0].clientX,
+				y: e.touches[0].clientY,
 			}),
 			onDragEnd,
 		);

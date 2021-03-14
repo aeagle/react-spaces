@@ -115,6 +115,9 @@ export function styleDefinition(space: ISpaceDefinition) {
 	if (style.zIndex) {
 		cssString.push(`z-index: ${style.zIndex};`);
 	}
+	if (space.allowOverflow) {
+		cssString.push("overflow: visible;");
+	}
 
 	if (cssString.length > 0) {
 		cssElements.push(`#${space.id} { ${cssString.join(" ")} }`);

@@ -80,6 +80,7 @@ export interface ICommonProps extends IPassThroughEvents {
 	zIndex?: number;
 	scrollable?: boolean;
 	trackSize?: boolean;
+	allowOverflow?: boolean;
 }
 
 export interface ISpaceProps extends ICommonProps {
@@ -173,6 +174,7 @@ export interface ISpaceDefinition {
 	canResizeLeft: boolean;
 	canResizeRight: boolean;
 	canResizeBottom: boolean;
+	allowOverflow: boolean;
 }
 
 export interface ISpaceContext {
