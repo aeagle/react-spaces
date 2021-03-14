@@ -1,7 +1,7 @@
 export type ResizeMouseEvent = React.MouseEvent<HTMLElement, MouseEvent>;
 export type OnResizeStart = (() => void | boolean) | undefined;
 export type OnResizeEnd = ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
-export type OnDragEnd = (position: IPosition) => void;
+export type OnDragEnd = (position: IPosition, moved: boolean) => void;
 
 export enum Type {
 	ViewPort = "viewport",

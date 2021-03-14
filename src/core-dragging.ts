@@ -73,13 +73,16 @@ export function createDrag(store: ISpaceStore) {
 						const info = (({ left, top, right, bottom, width, height }) => ({ left, top, right, bottom, width, height }))(
 							space.element.getBoundingClientRect(),
 						);
-						onDragEnd({
-							...info,
-							...{
-								left: info.left - parentInfo.left,
-								top: info.top - parentInfo.top,
+						onDragEnd(
+							{
+								...info,
+								...{
+									left: info.left - parentInfo.left,
+									top: info.top - parentInfo.top,
+								},
 							},
-						});
+							moved,
+						);
 					}
 				};
 				window.addEventListener(moveEvent, withPreventDefault as EventListener);
