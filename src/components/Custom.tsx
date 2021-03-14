@@ -1,4 +1,4 @@
-import { ICommonProps, Type, SizeUnit, IPositionalProps, AnchorType } from "../core-types";
+import { ICommonProps, Type, SizeUnit, IPositionalProps, AnchorType, ResizeType } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 import * as PropTypes from "prop-types";
@@ -15,6 +15,7 @@ interface ICustomProps extends ICommonProps {
 	anchor?: AnchorType;
 	anchorSize?: SizeUnit;
 	resizable?: boolean;
+	resizeTypes?: ResizeType[];
 	handleSize?: number;
 	overlayHandle?: boolean;
 	minimumSize?: number;
@@ -35,6 +36,7 @@ export const Custom: React.FC<ICustomProps> = ({
 	anchor,
 	isPositioned,
 	resizable,
+	resizeTypes,
 	...props
 }) => {
 	let position: IPositionalProps;
@@ -54,11 +56,27 @@ export const Custom: React.FC<ICustomProps> = ({
 			position = { left: 0, bottom: 0, right: 0, height: anchorSize, topResizable: resizable };
 			type = Type.Anchored;
 		} else {
-			position = { left: 0, top: 0, bottom: 0, right: 0 };
+			position = {
+				left: 0,
+				top: 0,
+				bottom: 0,
+				right: 0,
+			};
 			type = Type.Fill;
 		}
 	} else {
-		position = { left: left, top: top, right: right, bottom: bottom, width: width, height: height };
+		position = {
+			left: left,
+			top: top,
+			right: right,
+			bottom: bottom,
+			width: width,
+			height: height,
+			leftResizable: resizeTypes && resizeTypes.includes(ResizeType.Left),
+			topResizable: resizeTypes && resizeTypes.includes(ResizeType.Top),
+			rightResizable: resizeTypes && resizeTypes.includes(ResizeType.Right),
+			bottomResizable: resizeTypes && resizeTypes.includes(ResizeType.Bottom),
+		};
 	}
 
 	return (
