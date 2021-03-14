@@ -61,10 +61,25 @@ export function createDrag(store: ISpaceStore) {
 					window.removeEventListener(endEvent, removeListener);
 
 					if (onDragEnd) {
+						const parentInfo = (space.parentId && store.getSpace(space.parentId)?.element.getBoundingClientRect()) || {
+							left: 0,
+							top: 0,
+							right: 0,
+							bottom: 0,
+							width: 0,
+							height: 0,
+						};
+
 						const info = (({ left, top, right, bottom, width, height }) => ({ left, top, right, bottom, width, height }))(
 							space.element.getBoundingClientRect(),
 						);
-						onDragEnd(info);
+						onDragEnd({
+							...info,
+							...{
+								left: info.left - parentInfo.left,
+								top: info.top - parentInfo.top,
+							},
+						});
 					}
 				};
 				window.addEventListener(moveEvent, withPreventDefault as EventListener);
