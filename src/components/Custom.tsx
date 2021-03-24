@@ -1,4 +1,4 @@
-import { ICommonProps, Type, SizeUnit, IPositionalProps, AnchorType, ResizeType } from "../core-types";
+import { ICommonProps, Type, SizeUnit, IPositionalProps, AnchorType, ResizeType, ResizeHandlePlacement } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 import * as PropTypes from "prop-types";
@@ -17,6 +17,7 @@ interface ICustomProps extends ICommonProps {
 	resizable?: boolean;
 	resizeTypes?: ResizeType[];
 	handleSize?: number;
+	handlePlacement?: ResizeHandlePlacement;
 	overlayHandle?: boolean;
 	minimumSize?: number;
 	maximumSize?: number;
