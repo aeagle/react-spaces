@@ -173,18 +173,20 @@ export function styleDefinition(space: ISpaceDefinition) {
 }
 
 export function updateStyleDefinition(space: ISpaceDefinition) {
-	const definition = styleDefinition(space);
-	const existing = document.getElementById(`style_${space.id}`);
+	if (document) {
+		const definition = styleDefinition(space);
+		const existing = document.getElementById(`style_${space.id}`);
 
-	if (existing) {
-		if (existing.innerHTML !== definition) {
-			existing.innerHTML = definition;
+		if (existing) {
+			if (existing.innerHTML !== definition) {
+				existing.innerHTML = definition;
+			}
+		} else {
+			const newStyle = document.createElement("style");
+			newStyle.id = `style_${space.id}`;
+			newStyle.innerHTML = definition;
+			document.head.appendChild(newStyle);
 		}
-	} else {
-		const newStyle = document.createElement("style");
-		newStyle.id = `style_${space.id}`;
-		newStyle.innerHTML = definition;
-		document.head.appendChild(newStyle);
 	}
 }
 
