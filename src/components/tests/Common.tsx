@@ -23,6 +23,15 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 		});
 	});
 
+	test(`${name} with ID applied`, async () => {
+		// arrange, act
+		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", className: "custom-class" })}</ViewPort>);
+
+		// assert
+		const sut = container.querySelector(".spaces-space")!;
+		expect(sut.id).toBe("test");
+	});
+
 	test(`${name} with class applied`, async () => {
 		// arrange, act
 		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", className: "custom-class" })}</ViewPort>);
