@@ -156,4 +156,5 @@ export interface ISpaceDefinition {
 	canResizeLeft: boolean;
 	canResizeRight: boolean;
 	canResizeBottom: boolean;
+	ssrStyle?: string;
 }

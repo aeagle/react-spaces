@@ -3,7 +3,7 @@ import { useSpace, ParentContext, LayerContext, DOMRectContext } from "../core-r
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
-import { shortuuid } from "../core-utils";
+import { shortuuid, updateStyleDefinition } from "../core-utils";
 
 function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
 	switch (centerType) {
@@ -60,6 +60,18 @@ const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) =
 
 	React.useEffect(() => {
 		space.element = elementRef.current!;
+
+		if (space.element.getAttribute("data-ssr") === "1") {
+			const preRenderedStyle = space.element.children[0];
+			if (preRenderedStyle) {
+				const newStyle = document.createElement("style");
+				newStyle.id = `style_${space.id}`;
+				newStyle.innerHTML = preRenderedStyle.innerHTML;
+				document.head.appendChild(newStyle);
+			}
+			space.element.removeAttribute("data-ssr");
+			updateStyleDefinition(space);
+		}
 	}, []);
 
 	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
@@ -86,6 +98,21 @@ const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) =
 
 	const centeredContent = applyCentering(children, props.centerContent);
 
+	const outerProps = {
+		...{
+			id: space.id,
+			ref: elementRef,
+			className: outerClasses.join(" "),
+		},
+		...events,
+	} as any;
+
+	const isSSR = typeof document === "undefined";
+
+	if (isSSR) {
+		outerProps["data-ssr"] = "1";
+	}
+
 	return (
 		<>
 			{resizeHandles.mouseHandles.map((r) => (
@@ -93,21 +120,17 @@ const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) =
 			))}
 			{React.createElement(
 				props.as || "div",
-				{
-					...{
-						id: space.id,
-						ref: elementRef,
-						className: outerClasses.join(" "),
-					},
-					...events,
-				},
-				<div className={innerClasses.join(" ")} style={innerStyle}>
-					<ParentContext.Provider value={space.id}>
-						<LayerContext.Provider value={undefined}>
-							<DOMRectContext.Provider value={domRect}>{centeredContent}</DOMRectContext.Provider>
-						</LayerContext.Provider>
-					</ParentContext.Provider>
-				</div>,
+				outerProps,
+				<>
+					{isSSR && space.ssrStyle && <style className="ssr">{space.ssrStyle}</style>}
+					<div className={innerClasses.join(" ")} style={innerStyle}>
+						<ParentContext.Provider value={space.id}>
+							<LayerContext.Provider value={undefined}>
+								<DOMRectContext.Provider value={domRect}>{centeredContent}</DOMRectContext.Provider>
+							</LayerContext.Provider>
+						</ParentContext.Provider>
+					</div>
+				</>,
 			)}
 		</>
 	);
