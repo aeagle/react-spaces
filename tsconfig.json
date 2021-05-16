@@ -19,7 +19,8 @@
 		"noUnusedLocals": true,
 		"declaration": true,
 		"typeRoots": ["node_modules/@types", "typings"],
-		"esModuleInterop": true
+		"esModuleInterop": true,   
+		"skipLibCheck": true
 	},
 	"include": ["./src/**/*", "@types/global.d.ts"],
 	"exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest", "src/setupTests.ts"]

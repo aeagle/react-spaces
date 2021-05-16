@@ -1,22 +1,22 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { StateDriven, AnchoredDefaultOrdering, SpaceDemoStacked1 } from "../Utils";
 
 <Meta title="Testing/State" />
 
-<Preview>
+<Canvas>
 	<Story name="Spaces using global store with state driven sizing and switched spaces">
 		<StateDriven />
 	</Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
 	<Story name="Anchored spaces with default ordering">
 		<AnchoredDefaultOrdering />
 	</Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
 	<Story name="Test stacked spaces">
 		<SpaceDemoStacked1 />
 	</Story>
-</Preview>
+</Canvas>

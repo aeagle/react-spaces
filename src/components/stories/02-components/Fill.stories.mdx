@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../";
 import { green, description, lorem } from "../Utils";
@@ -14,51 +14,51 @@ Space which fills all remaining space taken up by anchored spaces.
 
 ### With a left space
 
-<Preview>
+<Canvas>
 	<Story name="With left space">
 		<ViewPort>
 			<Left size="20%">{description("Left 20%")}</Left>
 			<Fill style={green}>{description("Fill")}</Fill>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a top space
 
-<Preview>
+<Canvas>
 	<Story name="With top space">
 		<ViewPort>
 			<Top size="20%">{description("Top 20%")}</Top>
 			<Fill style={green}>{description("Fill")}</Fill>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a right space
 
-<Preview>
+<Canvas>
 	<Story name="With right space">
 		<ViewPort>
 			<Right size="20%">{description("Right 20%")}</Right>
 			<Fill style={green}>{description("Fill")}</Fill>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a bottom space
 
-<Preview>
+<Canvas>
 	<Story name="With bottom space">
 		<ViewPort>
 			<Bottom size="20%">{description("Bottom 20%")}</Bottom>
 			<Fill style={green}>{description("Fill")}</Fill>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a left resizable space
 
-<Preview>
+<Canvas>
 	<Story name="With left resizable space">
 		<ViewPort>
 			<LeftResizable size="20%" trackSize={true}>
@@ -69,11 +69,11 @@ Space which fills all remaining space taken up by anchored spaces.
 			</Fill>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a top resizable space
 
-<Preview>
+<Canvas>
 	<Story name="With top resizable space">
 		<ViewPort>
 			<TopResizable size="20%" trackSize={true}>
@@ -84,11 +84,11 @@ Space which fills all remaining space taken up by anchored spaces.
 			</Fill>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a right resizable space
 
-<Preview>
+<Canvas>
 	<Story name="With right resizable space">
 		<ViewPort>
 			<RightResizable size="20%" trackSize={true}>
@@ -99,11 +99,11 @@ Space which fills all remaining space taken up by anchored spaces.
 			</Fill>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a bottom resizable space
 
-<Preview>
+<Canvas>
 	<Story name="With bottom resizable space">
 		<ViewPort>
 			<BottomResizable size="20%" trackSize={true}>
@@ -114,11 +114,11 @@ Space which fills all remaining space taken up by anchored spaces.
 			</Fill>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a scrollable space
 
-<Preview>
+<Canvas>
 	<Story name="Scrollable">
 		<ViewPort>
 			<Fill style={green} scrollable={true}>
@@ -126,7 +126,7 @@ Space which fills all remaining space taken up by anchored spaces.
 			</Fill>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Properties
 
