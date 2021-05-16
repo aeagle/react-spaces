@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, CenteredVertically } from "../../";
 import { blue } from "../Utils";
@@ -15,10 +15,10 @@ Centers children vertically within a space.
 Alternatively you can specify `centerContent={CenterType.Vertical}` or `centerContent="vertical"` 
 on a space.
 
-<Preview>
+<Canvas>
 	<Story name="Default">
 		<ViewPort style={blue}>
 			<CenteredVertically>Centered content vertically</CenteredVertically>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>

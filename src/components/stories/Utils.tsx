@@ -181,7 +181,7 @@ export const DemoUI = () => {
 
 	return (
 		<React.StrictMode>
-			<Fixed style={{ outline: "1px solid black" }} height={400}>
+			<Fixed style={{ outline: "1px solid black" }} className="container" height={400}>
 				<Top style={{ borderBottom: "1px dashed black", padding: 5 }} order={1} size={25} centerContent={CenterType.Vertical}>
 					Title
 				</Top>

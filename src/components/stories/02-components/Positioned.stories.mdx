@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, Centered, Positioned } from "../../";
 //import { useParentSpace } from "../../../hooks/useParentSpace";
@@ -15,7 +15,7 @@ Absolutely positioned space within it's parent.
 
 ### With a width and height specified
 
-<Preview>
+<Canvas>
 	<Story name="With size">
 		<ViewPort>
 			<Positioned style={green} left={200} top={200} width={400} height={300}>
@@ -23,11 +23,11 @@ Absolutely positioned space within it's parent.
 			</Positioned>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With all side offsets specified
 
-<Preview>
+<Canvas>
 	<Story name="Without size">
 		<ViewPort>
 			<Positioned style={green} left={200} top={200} right={200} bottom={200} trackSize={true}>
@@ -35,11 +35,11 @@ Absolutely positioned space within it's parent.
 			</Positioned>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Allowing repositioning by dragging with a drag handle
 
-<Preview>
+<Canvas>
 	<Story name="With drag handle">
 		{() => {
 			const DragHandle = () => {
@@ -59,7 +59,7 @@ Absolutely positioned space within it's parent.
 			</ViewPort>
 		}}
 	</Story>
-</Preview>
+</Canvas>
 
 ### Properties
 

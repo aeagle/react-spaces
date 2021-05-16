@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../";
 import { red, green, blue, description } from "../Utils";
@@ -14,11 +14,11 @@ Top-level space that fills entire browser view port
 
 ### Full coverage
 
-<Preview>
+<Canvas>
 	<Story name="Default">
 		<ViewPort style={blue}>{description("ViewPort")}</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ## With offsets
 
@@ -27,43 +27,43 @@ window elements that may be on the page.
 
 ### With a top offset
 
-<Preview>
+<Canvas>
 	<Story name="Top offset">
 		<ViewPort style={blue} top={50}>
 			{description("ViewPort with top offset")}
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a right offset
 
-<Preview>
+<Canvas>
 	<Story name="Right offset">
 		<ViewPort style={blue} right={50}>
 			{description("ViewPort with right offset")}
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a bottom offset
 
-<Preview>
+<Canvas>
 	<Story name="Bottom offset">
 		<ViewPort style={blue} bottom={50}>
 			{description("ViewPort with bottom offset")}
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### With a left offset
 
-<Preview>
+<Canvas>
 	<Story name="Left offset">
 		<ViewPort style={blue} left={50}>
 			{description("ViewPort with left offset")}
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Properties
 
