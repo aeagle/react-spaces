@@ -27,6 +27,16 @@ steps:
     TargetFolder: 'storybook-static'
     OverWrite: true
 
+- task: npmAuthenticate@0
+  inputs:
+    workingFile: '.npmrc'
+    customEndpoint: 'NPM'
+
+- task: npmAuthenticate@0
+  inputs:
+    workingFile: 'storybook-static/.npmrc'
+    customEndpoint: 'NPM'
+
 - task: Npm@1
   displayName: Publish react-spaces-storybook
   inputs:
