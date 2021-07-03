@@ -29,7 +29,7 @@ steps:
   inputs:
     SourceFolder: '.storybook'
     Contents: 'package.json'
-    TargetFolder: 'storybook-static'
+    TargetFolder: './storybook-static'
     OverWrite: true
 
 - task: CopyFiles@2
@@ -37,7 +37,7 @@ steps:
   inputs:
     SourceFolder: '.'
     Contents: '.npmrc'
-    TargetFolder: 'storybook-static'
+    TargetFolder: './storybook-static'
     OverWrite: true
 
 - task: npmAuthenticate@0
