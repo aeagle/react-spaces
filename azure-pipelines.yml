@@ -3,10 +3,29 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 steps:
+- task: gitversion/setup@0
+  inputs:
+    versionSpec: '5.x'
+    
+- task: gitversion/execute@0 
+
+- task: Bash@3
+  displayName: Update version number in react-spaces package.json to $(GitVersion.SemVer)
+  inputs:
+    targetType: 'inline'
+    script:  sed -i "s/0.0.1/$GITVERSIONNUMBER/g" package.json
+  env:
+    GITVERSIONNUMBER: $(GitVersion.SemVer)
+
+- task: Bash@3
+  displayName: Update version number in react-spaces-storybook package.json to $(GitVersion.SemVer)
+  inputs:
+    targetType: 'inline'
+    script:  sed -i "s/0.0.1/$GITVERSIONNUMBER/g" .storybook/package.json
+  env:
+    GITVERSIONNUMBER: $(GitVersion.SemVer)
+
 - task: NodeTool@0
   inputs:
     versionSpec: '12.x'
@@ -24,18 +43,8 @@ steps:
   inputs:
     SourceFolder: '.storybook'
     Contents: 'package.json'
-    TargetFolder: 'storybook-static'
+    TargetFolder: './storybook-static'
     OverWrite: true
-
-- task: npmAuthenticate@0
-  inputs:
-    workingFile: '.npmrc'
-    customEndpoint: 'NPM'
-
-- task: npmAuthenticate@0
-  inputs:
-    workingFile: 'storybook-static/.npmrc'
-    customEndpoint: 'NPM'
 
 - task: Npm@1
   displayName: Publish react-spaces-storybook
