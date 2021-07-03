@@ -50,6 +50,7 @@ steps:
     OverWrite: true
 
 - task: Npm@1
+  enabled: false
   displayName: Publish react-spaces-storybook
   inputs:
     command: 'publish'
