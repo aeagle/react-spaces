@@ -10,11 +10,6 @@ steps:
     checkLatest: true
   displayName: 'Install Node.js'
 
-- task: npmAuthenticate@0
-  inputs:
-    workingFile: '.npmrc'
-    customEndpoint: 'NPM'
-
 - script: |
     npm install
     npm run build
@@ -28,19 +23,6 @@ steps:
     Contents: 'package.json'
     TargetFolder: './storybook-static'
     OverWrite: true
-
-- task: CopyFiles@2
-  displayName: Move .npmrc
-  inputs:
-    SourceFolder: '.'
-    Contents: '.npmrc'
-    TargetFolder: './storybook-static'
-    OverWrite: true
-
-- task: npmAuthenticate@0
-  inputs:
-    workingFile: 'storybook-static/.npmrc'
-    customEndpoint: 'NPM'
 
 - task: Npm@1
   displayName: Publish react-spaces-storybook
