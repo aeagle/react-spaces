@@ -34,7 +34,7 @@ steps:
     publishEndpoint: 'NPM'
 
 - task: Npm@1
-  enabled: true
+  enabled: false
   displayName: Publish react-spaces
   inputs:
     command: 'publish'
