@@ -4,6 +4,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 steps:
+- task: gitversion/setup@0
+  inputs:
+    versionSpec: '5.x'
+    
 - task: gitversion/execute@0
 
 - task: NodeTool@0
