@@ -6,7 +6,6 @@
 pool:
   vm: "ubuntu"
 
-container:
 steps:
 - task: gitversion/setup@0
   inputs:
