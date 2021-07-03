@@ -13,21 +13,23 @@ steps:
     
 - task: gitversion/execute@0 
 
-- task: Bash@3
-  displayName: Update version number in react-spaces package.json to $(GitVersion.SemVer)
-  inputs:
-    targetType: 'inline'
-    script:  sed -i "s/0.2.2/$(GitVersion.MajorMinorPatch)/g" package.json
-  env:
-    GITVERSIONNUMBER: $(GitVersion.SemVer)
+- script: echo "##vso[build.updatebuildnumber]$(GitVersion.MajorMinorPatch)"
 
 - task: Bash@3
-  displayName: Update version number in react-spaces-storybook package.json to $(GitVersion.SemVer)
+  displayName: Update version number in react-spaces package.json
   inputs:
     targetType: 'inline'
-    script:  sed -i "s/0.2.2/$(GitVersion.MajorMinorPatch)/g" .storybook/package.json
+    script:  sed -i "s/0.2.2/$GITVERSIONNUMBER/g" package.json
   env:
-    GITVERSIONNUMBER: $(GitVersion.SemVer)
+    GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
+
+- task: Bash@3
+  displayName: Update version number in react-spaces-storybook package.json
+  inputs:
+    targetType: 'inline'
+    script:  sed -i "s/0.2.2/$GITVERSIONNUMBER/g" .storybook/package.json
+  env:
+    GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
 
 - task: NodeTool@0
   inputs:
