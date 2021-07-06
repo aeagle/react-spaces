@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, LeftResizable, Fill } from "../../";
 import { action } from '@storybook/addon-actions';
@@ -16,7 +16,7 @@ only the initial size of a space and React Spaces deals with any resizing. To ke
 space controlled in state you need to use the onResizeEnd event to set the new size of a space
 after a resize back to a state value.
 
-<Preview>
+<Canvas>
 	<Story name="Controlled size">
 		{
 			() => {
@@ -34,13 +34,13 @@ after a resize back to a state value.
 			}
 		}
 	</Story>
-</Preview>
+</Canvas>
 
 ## Cancelling resize with onResizeStart
 
 You can cancel a resize by returning `false` from a onResizeStart event handler.
 
-<Preview>
+<Canvas>
 	<Story name="Cancelled resize">
 		{
 			() => {
@@ -57,4 +57,4 @@ You can cancel a resize by returning `false` from a onResizeStart event handler.
 			}
 		}
 	</Story>
-</Preview>
+</Canvas>

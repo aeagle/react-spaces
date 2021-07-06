@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { action } from '@storybook/addon-actions';
 import { ViewPort, Custom } from "../../";
@@ -17,17 +17,17 @@ intend to change the type of the space dynamically without causing remounting of
 
 ### As a fill space
 
-<Preview>
+<Canvas>
 	<Story name="Fill">
 		<ViewPort>
 			<Custom style={green}>{description("Custom fill")}</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a positioned space
 
-<Preview>
+<Canvas>
 	<Story name="Positioned">
 		<ViewPort>
 			<Custom style={green} left={200} top={200} width={300} height={300} isPositioned={true}>
@@ -35,11 +35,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a left anchored space
 
-<Preview>
+<Canvas>
 	<Story name="Anchored left">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Left} anchorSize={200}>
@@ -47,11 +47,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a top anchored space
 
-<Preview>
+<Canvas>
 	<Story name="Anchored top">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Top} anchorSize={200}>
@@ -59,11 +59,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a right anchored space
 
-<Preview>
+<Canvas>
 	<Story name="Anchored right">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Right} anchorSize={200}>
@@ -71,11 +71,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a bottom anchored space
 
-<Preview>
+<Canvas>
 	<Story name="Anchored bottom">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Bottom} anchorSize={200}>
@@ -83,11 +83,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a left resizable space
 
-<Preview>
+<Canvas>
 	<Story name="Resizable left">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Left} anchorSize={200} resizable={true} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
@@ -95,11 +95,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a top resizable space
 
-<Preview>
+<Canvas>
 	<Story name="Resizable top">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Top} anchorSize={200} resizable={true} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
@@ -107,11 +107,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a right resizable space
 
-<Preview>
+<Canvas>
 	<Story name="Resizable right">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Right} anchorSize={200} resizable={true} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
@@ -119,11 +119,11 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a bottom resizable space
 
-<Preview>
+<Canvas>
 	<Story name="Resizable bottom">
 		<ViewPort>
 			<Custom style={green} anchor={AnchorType.Bottom} anchorSize={200} resizable={true} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
@@ -131,7 +131,7 @@ intend to change the type of the space dynamically without causing remounting of
 			</Custom>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Properties
 

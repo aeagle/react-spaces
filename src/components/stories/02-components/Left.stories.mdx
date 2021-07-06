@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, Left } from "../../";
 import { green, description, lorem } from "../Utils";
@@ -14,7 +14,7 @@ Anchored space on the left edge of it's parent.
 
 ### Specifying a % size
 
-<Preview>
+<Canvas>
 	<Story name="Default (%)">
 		<ViewPort>
 			<Left style={green} size="50%">
@@ -22,11 +22,11 @@ Anchored space on the left edge of it's parent.
 			</Left>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Specifying a pixel size
 
-<Preview>
+<Canvas>
 	<Story name="Default (px)">
 		<ViewPort>
 			<Left style={green} size={300}>
@@ -34,11 +34,11 @@ Anchored space on the left edge of it's parent.
 			</Left>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### As a scrollable space
 
-<Preview>
+<Canvas>
 	<Story name="Scrollable">
 		<ViewPort>
 			<Left style={green} size={300} scrollable={true}>
@@ -46,7 +46,7 @@ Anchored space on the left edge of it's parent.
 			</Left>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Properties
 
