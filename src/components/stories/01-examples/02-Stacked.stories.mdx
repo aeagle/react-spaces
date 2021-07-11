@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, LeftResizable, RightResizable, Left, Right, TopResizable, BottomResizable, Top, Bottom, Fill } from "../../";
 import { red, green, blue, description } from "../Utils";
@@ -14,7 +14,7 @@ Example of stacking spaces.
 
 ### Left and right stacked spaces
 
-<Preview>
+<Canvas>
 	<Story name="Fixed vertical">
 		<React.StrictMode>
 			<ViewPort>
@@ -34,11 +34,11 @@ Example of stacking spaces.
 			</ViewPort>
 		</React.StrictMode>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Top and bottom stacked spaces
 
-<Preview>
+<Canvas>
 	<Story name="Fixed horizontal">
 		<React.StrictMode>
 			<ViewPort>
@@ -58,11 +58,11 @@ Example of stacking spaces.
 			</ViewPort>
 		</React.StrictMode>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Left and right resizable stacked spaces
 
-<Preview>
+<Canvas>
 	<Story name="Resizable vertical">
 		<React.StrictMode>
 			<ViewPort>
@@ -84,11 +84,11 @@ Example of stacking spaces.
 			</ViewPort>
 		</React.StrictMode>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Top and bottom resizable stacked spaces
 
-<Preview>
+<Canvas>
 	<Story name="Resizable horizontal">
 		<React.StrictMode>
 			<ViewPort>
@@ -110,4 +110,4 @@ Example of stacking spaces.
 			</ViewPort>
 		</React.StrictMode>
 	</Story>
-</Preview>
+</Canvas>
