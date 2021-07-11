@@ -209,7 +209,7 @@ export const StateDriven: React.FC = () => {
 	const [size, setSize] = React.useState(true);
 	const [side, setSide] = React.useState(true);
 	return (
-		<ViewPort as="main">
+		<ViewPort as="main" className="state-driven">
 			<LeftResizable as="aside" size="15%" style={red} trackSize={true}>
 				{description("Left")}
 			</LeftResizable>
@@ -221,10 +221,7 @@ export const StateDriven: React.FC = () => {
 					<Fill>
 						{visible && (
 							<LeftResizable size={size ? "10%" : "15%"} order={0} style={green} trackSize={true}>
-								{description("Left 1")}
-								<div>
-									<button onClick={() => setSize((prev) => !prev)}>Toggle size</button>
-								</div>
+								{description("Left 1", <button onClick={() => setSize((prev) => !prev)}>Toggle size</button>)}
 							</LeftResizable>
 						)}
 						<LeftResizable size={"10%"} order={1} style={red} trackSize={true}>
@@ -237,24 +234,15 @@ export const StateDriven: React.FC = () => {
 							<Fill style={blue}>
 								{side ? (
 									<LeftResizable size="20%" style={white} trackSize={true}>
-										{description("Left 2")}
-										<div>
-											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
-										</div>
+										{description("Left 2", <button onClick={() => setSide((prev) => !prev)}>Toggle side</button>)}
 									</LeftResizable>
 								) : (
 									<TopResizable size="20%" style={white} trackSize={true}>
-										{description("Top")}
-										<div>
-											<button onClick={() => setSide((prev) => !prev)}>Toggle side</button>
-										</div>
+										{description("Top", <button onClick={() => setSide((prev) => !prev)}>Toggle side</button>)}
 									</TopResizable>
 								)}
 								<Fill trackSize={true}>
-									{description("Fill")}
-									<div>
-										<button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>
-									</div>
+									{description("Fill", <button onClick={() => setVisible((prev) => !prev)}>Toggle visible</button>)}
 								</Fill>
 							</Fill>
 							<BottomResizable size="20%" style={red} trackSize={true}>
@@ -335,7 +323,7 @@ export const SpaceDemoStacked1 = () => (
 	</>
 );
 
-const Description = (desc: string, mobileDesc: string) => (
+const Description = (desc: string, mobileDesc: string, extra?: React.ReactNode) => (
 	<Centered>
 		<span className="description">
 			<strong className="desc">{desc}</strong>
@@ -348,6 +336,7 @@ const Description = (desc: string, mobileDesc: string) => (
 					</span>
 				)}
 			</Info>
+			{extra}
 		</span>
 	</Centered>
 );
@@ -361,7 +350,7 @@ export const description = (props: string, additional?: React.ReactNode) => (
 	<Info>
 		{(info) => (
 			<Centered>
-				<div className="description">
+				<span className="description">
 					<strong>{props}</strong>
 					<br />
 					{info && (
@@ -369,7 +358,8 @@ export const description = (props: string, additional?: React.ReactNode) => (
 							{info.width} x {info.height}
 						</>
 					)}
-				</div>
+				</span>
+				<br />
 				{additional}
 			</Centered>
 		)}
