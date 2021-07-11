@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { Fixed, Centered, LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../";
 import { red, green, blue, description } from "../Utils";
@@ -14,23 +14,23 @@ Top-level space with a fixed height and optional width.
 
 ### With width specified
 
-<Preview>
+<Canvas>
 	<Story name="With width">
 		<Fixed style={blue} width={300} height={300}>
 			{description("Fixed 300px x 300px")}
 		</Fixed>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Without a width specified
 
-<Preview>
+<Canvas>
 	<Story name="Without width">
 		<Fixed style={blue} height={300}>
 			{description("Fixed 100% x 300px")}
 		</Fixed>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Properties
 

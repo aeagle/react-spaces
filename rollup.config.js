@@ -7,7 +7,15 @@ import postcss from "rollup-plugin-postcss";
 import { uglify } from "rollup-plugin-uglify";
 import pkg from "./package.json";
 
-const commonPlugins = [typescript({ typescript: require("typescript"), sourceMap: true }), resolve(), commonjs(), sourcemaps()];
+const commonPlugins = [
+	typescript({
+		typescript: require("typescript"),
+		sourceMap: true,
+	}),
+	resolve(),
+	commonjs(),
+	sourcemaps(),
+];
 
 const targets = [
 	{

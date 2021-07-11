@@ -4,12 +4,37 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 steps:
+- task: gitversion/setup@0
+  inputs:
+    versionSpec: '5.x'
+    
+- task: gitversion/execute@0 
+
+- script: echo "##vso[build.updatebuildnumber]$(GitVersion.MajorMinorPatch)"
+
+- task: Bash@3
+  displayName: Update version number in react-spaces package.json
+  inputs:
+    targetType: 'inline'
+    script:  sed -i "s/0.2.2/$GITVERSIONNUMBER/g" package.json
+  env:
+    GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
+
+- task: Bash@3
+  displayName: Update version number in react-spaces-storybook package.json
+  inputs:
+    targetType: 'inline'
+    script:  sed -i "s/0.2.2/$GITVERSIONNUMBER/g" .storybook/package.json
+  env:
+    GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
+
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '12.x'
+    checkLatest: true
   displayName: 'Install Node.js'
 
 - script: |
@@ -23,10 +48,11 @@ steps:
   inputs:
     SourceFolder: '.storybook'
     Contents: 'package.json'
-    TargetFolder: 'storybook-static'
+    TargetFolder: './storybook-static'
     OverWrite: true
 
 - task: Npm@1
+  enabled: true
   displayName: Publish react-spaces-storybook
   inputs:
     command: 'publish'

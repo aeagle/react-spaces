@@ -1,4 +1,4 @@
-import { Meta, Story, Preview, Props } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, Experimental, Layer, Centered, Positioned } from "../../";
 import { blue, red } from "../Utils";
@@ -45,7 +45,7 @@ inside the space.
 
 ### Positioned spaces in different layers
 
-<Preview>
+<Canvas>
 	<Story name="Default">
 		<ViewPort>
 			<Layer zIndex={1}>
@@ -66,7 +66,7 @@ inside the space.
 			</Layer>
 		</ViewPort>
 	</Story>
-</Preview>
+</Canvas>
 
 ### Properties
 

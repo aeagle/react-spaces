@@ -45,7 +45,7 @@ export function createResize(store: ISpaceStore) {
 		if (adjustment < minimumAdjust) {
 			adjustment = minimumAdjust;
 		} else {
-			if (maximumAdjust) {
+			if (typeof maximumAdjust === "number") {
 				if (adjustment > maximumAdjust) {
 					adjustment = maximumAdjust;
 				}
