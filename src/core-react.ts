@@ -127,7 +127,7 @@ export function useSpace(props: ISpaceProps) {
 	return { space: space, resizeHandles: resizeHandles, domRect: domRect, elementRef: elementRef };
 }
 
-interface IResizeHandleProps {
+export interface IResizeHandleProps {
 	id?: string;
 	key: string | number;
 	className?: string;

@@ -39,6 +39,7 @@ const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) =
 		onTouchMove,
 		onTouchEnd,
 		children,
+        handleRender
 	} = props;
 
 	const events = {
@@ -88,8 +89,8 @@ const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) =
 
 	return (
 		<>
-			{resizeHandles.mouseHandles.map((r) => (
-				<div {...r} />
+			{resizeHandles.mouseHandles.map((handleProps) => (
+				handleRender?.(handleProps) || <div {...handleProps} />
 			))}
 			{React.createElement(
 				props.as || "div",
