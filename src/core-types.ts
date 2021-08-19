@@ -1,3 +1,5 @@
+import React from "react";
+
 export enum Type {
 	ViewPort = "viewport",
 	Fixed = "fixed",
@@ -60,7 +62,7 @@ export interface ICommonProps extends IPassThroughEvents {
 	id?: string;
 	className?: string;
 	style?: React.CSSProperties;
-	as?: string;
+	as?: keyof React.ReactDOM | React.ComponentType<ICommonProps>;
 	centerContent?: CenterType;
 	zIndex?: number;
 	scrollable?: boolean;

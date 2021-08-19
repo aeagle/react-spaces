@@ -15,7 +15,7 @@ export const commonProps = {
 	id: PropTypes.string,
 	className: PropTypes.string,
 	style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-	as: PropTypes.string,
+	as: PropTypes.any,
 	centerContent: PropTypes.oneOf([CenterType.None, CenterType.Vertical, CenterType.HorizontalVertical]),
 	zIndex: PropTypes.number,
 	scrollable: PropTypes.bool,
