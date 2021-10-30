@@ -1,5 +1,5 @@
-import { ISpaceProps, CenterType, ResizeHandlePlacement, AnchorType } from "../core-types";
-import { useSpace, ParentContext, LayerContext, DOMRectContext } from "../core-react";
+import { CenterType, ResizeHandlePlacement, AnchorType } from "../core-types";
+import { useSpace, ParentContext, LayerContext, DOMRectContext, IReactSpaceProps } from "../core-react";
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
@@ -15,13 +15,13 @@ function applyCentering(children: React.ReactNode, centerType: CenterType | unde
 	return children;
 }
 
-export class Space extends React.Component<ISpaceProps> {
+export class Space extends React.Component<IReactSpaceProps> {
 	public render() {
 		return <SpaceInner {...this.props} wrapperInstance={this} />;
 	}
 }
 
-const SpaceInner: React.FC<ISpaceProps & { wrapperInstance: Space }> = (props) => {
+const SpaceInner: React.FC<IReactSpaceProps & { wrapperInstance: Space }> = (props) => {
 	if (!props.id && !props.wrapperInstance["_react_spaces_uniqueid"]) {
 		props.wrapperInstance["_react_spaces_uniqueid"] = `s${shortuuid()}`;
 	}
