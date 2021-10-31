@@ -150,7 +150,6 @@ export function styleDefinition(space: ISpaceDefinition) {
 					space.top,
 				)}; bottom: ${css(space.bottom)}; height: ${css(space.height)}; }`,
 			);
-			cssElements.push(`#${space.id}-ml:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
 		}
 
 		if (space.canResizeTop) {
@@ -167,6 +166,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 		}
 
 		if (space.canResizeRight) {
+			cssElements.push(`#${space.id}-mr:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
 			if (space.width.size) {
 				cssElements.push(
 					`#${space.id}-mr { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${
@@ -206,7 +206,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 	} else {
 		if (space.canResizeLeft) {
 			cssElements.push(
-				`#${space.id}-ml { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${
+				`#${space.id}-ml { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${
 					space.handleSize
 				}px; }`,
 			);
@@ -215,7 +215,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 		if (space.canResizeTop) {
 			cssElements.push(
-				`#${space.id}-mt { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${
+				`#${space.id}-mt { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${
 					space.handleSize
 				}px; }`,
 			);
@@ -224,7 +224,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 		if (space.canResizeRight) {
 			cssElements.push(
-				`#${space.id}-mr { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${
+				`#${space.id}-mr { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${
 					space.handleSize
 				}px; }`,
 			);
@@ -233,7 +233,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 		if (space.canResizeBottom) {
 			cssElements.push(
-				`#${space.id}-mb { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${
+				`#${space.id}-mb { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${
 					space.handleSize
 				}px; }`,
 			);

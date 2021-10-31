@@ -232,10 +232,10 @@ export function createStore(): ISpaceStore {
 				handlePlacement,
 				allowOverflow,
 			} = props;
-			const canResizeLeft = (position && position.rightResizable) || false;
-			const canResizeRight = (position && position.leftResizable) || false;
-			const canResizeTop = (position && position.bottomResizable) || false;
-			const canResizeBottom = (position && position.topResizable) || false;
+			const canResizeLeft = (position && position.leftResizable) || false;
+			const canResizeRight = (position && position.rightResizable) || false;
+			const canResizeTop = (position && position.topResizable) || false;
+			const canResizeBottom = (position && position.bottomResizable) || false;
 
 			let changed = false;
 

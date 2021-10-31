@@ -1,6 +1,6 @@
 export type ResizeMouseEvent = React.MouseEvent<HTMLElement, MouseEvent>;
-export type OnResizeStart = (() => void | boolean) | undefined;
-export type OnResizeEnd = ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
+export type OnResizeStart = ((resizeType?: ResizeType) => void | boolean) | undefined;
+export type OnResizeEnd = ((newSize: SizeUnit, domRect: DOMRect, resizeType?: ResizeType) => void) | undefined;
 export type OnDragEnd = (position: IPosition, moved: boolean) => void;
 
 export enum Type {
@@ -31,10 +31,10 @@ export enum ResizeType {
 	Right = "resize-right",
 	Top = "resize-top",
 	Bottom = "resize-bottom",
-	NW = "resize-nw",
-	NE = "resize-ne",
-	SW = "resize-sw",
-	SE = "resize-se",
+	TopLeft = "resize-topleft",
+	TopRight = "resize-topright",
+	BottomLeft = "resize-bottomleft",
+	BottomRight = "resize-bottomright",
 }
 
 export enum ResizeHandlePlacement {

@@ -1,6 +1,6 @@
 import { SyntheticEvent } from "react";
-import { ISpaceDefinition, ISize, ResizeType, ISpaceStore, OnResizeEnd, Type, EndEvent, MoveEvent } from "./core-types";
-import { throttle, coalesce } from "./core-utils";
+import { ISpaceDefinition, ResizeType, ISpaceStore, OnResizeEnd, EndEvent, MoveEvent } from "./core-types";
+import { throttle } from "./core-utils";
 
 const RESIZE_THROTTLE = 0;
 
@@ -9,120 +9,68 @@ export interface IResizeChange {
 	y: number;
 }
 
-function customSizeHoriz(space: ISpaceDefinition, adjust: number) {
-	if (space.width.size) {
-		space.width.resized = -adjust;
-	}
+function isHorizontal(resizeType: ResizeType) {
+	return resizeType === ResizeType.Left || resizeType === ResizeType.Right;
 }
 
-function customSizeVert(space: ISpaceDefinition, adjust: number) {
-	if (space.height.size) {
-		space.height.resized = -adjust;
-	}
-}
+type ResizeAdjuster = (currentX: number, currentY: number) => void;
 
-function getCustomSizing(resizeType: ResizeType, space: ISpaceDefinition) {
-	if (resizeType === ResizeType.Left) {
-		return space.type === Type.Positioned ? (a: number) => customSizeHoriz(space, a) : undefined;
-	} else if (resizeType === ResizeType.Right) {
-		return space.type === Type.Positioned ? (space.width.size ? undefined : (a: number) => customSizeHoriz(space, a)) : undefined;
-	} else if (resizeType === ResizeType.Top) {
-		return space.type === Type.Positioned ? (a: number) => customSizeVert(space, a) : undefined;
-	} else if (resizeType === ResizeType.Bottom) {
-		return space.type === Type.Positioned ? (space.height.size ? undefined : (a: number) => customSizeVert(space, a)) : undefined;
-	}
-	throw new Error("unknown resize type");
-}
+function createAdjuster(resizeType: ResizeType, space: ISpaceDefinition, originalX: number, originalY: number): ResizeAdjuster {
+	const dimensionToAdjust = (() => {
+		if (resizeType === ResizeType.Left) {
+			return space.left;
+		} else if (resizeType === ResizeType.Right) {
+			return space.right;
+		} else if (resizeType === ResizeType.Bottom) {
+			return space.bottom;
+		} else if (resizeType === ResizeType.Top) {
+			return space.top;
+		} else {
+			throw new Error("unknown resize type");
+		}
+	})();
 
-function getTargetSize(resizeType: ResizeType, space: ISpaceDefinition) {
-	if (resizeType === ResizeType.Left) {
-		return space.type === Type.Positioned ? space.left : space.width;
-	} else if (resizeType === ResizeType.Right) {
-		return space.type === Type.Positioned ? (space.width.size ? space.width : space.right) : space.width;
-	} else if (resizeType === ResizeType.Top) {
-		return space.type === Type.Positioned ? space.top : space.height;
-	} else if (resizeType === ResizeType.Bottom) {
-		return space.type === Type.Positioned ? (space.height.size ? space.height : space.bottom) : space.height;
-	}
-	throw new Error("unknown resize type");
-}
+	const negater = resizeType === ResizeType.Right || resizeType === ResizeType.Bottom ? (val: number) => -val : (val: number) => val;
 
-function getResizeType(resizeType: ResizeType, space: ISpaceDefinition) {
-	if (resizeType === ResizeType.Left) {
-		return ResizeType.Left;
-	} else if (resizeType === ResizeType.Right) {
-		return space.type === Type.Positioned ? (space.width.size ? ResizeType.Left : ResizeType.Right) : ResizeType.Right;
-	} else if (resizeType === ResizeType.Top) {
-		return ResizeType.Top;
-	} else if (resizeType === ResizeType.Bottom) {
-		return space.type === Type.Positioned ? (space.height.size ? ResizeType.Top : ResizeType.Bottom) : ResizeType.Bottom;
-	}
-	throw new Error("unknown resize type");
-}
+	const candidateOppositeDimensionToAdjust = isHorizontal(resizeType) ? space.width : space.height;
 
-function getCustomOriginal(resizeType: ResizeType, space: ISpaceDefinition) {
-	if (resizeType === ResizeType.Left) {
-		return space.width.size ? -space.width.resized : 0;
-	} else if (resizeType === ResizeType.Right) {
-		return 0;
-	} else if (resizeType === ResizeType.Top) {
-		return space.height.size ? -space.height.resized : 0;
-	} else if (resizeType === ResizeType.Bottom) {
-		return 0;
-	}
-	throw new Error("unknown resize type");
+	const offset1 = dimensionToAdjust.resized;
+	const offset2 = candidateOppositeDimensionToAdjust.resized;
+
+	// const rect = space.element.getBoundingClientRect();
+	// const size = isHorizontal(resizeType) ? rect.width : rect.height;
+	// const minimumAdjust = coalesce(space.minimumSize, 20)! - size + 0;
+	// const maximumAdjust = space.maximumSize ? space.maximumSize - size + 0 : undefined;
+
+	return (currentX: number, currentY: number) => {
+		const adjustment = (isHorizontal(resizeType) ? originalX : originalY) - (isHorizontal(resizeType) ? currentX : currentY);
+
+		// if (adjustment < minimumAdjust) {
+		// 	adjustment = minimumAdjust;
+		// } else {
+		// 	if (typeof maximumAdjust === "number") {
+		// 		if (adjustment > maximumAdjust) {
+		// 			adjustment = maximumAdjust;
+		// 		}
+		// 	}
+		// }
+
+		if (dimensionToAdjust.size !== undefined) {
+			dimensionToAdjust.resized = negater(-adjustment) + offset1;
+			if (candidateOppositeDimensionToAdjust.size) {
+				candidateOppositeDimensionToAdjust.resized = negater(adjustment) + offset2;
+			}
+		} else {
+			candidateOppositeDimensionToAdjust.resized = negater(adjustment) + offset2;
+		}
+	};
 }
 
 export function createResize(store: ISpaceStore) {
-	function onResize(
-		space: ISpaceDefinition,
-		targetSize: ISize,
-		resizeType: ResizeType,
-		startSize: number,
-		originalX: number,
-		originalY: number,
-		customOriginal: number,
-		x: number,
-		y: number,
-		minimumAdjust: number,
-		maximumAdjust: number | undefined,
-		customAdjust?: (adjustment: number) => void,
-	) {
-		let adjustment =
-			startSize +
-			(resizeType === ResizeType.Left || resizeType === ResizeType.Right
-				? resizeType === ResizeType.Left
-					? x - originalX
-					: originalX - x
-				: resizeType === ResizeType.Top
-				? y - originalY
-				: originalY - y);
-
-		if (adjustment < minimumAdjust) {
-			adjustment = minimumAdjust;
-		} else {
-			if (typeof maximumAdjust === "number") {
-				if (adjustment > maximumAdjust) {
-					adjustment = maximumAdjust;
-				}
-			}
-		}
-
-		if (adjustment !== targetSize.resized) {
-			targetSize.resized = adjustment;
-
-			if (customAdjust) {
-				customAdjust(adjustment + customOriginal);
-			}
-
-			store.updateStyles(space);
-		}
-	}
-
 	return {
 		startResize<T extends SyntheticEvent<HTMLElement> | MouseEvent | TouchEvent>(
 			e: T,
-			resizeHandleType: ResizeType,
+			resizeType: ResizeType,
 			space: ISpaceDefinition,
 			endEvent: EndEvent,
 			moveEvent: MoveEvent,
@@ -130,46 +78,26 @@ export function createResize(store: ISpaceStore) {
 			onResizeEnd?: OnResizeEnd,
 		) {
 			if (space.onResizeStart) {
-				const result = space.onResizeStart();
+				const result = space.onResizeStart(resizeType);
 				if (typeof result === "boolean" && !result) {
 					return;
 				}
 			}
 
 			const originalCoords = getCoords(e);
-			const resizeType = getResizeType(resizeHandleType, space);
-			const customAdjust = getCustomSizing(resizeHandleType, space);
-			const targetSize = getTargetSize(resizeHandleType, space);
-			const customOriginal = getCustomOriginal(resizeHandleType, space) - targetSize.resized;
+			const adjuster = createAdjuster(resizeType, space, originalCoords.x, originalCoords.y);
 
 			space.resizing = true;
 			space.updateParent();
-
-			const rect = space.element.getBoundingClientRect();
-			const size = resizeType === ResizeType.Left || resizeType === ResizeType.Right ? rect.width : rect.height;
-			const startSize = targetSize.resized;
-			const minimumAdjust = coalesce(space.minimumSize, 20)! - size + targetSize.resized;
-			const maximumAdjust = space.maximumSize ? space.maximumSize - size + targetSize.resized : undefined;
 
 			let lastX = 0;
 			let lastY = 0;
 			let moved = false;
 
-			const resize = (x: number, y: number) =>
-				onResize(
-					space,
-					targetSize,
-					resizeType,
-					startSize,
-					originalCoords.x,
-					originalCoords.y,
-					customOriginal,
-					x,
-					y,
-					minimumAdjust,
-					maximumAdjust,
-					customAdjust,
-				);
+			const resize = (currentX: number, currentY: number) => {
+				adjuster(currentX, currentY);
+				store.updateStyles(space);
+			};
 
 			const withPreventDefault = (e: T) => {
 				moved = true;
@@ -194,10 +122,7 @@ export function createResize(store: ISpaceStore) {
 				const resizeEnd = onResizeEnd || space.onResizeEnd;
 				if (resizeEnd) {
 					const currentRect = space.element.getBoundingClientRect();
-					resizeEnd(
-						Math.floor(resizeType === ResizeType.Left || resizeType === ResizeType.Right ? currentRect.width : currentRect.height),
-						currentRect as DOMRect,
-					);
+					resizeEnd(Math.floor(isHorizontal(resizeType) ? currentRect.width : currentRect.height), currentRect as DOMRect, resizeType);
 				}
 			};
 
