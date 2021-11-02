@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createStore } from "./core";
-import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType, CenterType } from "./core-types";
+import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType, CenterType, ICommonProps } from "./core-types";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import * as PropTypes from "prop-types";
@@ -30,10 +30,6 @@ export const commonProps = {
 	onTouchEnd: PropTypes.func,
 };
 
-export interface IReactSpacesOptions {
-	debug?: boolean
-}
-
 export interface IReactEvents {
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 	onDoubleClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
@@ -46,6 +42,15 @@ export interface IReactEvents {
 	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
 }
 
+export interface IReactSpaceProps extends ISpaceProps, IReactEvents {
+	style?: React.CSSProperties;
+	as?: keyof React.ReactDOM | React.ComponentType<ICommonProps>;
+}
+
+export interface IReactSpacesOptions {
+	debug?: boolean;
+}
+
 export function useForceUpdate() {
 	const [, setTick] = React.useState(0);
 	const update = React.useCallback(() => {
@@ -54,7 +59,7 @@ export function useForceUpdate() {
 	return update;
 }
 
-export function useSpace(props: ISpaceProps) {
+export function useSpace(props: IReactSpaceProps) {
 	const store = currentStore;
 	const update = useForceUpdate();
 	const parent = React.useContext(ParentContext);
@@ -179,6 +184,6 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 	}
 
 	return {
-		mouseHandles
+		mouseHandles,
 	};
 }
