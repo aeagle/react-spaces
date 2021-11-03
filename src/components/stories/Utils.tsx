@@ -68,9 +68,9 @@ export const StandardProps = () => (
 		<PropsHeader>Standard properties</PropsHeader>
 		<Prop
 			name="as"
-			type="string"
+			type="string | React.ComponentType<ICommonProps>"
 			default="div"
-			description="Allows control over the outputted HTML element allowing HTML 5 semantic markup to be created."
+			description="Allows control over the outputted HTML element either through HTML 5 semantic markup or a custom Component."
 		/>
 		<Prop
 			name="centerContent"

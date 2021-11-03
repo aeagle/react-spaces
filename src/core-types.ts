@@ -59,23 +59,9 @@ export enum EndEvent {
 	Touch = "touchend",
 }
 
-export interface IPassThroughEvents {
-	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-	onDoubleClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-	onMouseDown?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-	onMouseEnter?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-	onMouseLeave?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-	onMouseMove?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-	onTouchStart?: (event: React.TouchEvent<HTMLElement>) => void;
-	onTouchMove?: (event: React.TouchEvent<HTMLElement>) => void;
-	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
-}
-
-export interface ICommonProps extends IPassThroughEvents {
+export interface ICommonProps {
 	id?: string;
 	className?: string;
-	style?: React.CSSProperties;
-	as?: string;
 	centerContent?: CenterType;
 	zIndex?: number;
 	scrollable?: boolean;

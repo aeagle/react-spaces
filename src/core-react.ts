@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createStore } from "./core";
-import { ISpaceProps, ISpaceStore, ISpaceDefinition, ResizeType, CenterType, ISpaceContext } from "./core-types";
+import { ISpaceProps, ISpaceStore, ISpaceDefinition, ResizeType, CenterType, ISpaceContext, ICommonProps } from "./core-types";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import * as PropTypes from "prop-types";
@@ -15,7 +15,7 @@ export const commonProps = {
 	id: PropTypes.string,
 	className: PropTypes.string,
 	style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-	as: PropTypes.string,
+	as: PropTypes.any,
 	centerContent: PropTypes.oneOf([CenterType.None, CenterType.Vertical, CenterType.HorizontalVertical]),
 	zIndex: PropTypes.number,
 	scrollable: PropTypes.bool,
@@ -47,6 +47,15 @@ export interface IReactEvents {
 	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
 }
 
+export interface IReactSpaceProps extends ISpaceProps, IReactEvents {
+	style?: React.CSSProperties;
+	as?: keyof React.ReactDOM | React.ComponentType<ICommonProps>;
+}
+
+export interface IReactSpacesOptions {
+	debug?: boolean;
+}
+
 export function useForceUpdate() {
 	const [, setTick] = React.useState(0);
 	const update = React.useCallback(() => {
@@ -55,7 +64,7 @@ export function useForceUpdate() {
 	return update;
 }
 
-export function useSpace(props: ISpaceProps) {
+export function useSpace(props: IReactSpaceProps) {
 	const store = currentStore;
 	const update = useForceUpdate();
 	const parent = React.useContext(ParentContext);
