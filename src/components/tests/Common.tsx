@@ -3,8 +3,9 @@ import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { ViewPort } from "../ViewPort";
 import { drag } from "./TestUtils";
+import { ResizeType } from "../../core-types";
 
-const mutateComponent = (component: React.ReactNode, newProps: Object) => {
+export const mutateComponent = (component: React.ReactNode, newProps: Object) => {
 	return React.cloneElement(component as React.DetailedReactHTMLElement<any, HTMLElement>, newProps);
 };
 
@@ -285,5 +286,75 @@ export const commonResizableTests = (
 		// assert
 		const style = window.getComputedStyle(sut);
 		expect(size(style)).toBe("150px");
+	});
+};
+
+export const commonPositionedTests = (
+	name: string,
+	component: React.ReactNode,
+	size: (style: CSSStyleDeclaration) => string | null,
+	edge: (style: CSSStyleDeclaration) => string | null,
+	oppositeEdge: (style: CSSStyleDeclaration) => string | null,
+	handle: string,
+	horizontal: boolean,
+	negate: boolean,
+) => {
+	test(`${name} after resize has correct styles`, async () => {
+		// arrange
+		const { container } = render(
+			<ViewPort>
+				{mutateComponent(component, { id: "test", resizable: [ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right] })}
+			</ViewPort>,
+		);
+
+		const resizeHandle = container.querySelector(`#test-${handle}`)!;
+		const sut = container.querySelector("#test")!;
+
+		// act
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			horizontal ? (negate ? -100 : 100) : 0,
+			horizontal ? 0 : negate ? -100 : 100,
+		);
+
+		// assert
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("calc(100px + -100px)");
+	});
+
+	test(`${name} subsequent resize has correct styles`, async () => {
+		// arrange
+		const { container } = render(
+			<ViewPort>
+				{mutateComponent(component, { id: "test", resizable: [ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right] })}
+			</ViewPort>,
+		);
+		const resizeHandle = container.querySelector(`#test-${handle}`)!;
+		const sut = container.querySelector("#test")!;
+
+		// act
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			horizontal ? (negate ? -100 : 100) : 0,
+			horizontal ? 0 : negate ? -100 : 100,
+		);
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			horizontal ? (negate ? 100 : -100) : 0,
+			horizontal ? 0 : negate ? 100 : -100,
+		);
+
+		// assert
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("100px");
 	});
 };
