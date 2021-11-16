@@ -1,4 +1,5 @@
 export type ResizeMouseEvent = React.MouseEvent<HTMLElement, MouseEvent>;
+export type ResizeTouchEvent = React.TouchEvent<HTMLElement>;
 export type OnResizeStart = ((resizeType?: ResizeType) => void | boolean) | undefined;
 export type OnResizeEnd = ((newSize: SizeUnit, domRect: DOMRect, resizeType?: ResizeType) => void) | undefined;
 export type OnDragEnd = (position: IPosition, moved: boolean) => void;
@@ -94,7 +95,7 @@ export interface ISpaceStore {
 	startMouseResize: (resizeType: ResizeType, space: ISpaceDefinition, event: React.MouseEvent<HTMLElement>, onResizeEnd?: OnResizeEnd) => void;
 	startTouchResize: (resizeType: ResizeType, space: ISpaceDefinition, event: React.TouchEvent<HTMLElement>, onResizeEnd?: OnResizeEnd) => void;
 	startMouseDrag: (space: ISpaceDefinition, event: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
-	startTouchDrag: (space: ISpaceDefinition, event: TouchEvent, onDragEnd?: OnDragEnd) => void;
+	startTouchDrag: (space: ISpaceDefinition, event: ResizeTouchEvent, onDragEnd?: OnDragEnd) => void;
 }
 
 export interface IPosition {
@@ -167,6 +168,6 @@ export interface ISpaceContext {
 	size: DOMRect;
 	layer: number;
 	startMouseDrag: (e: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
-	startTouchDrag: (e: TouchEvent, onDragEnd?: OnDragEnd) => void;
+	startTouchDrag: (e: ResizeTouchEvent, onDragEnd?: OnDragEnd) => void;
 	forceUpdate: () => void;
 }
