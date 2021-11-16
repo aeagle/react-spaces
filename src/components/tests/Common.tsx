@@ -290,7 +290,7 @@ export const commonResizableTests = (
 	});
 };
 
-export const commonPositionedTests = (
+export const commonPositionedResizeTests = (
 	name: string,
 	size: (style: CSSStyleDeclaration) => string | null,
 	edge: (style: CSSStyleDeclaration) => string | null,
