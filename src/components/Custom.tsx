@@ -1,10 +1,10 @@
-import { ICommonProps, Type, SizeUnit, IPositionalProps, AnchorType, ResizeType, ResizeHandlePlacement } from "../core-types";
+import { Type, SizeUnit, IPositionalProps, AnchorType, ResizeType, ResizeHandlePlacement } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 import * as PropTypes from "prop-types";
-import { commonProps } from "../core-react";
+import { commonProps, IReactSpaceProps } from "../core-react";
 
-interface ICustomProps extends ICommonProps {
+interface ICustomProps extends IReactSpaceProps {
 	left?: SizeUnit | undefined;
 	top?: SizeUnit | undefined;
 	right?: SizeUnit | undefined;

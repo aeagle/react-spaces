@@ -23,6 +23,15 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 		});
 	});
 
+	test(`${name} with id applied`, async () => {
+		// arrange, act
+		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test" })}</ViewPort>);
+
+		// assert
+		const sut = container.querySelector("#test")!;
+		expect(sut.id).toBe("test");
+	});
+
 	test(`${name} with class applied`, async () => {
 		// arrange, act
 		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", className: "custom-class" })}</ViewPort>);
@@ -132,11 +141,12 @@ export const commonAnchorTests = (
 
 		// assert
 		const style = window.getComputedStyle(sut);
+		const style1 = window.getComputedStyle(sut1);
+
 		expect(size(style)).toBe("50px");
 		expect(edge(style)).toBe("0px");
 		expect(oppositeEdge(style)).toBe("");
 
-		const style1 = window.getComputedStyle(sut1);
 		expect(size(style1)).toBe("100px");
 		expect(edge(style1)).toBe("calc(0px + 50px)");
 		expect(oppositeEdge(style1)).toBe("");

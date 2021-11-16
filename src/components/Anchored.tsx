@@ -1,10 +1,10 @@
-import { ICommonProps, SizeUnit, Type, AnchorType, ResizeHandlePlacement } from "../core-types";
+import { SizeUnit, Type, AnchorType, ResizeHandlePlacement } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 import * as PropTypes from "prop-types";
-import { commonProps } from "../core-react";
+import { commonProps, IReactSpaceProps } from "../core-react";
 
-interface IAnchorProps extends ICommonProps {
+interface IAnchorProps extends IReactSpaceProps {
 	size: SizeUnit;
 	order?: number;
 	resizable?: boolean;

@@ -47,10 +47,12 @@ export interface IReactEvents {
 	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
 }
 
-export interface IReactSpaceProps extends ISpaceProps, IReactEvents {
+export interface IReactSpaceProps extends ICommonProps, IReactEvents {
 	style?: React.CSSProperties;
 	as?: keyof React.ReactDOM | React.ComponentType<ICommonProps>;
 }
+
+export interface IReactSpaceInnerProps extends IReactSpaceProps, ISpaceProps, IReactEvents {}
 
 export interface IReactSpacesOptions {
 	debug?: boolean;
@@ -64,7 +66,7 @@ export function useForceUpdate() {
 	return update;
 }
 
-export function useSpace(props: IReactSpaceProps) {
+export function useSpace(props: IReactSpaceInnerProps) {
 	const store = currentStore;
 	const update = useForceUpdate();
 	const parent = React.useContext(ParentContext);
