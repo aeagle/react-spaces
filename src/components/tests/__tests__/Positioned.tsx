@@ -30,45 +30,41 @@ commonPropsTests("Positioned (left/top/width/height)", positionedLeftTopWidthHei
 });
 
 commonPositionedTests(
-	"Positioned left resize (left/top/width/height)",
-	positionedLeftTopWidthHeight,
-	(style) => style.width,
-	(style) => style.left,
-	(style) => style.right,
+	"Positioned left resize",
+	/* size */ (style) => style.width,
+	/* edge */ (style) => style.left,
+	/* opposite edge */ (style) => style.right,
 	"ml",
-	true,
-	false,
+	/* horizontal */ true,
+	/* negate */ false,
 );
 
 commonPositionedTests(
-	"Positioned right resize (left/top/width/height)",
-	positionedLeftTopWidthHeight,
-	(style) => style.width,
-	(style) => style.right,
-	(style) => style.left,
+	"Positioned right resize",
+	/* size */ (style) => style.width,
+	/* edge */ (style) => style.right,
+	/* opposite edge */ (style) => style.left,
 	"mr",
-	true,
-	true,
+	/* horizontal */ true,
+	/* negate */ true,
 );
 
 commonPositionedTests(
-	"Positioned top resize (left/top/width/height)",
-	positionedLeftTopWidthHeight,
-	(style) => style.height,
-	(style) => style.top,
-	(style) => style.bottom,
+	"Positioned top resize",
+	/* size */ (style) => style.height,
+	/* edge */ (style) => style.top,
+	/* opposite edge */ (style) => style.bottom,
 	"mt",
-	false,
-	false,
+	/* horizontal */ false,
+	/* negate */ false,
 );
 
 commonPositionedTests(
-	"Positioned bottom resize (left/top/width/height)",
-	positionedLeftTopWidthHeight,
-	(style) => style.height,
-	(style) => style.bottom,
-	(style) => style.top,
+	"Positioned bottom resize",
+	/* size */ (style) => style.height,
+	/* edge */ (style) => style.bottom,
+	/* opposite edge */ (style) => style.top,
 	"mb",
-	false,
-	true,
+	/* horizontal */ false,
+	/* negate */ true,
 );

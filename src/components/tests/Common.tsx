@@ -4,6 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { ViewPort } from "../ViewPort";
 import { drag } from "./TestUtils";
 import { ResizeType } from "../../core-types";
+import { Positioned } from "../Positioned";
 
 export const mutateComponent = (component: React.ReactNode, newProps: Object) => {
 	return React.cloneElement(component as React.DetailedReactHTMLElement<any, HTMLElement>, newProps);
@@ -291,7 +292,6 @@ export const commonResizableTests = (
 
 export const commonPositionedTests = (
 	name: string,
-	component: React.ReactNode,
 	size: (style: CSSStyleDeclaration) => string | null,
 	edge: (style: CSSStyleDeclaration) => string | null,
 	oppositeEdge: (style: CSSStyleDeclaration) => string | null,
@@ -299,62 +299,71 @@ export const commonPositionedTests = (
 	horizontal: boolean,
 	negate: boolean,
 ) => {
-	test(`${name} after resize has correct styles`, async () => {
-		// arrange
-		const { container } = render(
-			<ViewPort>
-				{mutateComponent(component, { id: "test", resizable: [ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right] })}
-			</ViewPort>,
-		);
+	const testProps = { id: "test", resizable: [ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right] };
 
-		const resizeHandle = container.querySelector(`#test-${handle}`)!;
-		const sut = container.querySelector("#test")!;
+	[
+		{ name: "left/top/width/height", props: { left: 100, top: 100, width: 100, height: 100 }, widthHeightSpecified: true },
+		{ name: "left/top/right/bottom", props: { left: 100, top: 100, right: 100, bottom: 100 }, widthHeightSpecified: false },
+	].forEach((testCase) => {
+		test(`${name} (${testCase.name}) after resize has correct styles`, async () => {
+			// arrange
+			const { container } = render(<ViewPort>{mutateComponent(<Positioned />, { ...testProps, ...testCase.props })}</ViewPort>);
 
-		// act
-		drag(
-			resizeHandle,
-			sut,
-			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
-			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
-			horizontal ? (negate ? -100 : 100) : 0,
-			horizontal ? 0 : negate ? -100 : 100,
-		);
+			const resizeHandle = container.querySelector(`#test-${handle}`)!;
+			const sut = container.querySelector("#test")!;
 
-		// assert
-		const style = window.getComputedStyle(sut);
-		expect(size(style)).toBe("calc(100px + -100px)");
-	});
+			// act
+			drag(
+				resizeHandle,
+				sut,
+				{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+				{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+				horizontal ? (negate ? -100 : 100) : 0,
+				horizontal ? 0 : negate ? -100 : 100,
+			);
 
-	test(`${name} subsequent resize has correct styles`, async () => {
-		// arrange
-		const { container } = render(
-			<ViewPort>
-				{mutateComponent(component, { id: "test", resizable: [ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right] })}
-			</ViewPort>,
-		);
-		const resizeHandle = container.querySelector(`#test-${handle}`)!;
-		const sut = container.querySelector("#test")!;
+			// assert
+			const style = window.getComputedStyle(sut);
 
-		// act
-		drag(
-			resizeHandle,
-			sut,
-			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
-			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
-			horizontal ? (negate ? -100 : 100) : 0,
-			horizontal ? 0 : negate ? -100 : 100,
-		);
-		drag(
-			resizeHandle,
-			sut,
-			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
-			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
-			horizontal ? (negate ? 100 : -100) : 0,
-			horizontal ? 0 : negate ? 100 : -100,
-		);
+			if (testCase.widthHeightSpecified) {
+				expect(size(style)).toBe("calc(100px + -100px)");
+			} else {
+				expect(edge(style)).toBe("calc(100px + 100px)");
+			}
+		});
 
-		// assert
-		const style = window.getComputedStyle(sut);
-		expect(size(style)).toBe("100px");
+		test(`${name} (${testCase.name}) subsequent resize has correct styles`, async () => {
+			// arrange
+			const { container } = render(<ViewPort>{mutateComponent(<Positioned />, { ...testProps, ...testCase.props })}</ViewPort>);
+			const resizeHandle = container.querySelector(`#test-${handle}`)!;
+			const sut = container.querySelector("#test")!;
+
+			// act
+			drag(
+				resizeHandle,
+				sut,
+				{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+				{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+				horizontal ? (negate ? -100 : 100) : 0,
+				horizontal ? 0 : negate ? -100 : 100,
+			);
+			drag(
+				resizeHandle,
+				sut,
+				{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+				{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+				horizontal ? (negate ? 100 : -100) : 0,
+				horizontal ? 0 : negate ? 100 : -100,
+			);
+
+			// assert
+			const style = window.getComputedStyle(sut);
+
+			if (testCase.widthHeightSpecified) {
+				expect(size(style)).toBe("100px");
+			} else {
+				expect(edge(style)).toBe("100px");
+			}
+		});
 	});
 };
