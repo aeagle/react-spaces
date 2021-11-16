@@ -1,6 +1,6 @@
 import { SyntheticEvent } from "react";
-import { ISpaceDefinition, ResizeType, ISpaceStore, OnResizeEnd, EndEvent, MoveEvent } from "./core-types";
-import { throttle } from "./core-utils";
+import { ISpaceDefinition, ResizeType, ISpaceStore, OnResizeEnd, EndEvent, MoveEvent, Type } from "./core-types";
+import { coalesce, throttle } from "./core-utils";
 
 const RESIZE_THROTTLE = 0;
 
@@ -37,23 +37,28 @@ function createAdjuster(resizeType: ResizeType, space: ISpaceDefinition, origina
 	const offset1 = dimensionToAdjust.resized;
 	const offset2 = candidateOppositeDimensionToAdjust.resized;
 
-	// const rect = space.element.getBoundingClientRect();
-	// const size = isHorizontal(resizeType) ? rect.width : rect.height;
-	// const minimumAdjust = coalesce(space.minimumSize, 20)! - size + 0;
-	// const maximumAdjust = space.maximumSize ? space.maximumSize - size + 0 : undefined;
+	const rect = space.element.getBoundingClientRect();
+	const size = isHorizontal(resizeType) ? rect.width : rect.height;
+	const minimumAdjust = coalesce(space.minimumSize, 20)! - size + 0;
+	const maximumAdjust = space.maximumSize ? space.maximumSize - size + 0 : undefined;
 
 	return (currentX: number, currentY: number) => {
-		const adjustment = (isHorizontal(resizeType) ? originalX : originalY) - (isHorizontal(resizeType) ? currentX : currentY);
+		let adjustment = (isHorizontal(resizeType) ? originalX : originalY) - (isHorizontal(resizeType) ? currentX : currentY);
+		let dimensionResized = negater(adjustment);
 
-		// if (adjustment < minimumAdjust) {
-		// 	adjustment = minimumAdjust;
-		// } else {
-		// 	if (typeof maximumAdjust === "number") {
-		// 		if (adjustment > maximumAdjust) {
-		// 			adjustment = maximumAdjust;
-		// 		}
-		// 	}
-		// }
+		if (space.type !== Type.Positioned) {
+			dimensionResized = Math.max(negater(adjustment), minimumAdjust);
+
+			if (dimensionResized < minimumAdjust) {
+				dimensionResized = minimumAdjust;
+			}
+
+			if (typeof maximumAdjust === "number") {
+				if (dimensionResized > maximumAdjust) {
+					dimensionResized = maximumAdjust;
+				}
+			}
+		}
 
 		if (dimensionToAdjust.size !== undefined) {
 			dimensionToAdjust.resized = negater(-adjustment) + offset1;
@@ -61,7 +66,7 @@ function createAdjuster(resizeType: ResizeType, space: ISpaceDefinition, origina
 				candidateOppositeDimensionToAdjust.resized = negater(adjustment) + offset2;
 			}
 		} else {
-			candidateOppositeDimensionToAdjust.resized = negater(adjustment) + offset2;
+			candidateOppositeDimensionToAdjust.resized = dimensionResized + offset2;
 		}
 	};
 }
