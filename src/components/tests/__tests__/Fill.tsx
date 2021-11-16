@@ -4,7 +4,7 @@ import { Fill } from "../../Fill";
 import { Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable } from "../../Anchored";
 import "@testing-library/jest-dom/extend-expect";
 import { ViewPort } from "../../ViewPort";
-import { commonPropsTests } from "../Common";
+import { commonPropsTests, fixUp } from "../Common";
 
 afterEach(cleanup);
 
@@ -197,7 +197,8 @@ test("Fill with LeftResizable has correct styles", async () => {
 			<Fill id="test" />
 		</ViewPort>,
 	);
-	const sut = container.querySelector("#test")!;
+
+	const sut = fixUp(container.querySelector("#test")!);
 	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");
@@ -219,7 +220,7 @@ test("Fill with stacked LeftResizable has correct styles", async () => {
 			<Fill id="test" />
 		</ViewPort>,
 	);
-	const sut = container.querySelector("#test")!;
+	const sut = fixUp(container.querySelector("#test")!);
 	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");
@@ -240,7 +241,7 @@ test("Fill with TopResizable has correct styles", async () => {
 			<Fill id="test" />
 		</ViewPort>,
 	);
-	const sut = container.querySelector("#test")!;
+	const sut = fixUp(container.querySelector("#test")!);
 	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");
@@ -262,7 +263,7 @@ test("Fill with stacked TopResizable has correct styles", async () => {
 			<Fill id="test" />
 		</ViewPort>,
 	);
-	const sut = container.querySelector("#test")!;
+	const sut = fixUp(container.querySelector("#test")!);
 	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");
@@ -283,7 +284,7 @@ test("Fill with RightResizable has correct styles", async () => {
 			<Fill id="test" />
 		</ViewPort>,
 	);
-	const sut = container.querySelector("#test")!;
+	const sut = fixUp(container.querySelector("#test")!);
 	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");
@@ -305,7 +306,7 @@ test("Fill with stacked RightResizable has correct styles", async () => {
 			<Fill id="test" />
 		</ViewPort>,
 	);
-	const sut = container.querySelector("#test")!;
+	const sut = fixUp(container.querySelector("#test")!);
 	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");
@@ -326,7 +327,7 @@ test("Fill with BottomResizable has correct styles", async () => {
 			<Fill id="test" />
 		</ViewPort>,
 	);
-	const sut = container.querySelector("#test")!;
+	const sut = fixUp(container.querySelector("#test")!);
 	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");
@@ -348,7 +349,7 @@ test("Fill with stacked BottomResizable has correct styles", async () => {
 			<Fill id="test" />
 		</ViewPort>,
 	);
-	const sut = container.querySelector("#test")!;
+	const sut = fixUp(container.querySelector("#test")!);
 	const style = window.getComputedStyle(sut);
 
 	expect(style.display).toBe("block");

@@ -8,6 +8,22 @@ const mutateComponent = (component: React.ReactNode, newProps: Object) => {
 	return React.cloneElement(component as React.DetailedReactHTMLElement<any, HTMLElement>, newProps);
 };
 
+export const fixUp = (sut: HTMLElement) => {
+	// This is annoying. A bug in JSDOM means that getComputedStyle() on test elements does
+	// not correctly return the applied styles when a dynamically added style tag is added to
+	// the document.head. It doesn't happen in all cases. Quick fix for now is take the style
+	// from the doc head and apply directly to the test element
+	// Existing issue raised on JSDOM repo - https://github.com/jsdom/jsdom/issues/2986
+	const test = document.documentElement.querySelector(`#style_${sut.id}`)!;
+	const style = test.innerHTML
+		.replace(`#${sut.id} { `, "")
+		.split("#")[0]
+		.replace(" }", "");
+	sut.setAttribute("style", style);
+
+	return sut;
+};
+
 export const commonPropsTests = (name: string, component: React.ReactNode, expectedStyle: Partial<CSSStyleDeclaration>) => {
 	test(`${name} default has correct styles`, async () => {
 		// arrange, act
@@ -136,8 +152,8 @@ export const commonAnchorTests = (
 				{mutateComponent(component, { id: "test1", size: 100, order: 1 })}
 			</ViewPort>,
 		);
-		const sut = container.querySelector("#test")!;
-		const sut1 = container.querySelector("#test1")!;
+		const sut = fixUp(container.querySelector("#test")!);
+		const sut1 = fixUp(container.querySelector("#test1")!);
 
 		// assert
 		const style = window.getComputedStyle(sut);
@@ -173,8 +189,8 @@ export const commonAnchorTests = (
 				{mutateComponent(component, { id: "test", size: 50, order: 0 })}
 			</ViewPort>,
 		);
-		const sut = container.querySelector("#test")!;
-		const sut1 = container.querySelector("#test1")!;
+		const sut = fixUp(container.querySelector("#test")!);
+		const sut1 = fixUp(container.querySelector("#test1")!);
 
 		// assert
 		const style = window.getComputedStyle(sut);
