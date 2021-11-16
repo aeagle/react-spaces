@@ -74,7 +74,7 @@ export const StandardProps = () => (
 		/>
 		<Prop
 			name="centerContent"
-			type="CenterType.Vertical ('vertical'), CenterType.HorizontalVertical ('horizontalVertical')"
+			type="CenterType.Vertical | CenterType.HorizontalVertical | 'vertical' | 'horizontalVertical'"
 			description="Apply centering to children."
 		/>
 		<Prop name="className" type="string" description="A class name to apply to the space element." />
@@ -143,7 +143,7 @@ export const ResizableProps = () => (
 		/>
 		<Prop
 			name="handlePlacement"
-			type="ResizeHandlePlacement.OverlayInside ('overlay-inside'), ResizeHandlePlacement.Inside ('inside'), ResizeHandlePlacement.OverlayBoundary ('overlay-boundary')"
+			type="ResizeHandlePlacement.OverlayInside | 'overlay-inside' | ResizeHandlePlacement.Inside | 'inside' | ResizeHandlePlacement.OverlayBoundary | 'overlay-boundary'"
 			default="overlay-inside"
 			description="Determines method of placement of the resize handle. By default the handle is placed overlays content inside the space ('overlay'). Other options are to take up space within the space ('inside') or to be overlayed in the middle of the boundary of the space and neighbouring spaces ('overlay-boundary')"
 		/>
@@ -156,7 +156,7 @@ export const ResizableProps = () => (
 		/>
 		<Prop
 			name="onResizeEnd"
-			type="(newSize: number, newRect: DOMRect) => void"
+			type="(newSize: number, newRect: DOMRect, resizeType: ResizeType | 'resize-left' | 'resize-top' | 'resize-right' | 'resize-bottom') => void"
 			description="Triggered when a resize ends. The final size in pixels of the space in after the resize is passed as the first parameter."
 		/>
 	</>
