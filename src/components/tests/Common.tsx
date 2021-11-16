@@ -288,6 +288,48 @@ export const commonResizableTests = (
 		const style = window.getComputedStyle(sut);
 		expect(size(style)).toBe("150px");
 	});
+
+	test(`${name} resize with maximum size constraint has correct styles`, async () => {
+		// arrange
+		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", size: 50, maximumSize: 100 })}</ViewPort>);
+		const sut = container.querySelector("#test")!;
+		const resizeHandle = container.querySelector(".spaces-resize-handle")!;
+
+		// act (resize 100px)
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			horizontal ? (negate ? -100 : 100) : 0,
+			horizontal ? 0 : negate ? -100 : 100,
+		);
+
+		// assert
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("calc(50px + 50px)"); // only 50px resized
+	});
+
+	test(`${name} resize with minimum size constraint has correct styles`, async () => {
+		// arrange
+		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", size: 150, minimumSize: 100 })}</ViewPort>);
+		const sut = container.querySelector("#test")!;
+		const resizeHandle = container.querySelector(".spaces-resize-handle")!;
+
+		// act (resize -100px)
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			horizontal ? (negate ? 100 : -100) : 0,
+			horizontal ? 0 : negate ? 100 : -100,
+		);
+
+		// assert
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("calc(150px + -50px)"); // only -50px resized
+	});
 };
 
 export const commonPositionedResizeTests = (
