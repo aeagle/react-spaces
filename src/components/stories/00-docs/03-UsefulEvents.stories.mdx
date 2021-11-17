@@ -9,18 +9,26 @@ import { CommonHeader } from "../Utils";
 
 ### onResizeStart
 
-Applies to `<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />`
+Triggered when a mouse/touch resize starts. The resize action can be cancelled by returning `false` from the event handler.
 
-Triggered when a mouse/touch resize starts. 
+#### Applies to
 
-The resize action can be cancelled by returning `false` from the event handler.
+`<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />`
+
+#### Parameters
+
+- **resizeType**: "resize-left" | "resize-top" | "resize-right" | "resize-bottom" - Type of resize operation started
+
+#### Example
 
 ```tsx
 const Example = () => {
 	const shouldResize = // logic to determine if resizing should be possible
 
 	return (
-		<LeftResizable onResizeStart={(resizeType: "resize-left" | "resize-top" | "resize-right" | "resize-bottom") => shouldResize}>
+		<LeftResizable 
+			onResizeStart={
+				(resizeType) => shouldResize}>
 		...
 		</LeftResizable>
 	)
@@ -29,9 +37,21 @@ const Example = () => {
 
 ### onResizeEnd
 
-Applies to `<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />`
-
 Triggered at the end of a resize action providing the new size (in pixels) of the space.
+
+#### Applies to
+
+`<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />`
+
+#### Parameters
+
+- **newSize**: number - New size of space. For `<LeftResizable />` and `<RightResizable />` 
+this will be the width, for `<TopResizable />` and `<BottomResizable />` this will be the height
+- **domRect**: DOMRect - Final dimensions of space
+- **resizeType**: "resize-left" | "resize-top" | "resize-right" | "resize-bottom" - Type of resize 
+operation started
+
+#### Example
 
 The likely scenario where you need to use this is to keep the size of the space controlled 
 in state:
@@ -42,7 +62,17 @@ const Example = () => {
 
 	return (
 		<ViewPort>
-			<LeftResizable onResizeEnd={(newSize: number, domRect: DOMRect, resizeType: "resize-left" | "resize-top" | "resize-right" | "resize-bottom") => setSize(newSize)}>
+			<LeftResizable 
+				onResizeEnd={
+					(
+						newSize: number,
+						domRect: DOMRect,
+						resizeType: 
+							"resize-left" | 
+							"resize-top" | 
+							"resize-right" | 
+							"resize-bottom"
+					) => setSize(newSize)}>
 			  ...
 			</LeftResizable>
 		</ViewPort>
@@ -52,9 +82,7 @@ const Example = () => {
 
 ### Element events
 
-Applies to `<Fill />` `<Left />` `<Top />` `<Right />` `<Bottom />` `<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />` `<Positioned />` `<Custom />`
-
-Space currently components support the follow HTML element events.
+Spaces allow you to bind to the following React component events.
 
 - `onClick`
 - `onDoubleClick`
@@ -65,3 +93,9 @@ Space currently components support the follow HTML element events.
 - `onTouchStart`
 - `onTouchMove`
 - `onTouchEnd`
+
+#### Applies to
+
+`<Fill />` `<Left />` `<Top />` `<Right />` `<Bottom />` `<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />` `<Positioned />` `<Custom />`
+
+

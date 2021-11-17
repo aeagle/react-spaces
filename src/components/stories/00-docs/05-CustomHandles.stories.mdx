@@ -17,17 +17,18 @@ This is an alternative to overriding the default css classes and will give you m
 Pass a function to the `handleRender` prop that will be called for every resize handle on that component. 
 
 ```tsx
-// This example is literally what happens under the hood
 <BottomResizable 
     size="50%" 
     handleRender={(props: IResizeHandleProps) => <div {...props}></div>}>
 </BottomResizable>
 ```
 
-You can determine the position of the handle by accessing the `props.key` property. This will allow you to render different handles depending
-on where it should be positioned.
+You can determine the which type of handle is being rendered by accessing the `props.key` property. It will 
+contain values `left`, `top`, `right` or `bottom`. For example, you can render different handles for differently 
+positioned resize handles.
 
-It's also important that you pass following props to the **top level** element for your custom component, if you don't resizing will not work on mouse drag:
+It's also important that you pass following props to the **top level** element for your custom component, if 
+you don't resizing will not work on mouse drag:
 
 ```tsx
 onMouseDown: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;

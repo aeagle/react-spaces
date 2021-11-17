@@ -21,6 +21,7 @@ Example of a custom resize handle that renders an up arrow for bottom or top res
                 size="50%" 
                 onResizeStart={action('onResizeStart')} 
                 onResizeEnd={action('onResizeEnd')}
+                trackSize
                 handleRender={(props) => 
                     ["top", "bottom"].includes(props.key) && <div {...props} style={{display: "flex", justifyContent: "center"}}>
                         <div style={{position: "absolute", transform: "translateY(-50%)"}}>

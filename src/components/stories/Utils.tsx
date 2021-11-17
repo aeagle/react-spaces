@@ -1,5 +1,6 @@
 import * as React from "react";
 import { CSSProperties } from "react";
+import { useCurrentSpace } from "../../core-react";
 import { Info, Fixed, ViewPort, Top, Fill, Left, LeftResizable, Right, BottomResizable, Centered, Layer, TopResizable, RightResizable } from "..";
 import { CenterType } from "../../core-types";
 import "./Utils.scss";
@@ -95,13 +96,19 @@ export const StandardProps = () => (
 			name="trackSize"
 			type="boolean"
 			default="false"
-			description="Tells the space to report it's size when it changes size to the &lt;Info /&gt; component. With this turned off the space will only report the initial size."
+			description="Tells the space to report it's size when it changes size to the &lt;useCurrentSpace() /&gt; hook. With this turned off the space will only report the initial size."
 		/>
 		<Prop
 			name="zIndex"
 			type="number"
 			default="0"
 			description="A number representing which layer the space sits within. If not specified the space is place in layer 0. Higher numbers appear in front of lower numbers. This is intended to be an alternative to using &lt;Layer /&gt; as a wrapper and preferable for spaces moving between different layers to avoid remounting of child components."
+		/>
+		<Prop
+			name="allowOverflow"
+			type="boolean"
+			default="false"
+			description="When true, allows content within a space to exceed the boundary of the space"
 		/>
 		<Prop name="onClick" type="(event) => void" description="onClick handler" />
 		<Prop name="onDoubleClick" type="(event) => void" description="onDoubleClick handler" />
@@ -134,10 +141,12 @@ export const ResizableProps = () => (
 				<>
 					An optional handle size that can be used to make the handle area bigger for touches. This extends outside the dimensions of the
 					resize handle.{" "}
-					<strong>
-						NOTE: You should ensure that you try not to place clickable elements underneath this extended handle area as the handle area
-						will block interaction with that element.
-					</strong>
+					<p>
+						<strong>
+							NOTE: You should ensure that you try not to place clickable elements underneath this extended handle area as the handle
+							area will block interaction with that element.
+						</strong>
+					</p>
 				</>
 			}
 		/>
@@ -147,12 +156,44 @@ export const ResizableProps = () => (
 			default="overlay-inside"
 			description="Determines method of placement of the resize handle. By default the handle is placed overlays content inside the space ('overlay'). Other options are to take up space within the space ('inside') or to be overlayed in the middle of the boundary of the space and neighbouring spaces ('overlay-boundary')"
 		/>
+		<Prop
+			name="handleRender"
+			type="(props: IResizeHandleProps) => ReactNode"
+			description={
+				<>
+					Provides a custom component to use for rendering handles.
+					<p>
+						Properties provided should be passed directly through to the custom component to allow it to behave like a resize handle, i.e.
+						handleRender={"{"}(props) {"->"} &lt;MyCustomHandle {"{"}...props{"}"} /&gt;{"}"}
+					</p>
+					<p>
+						<small>
+							<code>
+								IResizeHandleProps {"{"}
+								<div style={{ marginLeft: 10 }}>
+									id: string;
+									<br />
+									key: "left" | "top" | "right" | "bottom";
+									<br />
+									className: string;
+									<br />
+									onMouseDown: (e: React.MouseEvent{"<"}HTMLElement, MouseEvent{">"}) {"->"} void;
+									<br />
+									onTouchStart: (e: React.TouchEvent{"<"}HTMLElement, TouchEvent{">"}) {"->"} void;
+								</div>
+								{"}"}
+							</code>
+						</small>
+					</p>
+				</>
+			}
+		/>
 		<Prop name="minimumSize" type="number" description="Constrains resizing of the space to a minimum size." />
 		<Prop name="maximumSize" type="number" description="Constrains resizing of the space to a maximum size." />
 		<Prop
 			name="onResizeStart"
 			type="() => boolean | void"
-			description="Triggered when a resize starts. Returning false from the event handler cancels the resize."
+			description="{Triggered when a resize starts. Returning false from the event handler cancels the resize."
 		/>
 		<Prop
 			name="onResizeEnd"
@@ -346,25 +387,27 @@ export const blue: CSSProperties = { backgroundColor: "rgb(224, 238, 238, 0.7)" 
 export const red: CSSProperties = { backgroundColor: "rgb(238, 224, 224, 0.7)" };
 export const green: CSSProperties = { backgroundColor: "rgb(224, 238, 224, 0.7)" };
 
-export const description = (props: string, additional?: React.ReactNode) => (
-	<Info>
-		{(info) => (
-			<Centered>
-				<span className="description">
-					<strong>{props}</strong>
-					<br />
-					{info && (
-						<>
-							{info.width} x {info.height}
-						</>
-					)}
-				</span>
-				<br />
-				{additional}
-			</Centered>
-		)}
-	</Info>
-);
+const DescriptionComponent = (props: { text: string }) => {
+	const spaceInfo = useCurrentSpace();
+
+	return (
+		<span className="description">
+			<strong>{props.text}</strong>
+			<br />
+			{spaceInfo.size.width} x {spaceInfo.size.height}
+		</span>
+	);
+};
+
+export const description = (props: string, additional?: React.ReactNode) => {
+	return (
+		<Centered>
+			<DescriptionComponent text={props} />
+			<br />
+			{additional}
+		</Centered>
+	);
+};
 
 export const lorem = (
 	<div style={{ padding: 10, fontSize: 14, lineHeight: 1.5 }}>

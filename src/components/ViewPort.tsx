@@ -2,9 +2,9 @@ import { Type, SizeUnit } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 import * as PropTypes from "prop-types";
-import { commonProps, IReactSpaceProps } from "../core-react";
+import { commonProps, IReactSpaceCommonProps } from "../core-react";
 
-interface IViewPortProps extends IReactSpaceProps {
+interface IViewPortProps extends IReactSpaceCommonProps {
 	left?: SizeUnit;
 	right?: SizeUnit;
 	top?: SizeUnit;

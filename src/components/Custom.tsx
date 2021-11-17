@@ -1,10 +1,16 @@
-import { Type, SizeUnit, IPositionalProps, AnchorType, ResizeType, ResizeHandlePlacement } from "../core-types";
+import { Type, SizeUnit, IPositionalProps, AnchorType, ResizeType } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 import * as PropTypes from "prop-types";
-import { commonProps, IReactSpaceProps } from "../core-react";
+import { IReactSpaceCommonProps } from "../core-react";
+import { anchoredProps, IAnchorProps } from "./Anchored";
 
-interface ICustomProps extends IReactSpaceProps {
+type ICustomProps = Omit<IReactSpaceCommonProps & IAnchorProps, "size"> & {
+	// Anchored
+	anchor?: AnchorType;
+	anchorSize?: SizeUnit;
+
+	// Positioned
 	left?: SizeUnit | undefined;
 	top?: SizeUnit | undefined;
 	right?: SizeUnit | undefined;
@@ -12,18 +18,25 @@ interface ICustomProps extends IReactSpaceProps {
 	width?: SizeUnit | undefined;
 	height?: SizeUnit | undefined;
 	isPositioned?: boolean;
-	anchor?: AnchorType;
-	anchorSize?: SizeUnit;
-	resizable?: boolean;
 	resizeTypes?: ResizeType[];
-	handleSize?: number;
-	handlePlacement?: ResizeHandlePlacement;
-	overlayHandle?: boolean;
-	minimumSize?: number;
-	maximumSize?: number;
-	onResizeStart?: () => void | boolean;
-	onResizeEnd?: (newSize: SizeUnit) => void;
-}
+};
+
+const customProps = {
+	...anchoredProps,
+	...{
+		anchor: PropTypes.oneOf([AnchorType.Left, AnchorType.Top, AnchorType.Right, AnchorType.Bottom]),
+		anchorSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+		left: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		right: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		isPositioned: PropTypes.bool,
+		resizeTypes: PropTypes.any,
+	},
+};
 
 export const Custom: React.FC<ICustomProps> = ({
 	children,
@@ -87,23 +100,4 @@ export const Custom: React.FC<ICustomProps> = ({
 	);
 };
 
-Custom.propTypes = {
-	...commonProps,
-	...{
-		left: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		right: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		isPositioned: PropTypes.bool,
-		anchor: PropTypes.oneOf([AnchorType.Left, AnchorType.Top, AnchorType.Right, AnchorType.Bottom]),
-		anchorSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		resizable: PropTypes.bool,
-		handleSize: PropTypes.number,
-		minimumSize: PropTypes.number,
-		maximumSize: PropTypes.number,
-		onResizeStart: PropTypes.func,
-		onResizeEnd: PropTypes.func,
-	},
-};
+Custom.propTypes = customProps;

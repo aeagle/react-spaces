@@ -21,6 +21,7 @@ export const commonProps = {
 	scrollable: PropTypes.bool,
 	trackSize: PropTypes.bool,
 	allowOverflow: PropTypes.bool,
+	handleRender: PropTypes.func,
 	onClick: PropTypes.func,
 	onMouseDown: PropTypes.func,
 	onMouseEnter: PropTypes.func,
@@ -47,13 +48,14 @@ export interface IReactEvents {
 	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
 }
 
-export interface IReactSpaceProps extends ICommonProps, IReactEvents {
+export interface IReactSpaceCommonProps extends ICommonProps, IReactEvents {
 	style?: React.CSSProperties;
 	as?: keyof React.ReactDOM | React.ComponentType<ICommonProps>;
-	handleRender?: (handleProps: IResizeHandleProps) => React.ReactNode;
 }
 
-export interface IReactSpaceInnerProps extends IReactSpaceProps, ISpaceProps, IReactEvents {}
+export interface IReactSpaceInnerProps extends IReactSpaceCommonProps, ISpaceProps, IReactEvents {
+	handleRender?: (handleProps: IResizeHandleProps) => React.ReactNode;
+}
 
 export interface IReactSpacesOptions {
 	debug?: boolean;
@@ -199,21 +201,26 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 export function useCurrentSpace() {
 	const store = currentStore;
 	const spaceId = React.useContext(ParentContext);
+
+	const space = spaceId ? store.getSpace(spaceId) : undefined;
+
 	const domRect = React.useContext(DOMRectContext);
 	const layer = React.useContext(LayerContext);
-	const space = spaceId ? store.getSpace(spaceId) : undefined;
+	const onMouseDrag = React.useCallback((e, onDragEnd) => (space ? store.startMouseDrag(space, e, onDragEnd) : null), [spaceId]);
+	const onTouchDrag = React.useCallback((e, onDragEnd) => (space ? store.startTouchDrag(space, e, onDragEnd) : null), [spaceId]);
+	const onForceUpdate = React.useCallback(() => (space ? store.updateStyles(space) : null), [spaceId]);
 
 	const defaults = { width: 0, height: 0, x: 0, y: 0 };
 	const size = {
-		...domRect,
 		...defaults,
+		...domRect,
 	};
 
 	return {
 		size: size,
 		layer: layer || 0,
-		startMouseDrag: (e, onDragEnd) => (space ? store.startMouseDrag(space, e, onDragEnd) : null),
-		startTouchDrag: (e, onDragEnd) => (space ? store.startTouchDrag(space, e, onDragEnd) : null),
-		forceUpdate: () => (space ? store.updateStyles(space) : null),
+		startMouseDrag: onMouseDrag,
+		startTouchDrag: onTouchDrag,
+		forceUpdate: onForceUpdate,
 	} as ISpaceContext;
 }
