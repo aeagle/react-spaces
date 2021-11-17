@@ -125,13 +125,30 @@ export const StandardProps = () => (
 export const AnchoredProps = () => (
 	<>
 		<PropsHeader>Anchored properties</PropsHeader>
-		<Prop name="size" type="string | number" description="Initial size of space specified as a percentage or in pixels." />
+		<Prop
+			name="resizable"
+			type="boolean"
+			default="false"
+			description={
+				<>
+					Determines if space is resizable.{" "}
+					<p>
+						<strong>
+							Note this is only available on Left, Top, Right and Bottom spaces to be able to switch non-resizable anchored spaces to
+							resizable spaces without reparenting child components. On LeftResizable, TopResizable, RightResizable and BottomResizable
+							this is inferred by default as true.
+						</strong>
+					</p>
+				</>
+			}
+		/>
 	</>
 );
 
 export const ResizableProps = () => (
 	<>
 		<PropsHeader>Resizable properties</PropsHeader>
+		<Prop name="size" type="string | number" description="Initial size of space specified as a percentage or in pixels." />
 		<Prop name="handleSize" type="number" default="5" description="Size of the resize handle in pixels." />
 		<Prop
 			name="touchHandleSize"

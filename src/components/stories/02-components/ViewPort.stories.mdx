@@ -2,7 +2,7 @@ import { Meta, Story, Canvas, Props } from "@storybook/addon-docs";
 import { withKnobs } from "@storybook/addon-knobs";
 import { ViewPort, LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../";
 import { red, green, blue, description } from "../Utils";
-import { CommonHeader, PropsTable, PropsHeader, Prop } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
 
 <CommonHeader />
 
@@ -74,8 +74,6 @@ window elements that may be on the page.
 		<Prop name="left" type="number | string" description="Left offset from viewport edge" />
 		<Prop name="right" type="number | string" description="Right offset from viewport edge" />
 		<Prop name="top" type="number | string" description="Top offset from viewport edge" />
-		<PropsHeader>Standard properties</PropsHeader>
-		<Prop name="className" type="string" description="A class name to apply to the space element." />
-		<Prop name="style" type="CSSProperties" description="CSS properties" />
+		<StandardProps />
 	</PropsTable>
 </Story>

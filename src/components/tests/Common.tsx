@@ -5,10 +5,17 @@ import { ViewPort } from "../ViewPort";
 import { drag } from "./TestUtils";
 import { ResizeType } from "../../core-types";
 import { Positioned } from "../Positioned";
+import { IReactSpaceCommonProps } from "../../core-react";
 
 export const mutateComponent = (component: React.ReactNode, newProps: Object) => {
 	return React.cloneElement(component as React.DetailedReactHTMLElement<any, HTMLElement>, newProps);
 };
+
+export function hasProps(name: string, component: React.FC<IReactSpaceCommonProps>, props: string[]) {
+	props.forEach((prop) => {
+		expect(prop in component.propTypes!, `${prop} missing`).toBe(true);
+	});
+}
 
 export const fixUp = (sut: HTMLElement) => {
 	// This is annoying. A bug in JSDOM means that getComputedStyle() on test elements does
@@ -25,6 +32,54 @@ export const fixUp = (sut: HTMLElement) => {
 
 	return sut;
 };
+
+export function commonPropTypesTest(name: string, component: React.FC<IReactSpaceCommonProps>) {
+	test(`${name} has correct common prop types`, async () => {
+		hasProps(name, component, [
+			"as",
+			"centerContent",
+			"className",
+			"id",
+			"scrollable",
+			"trackSize",
+			"zIndex",
+			"allowOverflow",
+			"onClick",
+			"onDoubleClick",
+			"onMouseDown",
+			"onMouseEnter",
+			"onMouseLeave",
+			"onMouseMove",
+			"onTouchStart",
+			"onTouchMove",
+			"onTouchEnd",
+		]);
+	});
+}
+
+export function resizablePropTypesTest(name: string, component: React.FC<IReactSpaceCommonProps>) {
+	commonPropTypesTest(name, component);
+	test(`${name} has correct resizable prop types`, async () => {
+		hasProps(name, component, [
+			"size",
+			"handleSize",
+			"touchHandleSize",
+			"handlePlacement",
+			"handleRender",
+			"minimumSize",
+			"maximumSize",
+			"onResizeStart",
+			"onResizeEnd",
+		]);
+	});
+}
+
+export function anchorPropTypesTest(name: string, component: React.FC<IReactSpaceCommonProps>) {
+	resizablePropTypesTest(name, component);
+	test(`${name} has correct anchor prop types`, async () => {
+		hasProps(name, component, ["resizable"]);
+	});
+}
 
 export const commonPropsTests = (name: string, component: React.ReactNode, expectedStyle: Partial<CSSStyleDeclaration>) => {
 	test(`${name} default has correct styles`, async () => {

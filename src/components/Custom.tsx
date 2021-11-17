@@ -6,6 +6,8 @@ import { IReactSpaceCommonProps } from "../core-react";
 import { anchoredProps, IAnchorProps } from "./Anchored";
 
 type ICustomProps = Omit<IReactSpaceCommonProps & IAnchorProps, "size"> & {
+	type?: Type;
+
 	// Anchored
 	anchor?: AnchorType;
 	anchorSize?: SizeUnit;
@@ -17,13 +19,14 @@ type ICustomProps = Omit<IReactSpaceCommonProps & IAnchorProps, "size"> & {
 	bottom?: SizeUnit | undefined;
 	width?: SizeUnit | undefined;
 	height?: SizeUnit | undefined;
-	isPositioned?: boolean;
 	resizeTypes?: ResizeType[];
 };
 
 const customProps = {
 	...anchoredProps,
 	...{
+		type: PropTypes.oneOf([Type.Positioned, Type.Fill, Type.Anchored]),
+
 		anchor: PropTypes.oneOf([AnchorType.Left, AnchorType.Top, AnchorType.Right, AnchorType.Bottom]),
 		anchorSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
@@ -33,13 +36,13 @@ const customProps = {
 		bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		isPositioned: PropTypes.bool,
-		resizeTypes: PropTypes.any,
+		resizeTypes: PropTypes.array,
 	},
 };
 
 export const Custom: React.FC<ICustomProps> = ({
 	children,
+	type,
 	left,
 	top,
 	right,
@@ -48,15 +51,27 @@ export const Custom: React.FC<ICustomProps> = ({
 	height,
 	anchorSize,
 	anchor,
-	isPositioned,
 	resizable,
 	resizeTypes,
 	...props
 }) => {
 	let position: IPositionalProps;
-	let type = Type.Positioned;
+	type = type || Type.Fill;
 
-	if (!isPositioned) {
+	if (type === Type.Positioned) {
+		position = {
+			left: left,
+			top: top,
+			right: right,
+			bottom: bottom,
+			width: width,
+			height: height,
+			leftResizable: resizeTypes && resizeTypes.includes(ResizeType.Left),
+			topResizable: resizeTypes && resizeTypes.includes(ResizeType.Top),
+			rightResizable: resizeTypes && resizeTypes.includes(ResizeType.Right),
+			bottomResizable: resizeTypes && resizeTypes.includes(ResizeType.Bottom),
+		};
+	} else {
 		if (anchor === AnchorType.Left) {
 			position = { left: 0, top: 0, bottom: 0, width: anchorSize, rightResizable: resizable };
 			type = Type.Anchored;
@@ -78,19 +93,6 @@ export const Custom: React.FC<ICustomProps> = ({
 			};
 			type = Type.Fill;
 		}
-	} else {
-		position = {
-			left: left,
-			top: top,
-			right: right,
-			bottom: bottom,
-			width: width,
-			height: height,
-			leftResizable: resizeTypes && resizeTypes.includes(ResizeType.Left),
-			topResizable: resizeTypes && resizeTypes.includes(ResizeType.Top),
-			rightResizable: resizeTypes && resizeTypes.includes(ResizeType.Right),
-			bottomResizable: resizeTypes && resizeTypes.includes(ResizeType.Bottom),
-		};
 	}
 
 	return (

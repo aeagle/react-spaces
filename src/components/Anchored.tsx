@@ -8,6 +8,7 @@ export interface IResizableProps extends IReactSpaceCommonProps {
 	size: SizeUnit;
 	order?: number;
 	handleSize?: number;
+	touchHandleSize?: number;
 	handlePlacement?: ResizeHandlePlacement;
 	handleRender?: (handleProps: IResizeHandleProps) => React.ReactNode;
 	minimumSize?: number;
@@ -22,6 +23,7 @@ export const resizableProps = {
 		size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 		order: PropTypes.number,
 		handleSize: PropTypes.number,
+		touchHandleSize: PropTypes.number,
 		handlePlacement: PropTypes.oneOf([ResizeHandlePlacement.Inside, ResizeHandlePlacement.OverlayBoundary, ResizeHandlePlacement.OverlayInside]),
 		handleRender: PropTypes.func,
 		minimumSize: PropTypes.number,

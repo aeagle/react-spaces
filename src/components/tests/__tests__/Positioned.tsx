@@ -2,7 +2,7 @@ import * as React from "react";
 import { cleanup, render } from "@testing-library/react";
 import { Positioned } from "../../Positioned";
 import "@testing-library/jest-dom/extend-expect";
-import { commonPositionedResizeTests, commonPropsTests, mutateComponent } from "../Common";
+import { commonPositionedResizeTests, commonPropsTests, commonPropTypesTest, hasProps, mutateComponent } from "../Common";
 import { useCurrentSpace } from "../../../core-react";
 import { ViewPort } from "../../ViewPort";
 import { drag } from "../TestUtils";
@@ -179,4 +179,10 @@ const testProps = { id: "test" };
 			expect(style.bottom).toBe("calc(100px + 0px)");
 		}
 	});
+});
+
+commonPropTypesTest("Positioned", Positioned);
+
+test(`Positioned has correct prop types`, async () => {
+	hasProps("Positioned", Positioned, ["left", "top", "right", "bottom", "width", "height", "resizable"]);
 });

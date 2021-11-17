@@ -23,6 +23,7 @@ export const commonProps = {
 	allowOverflow: PropTypes.bool,
 	handleRender: PropTypes.func,
 	onClick: PropTypes.func,
+	onDoubleClick: PropTypes.func,
 	onMouseDown: PropTypes.func,
 	onMouseEnter: PropTypes.func,
 	onMouseLeave: PropTypes.func,

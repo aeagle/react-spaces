@@ -4,7 +4,7 @@ import { Fill } from "../../Fill";
 import { Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable } from "../../Anchored";
 import "@testing-library/jest-dom/extend-expect";
 import { ViewPort } from "../../ViewPort";
-import { commonPropsTests, fixUp } from "../Common";
+import { commonPropsTests, commonPropTypesTest, fixUp } from "../Common";
 
 afterEach(cleanup);
 
@@ -362,3 +362,5 @@ test("Fill with stacked BottomResizable has correct styles", async () => {
 	expect(style.height).toBe("");
 	expect(sut.nodeName).toBe("DIV");
 });
+
+commonPropTypesTest("Fill", Fill);
