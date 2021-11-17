@@ -5,6 +5,9 @@ interface ISpaceInfoProps {
 	children: (info: DOMRect) => JSX.Element;
 }
 
+/**
+ * @deprecated use useCurrentSpace() hook instead
+ */
 export const Info: React.FC<ISpaceInfoProps> = (props) => {
 	const domRect = React.useContext(DOMRectContext);
 

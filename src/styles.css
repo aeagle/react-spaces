@@ -17,16 +17,6 @@
 	clear: both;
 }
 
-.spaces-fixedsize-layout {
-	overflow: hidden;
-	position: relative;
-}
-
-.spaces-fullpage-layout {
-	position: fixed;
-	overflow: hidden;
-}
-
 .spaces-resize-handle {
 	position: absolute;
 	z-index: 9999;
@@ -131,8 +121,7 @@
 	box-sizing: border-box;
 }
 
-.spaces-space.scrollable .spaces-space-inner,
-.spaces-space.scrollable-a {
+.spaces-space.scrollable .spaces-space-inner {
 	overflow: auto;
 	touch-action: auto;
 }

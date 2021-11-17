@@ -1,0 +1,28 @@
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs";
+import { withKnobs } from "@storybook/addon-knobs";
+import { action } from '@storybook/addon-actions';
+import { ViewPort, Centered, Positioned } from "../../";
+import { ResizeType } from "../../../core-types";
+import { useCurrentSpace } from "../../../core-react";
+import { green, description } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="Components/Positioned" component={Positioned} />
+
+### Properties
+
+<Story name="Properties">
+	<PropsTable>
+		<PropsHeader>Positioned properties</PropsHeader>
+		<Prop name="bottom" type="number | string" description="Bottom offset from edge of parent space. (optional)" />
+		<Prop name="left" type="number | string" description="Left offset from edge of parent space." />
+		<Prop name="right" type="number | string" description="Right offset from edge of parent space. (optional)" />
+		<Prop name="top" type="number | string" description="Top offset from edge of parent space." />
+		<Prop name="width" type="number | string" description="Width of space (optional)" />
+		<Prop name="height" type="number | string" description="Height of space (optional)" />
+		<Prop name="resizable" type="(ResizeType | 'resize-left' | 'resize-top' | 'resize-right' | 'resize-bottom')[]" description="Array of sides that are resizable" />
+		<StandardProps />
+	</PropsTable>
+</Story>
