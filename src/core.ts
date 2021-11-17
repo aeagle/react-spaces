@@ -1,12 +1,26 @@
-import { ISpaceDefinition, SizeUnit, AnchorType, Type, Orientation, ISpaceStore, ISpaceProps, CenterType, ResizeHandlePlacement } from "./core-types";
-import { EndEvent, MoveEvent, createResize } from "./core-resizing";
+import {
+	ISpaceDefinition,
+	SizeUnit,
+	AnchorType,
+	Type,
+	Orientation,
+	EndEvent,
+	MoveEvent,
+	ISpaceStore,
+	ISpaceProps,
+	CenterType,
+	ResizeHandlePlacement,
+} from "./core-types";
+import { createResize } from "./core-resizing";
 import { updateStyleDefinition, removeStyleDefinition, coalesce, adjustmentsEqual } from "./core-utils";
+import { createDrag } from "./core-dragging";
 
 const spaceDefaults: Partial<ISpaceDefinition> = {
 	id: "",
 	zIndex: 0,
 	scrollable: false,
 	resizing: false,
+	allowOverflow: false,
 	centerContent: "none",
 	dimension: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => "" },
 	handleSize: 5,
@@ -216,11 +230,12 @@ export function createStore(): ISpaceStore {
 				handleSize,
 				touchHandleSize,
 				handlePlacement,
+				allowOverflow,
 			} = props;
-			const canResizeLeft = (position && position.rightResizable) || false;
-			const canResizeRight = (position && position.leftResizable) || false;
-			const canResizeTop = (position && position.bottomResizable) || false;
-			const canResizeBottom = (position && position.topResizable) || false;
+			const canResizeLeft = (position && position.leftResizable) || false;
+			const canResizeRight = (position && position.rightResizable) || false;
+			const canResizeTop = (position && position.topResizable) || false;
+			const canResizeBottom = (position && position.bottomResizable) || false;
 
 			let changed = false;
 
@@ -251,36 +266,42 @@ export function createStore(): ISpaceStore {
 			if (space.left.size !== (position && position.left)) {
 				space.left.size = position && position.left;
 				space.left.resized = 0;
+				space.left.adjusted = [];
 				changed = true;
 			}
 
 			if (space.right.size !== (position && position.right)) {
 				space.right.size = position && position.right;
 				space.right.resized = 0;
+				space.right.adjusted = [];
 				changed = true;
 			}
 
 			if (space.top.size !== (position && position.top)) {
 				space.top.size = position && position.top;
 				space.top.resized = 0;
+				space.top.adjusted = [];
 				changed = true;
 			}
 
 			if (space.bottom.size !== (position && position.bottom)) {
 				space.bottom.size = position && position.bottom;
 				space.bottom.resized = 0;
+				space.bottom.adjusted = [];
 				changed = true;
 			}
 
 			if (space.width.size !== (position && position.width)) {
 				space.width.size = position && position.width;
 				space.width.resized = 0;
+				space.width.adjusted = [];
 				changed = true;
 			}
 
 			if (space.height.size !== (position && position.height)) {
 				space.height.size = position && position.height;
 				space.height.resized = 0;
+				space.height.adjusted = [];
 				changed = true;
 			}
 
@@ -349,6 +370,11 @@ export function createStore(): ISpaceStore {
 				changed = true;
 			}
 
+			if (space.allowOverflow !== allowOverflow) {
+				space.allowOverflow = allowOverflow || spaceDefaults.allowOverflow!;
+				changed = true;
+			}
+
 			if (changed) {
 				if (space.parentId) {
 					const parentSpace = getSpace(space.parentId);
@@ -362,9 +388,12 @@ export function createStore(): ISpaceStore {
 		createSpace: () => ({} as ISpaceDefinition),
 		startMouseResize: () => null,
 		startTouchResize: () => null,
+		startMouseDrag: () => null,
+		startTouchDrag: () => null,
 	};
 
 	const resize = createResize(store);
+	const drag = createDrag(store);
 
 	store.createSpace = (parentId: string | undefined, props: ISpaceProps, update: () => void) => {
 		const { position, anchor, type, ...commonProps } = props;
@@ -461,18 +490,62 @@ export function createStore(): ISpaceStore {
 		return newSpace;
 	};
 
-	store.startMouseResize = (resizeType, space, size, event) => {
-		resize.startResize(resizeType, event, space, size, EndEvent.Mouse, MoveEvent.Mouse, (e) => ({
-			x: e.clientX,
-			y: e.clientY,
-		}));
+	store.startMouseResize = (resizeType, space, event, onResizeEnd) => {
+		resize.startResize(
+			event,
+			resizeType,
+			space,
+			EndEvent.Mouse,
+			MoveEvent.Mouse,
+			(e) => ({
+				x: e.clientX,
+				y: e.clientY,
+			}),
+			onResizeEnd,
+		);
 	};
 
-	store.startTouchResize = (resizeType, space, size, event) => {
-		resize.startResize(resizeType, event, space, size, EndEvent.Touch, MoveEvent.Touch, (e) => ({
-			x: e.touches[0].clientX,
-			y: e.touches[0].clientY,
-		}));
+	store.startTouchResize = (resizeType, space, event, onResizeEnd) => {
+		resize.startResize(
+			event,
+			resizeType,
+			space,
+			EndEvent.Touch,
+			MoveEvent.Touch,
+			(e) => ({
+				x: e.touches[0].clientX,
+				y: e.touches[0].clientY,
+			}),
+			onResizeEnd,
+		);
+	};
+
+	store.startMouseDrag = (space, event, onDragEnd) => {
+		drag.startDrag(
+			event,
+			space,
+			EndEvent.Mouse,
+			MoveEvent.Mouse,
+			(e) => ({
+				x: e.clientX,
+				y: e.clientY,
+			}),
+			onDragEnd,
+		);
+	};
+
+	store.startTouchDrag = (space, event, onDragEnd) => {
+		drag.startDrag(
+			event,
+			space,
+			EndEvent.Touch,
+			MoveEvent.Touch,
+			(e) => ({
+				x: e.touches[0].clientX,
+				y: e.touches[0].clientY,
+			}),
+			onDragEnd,
+		);
 	};
 
 	return store;

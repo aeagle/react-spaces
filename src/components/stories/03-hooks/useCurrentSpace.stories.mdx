@@ -1,0 +1,39 @@
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort, Bottom } from "../../";
+import { green, description, lorem } from "../Utils";
+import { CommonHeader, PropsTable, StandardProps, AnchoredProps } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="Hooks/useCurrentSpace" />
+
+## useCurrentSpace()
+
+Hook that gives information / events on closest parent space. For example:
+
+```jsx
+const InnerComponent = () => {
+	const space = useCurrentSpace(); // information on <Space.LeftResizable />
+
+	return <div>{$`width: ${space.size.width}, height: ${space.size.height}`}</div>
+}
+
+<Space.ViewPort>
+	<Space.LeftResizable size="20%">
+		<InnerComponent />
+	</Space.LeftResizable>
+</Space.ViewPort>
+
+```
+
+The hook currently returns the following information:
+
+- **size** - sizing information of the space from the DOM
+- **startMouseDrag** / **startTouchDrag** - a handler which can be attached to inner components to start drag behaviour on <Positioned /> spaces. i.e. could be used to implement a title bar in a dialog which can be used to drag the dialog.
+
+```jsx
+<button onMouseDown={space.startMouseDrag} onTouchStart={space.startTouchDrag}>
+	Drag handle
+</button>
+```

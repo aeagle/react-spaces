@@ -1,6 +1,8 @@
 import { Meta, Story, Canvas, Props } from "@storybook/addon-docs/blocks";
 import { withKnobs } from "@storybook/addon-knobs";
-import { ViewPort, Custom, AnchorType } from "../../";
+import { action } from '@storybook/addon-actions';
+import { ViewPort, Custom } from "../../";
+import { AnchorType } from "../../../core-types";
 import { green, description } from "../Utils";
 import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
 
@@ -88,7 +90,7 @@ intend to change the type of the space dynamically without causing remounting of
 <Canvas>
 	<Story name="Resizable left">
 		<ViewPort>
-			<Custom style={green} anchor={AnchorType.Left} anchorSize={200} resizable={true} trackSize={true}>
+			<Custom style={green} anchor={AnchorType.Left} anchorSize={200} resizable={true} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Custom resizable left")}
 			</Custom>
 		</ViewPort>
@@ -100,7 +102,7 @@ intend to change the type of the space dynamically without causing remounting of
 <Canvas>
 	<Story name="Resizable top">
 		<ViewPort>
-			<Custom style={green} anchor={AnchorType.Top} anchorSize={200} resizable={true} trackSize={true}>
+			<Custom style={green} anchor={AnchorType.Top} anchorSize={200} resizable={true} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Custom resizable top")}
 			</Custom>
 		</ViewPort>
@@ -112,7 +114,7 @@ intend to change the type of the space dynamically without causing remounting of
 <Canvas>
 	<Story name="Resizable right">
 		<ViewPort>
-			<Custom style={green} anchor={AnchorType.Right} anchorSize={200} resizable={true} trackSize={true}>
+			<Custom style={green} anchor={AnchorType.Right} anchorSize={200} resizable={true} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Custom resizable right")}
 			</Custom>
 		</ViewPort>
@@ -124,7 +126,7 @@ intend to change the type of the space dynamically without causing remounting of
 <Canvas>
 	<Story name="Resizable bottom">
 		<ViewPort>
-			<Custom style={green} anchor={AnchorType.Bottom} anchorSize={200} resizable={true} trackSize={true}>
+			<Custom style={green} anchor={AnchorType.Bottom} anchorSize={200} resizable={true} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Custom resizable bottom")}
 			</Custom>
 		</ViewPort>

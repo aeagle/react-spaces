@@ -3,9 +3,27 @@ import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { ViewPort } from "../ViewPort";
 import { drag } from "./TestUtils";
+import { ResizeType } from "../../core-types";
+import { Positioned } from "../Positioned";
 
-const mutateComponent = (component: React.ReactNode, newProps: Object) => {
+export const mutateComponent = (component: React.ReactNode, newProps: Object) => {
 	return React.cloneElement(component as React.DetailedReactHTMLElement<any, HTMLElement>, newProps);
+};
+
+export const fixUp = (sut: HTMLElement) => {
+	// This is annoying. A bug in JSDOM means that getComputedStyle() on test elements does
+	// not correctly return the applied styles when a dynamically added style tag is added to
+	// the document.head. It doesn't happen in all cases. Quick fix for now is take the style
+	// from the doc head and apply directly to the test element
+	// Existing issue raised on JSDOM repo - https://github.com/jsdom/jsdom/issues/2986
+	const test = document.documentElement.querySelector(`#style_${sut.id}`)!;
+	const style = test.innerHTML
+		.replace(`#${sut.id} { `, "")
+		.split("#")[0]
+		.replace(" }", "");
+	sut.setAttribute("style", style);
+
+	return sut;
 };
 
 export const commonPropsTests = (name: string, component: React.ReactNode, expectedStyle: Partial<CSSStyleDeclaration>) => {
@@ -21,6 +39,15 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 		Object.keys(expectedStyle).forEach((k) => {
 			expect(style[k], `Property ${k}`).toBe(expectedStyle[k]);
 		});
+	});
+
+	test(`${name} with id applied`, async () => {
+		// arrange, act
+		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test" })}</ViewPort>);
+
+		// assert
+		const sut = container.querySelector("#test")!;
+		expect(sut.id).toBe("test");
 	});
 
 	test(`${name} with class applied`, async () => {
@@ -127,16 +154,17 @@ export const commonAnchorTests = (
 				{mutateComponent(component, { id: "test1", size: 100, order: 1 })}
 			</ViewPort>,
 		);
-		const sut = container.querySelector("#test")!;
-		const sut1 = container.querySelector("#test1")!;
+		const sut = fixUp(container.querySelector("#test")!);
+		const sut1 = fixUp(container.querySelector("#test1")!);
 
 		// assert
 		const style = window.getComputedStyle(sut);
+		const style1 = window.getComputedStyle(sut1);
+
 		expect(size(style)).toBe("50px");
 		expect(edge(style)).toBe("0px");
 		expect(oppositeEdge(style)).toBe("");
 
-		const style1 = window.getComputedStyle(sut1);
 		expect(size(style1)).toBe("100px");
 		expect(edge(style1)).toBe("calc(0px + 50px)");
 		expect(oppositeEdge(style1)).toBe("");
@@ -163,8 +191,8 @@ export const commonAnchorTests = (
 				{mutateComponent(component, { id: "test", size: 50, order: 0 })}
 			</ViewPort>,
 		);
-		const sut = container.querySelector("#test")!;
-		const sut1 = container.querySelector("#test1")!;
+		const sut = fixUp(container.querySelector("#test")!);
+		const sut1 = fixUp(container.querySelector("#test1")!);
 
 		// assert
 		const style = window.getComputedStyle(sut);
@@ -259,5 +287,125 @@ export const commonResizableTests = (
 		// assert
 		const style = window.getComputedStyle(sut);
 		expect(size(style)).toBe("150px");
+	});
+
+	test(`${name} resize with maximum size constraint has correct styles`, async () => {
+		// arrange
+		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", size: 50, maximumSize: 100 })}</ViewPort>);
+		const sut = container.querySelector("#test")!;
+		const resizeHandle = container.querySelector(".spaces-resize-handle")!;
+
+		// act (resize 100px)
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			horizontal ? (negate ? -100 : 100) : 0,
+			horizontal ? 0 : negate ? -100 : 100,
+		);
+
+		// assert
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("calc(50px + 50px)"); // only 50px resized
+	});
+
+	test(`${name} resize with minimum size constraint has correct styles`, async () => {
+		// arrange
+		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", size: 150, minimumSize: 100 })}</ViewPort>);
+		const sut = container.querySelector("#test")!;
+		const resizeHandle = container.querySelector(".spaces-resize-handle")!;
+
+		// act (resize -100px)
+		drag(
+			resizeHandle,
+			sut,
+			{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+			{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+			horizontal ? (negate ? 100 : -100) : 0,
+			horizontal ? 0 : negate ? 100 : -100,
+		);
+
+		// assert
+		const style = window.getComputedStyle(sut);
+		expect(size(style)).toBe("calc(150px + -50px)"); // only -50px resized
+	});
+};
+
+export const commonPositionedResizeTests = (
+	name: string,
+	size: (style: CSSStyleDeclaration) => string | null,
+	edge: (style: CSSStyleDeclaration) => string | null,
+	oppositeEdge: (style: CSSStyleDeclaration) => string | null,
+	handle: string,
+	horizontal: boolean,
+	negate: boolean,
+) => {
+	const testProps = { id: "test", resizable: [ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right] };
+
+	[
+		{ name: "left/top/width/height", props: { left: 100, top: 100, width: 100, height: 100 }, widthHeightSpecified: true },
+		{ name: "left/top/right/bottom", props: { left: 100, top: 100, right: 100, bottom: 100 }, widthHeightSpecified: false },
+	].forEach((testCase) => {
+		test(`${name} (${testCase.name}) after resize has correct styles`, async () => {
+			// arrange
+			const { container } = render(<ViewPort>{mutateComponent(<Positioned />, { ...testProps, ...testCase.props })}</ViewPort>);
+
+			const resizeHandle = container.querySelector(`#test-${handle}`)!;
+			const sut = container.querySelector("#test")!;
+
+			// act
+			drag(
+				resizeHandle,
+				sut,
+				{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+				{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+				horizontal ? (negate ? -100 : 100) : 0,
+				horizontal ? 0 : negate ? -100 : 100,
+			);
+
+			// assert
+			const style = window.getComputedStyle(sut);
+
+			if (testCase.widthHeightSpecified) {
+				expect(size(style)).toBe("calc(100px + -100px)");
+			} else {
+				expect(edge(style)).toBe("calc(100px + 100px)");
+			}
+		});
+
+		test(`${name} (${testCase.name}) subsequent resize has correct styles`, async () => {
+			// arrange
+			const { container } = render(<ViewPort>{mutateComponent(<Positioned />, { ...testProps, ...testCase.props })}</ViewPort>);
+			const resizeHandle = container.querySelector(`#test-${handle}`)!;
+			const sut = container.querySelector("#test")!;
+
+			// act
+			drag(
+				resizeHandle,
+				sut,
+				{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+				{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+				horizontal ? (negate ? -100 : 100) : 0,
+				horizontal ? 0 : negate ? -100 : 100,
+			);
+			drag(
+				resizeHandle,
+				sut,
+				{ width: horizontal ? 150 : 0, height: horizontal ? 0 : 150 },
+				{ width: horizontal ? 50 : 0, height: horizontal ? 0 : 50 },
+				horizontal ? (negate ? 100 : -100) : 0,
+				horizontal ? 0 : negate ? 100 : -100,
+			);
+
+			// assert
+			const style = window.getComputedStyle(sut);
+
+			if (testCase.widthHeightSpecified) {
+				expect(size(style)).toBe("100px");
+			} else {
+				expect(edge(style)).toBe("100px");
+			}
+		});
 	});
 };

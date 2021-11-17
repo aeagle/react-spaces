@@ -20,7 +20,7 @@ const Example = () => {
 	const shouldResize = // logic to determine if resizing should be possible
 
 	return (
-		<LeftResizable onResizeStart={() => shouldResize}>
+		<LeftResizable onResizeStart={(resizeType: "resize-left" | "resize-top" | "resize-right" | "resize-bottom") => shouldResize}>
 		...
 		</LeftResizable>
 	)
@@ -42,7 +42,7 @@ const Example = () => {
 
 	return (
 		<ViewPort>
-			<LeftResizable onResizeEnd={(newSize) => setSize(newSize)}>
+			<LeftResizable onResizeEnd={(newSize: number, domRect: DOMRect, resizeType: "resize-left" | "resize-top" | "resize-right" | "resize-bottom") => setSize(newSize)}>
 			  ...
 			</LeftResizable>
 		</ViewPort>
