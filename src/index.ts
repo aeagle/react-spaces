@@ -6,10 +6,11 @@ import type {
 	OnResizeStart,
 	OnResizeEnd,
 	OnDragEnd,
-	ResizeMouseEvent
+	ResizeMouseEvent,
+	ResizeTouchEvent
 } from "./core-types";
 
-export { ResizeHandlePlacement, ResizeType, AnchorType, CenterType } from "./core-types";
+export { ResizeHandlePlacement, ResizeType, AnchorType, CenterType, Type } from "./core-types";
 
 export type {
 	ISpaceContext,
@@ -17,7 +18,8 @@ export type {
 	OnResizeStart,
 	OnResizeEnd,
 	OnDragEnd,
-	ResizeMouseEvent
+	ResizeMouseEvent,
+	ResizeTouchEvent
 }
 
 export { useCurrentSpace } from "./core-react";
