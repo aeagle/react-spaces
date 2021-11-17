@@ -22,17 +22,11 @@ Triggered when a mouse/touch resize starts. The resize action can be cancelled b
 #### Example
 
 ```tsx
-const Example = () => {
-	const shouldResize = // logic to determine if resizing should be possible
-
-	return (
-		<LeftResizable 
-			onResizeStart={
-				(resizeType) => shouldResize}>
-		...
-		</LeftResizable>
-	)
-}
+const Example = () => 
+	<LeftResizable 
+		onResizeStart={(resizeType) => /* logic to determine if resizing should be possible */}>
+	...
+	</LeftResizable>
 ```
 
 ### onResizeEnd
@@ -63,16 +57,7 @@ const Example = () => {
 	return (
 		<ViewPort>
 			<LeftResizable 
-				onResizeEnd={
-					(
-						newSize: number,
-						domRect: DOMRect,
-						resizeType: 
-							"resize-left" | 
-							"resize-top" | 
-							"resize-right" | 
-							"resize-bottom"
-					) => setSize(newSize)}>
+				onResizeEnd={(newSize, domRect, resizeType) => setSize(newSize)}>
 			  ...
 			</LeftResizable>
 		</ViewPort>
