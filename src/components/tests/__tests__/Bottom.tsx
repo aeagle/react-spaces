@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cleanup } from "@testing-library/react";
 import { Bottom } from "../../Anchored";
-import { commonPropsTests, commonAnchorTests } from "../Common";
+import { commonPropsTests, commonAnchorTests, anchorPropTypesTest } from "../Common";
 
 afterEach(cleanup);
 
@@ -22,3 +22,5 @@ commonAnchorTests(
 	(style) => style.bottom,
 	(style) => style.top,
 );
+
+anchorPropTypesTest("Bottom", Bottom);
