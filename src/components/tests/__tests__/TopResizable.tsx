@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cleanup } from "@testing-library/react";
 import { TopResizable } from "../../Anchored";
-import { commonPropsTests, commonAnchorTests, commonResizableTests } from "../Common";
+import { commonPropsTests, commonAnchorTests, commonResizableTests, resizablePropTypesTest } from "../Common";
 
 afterEach(cleanup);
 
@@ -32,3 +32,5 @@ commonResizableTests(
 	false,
 	false,
 );
+
+resizablePropTypesTest("TopResizable", TopResizable);

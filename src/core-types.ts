@@ -1,3 +1,9 @@
+export type ResizeMouseEvent = React.MouseEvent<HTMLElement, MouseEvent>;
+export type ResizeTouchEvent = React.TouchEvent<HTMLElement>;
+export type OnResizeStart = ((resizeType?: ResizeType) => void | boolean) | undefined;
+export type OnResizeEnd = ((newSize: SizeUnit, domRect: DOMRect, resizeType?: ResizeType) => void) | undefined;
+export type OnDragEnd = (position: IPosition, moved: boolean) => void;
+
 export enum Type {
 	ViewPort = "viewport",
 	Fixed = "fixed",
@@ -26,10 +32,10 @@ export enum ResizeType {
 	Right = "resize-right",
 	Top = "resize-top",
 	Bottom = "resize-bottom",
-	NW = "resize-nw",
-	NE = "resize-ne",
-	SW = "resize-sw",
-	SE = "resize-se",
+	TopLeft = "resize-topleft",
+	TopRight = "resize-topright",
+	BottomLeft = "resize-bottomleft",
+	BottomRight = "resize-bottomright",
 }
 
 export enum ResizeHandlePlacement {
@@ -44,6 +50,16 @@ export enum CenterType {
 	HorizontalVertical = "horizontalVertical",
 }
 
+export enum MoveEvent {
+	Mouse = "mousemove",
+	Touch = "touchmove",
+}
+
+export enum EndEvent {
+	Mouse = "mouseup",
+	Touch = "touchend",
+}
+
 export interface ICommonProps {
 	id?: string;
 	className?: string;
@@ -51,6 +67,7 @@ export interface ICommonProps {
 	zIndex?: number;
 	scrollable?: boolean;
 	trackSize?: boolean;
+	allowOverflow?: boolean;
 }
 
 export interface ISpaceProps extends ICommonProps {
@@ -63,8 +80,8 @@ export interface ISpaceProps extends ICommonProps {
 	touchHandleSize?: number | undefined;
 	minimumSize?: number | undefined;
 	maximumSize?: number | undefined;
-	onResizeStart?: (() => void | boolean) | undefined;
-	onResizeEnd?: ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
+	onResizeStart?: OnResizeStart;
+	onResizeEnd?: OnResizeEnd;
 }
 
 export interface ISpaceStore {
@@ -75,8 +92,10 @@ export interface ISpaceStore {
 	updateStyles: (space: ISpaceDefinition) => void;
 	removeSpace: (space: ISpaceDefinition) => void;
 	createSpace: (parent: string | undefined, props: ISpaceProps, update: () => void) => ISpaceDefinition;
-	startMouseResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, event: React.MouseEvent<HTMLElement>) => void;
-	startTouchResize: (resizeType: ResizeType, space: ISpaceDefinition, size: ISize, event: React.TouchEvent<HTMLElement>) => void;
+	startMouseResize: (resizeType: ResizeType, space: ISpaceDefinition, event: React.MouseEvent<HTMLElement>, onResizeEnd?: OnResizeEnd) => void;
+	startTouchResize: (resizeType: ResizeType, space: ISpaceDefinition, event: React.TouchEvent<HTMLElement>, onResizeEnd?: OnResizeEnd) => void;
+	startMouseDrag: (space: ISpaceDefinition, event: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
+	startTouchDrag: (space: ISpaceDefinition, event: ResizeTouchEvent, onDragEnd?: OnDragEnd) => void;
 }
 
 export interface IPosition {
@@ -110,8 +129,8 @@ export interface ISpaceDefinition {
 	adjustBottom: (adjusted: SizeUnit[]) => boolean;
 	adjustEdge: (adjusted: SizeUnit[]) => boolean;
 	anchoredChildren: (children: ISpaceDefinition[], anchor: AnchorType, zIndex: number) => ISpaceDefinition[];
-	onResizeStart?: (() => void | boolean) | undefined;
-	onResizeEnd?: ((newSize: SizeUnit, domRect: DOMRect) => void) | undefined;
+	onResizeStart?: OnResizeStart;
+	onResizeEnd?: OnResizeEnd;
 	element: HTMLElement;
 	id: string;
 	type: Type;
@@ -142,4 +161,13 @@ export interface ISpaceDefinition {
 	canResizeLeft: boolean;
 	canResizeRight: boolean;
 	canResizeBottom: boolean;
+	allowOverflow: boolean;
+}
+
+export interface ISpaceContext {
+	size: DOMRect;
+	layer: number;
+	startMouseDrag: (e: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
+	startTouchDrag: (e: ResizeTouchEvent, onDragEnd?: OnDragEnd) => void;
+	forceUpdate: () => void;
 }

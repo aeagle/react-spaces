@@ -1,7 +1,7 @@
 import typescript from "rollup-plugin-typescript2";
-import commonjs from "rollup-plugin-commonjs";
-import resolve from "rollup-plugin-node-resolve";
-import babel from "rollup-plugin-babel";
+import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
+import babel from "@rollup/plugin-babel";
 import sourcemaps from "rollup-plugin-sourcemaps";
 import postcss from "rollup-plugin-postcss";
 import { uglify } from "rollup-plugin-uglify";
@@ -26,10 +26,9 @@ const targets = [
 		plugins: [
 			postcss({
 				extract: false,
-				extensions: [".css"],
 			}),
 			...commonPlugins,
-			babel({ exclude: "node_modules/**" }),
+			babel({ babelHelpers: "runtime", exclude: "node_modules/**" }),
 			uglify(),
 		],
 	},
@@ -41,7 +40,6 @@ const targets = [
 		plugins: [
 			postcss({
 				extract: false,
-				extensions: [".css"],
 			}),
 			...commonPlugins,
 		],
@@ -54,10 +52,9 @@ const targets = [
 		plugins: [
 			postcss({
 				extract: true,
-				extensions: [".css"],
 			}),
 			...commonPlugins,
-			babel({ exclude: "node_modules/**" }),
+			babel({ babelHelpers: "runtime", exclude: "node_modules/**" }),
 			uglify(),
 		],
 	},
@@ -69,7 +66,6 @@ const targets = [
 		plugins: [
 			postcss({
 				extract: true,
-				extensions: [".css"],
 			}),
 			...commonPlugins,
 		],

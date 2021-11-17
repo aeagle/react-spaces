@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createStore } from "./core";
-import { ISpaceProps, ISpaceStore, ISpaceDefinition, IPositionalProps, ResizeType, CenterType, ICommonProps } from "./core-types";
+import { ISpaceProps, ISpaceStore, ISpaceDefinition, ResizeType, CenterType, ISpaceContext, ICommonProps } from "./core-types";
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import * as PropTypes from "prop-types";
@@ -20,7 +20,10 @@ export const commonProps = {
 	zIndex: PropTypes.number,
 	scrollable: PropTypes.bool,
 	trackSize: PropTypes.bool,
+	allowOverflow: PropTypes.bool,
+	handleRender: PropTypes.func,
 	onClick: PropTypes.func,
+	onDoubleClick: PropTypes.func,
 	onMouseDown: PropTypes.func,
 	onMouseEnter: PropTypes.func,
 	onMouseLeave: PropTypes.func,
@@ -29,6 +32,10 @@ export const commonProps = {
 	onTouchMove: PropTypes.func,
 	onTouchEnd: PropTypes.func,
 };
+
+export interface IReactSpacesOptions {
+	debug?: boolean;
+}
 
 export interface IReactEvents {
 	onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
@@ -42,9 +49,13 @@ export interface IReactEvents {
 	onTouchEnd?: (event: React.TouchEvent<HTMLElement>) => void;
 }
 
-export interface IReactSpaceProps extends ISpaceProps, IReactEvents {
+export interface IReactSpaceCommonProps extends ICommonProps, IReactEvents {
 	style?: React.CSSProperties;
 	as?: keyof React.ReactDOM | React.ComponentType<ICommonProps>;
+}
+
+export interface IReactSpaceInnerProps extends IReactSpaceCommonProps, ISpaceProps, IReactEvents {
+	handleRender?: (handleProps: IResizeHandleProps) => React.ReactNode;
 }
 
 export interface IReactSpacesOptions {
@@ -59,7 +70,7 @@ export function useForceUpdate() {
 	return update;
 }
 
-export function useSpace(props: IReactSpaceProps) {
+export function useSpace(props: IReactSpaceInnerProps) {
 	const store = currentStore;
 	const update = useForceUpdate();
 	const parent = React.useContext(ParentContext);
@@ -91,7 +102,7 @@ export function useSpace(props: IReactSpaceProps) {
 		store.updateSpace(space, parsedProps);
 	}
 
-	const resizeHandles = useSpaceResizeHandles(store, space, props.position);
+	const resizeHandles = useSpaceResizeHandles(store, space);
 
 	React.useEffect(() => {
 		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
@@ -132,7 +143,7 @@ export function useSpace(props: IReactSpaceProps) {
 	return { space: space, resizeHandles: resizeHandles, domRect: domRect, elementRef: elementRef };
 }
 
-interface IResizeHandleProps {
+export interface IResizeHandleProps {
 	id?: string;
 	key: string | number;
 	className?: string;
@@ -140,50 +151,77 @@ interface IResizeHandleProps {
 	onTouchStart: (e: React.TouchEvent<HTMLElement>) => void;
 }
 
-export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinition, position: IPositionalProps | undefined) {
+export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinition) {
 	const mouseHandles: IResizeHandleProps[] = [];
 
-	if (position && position.rightResizable) {
+	if (space.canResizeLeft) {
 		mouseHandles.push({
-			id: `${space.id}-m`,
-			key: "right",
-			className: `spaces-resize-handle resize-right`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Right, space, space.width, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, space.width, event),
-		});
-	}
-
-	if (position && position.leftResizable) {
-		mouseHandles.push({
-			id: `${space.id}-m`,
+			id: `${space.id}-ml`,
 			key: "left",
 			className: `spaces-resize-handle resize-left`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Left, space, space.width, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, space.width, event),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Left, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, event),
 		});
 	}
 
-	if (position && position.topResizable) {
+	if (space.canResizeRight) {
 		mouseHandles.push({
-			id: `${space.id}-m`,
+			id: `${space.id}-mr`,
+			key: "right",
+			className: `spaces-resize-handle resize-right`,
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Right, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, event),
+		});
+	}
+
+	if (space.canResizeTop) {
+		mouseHandles.push({
+			id: `${space.id}-mt`,
 			key: "top",
 			className: `spaces-resize-handle resize-top`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Top, space, space.height, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, space.height, event),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Top, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, event),
 		});
 	}
 
-	if (position && position.bottomResizable) {
+	if (space.canResizeBottom) {
 		mouseHandles.push({
-			id: `${space.id}-m`,
+			id: `${space.id}-mb`,
 			key: "bottom",
 			className: `spaces-resize-handle resize-bottom`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, space.height, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, space.height, event),
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, event),
 		});
 	}
 
 	return {
 		mouseHandles,
 	};
+}
+
+export function useCurrentSpace() {
+	const store = currentStore;
+	const spaceId = React.useContext(ParentContext);
+
+	const space = spaceId ? store.getSpace(spaceId) : undefined;
+
+	const domRect = React.useContext(DOMRectContext);
+	const layer = React.useContext(LayerContext);
+	const onMouseDrag = React.useCallback((e, onDragEnd) => (space ? store.startMouseDrag(space, e, onDragEnd) : null), [spaceId]);
+	const onTouchDrag = React.useCallback((e, onDragEnd) => (space ? store.startTouchDrag(space, e, onDragEnd) : null), [spaceId]);
+	const onForceUpdate = React.useCallback(() => (space ? store.updateStyles(space) : null), [spaceId]);
+
+	const defaults = { width: 0, height: 0, x: 0, y: 0 };
+	const size = {
+		...defaults,
+		...domRect,
+	};
+
+	return {
+		size: size,
+		layer: layer || 0,
+		startMouseDrag: onMouseDrag,
+		startTouchDrag: onTouchDrag,
+		forceUpdate: onForceUpdate,
+	} as ISpaceContext;
 }
