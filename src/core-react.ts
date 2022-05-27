@@ -4,6 +4,42 @@ import { ISpaceProps, ISpaceStore, ISpaceDefinition, ResizeType, CenterType, ISp
 import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import * as PropTypes from "prop-types";
+import {useEffect, useRef, useState} from 'react';
+
+// WORKAROUND for React18 strict mode
+// https://blog.ag-grid.com/avoiding-react-18-double-mount/
+export const useEffectOnce = (effect: () => void | (() => void)) => {
+	const destroyFunc = useRef<void | (() => void)>();
+	const effectCalled = useRef(false);
+	const renderAfterCalled = useRef(false);
+	const [_val, setVal] = useState<number>(0);
+
+	if (effectCalled.current) {
+		renderAfterCalled.current = true;
+	}
+
+	useEffect(() => {
+		// only execute the effect first time around
+		if (!effectCalled.current) {
+			destroyFunc.current = effect();
+			effectCalled.current = true;
+		}
+
+		// this forces one render after the effect is run
+		setVal((val) => val + 1);
+
+		return () => {
+			// if the comp didn't render since the useEffect was called,
+			// we know it's the dummy React cycle
+			if (!renderAfterCalled.current) {
+				return;
+			}
+			if (destroyFunc.current) {
+				destroyFunc.current();
+			}
+		};
+	}, []);
+};
 
 export const ParentContext = React.createContext<string | undefined>(undefined);
 export const DOMRectContext = React.createContext<DOMRect | undefined>(undefined);
@@ -104,7 +140,7 @@ export function useSpace(props: IReactSpaceInnerProps) {
 
 	const resizeHandles = useSpaceResizeHandles(store, space);
 
-	React.useEffect(() => {
+	useEffectOnce(() => {
 		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
 		space!.dimension = {
 			...rect,
@@ -138,7 +174,7 @@ export function useSpace(props: IReactSpaceInnerProps) {
 			resizeSensor.current && resizeSensor.current.detach();
 			store.removeSpace(space!);
 		};
-	}, []);
+	});
 
 	return { space: space, resizeHandles: resizeHandles, domRect: domRect, elementRef: elementRef };
 }
