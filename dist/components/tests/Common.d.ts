@@ -1,0 +1,13 @@
+import * as React from "react";
+import "@testing-library/jest-dom/extend-expect";
+import { IReactSpaceCommonProps } from "../../core-react";
+export declare const mutateComponent: (component: React.ReactNode, newProps: Object) => React.DetailedReactHTMLElement<any, HTMLElement>;
+export declare function hasProps(name: string, component: React.FC<IReactSpaceCommonProps>, props: string[]): void;
+export declare const fixUp: (sut: HTMLElement) => HTMLElement;
+export declare function commonPropTypesTest(name: string, component: React.FC<IReactSpaceCommonProps>): void;
+export declare function resizablePropTypesTest(name: string, component: React.FC<IReactSpaceCommonProps>): void;
+export declare function anchorPropTypesTest(name: string, component: React.FC<IReactSpaceCommonProps>): void;
+export declare const commonPropsTests: (name: string, component: React.ReactNode, expectedStyle: Partial<CSSStyleDeclaration>) => void;
+export declare const commonAnchorTests: (name: string, component: React.ReactNode, size: (style: CSSStyleDeclaration) => string | null, edge: (style: CSSStyleDeclaration) => string | null, oppositeEdge: (style: CSSStyleDeclaration) => string | null) => void;
+export declare const commonResizableTests: (name: string, component: React.ReactNode, size: (style: CSSStyleDeclaration) => string | null, edge: (style: CSSStyleDeclaration) => string | null, oppositeEdge: (style: CSSStyleDeclaration) => string | null, horizontal: boolean, negate: boolean) => void;
+export declare const commonPositionedResizeTests: (name: string, size: (style: CSSStyleDeclaration) => string | null, edge: (style: CSSStyleDeclaration) => string | null, oppositeEdge: (style: CSSStyleDeclaration) => string | null, handle: string, horizontal: boolean, negate: boolean) => void;

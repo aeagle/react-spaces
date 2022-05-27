@@ -1,0 +1,127 @@
+.spaces-centered-vertically {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.spaces-centered {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	text-align: center;
+}
+
+.spaces-clearfix:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.spaces-resize-handle {
+	position: absolute;
+	z-index: 9999;
+	background: transparent;
+}
+
+.spaces-resize-handle:before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+}
+
+.spaces-resize-handle:after {
+	content: "";
+	position: absolute;
+	z-index: 1;
+}
+
+.spaces-touch-handle {
+	position: absolute;
+	z-index: 9998;
+	pointer-events: all;
+	background: transparent;
+}
+
+.spaces-resize-handle.resize-left {
+	top: 0;
+	bottom: 0;
+}
+
+.spaces-resize-handle.resize-left:before {
+	cursor: w-resize;
+}
+
+.spaces-touch-handle.resize-left {
+	top: 0;
+	bottom: 0;
+}
+
+.spaces-resize-handle.resize-right {
+	top: 0;
+	bottom: 0;
+}
+
+.spaces-resize-handle.resize-right:before {
+	cursor: e-resize;
+}
+
+.spaces-touch-handle.resize-right {
+	top: 0;
+	bottom: 0;
+}
+
+.spaces-resize-handle.resize-top {
+	left: 0;
+	right: 0;
+}
+
+.spaces-resize-handle.resize-top:before {
+	cursor: n-resize;
+}
+
+.spaces-touch-handle.resize-top {
+	left: 0;
+	right: 0;
+}
+
+.spaces-resize-handle.resize-bottom {
+	left: 0;
+	right: 0;
+}
+
+.spaces-resize-handle.resize-bottom:before {
+	cursor: s-resize;
+}
+
+.spaces-touch-handle.resize-bottom {
+	left: 0;
+	right: 0;
+}
+
+.spaces-space {
+	overflow: hidden;
+	touch-action: none;
+	box-sizing: border-box;
+}
+
+.spaces-resizing .spaces-space {
+	transition: none !important;
+}
+
+.spaces-space .spaces-space-inner {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	box-sizing: border-box;
+}
+
+.spaces-space.scrollable .spaces-space-inner {
+	overflow: auto;
+	touch-action: auto;
+}
