@@ -52,6 +52,7 @@ export interface IReactEvents {
 export interface IReactSpaceCommonProps extends ICommonProps, IReactEvents {
 	style?: React.CSSProperties;
 	as?: keyof React.ReactDOM | React.ComponentType<ICommonProps>;
+	children?: React.ReactNode;
 }
 
 export interface IReactSpaceInnerProps extends IReactSpaceCommonProps, ISpaceProps, IReactEvents {
