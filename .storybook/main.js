@@ -6,18 +6,13 @@ module.exports = {
 		"@storybook/addon-actions",
 		"@storybook/addon-links",
 		{
-			name: "@storybook/addon-docs/preset",
+			name: "@storybook/addon-docs",
 			options: {
 				configureJSX: true,
 				inlineStories: false,
 			},
 		},
 	],
-	typescript: {
-		check: true,
-		checkOptions: {},
-		reactDocgen: "react-docgen-typescript",
-	},
 	webpackFinal: async (config, { configType }) => {
 		if (process.env.NODE === "production") {
 			config.output.publicPath = "/react-spaces/docs";
@@ -30,5 +25,8 @@ module.exports = {
 		});
 
 		return config;
+	},
+	reactOptions: {
+		strictMode: true,
 	},
 };

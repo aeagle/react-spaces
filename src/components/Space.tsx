@@ -1,5 +1,5 @@
 import { CenterType, ResizeHandlePlacement, AnchorType, Type } from "../core-types";
-import { useSpace, ParentContext, LayerContext, DOMRectContext, IReactSpaceInnerProps } from "../core-react";
+import { useSpace, ParentContext, LayerContext, DOMRectContext, IReactSpaceInnerProps, useEffectOnce } from "../core-react";
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
@@ -59,9 +59,9 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 		...{ id: props.id || props.wrapperInstance["_react_spaces_uniqueid"] },
 	});
 
-	React.useEffect(() => {
+	useEffectOnce(() => {
 		space.element = elementRef.current!;
-	}, []);
+	});
 
 	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
 
