@@ -31,4 +31,7 @@ module.exports = {
 
 		return config;
 	},
+	reactOptions: {
+		strictMode: true,
+	},
 };
