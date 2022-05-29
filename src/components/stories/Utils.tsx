@@ -23,7 +23,7 @@ export const CommonHeader = () => (
 	</div>
 );
 
-export const PropsTable: React.FC = (props) => (
+export const PropsTable: React.FC<{ children?: React.ReactNode }> = (props) => (
 	<table className="sbdocs sbdocs-table properties-table css-lckf62">
 		<tbody>
 			<tr>
@@ -47,7 +47,7 @@ const propHeaderStyle: CSSProperties = {
 	fontWeight: 500,
 };
 
-export const PropsHeader: React.FC = (props) => (
+export const PropsHeader: React.FC<{ children?: React.ReactNode }> = (props) => (
 	<tr>
 		<td colSpan={4} style={propHeaderStyle}>
 			{props.children}
