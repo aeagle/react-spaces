@@ -9,10 +9,16 @@ import { CommonHeader, PropsTable, StandardProps, AnchoredProps, ResizableProps 
 
 <Meta title="React Spaces/Custom resize handles" />
 
-# Custom resize handles
+## Custom resize handles
 
-React spaces allows you to pass custom components to be used as resize handles using the `handleRender` prop. 
+You can pass custom components to be used as resize handles using the `handleRender` prop. 
 This is an alternative to overriding the default css classes and will give you more control.
+
+#### Applies to
+
+`<LeftResizable />` `<TopResizable />` `<RightResizable />` `<BottomResizable />`
+
+#### Example
 
 Pass a function to the `handleRender` prop that will be called for every resize handle on that component. 
 

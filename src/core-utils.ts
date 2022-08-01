@@ -1,5 +1,16 @@
 import { ISpaceDefinition, SizeUnit, ISize, ResizeHandlePlacement, Type } from "./core-types";
 
+export function omit<K extends string, T extends Record<K, unknown>>(object: T, ...keys: K[]): Omit<T, K> {
+	const keySet = new Set<string>(keys)
+	const result = Object.create(null) as Omit<T, K>
+	for (const key in Object.keys(object)) {
+		if (!keySet.has(key)) {
+			result[key] = object[key]
+		}
+	} 
+	return result
+}
+
 export function shortuuid() {
 	let firstPart = (Math.random() * 46656) | 0;
 	let secondPart = (Math.random() * 46656) | 0;
