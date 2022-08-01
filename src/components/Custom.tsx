@@ -4,6 +4,7 @@ import { Space } from "./Space";
 import * as PropTypes from "prop-types";
 import { IReactSpaceCommonProps } from "../core-react";
 import { anchoredProps, IAnchorProps } from "./Anchored";
+import { omit } from '../core-utils';
 
 type ICustomProps = Omit<IReactSpaceCommonProps & IAnchorProps, "size"> & {
 	type?: Type;
@@ -22,7 +23,7 @@ type ICustomProps = Omit<IReactSpaceCommonProps & IAnchorProps, "size"> & {
 	resizeTypes?: ResizeType[];
 };
 
-const customProps = {
+const customProps = omit({
 	...anchoredProps,
 	...{
 		type: PropTypes.oneOf([Type.Positioned, Type.Fill, Type.Anchored]),
@@ -38,7 +39,7 @@ const customProps = {
 		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		resizeTypes: PropTypes.array,
 	},
-};
+}, 'size');
 
 export const Custom: React.FC<ICustomProps> = ({
 	children,
