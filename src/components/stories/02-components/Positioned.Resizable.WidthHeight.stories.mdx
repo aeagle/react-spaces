@@ -29,7 +29,7 @@ Absolutely positioned space within it's parent with width and height specified.
 	<Story name="Resize handles (all sides)">
 		{() => {
 			return <ViewPort>
-				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right, ResizeType.TopLeft, ResizeType.TopRight, ResizeType.BottomLeft, ResizeType.BottomRight ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.All ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -86,6 +86,54 @@ Absolutely positioned space within it's parent with width and height specified.
 </Canvas>
 
 <Canvas>
+	<Story name="Resize handles (top-left only)">
+		{() => {
+			return <ViewPort>
+				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.TopLeft ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+					{description("Positioned")}
+				</Positioned>
+			</ViewPort>
+		}}
+	</Story>
+</Canvas>
+
+<Canvas>
+	<Story name="Resize handles (top-right only)">
+		{() => {
+			return <ViewPort>
+				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.TopRight ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+					{description("Positioned")}
+				</Positioned>
+			</ViewPort>
+		}}
+	</Story>
+</Canvas>
+
+<Canvas>
+	<Story name="Resize handles (bottom-left only)">
+		{() => {
+			return <ViewPort>
+				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.BottomLeft ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+					{description("Positioned")}
+				</Positioned>
+			</ViewPort>
+		}}
+	</Story>
+</Canvas>
+
+<Canvas>
+	<Story name="Resize handles (bottom-right only)">
+		{() => {
+			return <ViewPort>
+				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.BottomRight ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+					{description("Positioned")}
+				</Positioned>
+			</ViewPort>
+		}}
+	</Story>
+</Canvas>
+
+<Canvas>
 	<Story name="Drag handle">
 		{() => {
 			const DragHandle = () => {
@@ -121,7 +169,7 @@ Absolutely positioned space within it's parent with width and height specified.
 				)
 			}
 			return <ViewPort>
-				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.Left, ResizeType.Top, ResizeType.Bottom, ResizeType.Right, ResizeType.TopLeft, ResizeType.TopRight, ResizeType.BottomLeft, ResizeType.BottomRight ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+				<Positioned style={green} left={200} top={200} width={400} height={300} trackSize={true} resizable={[ ResizeType.All ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 					<DragHandle />
 				</Positioned>
 			</ViewPort>

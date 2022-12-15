@@ -28,6 +28,7 @@ export enum Orientation {
 export type SizeUnit = number | string | undefined;
 
 export enum ResizeType {
+	All = "resize-all",
 	Left = "resize-left",
 	Right = "resize-right",
 	Top = "resize-top",
