@@ -261,6 +261,26 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 		});
 	}
 
+	if (space.canResizeBottomLeft) {
+		mouseHandles.push({
+			id: `${space.id}-mbl`,
+			key: "bottom-left",
+			className: `spaces-resize-handle resize-bottom-left`,
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, event),
+		});
+	}
+
+	if (space.canResizeBottomRight) {
+		mouseHandles.push({
+			id: `${space.id}-mbr`,
+			key: "bottom-right",
+			className: `spaces-resize-handle resize-bottom-right`,
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, event),
+		});
+	}
+
 	return {
 		mouseHandles,
 	};
