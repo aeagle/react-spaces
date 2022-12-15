@@ -182,7 +182,6 @@ export function styleDefinition(space: ISpaceDefinition) {
 		}
 
 		if (space.canResizeRight) {
-			cssElements.push(`#${space.id}-mr:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
 			if (space.width.size) {
 				cssElements.push(
 					`#${space.id}-mr { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${
@@ -226,6 +225,22 @@ export function styleDefinition(space: ISpaceDefinition) {
 					space.handleSize
 				}px; height: ${space.handleSize}px; }`,
 			);
+		}
+
+		if (space.canResizeTopRight) {
+			if (space.width.size) {
+				cssElements.push(
+					`#${space.id}-mtr { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${
+						space.handleSize
+					}px + ${handleOffset}px); width: ${space.handleSize}px; top: ${css(space.top)}; height: ${space.handleSize}px; }`,
+				);
+			} else {
+				cssElements.push(
+					`#${space.id}-mtr { right: calc(${css(space.right, true)} - ${handleOffset}px); width: ${space.handleSize}px; top: ${css(
+						space.top,
+					)}; height: ${space.handleSize}px; }`,
+				);
+			}
 		}
 	} else {
 		if (space.canResizeLeft) {

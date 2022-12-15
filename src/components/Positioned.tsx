@@ -19,6 +19,8 @@ interface IPositionedProps extends IReactSpaceCommonProps {
 export const Positioned: React.FC<IPositionedProps> = ({ left, top, right, bottom, width, height, resizable, ...props }) => {
 	const resizeTypes = resizable || [];
 
+	console.log(resizeTypes);
+
 	return (
 		<Space
 			{...props}

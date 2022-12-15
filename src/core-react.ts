@@ -251,6 +251,16 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 		});
 	}
 
+	if (space.canResizeTopRight) {
+		mouseHandles.push({
+			id: `${space.id}-mtr`,
+			key: "top-right",
+			className: `spaces-resize-handle resize-top-right`,
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Right, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, event),
+		});
+	}
+
 	return {
 		mouseHandles,
 	};

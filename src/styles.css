@@ -88,6 +88,20 @@
 	bottom: 0;
 }
 
+.spaces-resize-handle.resize-top-right {
+	top: 0;
+	bottom: 0;
+}
+
+.spaces-resize-handle.resize-top-right:before {
+	cursor: ne-resize;
+}
+
+.spaces-touch-handle.resize-top-right {
+	top: 0;
+	bottom: 0;
+}
+
 .spaces-resize-handle.resize-top {
 	left: 0;
 	right: 0;
