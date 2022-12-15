@@ -25,13 +25,17 @@ export const Positioned: React.FC<IPositionedProps> = ({ left, top, right, botto
 			type={Type.Positioned}
 			position={{
 				left: left,
-				leftResizable: resizeTypes.includes(ResizeType.Left),
 				top: top,
-				topResizable: resizeTypes.includes(ResizeType.Top),
 				right: right,
-				rightResizable: resizeTypes.includes(ResizeType.Right),
 				bottom: bottom,
+				leftResizable: resizeTypes.includes(ResizeType.Left),
+				topResizable: resizeTypes.includes(ResizeType.Top),
+				rightResizable: resizeTypes.includes(ResizeType.Right),
 				bottomResizable: resizeTypes.includes(ResizeType.Bottom),
+				topLeftResizable: resizeTypes.includes(ResizeType.TopLeft),
+				topRightResizable: resizeTypes.includes(ResizeType.TopRight),
+				bottomLeftResizable: resizeTypes.includes(ResizeType.BottomLeft),
+				bottomRightResizable: resizeTypes.includes(ResizeType.BottomRight),
 				width: width,
 				height: height,
 			}}>

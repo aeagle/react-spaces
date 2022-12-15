@@ -425,6 +425,10 @@ export function createStore(): ISpaceStore {
 		const canResizeRight = (position && position.leftResizable) || false;
 		const canResizeTop = (position && position.bottomResizable) || false;
 		const canResizeBottom = (position && position.topResizable) || false;
+		const canResizeTopLeft = (position && position.topLeftResizable) || false;
+		const canResizeTopRight = (position && position.topRightResizable) || false;
+		const canResizeBottomLeft = (position && position.bottomLeftResizable) || false;
+		const canResizeBottomRight = (position && position.bottomRightResizable) || false;
 
 		const newSpace: ISpaceDefinition = {
 			...spaceDefaults,
@@ -456,11 +460,15 @@ export function createStore(): ISpaceStore {
 				canResizeRight: canResizeRight,
 				canResizeTop: canResizeTop,
 				canResizeBottom: canResizeBottom,
+				canResizeTopLeft: canResizeTopLeft,
+				canResizeTopRight: canResizeTopRight,
+				canResizeBottomLeft: canResizeBottomLeft,
+				canResizeBottomRight: canResizeBottomRight,
 			},
 		} as ISpaceDefinition;
 
-		newSpace.anchoredChildren = (children, anchor, zIndex) => {
-			return children.filter((s) => s.type === Type.Anchored && s.anchor === anchor && s.zIndex === zIndex);
+		newSpace.anchoredChildren = (children, chanchor, zIndex) => {
+			return children.filter((s) => s.type === Type.Anchored && s.anchor === chanchor && s.zIndex === zIndex);
 		};
 
 		newSpace.adjustLeft = (adjusted) => {

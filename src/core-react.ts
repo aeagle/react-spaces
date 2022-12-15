@@ -241,6 +241,16 @@ export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinitio
 		});
 	}
 
+	if (space.canResizeTopLeft) {
+		mouseHandles.push({
+			id: `${space.id}-mtl`,
+			key: "top-left",
+			className: `spaces-resize-handle resize-top-left`,
+			onMouseDown: (event) => store.startMouseResize(ResizeType.Left, space, event),
+			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, event),
+		});
+	}
+
 	return {
 		mouseHandles,
 	};

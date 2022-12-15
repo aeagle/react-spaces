@@ -60,6 +60,20 @@
 	bottom: 0;
 }
 
+.spaces-resize-handle.resize-top-left {
+	top: 0;
+	bottom: 0;
+}
+
+.spaces-resize-handle.resize-top-left:before {
+	cursor: nw-resize;
+}
+
+.spaces-touch-handle.resize-top-left {
+	top: 0;
+	bottom: 0;
+}
+
 .spaces-resize-handle.resize-right {
 	top: 0;
 	bottom: 0;

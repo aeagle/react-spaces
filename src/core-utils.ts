@@ -219,6 +219,14 @@ export function styleDefinition(space: ISpaceDefinition) {
 			}
 			cssElements.push(`#${space.id}-mb:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
 		}
+
+		if (space.canResizeTopLeft) {
+			cssElements.push(
+				`#${space.id}-mtl { left: calc(${css(space.left, true)} - ${handleOffset}px); top: ${css(space.top)}; width: ${
+					space.handleSize
+				}px; height: ${space.handleSize}px; }`,
+			);
+		}
 	} else {
 		if (space.canResizeLeft) {
 			cssElements.push(
