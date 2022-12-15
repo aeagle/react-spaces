@@ -236,6 +236,10 @@ export function createStore(): ISpaceStore {
 			const canResizeRight = (position && position.rightResizable) || false;
 			const canResizeTop = (position && position.topResizable) || false;
 			const canResizeBottom = (position && position.bottomResizable) || false;
+			const canResizeTopLeft = (position && position.topLeftResizable) || false;
+			const canResizeTopRight = (position && position.topRightResizable) || false;
+			const canResizeBottomLeft = (position && position.bottomLeftResizable) || false;
+			const canResizeBottomRight = (position && position.bottomRightResizable) || false;
 
 			let changed = false;
 
@@ -367,6 +371,26 @@ export function createStore(): ISpaceStore {
 
 			if (space.canResizeRight !== canResizeRight) {
 				space.canResizeRight = canResizeRight;
+				changed = true;
+			}
+
+			if (space.canResizeTopLeft !== canResizeTopLeft) {
+				space.canResizeTopLeft = canResizeTopLeft;
+				changed = true;
+			}
+
+			if (space.canResizeTopRight !== canResizeTopRight) {
+				space.canResizeTopRight = canResizeTopRight;
+				changed = true;
+			}
+
+			if (space.canResizeBottomLeft !== canResizeBottomLeft) {
+				space.canResizeBottomLeft = canResizeBottomLeft;
+				changed = true;
+			}
+
+			if (space.canResizeBottomRight !== canResizeBottomRight) {
+				space.canResizeBottomRight = canResizeBottomRight;
 				changed = true;
 			}
 

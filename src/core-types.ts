@@ -112,6 +112,10 @@ export interface IPositionalProps extends IPosition {
 	topResizable?: boolean;
 	rightResizable?: boolean;
 	bottomResizable?: boolean;
+	topLeftResizable?: boolean;
+	topRightResizable?: boolean;
+	bottomLeftResizable?: boolean;
+	bottomRightResizable?: boolean;
 }
 
 export interface ISize {
@@ -161,6 +165,10 @@ export interface ISpaceDefinition {
 	canResizeLeft: boolean;
 	canResizeRight: boolean;
 	canResizeBottom: boolean;
+	canResizeTopLeft: boolean;
+	canResizeTopRight: boolean;
+	canResizeBottomLeft: boolean;
+	canResizeBottomRight: boolean;
 	allowOverflow: boolean;
 }
 

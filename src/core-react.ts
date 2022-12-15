@@ -112,10 +112,9 @@ export interface IReactSpacesOptions {
 
 export function useForceUpdate() {
 	const [, setTick] = React.useState(0);
-	const update = React.useCallback(() => {
+	return React.useCallback(() => {
 		setTick((tick) => tick + 1);
 	}, []);
-	return update;
 }
 
 export function useSpace(props: IReactSpaceInnerProps) {
@@ -153,8 +152,8 @@ export function useSpace(props: IReactSpaceInnerProps) {
 	const resizeHandles = useSpaceResizeHandles(store, space);
 
 	useEffectOnce(() => {
-		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
-		space!.dimension = {
+		const rect = elementRef.current ? elementRef.current.getBoundingClientRect() : new DOMRect();
+		space.dimension = {
 			...rect,
 			...{
 				left: Math.floor(rect.left),
@@ -167,24 +166,24 @@ export function useSpace(props: IReactSpaceInnerProps) {
 				y: Math.floor(rect.y),
 			},
 		};
-		setDomRect(space!.dimension);
+		setDomRect(space.dimension);
 
 		if (props.trackSize) {
 			resizeSensor.current = new ResizeSensor(elementRef.current!, (size) => {
-				space!.dimension = {
+				space.dimension = {
 					...rect,
 					...{
 						width: Math.floor(size.width),
 						height: Math.floor(size.height),
 					},
 				};
-				setDomRect(space!.dimension);
+				setDomRect(space.dimension);
 			});
 		}
 
 		return () => {
 			resizeSensor.current && resizeSensor.current.detach();
-			store.removeSpace(space!);
+			store.removeSpace(space);
 		};
 	});
 
