@@ -145,7 +145,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 	let nhandleOffset = 0;
 	const handleSize = `${space.handleSize}px`;
-	const touchHandleSize = `${space.touchHandleSize / 2 - space.handleSize / 2}px`;
+	const touchHandleSize = `-${space.touchHandleSize / 2 - space.handleSize / 2}px`;
 
 	switch (space.handlePlacement) {
 		case ResizeHandlePlacement.Inside:
@@ -162,7 +162,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 	const handleOffset = `${nhandleOffset}px`;
 
-	const addCss = (id: string, pos: { left?: string; top?: string; right?: string; bottom?: string; width?: string; height?: string }) => {
+	const addHandleCss = (id: string, pos: { left?: string; top?: string; right?: string; bottom?: string; width?: string; height?: string }) => {
 		const styles: string[] = [];
 
 		if (pos.left) styles.push(`left: ${pos.left}`);
@@ -177,7 +177,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 	if (space.type === Type.Positioned) {
 		if (space.canResizeLeft) {
-			addCss("ml", {
+			addHandleCss("ml", {
 				left: `calc(${css(space.left, true)} - ${handleOffset})`,
 				top: css(space.top),
 				bottom: css(space.bottom),
@@ -187,16 +187,16 @@ export function styleDefinition(space: ISpaceDefinition) {
 		}
 
 		if (space.canResizeTop) {
-			addCss("mt", {
+			addHandleCss("mt", {
 				top: `calc(${css(space.top, true)} - ${handleOffset})`,
 				left: css(space.left),
 				right: css(space.right),
 				width: css(space.width),
 				height: handleSize,
 			});
-			addCss("mt:after", {
-				top: `-${touchHandleSize}`,
-				bottom: `-${touchHandleSize}`,
+			addHandleCss("mt:after", {
+				top: touchHandleSize,
+				bottom: touchHandleSize,
 				left: css(space.left),
 				right: css(space.right),
 				width: css(space.width),
@@ -205,7 +205,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 		if (space.canResizeRight) {
 			if (space.width.size) {
-				addCss("mr", {
+				addHandleCss("mr", {
 					left: `calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleSize} + ${handleOffset})`,
 					top: css(space.top),
 					bottom: css(space.bottom),
@@ -213,7 +213,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 					height: css(space.height),
 				});
 			} else {
-				addCss("mr", {
+				addHandleCss("mr", {
 					right: `calc(${css(space.right, true)} - ${handleOffset})`,
 					top: css(space.top),
 					bottom: css(space.bottom),
@@ -221,9 +221,9 @@ export function styleDefinition(space: ISpaceDefinition) {
 					height: css(space.height),
 				});
 			}
-			addCss("mr:after", {
-				left: `-${touchHandleSize}`,
-				right: `-${touchHandleSize}`,
+			addHandleCss("mr:after", {
+				left: touchHandleSize,
+				right: touchHandleSize,
 				top: `0`,
 				bottom: `0`,
 			});
@@ -231,7 +231,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 		if (space.canResizeBottom) {
 			if (space.height.size) {
-				addCss("mb", {
+				addHandleCss("mb", {
 					top: `calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleSize} + ${handleOffset})`,
 					left: css(space.left),
 					right: css(space.right),
@@ -239,7 +239,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 					height: handleSize,
 				});
 			} else {
-				addCss("mb", {
+				addHandleCss("mb", {
 					bottom: `calc(${css(space.bottom, true)} - ${handleOffset})`,
 					left: css(space.left),
 					right: css(space.right),
@@ -247,7 +247,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 					height: handleSize,
 				});
 			}
-			addCss("mb:after", {
+			addHandleCss("mb:after", {
 				top: `calc(${css(space.left, true)} - ${handleOffset})`,
 				bottom: `-${touchHandleSize}`,
 				left: `0`,
@@ -256,7 +256,7 @@ export function styleDefinition(space: ISpaceDefinition) {
 		}
 
 		if (space.canResizeTopLeft) {
-			addCss("mtl", {
+			addHandleCss("mtl", {
 				left: `calc(${css(space.left, true)} - ${handleOffset})`,
 				top: css(space.top),
 				width: handleSize,
@@ -266,14 +266,14 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 		if (space.canResizeTopRight) {
 			if (space.width.size) {
-				addCss("mtr", {
+				addHandleCss("mtr", {
 					left: `calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleSize} + ${handleOffset}`,
 					top: css(space.top),
 					width: handleSize,
 					height: handleSize,
 				});
 			} else {
-				addCss("mtr", {
+				addHandleCss("mtr", {
 					right: `calc(${css(space.right, true)} - ${handleOffset})`,
 					top: css(space.top),
 					width: handleSize,
@@ -284,14 +284,14 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 		if (space.canResizeBottomLeft) {
 			if (space.height.size) {
-				addCss("mbl", {
+				addHandleCss("mbl", {
 					top: `calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleSize} + ${handleOffset})`,
 					left: css(space.left),
 					width: handleSize,
 					height: handleSize,
 				});
 			} else {
-				addCss("mbl", {
+				addHandleCss("mbl", {
 					bottom: `calc(${css(space.bottom, true)} - ${handleOffset})`,
 					left: css(space.left),
 					width: handleSize,
@@ -302,14 +302,14 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 		if (space.canResizeBottomRight) {
 			if (space.height.size && space.width.size) {
-				addCss("mbr", {
+				addHandleCss("mbr", {
 					left: `calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleSize} + ${handleOffset}`,
 					top: `calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleSize} + ${handleOffset})`,
 					width: handleSize,
 					height: handleSize,
 				});
 			} else {
-				addCss("mbr", {
+				addHandleCss("mbr", {
 					right: `calc(${css(space.right, true)} - ${handleOffset})`,
 					bottom: `calc(${css(space.bottom, true)} - ${handleOffset})`,
 					width: handleSize,
@@ -319,39 +319,55 @@ export function styleDefinition(space: ISpaceDefinition) {
 		}
 	} else {
 		if (space.canResizeLeft) {
-			cssElements.push(
-				`#${space.id}-ml { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${
-					space.handleSize
-				}px; }`,
-			);
-			cssElements.push(`#${space.id}-ml:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
+			addHandleCss("ml", {
+				right: `calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleOffset})`,
+				width: handleSize,
+			});
+			addHandleCss("ml:after", {
+				left: touchHandleSize,
+				right: touchHandleSize,
+				top: `0`,
+				bottom: `0`,
+			});
 		}
 
 		if (space.canResizeTop) {
-			cssElements.push(
-				`#${space.id}-mt { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${
-					space.handleSize
-				}px; }`,
-			);
-			cssElements.push(`#${space.id}-mt:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
+			addHandleCss("mt", {
+				bottom: `calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleOffset})`,
+				height: handleSize,
+			});
+			addHandleCss("mt:after", {
+				top: touchHandleSize,
+				bottom: touchHandleSize,
+				left: `0`,
+				right: `0`,
+			});
 		}
 
 		if (space.canResizeRight) {
-			cssElements.push(
-				`#${space.id}-mr { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${
-					space.handleSize
-				}px; }`,
-			);
-			cssElements.push(`#${space.id}-mr:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
+			addHandleCss("mr", {
+				left: `calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleOffset})`,
+				width: handleSize,
+			});
+			addHandleCss("mr:after", {
+				left: touchHandleSize,
+				right: touchHandleSize,
+				top: `0`,
+				bottom: `0`,
+			});
 		}
 
 		if (space.canResizeBottom) {
-			cssElements.push(
-				`#${space.id}-mb { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${
-					space.handleSize
-				}px; }`,
-			);
-			cssElements.push(`#${space.id}-mb:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
+			addHandleCss("mb", {
+				top: `calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleOffset})`,
+				height: handleSize,
+			});
+			addHandleCss("mb:after", {
+				top: touchHandleSize,
+				bottom: touchHandleSize,
+				left: `0`,
+				right: `0`,
+			});
 		}
 	}
 
