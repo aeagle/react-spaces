@@ -1,14 +1,19 @@
 import { ISpaceDefinition, SizeUnit, ISize, ResizeHandlePlacement, Type } from "./core-types";
 
 export function omit<K extends string, T extends Record<K, unknown>>(object: T, ...keys: K[]): Omit<T, K> {
-	const keySet = new Set<string>(keys)
-	const result = Object.create(null) as Omit<T, K>
-	for (const key in Object.keys(object)) {
-		if (!keySet.has(key)) {
-			result[key] = object[key]
+	const keySet = Object.create(null) as Record<K, true>;
+	keys.forEach((key) => {
+		keySet[key] = true;
+	});
+
+	const result = Object.create(null) as Omit<T, K>;
+	Object.keys(object).forEach((key) => {
+		if (!keySet[key]) {
+			result[key] = object[key];
 		}
-	} 
-	return result
+	});
+
+	return result;
 }
 
 export function shortuuid() {
