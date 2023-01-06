@@ -395,20 +395,18 @@ export function styleDefinition(space: ISpaceDefinition) {
 
 export function updateStyleDefinition(space: ISpaceDefinition) {
 	const definition = styleDefinition(space);
-	if (typeof document !== "undefined") {
-		if (document) {
-			const existing = document.getElementById(`style_${space.id}`);
+	if (!isServer()) {
+		const existing = document.getElementById(`style_${space.id}`);
 
-			if (existing) {
-				if (existing.innerHTML !== definition) {
-					existing.innerHTML = definition;
-				}
-			} else {
-				const newStyle = document.createElement("style");
-				newStyle.id = `style_${space.id}`;
-				newStyle.innerHTML = definition;
-				document.head.appendChild(newStyle);
+		if (existing) {
+			if (existing.innerHTML !== definition) {
+				existing.innerHTML = definition;
 			}
+		} else {
+			const newStyle = document.createElement("style");
+			newStyle.id = `style_${space.id}`;
+			newStyle.innerHTML = definition;
+			document.head.appendChild(newStyle);
 		}
 	}
 }
@@ -418,4 +416,13 @@ export function removeStyleDefinition(space: ISpaceDefinition) {
 	if (existing) {
 		document.head.removeChild(existing);
 	}
+}
+
+export function isServer() {
+	if (typeof document !== "undefined") {
+		if (document) {
+			return false;
+		}
+	}
+	return true;
 }

@@ -1,9 +1,18 @@
 import { CenterType, ResizeHandlePlacement, AnchorType, Type } from "../core-types";
-import { useSpace, ParentContext, LayerContext, DOMRectContext, IReactSpaceInnerProps, useEffectOnce, SSR_SUPPORT_ENABLED } from "../core-react";
+import {
+	useSpace,
+	ParentContext,
+	LayerContext,
+	DOMRectContext,
+	IReactSpaceInnerProps,
+	useEffectOnce,
+	SSR_SUPPORT_ENABLED,
+	useUniqueId,
+} from "../core-react";
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
-import { shortuuid, updateStyleDefinition } from "../core-utils";
+import { updateStyleDefinition } from "../core-utils";
 
 function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
 	switch (centerType) {
@@ -22,8 +31,13 @@ export class Space extends React.Component<IReactSpaceInnerProps> {
 }
 
 const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> = (props) => {
-	if (!props.id && !props.wrapperInstance["_react_spaces_uniqueid"]) {
-		props.wrapperInstance["_react_spaces_uniqueid"] = `s${shortuuid()}`;
+	let idToUse = props.id ?? props.wrapperInstance["_react_spaces_uniqueid"];
+
+	const uniqueId = useUniqueId();
+
+	if (!idToUse) {
+		props.wrapperInstance["_react_spaces_uniqueid"] = uniqueId;
+		idToUse = props.wrapperInstance["_react_spaces_uniqueid"];
 	}
 
 	const {
@@ -56,7 +70,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 
 	const { space, domRect, elementRef, resizeHandles } = useSpace({
 		...props,
-		...{ id: props.id || props.wrapperInstance["_react_spaces_uniqueid"] },
+		...{ id: idToUse },
 	});
 
 	useEffectOnce(() => {
@@ -66,6 +80,12 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 			if (space.element.getAttribute("data-ssr") === "1") {
 				const preRenderedStyle = space.element.children[0];
 				if (preRenderedStyle) {
+					const id = preRenderedStyle.getAttribute("data-id");
+					if (id) {
+						space.id = id;
+						console.log(space.id);
+					}
+
 					const newStyle = document.createElement("style");
 					newStyle.id = `style_${space.id}`;
 					newStyle.innerHTML = preRenderedStyle.innerHTML;
@@ -123,7 +143,11 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 				props.as || "div",
 				outerProps,
 				<>
-					{SSR_SUPPORT_ENABLED && space.ssrStyle && <style className="ssr">{space.ssrStyle}</style>}
+					{SSR_SUPPORT_ENABLED && space.ssrStyle && (
+						<style className="ssr" data-id={space.id}>
+							{space.ssrStyle}
+						</style>
+					)}
 					<div className={innerClasses.join(" ")} style={innerStyle}>
 						<ParentContext.Provider value={space.id}>
 							<LayerContext.Provider value={undefined}>

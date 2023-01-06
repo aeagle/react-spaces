@@ -10,13 +10,11 @@ export default function Home() {
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-			<Space.ViewPort id="viewport">
-				<Space.LeftResizable id="left" size="25%" centerContent={Space.CenterType.HorizontalVertical} style={{ backgroundColor: "white" }}>
+			<Space.ViewPort>
+				<Space.LeftResizable size="25%" centerContent={Space.CenterType.HorizontalVertical} style={{ backgroundColor: "white" }}>
 					<span style={{ color: "black" }}>Hello world</span>
 				</Space.LeftResizable>
-				<Space.Fill id="fill" centerContent={Space.CenterType.HorizontalVertical}>
-					Hello world
-				</Space.Fill>
+				<Space.Fill centerContent={Space.CenterType.HorizontalVertical}>Hello world</Space.Fill>
 			</Space.ViewPort>
 		</>
 	);

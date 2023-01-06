@@ -117,13 +117,26 @@ export function useForceUpdate() {
 	}, []);
 }
 
+export function useUniqueId() {
+	if (React.version.startsWith("18")) {
+		return `s${React.useId().replace(/\:/g, "")}`;
+	}
+
+	if ((React as any).unstable_useOpaqueIdentifier) {
+		return `s${(React as any).unstable_useOpaqueIdentifier().replace(/\:/g, "")}`;
+	}
+
+	return `s${shortuuid()}`;
+}
+
 export function useSpace(props: IReactSpaceInnerProps) {
 	const store = currentStore;
 	const update = useForceUpdate();
 	const parent = React.useContext(ParentContext);
 	const layer = React.useContext(LayerContext);
 	const { debug } = React.useContext(OptionsContext);
-	const [spaceId] = React.useState(props.id || `s${shortuuid()}`);
+	const uniqueId = useUniqueId();
+	const [spaceId] = React.useState(props.id || uniqueId);
 	const elementRef = React.useRef<HTMLElement>();
 	const resizeSensor = React.useRef<ResizeSensor>();
 	const [domRect, setDomRect] = React.useState<DOMRect>();
@@ -277,6 +290,7 @@ export function useCurrentSpace() {
 }
 
 export let SSR_SUPPORT_ENABLED = false;
+
 export function enabledSsrSupport() {
 	SSR_SUPPORT_ENABLED = true;
 }
