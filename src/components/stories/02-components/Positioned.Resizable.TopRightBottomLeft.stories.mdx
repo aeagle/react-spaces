@@ -169,7 +169,7 @@ Absolutely positioned space within it's parent with top / left / right / bottom 
 				)
 			}
 			return <ViewPort>
-				<Positioned style={green} left={200} top={200} right={200} bottom={200} trackSize={true} resizable={[ ResizeType.All ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+				<Positioned style={green} left={200} top={200} right={200} bottom={200} touchHandleSize={20} trackSize={true} resizable={[ ResizeType.All ]} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 					<DragHandle />
 				</Positioned>
 			</ViewPort>
