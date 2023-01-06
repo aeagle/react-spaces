@@ -16,7 +16,6 @@ import { coalesce, shortuuid } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import * as PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
-import { Space } from "./components/Space";
 
 // WORKAROUND for React18 strict mode
 // https://blog.ag-grid.com/avoiding-react-18-double-mount/
