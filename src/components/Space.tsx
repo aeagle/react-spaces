@@ -134,15 +134,13 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 			{React.createElement(
 				props.as || "div",
 				outerProps,
-				<>
-					<div className={innerClasses.join(" ")} style={innerStyle}>
-						<ParentContext.Provider value={space.id}>
-							<LayerContext.Provider value={undefined}>
-								<DOMRectContext.Provider value={domRect}>{centeredContent}</DOMRectContext.Provider>
-							</LayerContext.Provider>
-						</ParentContext.Provider>
-					</div>
-				</>,
+				<div className={innerClasses.join(" ")} style={innerStyle}>
+					<ParentContext.Provider value={space.id}>
+						<LayerContext.Provider value={undefined}>
+							<DOMRectContext.Provider value={domRect}>{centeredContent}</DOMRectContext.Provider>
+						</LayerContext.Provider>
+					</ParentContext.Provider>
+				</div>,
 			)}
 		</>
 	);
