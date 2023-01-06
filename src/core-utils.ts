@@ -411,7 +411,6 @@ export function updateStyleDefinition(space: ISpaceDefinition) {
 			}
 		}
 	}
-	space.ssrStyle = definition;
 }
 
 export function removeStyleDefinition(space: ISpaceDefinition) {
