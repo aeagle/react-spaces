@@ -410,9 +410,8 @@ export function updateStyleDefinition(space: ISpaceDefinition) {
 				document.head.appendChild(newStyle);
 			}
 		}
-	} else {
-		space.ssrStyle = definition;
 	}
+	space.ssrStyle = definition;
 }
 
 export function removeStyleDefinition(space: ISpaceDefinition) {

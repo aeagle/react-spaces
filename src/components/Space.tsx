@@ -110,11 +110,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 		...events,
 	} as any;
 
-	const isSSR = typeof document === "undefined";
-
-	if (isSSR) {
-		outerProps["data-ssr"] = "1";
-	}
+	outerProps["data-ssr"] = "1";
 
 	return (
 		<>
@@ -123,7 +119,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 				props.as || "div",
 				outerProps,
 				<>
-					{isSSR && space.ssrStyle && <style className="ssr">{space.ssrStyle}</style>}
+					{space.ssrStyle && <style className="ssr">{space.ssrStyle}</style>}
 					<div className={innerClasses.join(" ")} style={innerStyle}>
 						<ParentContext.Provider value={space.id}>
 							<LayerContext.Provider value={undefined}>
