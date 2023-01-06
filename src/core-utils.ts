@@ -397,7 +397,6 @@ export function updateStyleDefinition(space: ISpaceDefinition) {
 	const definition = styleDefinition(space);
 	if (!isServer()) {
 		const existing = document.getElementById(`style_${space.id}`);
-
 		if (existing) {
 			if (existing.innerHTML !== definition) {
 				existing.innerHTML = definition;
@@ -408,6 +407,8 @@ export function updateStyleDefinition(space: ISpaceDefinition) {
 			newStyle.innerHTML = definition;
 			document.head.appendChild(newStyle);
 		}
+	} else {
+		space.ssrStyle = definition;
 	}
 }
 

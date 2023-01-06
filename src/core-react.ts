@@ -290,7 +290,6 @@ export function useCurrentSpace() {
 }
 
 export let SSR_SUPPORT_ENABLED = false;
-
 export function enabledSsrSupport() {
 	SSR_SUPPORT_ENABLED = true;
 }

@@ -12,7 +12,7 @@ import {
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
-import { updateStyleDefinition } from "../core-utils";
+import { isServer, updateStyleDefinition } from "../core-utils";
 
 function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
 	switch (centerType) {
@@ -73,28 +73,20 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 		...{ id: idToUse },
 	});
 
+	if (SSR_SUPPORT_ENABLED && !isServer()) {
+		const preRenderedStyle = document.getElementById(`style_${idToUse}_ssr`);
+		if (preRenderedStyle) {
+			const newStyle = document.createElement("style");
+			newStyle.id = `style_${idToUse}`;
+			newStyle.innerHTML = preRenderedStyle.innerHTML;
+			document.head.appendChild(newStyle);
+			space.ssrStyle = preRenderedStyle.innerHTML;
+		}
+		updateStyleDefinition(space);
+	}
+
 	useEffectOnce(() => {
 		space.element = elementRef.current!;
-
-		if (SSR_SUPPORT_ENABLED) {
-			if (space.element.getAttribute("data-ssr") === "1") {
-				const preRenderedStyle = space.element.children[0];
-				if (preRenderedStyle) {
-					const id = preRenderedStyle.getAttribute("data-id");
-					if (id) {
-						space.id = id;
-						console.log(space.id);
-					}
-
-					const newStyle = document.createElement("style");
-					newStyle.id = `style_${space.id}`;
-					newStyle.innerHTML = preRenderedStyle.innerHTML;
-					document.head.appendChild(newStyle);
-				}
-				space.element.removeAttribute("data-ssr");
-				updateStyleDefinition(space);
-			}
-		}
 	});
 
 	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
@@ -132,22 +124,18 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 		...events,
 	} as any;
 
-	if (SSR_SUPPORT_ENABLED) {
-		outerProps["data-ssr"] = "1";
-	}
-
 	return (
 		<>
 			{resizeHandles.mouseHandles.map((handleProps) => handleRender?.(handleProps) || <div {...handleProps} />)}
+			{SSR_SUPPORT_ENABLED && space.ssrStyle ? (
+				<style id={`style_${space.id}_ssr`}>{space.ssrStyle}</style>
+			) : (
+				<style id={`style_${space.id}_ssr`} />
+			)}
 			{React.createElement(
 				props.as || "div",
 				outerProps,
 				<>
-					{SSR_SUPPORT_ENABLED && space.ssrStyle && (
-						<style className="ssr" data-id={space.id}>
-							{space.ssrStyle}
-						</style>
-					)}
 					<div className={innerClasses.join(" ")} style={innerStyle}>
 						<ParentContext.Provider value={space.id}>
 							<LayerContext.Provider value={undefined}>
