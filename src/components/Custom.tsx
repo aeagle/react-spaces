@@ -4,7 +4,7 @@ import { Space } from "./Space";
 import * as PropTypes from "prop-types";
 import { IReactSpaceCommonProps } from "../core-react";
 import { anchoredProps, IAnchorProps } from "./Anchored";
-import { omit } from '../core-utils';
+import { omit } from "../core-utils";
 
 type ICustomProps = Omit<IReactSpaceCommonProps & IAnchorProps, "size"> & {
 	type?: Type;
@@ -23,23 +23,26 @@ type ICustomProps = Omit<IReactSpaceCommonProps & IAnchorProps, "size"> & {
 	resizeTypes?: ResizeType[];
 };
 
-const customProps = omit({
-	...anchoredProps,
-	...{
-		type: PropTypes.oneOf([Type.Positioned, Type.Fill, Type.Anchored]),
+const customProps = omit(
+	{
+		...anchoredProps,
+		...{
+			type: PropTypes.oneOf([Type.Positioned, Type.Fill, Type.Anchored]),
 
-		anchor: PropTypes.oneOf([AnchorType.Left, AnchorType.Top, AnchorType.Right, AnchorType.Bottom]),
-		anchorSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+			anchor: PropTypes.oneOf([AnchorType.Left, AnchorType.Top, AnchorType.Right, AnchorType.Bottom]),
+			anchorSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
-		left: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		right: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		resizeTypes: PropTypes.array,
+			left: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+			top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+			right: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+			bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+			width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+			height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+			resizeTypes: PropTypes.array,
+		},
 	},
-}, 'size');
+	"size",
+);
 
 export const Custom: React.FC<ICustomProps> = ({
 	children,
@@ -67,10 +70,14 @@ export const Custom: React.FC<ICustomProps> = ({
 			bottom: bottom,
 			width: width,
 			height: height,
-			leftResizable: resizeTypes && resizeTypes.includes(ResizeType.Left),
-			topResizable: resizeTypes && resizeTypes.includes(ResizeType.Top),
-			rightResizable: resizeTypes && resizeTypes.includes(ResizeType.Right),
-			bottomResizable: resizeTypes && resizeTypes.includes(ResizeType.Bottom),
+			leftResizable: resizeTypes && (resizeTypes.includes(ResizeType.Left) || resizeTypes.includes(ResizeType.All)),
+			topResizable: resizeTypes && (resizeTypes.includes(ResizeType.Top) || resizeTypes.includes(ResizeType.All)),
+			rightResizable: resizeTypes && (resizeTypes.includes(ResizeType.Right) || resizeTypes.includes(ResizeType.All)),
+			bottomResizable: resizeTypes && (resizeTypes.includes(ResizeType.Bottom) || resizeTypes.includes(ResizeType.All)),
+			topLeftResizable: resizeTypes && (resizeTypes.includes(ResizeType.TopLeft) || resizeTypes.includes(ResizeType.All)),
+			topRightResizable: resizeTypes && (resizeTypes.includes(ResizeType.TopRight) || resizeTypes.includes(ResizeType.All)),
+			bottomLeftResizable: resizeTypes && (resizeTypes.includes(ResizeType.BottomLeft) || resizeTypes.includes(ResizeType.All)),
+			bottomRightResizable: resizeTypes && (resizeTypes.includes(ResizeType.BottomRight) || resizeTypes.includes(ResizeType.All)),
 		};
 	} else {
 		if (anchor === AnchorType.Left) {

@@ -1,4 +1,4 @@
-import { ISpaceDefinition, SizeUnit, ISize, ResizeHandlePlacement, Type } from "./core-types";
+import { ISpaceDefinition, SizeUnit, ISize, ResizeHandlePlacement, Type, Orientation } from "./core-types";
 
 export function omit<K extends string, T extends Record<K, unknown>>(object: T, ...keys: K[]): Omit<T, K> {
 	const keySet = Object.create(null) as Record<K, true>;
@@ -143,118 +143,251 @@ export function styleDefinition(space: ISpaceDefinition) {
 		cssElements.push(`#${space.id} > .spaces-space-inner { overflow: auto; touch-action: auto; }`);
 	}
 
-	let handleOffset = 0;
-	const touchHandleSize = space.touchHandleSize / 2 - space.handleSize / 2;
+	let nhandleOffset = 0;
+	const handleSize = `${space.handleSize}px`;
+	const touchHandleSize = `-${space.touchHandleSize / 2 - space.handleSize / 2}px`;
+	const negativeTouchHandleSize = `${space.touchHandleSize / 2 - space.handleSize / 2}px`;
 
 	switch (space.handlePlacement) {
 		case ResizeHandlePlacement.Inside:
 		case ResizeHandlePlacement.OverlayInside:
-			handleOffset = space.handleSize;
+			nhandleOffset = space.handleSize;
 			if (space.type === Type.Positioned) {
-				handleOffset = 0;
+				nhandleOffset = 0;
 			}
 			break;
 		case ResizeHandlePlacement.OverlayBoundary:
-			handleOffset = space.handleSize / 2;
+			nhandleOffset = space.handleSize / 2;
 			break;
 	}
 
-	if (space.type === Type.Positioned) {
-		if (space.canResizeLeft) {
-			cssElements.push(
-				`#${space.id}-ml { left: calc(${css(space.left, true)} - ${handleOffset}px); width: ${space.handleSize}px; top: ${css(
-					space.top,
-				)}; bottom: ${css(space.bottom)}; height: ${css(space.height)}; }`,
-			);
-		}
+	const handleOffset = `${nhandleOffset}px`;
 
-		if (space.canResizeTop) {
-			cssElements.push(
-				`#${space.id}-mt { top: calc(${css(space.top, true)} - ${handleOffset}px); height: ${space.handleSize}px; left: ${css(
-					space.left,
-				)}; right: ${css(space.right)}; width: ${css(space.width)}; }`,
-			);
-			cssElements.push(
-				`#${space.id}-mt:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: ${css(space.left)}; right: ${css(
-					space.right,
-				)}; width: ${css(space.width)}; }`,
-			);
-		}
+	const addHandleCss = (id: string, pos: { left?: string; top?: string; right?: string; bottom?: string; width?: string; height?: string }) => {
+		const styles: string[] = [];
 
-		if (space.canResizeRight) {
-			cssElements.push(`#${space.id}-mr:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
-			if (space.width.size) {
-				cssElements.push(
-					`#${space.id}-mr { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${
-						space.handleSize
-					}px + ${handleOffset}px); width: ${space.handleSize}px; top: ${css(space.top)}; bottom: ${css(space.bottom)}; height: ${css(
-						space.height,
-					)}; }`,
-				);
+		if (pos.left) styles.push(`left: ${pos.left}`);
+		if (pos.top) styles.push(`top: ${pos.top}`);
+		if (pos.right) styles.push(`right: ${pos.right}`);
+		if (pos.bottom) styles.push(`bottom: ${pos.bottom}`);
+		if (pos.width) styles.push(`width: ${pos.width}`);
+		if (pos.height) styles.push(`height: ${pos.height}`);
+
+		cssElements.push(`#${space.id}-${id} { ${styles.join("; ")}}`);
+	};
+
+	const widthOrHeightSpecified = () =>
+		space.type === Type.Positioned
+			? space.width.size && space.height.size
+			: space.orientation == Orientation.Horizontal
+			? space.width.size
+			: space.height.size;
+
+	if (space.canResizeLeft) {
+		if (space.anchor) {
+			addHandleCss("ml", {
+				right: `calc(${css(space.right, true)} + ${css(space.width)} - ${handleOffset})`,
+				top: `0`,
+				bottom: `0`,
+				width: handleSize,
+			});
+		} else {
+			addHandleCss("ml", {
+				left: `calc(${css(space.left, true)} - ${handleOffset})`,
+				top: css(space.top),
+				bottom: css(space.bottom),
+				width: handleSize,
+				height: css(space.height),
+			});
+		}
+		addHandleCss("ml:after", {
+			left: touchHandleSize,
+			right: touchHandleSize,
+			top: touchHandleSize,
+			bottom: touchHandleSize,
+		});
+	}
+
+	if (space.canResizeTop) {
+		if (space.anchor) {
+			addHandleCss("mt", {
+				left: `0`,
+				right: `0`,
+				bottom: `calc(${css(space.bottom)} + ${css(space.height)} - ${handleOffset})`,
+				height: handleSize,
+			});
+			addHandleCss("mt:after", {
+				top: touchHandleSize,
+				bottom: touchHandleSize,
+				left: touchHandleSize,
+				width: css(space.width),
+				right: touchHandleSize,
+			});
+		} else {
+			addHandleCss("mt", {
+				top: `calc(${css(space.top, true)} - ${handleOffset})`,
+				left: css(space.left),
+				right: css(space.right),
+				width: css(space.width),
+				height: handleSize,
+			});
+			if (widthOrHeightSpecified()) {
+				addHandleCss("mt:after", {
+					top: touchHandleSize,
+					bottom: touchHandleSize,
+					left: touchHandleSize,
+					width: `calc(${css(space.width, true)} - ${handleOffset}) + ${negativeTouchHandleSize}`,
+					right: touchHandleSize,
+				});
 			} else {
-				cssElements.push(
-					`#${space.id}-mr { right: calc(${css(space.right, true)} - ${handleOffset}px); width: ${space.handleSize}px; top: ${css(
-						space.top,
-					)}; bottom: ${css(space.bottom)}; height: ${css(space.height)}; }`,
-				);
+				addHandleCss("mt:after", {
+					top: touchHandleSize,
+					bottom: touchHandleSize,
+					left: touchHandleSize,
+					width: css(space.width),
+					right: touchHandleSize,
+				});
 			}
-			cssElements.push(`#${space.id}-mr:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
 		}
+	}
 
-		if (space.canResizeBottom) {
-			if (space.height.size) {
-				cssElements.push(
-					`#${space.id}-mb { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${
-						space.handleSize
-					}px + ${handleOffset}px); height: ${space.handleSize}px; left: ${css(space.left)}; right: ${css(space.right)}; width: ${css(
-						space.width,
-					)}; }`,
-				);
-			} else {
-				cssElements.push(
-					`#${space.id}-mb { bottom: calc(${css(space.bottom, true)} - ${handleOffset}px); height: ${space.handleSize}px; left: ${css(
-						space.left,
-					)}; right: ${css(space.right)}; width: ${css(space.width)}; }`,
-				);
-			}
-			cssElements.push(`#${space.id}-mb:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
+	if (space.canResizeRight) {
+		if (widthOrHeightSpecified()) {
+			addHandleCss("mr", {
+				left: `calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleSize} + ${handleOffset})`,
+				top: css(space.top),
+				bottom: css(space.bottom),
+				width: handleSize,
+				height: css(space.height),
+			});
+		} else {
+			addHandleCss("mr", {
+				right: `calc(${css(space.right, true)} - ${handleOffset})`,
+				top: css(space.top),
+				bottom: css(space.bottom),
+				width: handleSize,
+				height: css(space.height),
+			});
 		}
-	} else {
-		if (space.canResizeLeft) {
-			cssElements.push(
-				`#${space.id}-ml { right: calc(${css(space.right, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${
-					space.handleSize
-				}px; }`,
-			);
-			cssElements.push(`#${space.id}-ml:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
-		}
+		addHandleCss("mr:after", {
+			left: touchHandleSize,
+			right: touchHandleSize,
+			top: touchHandleSize,
+			bottom: touchHandleSize,
+		});
+	}
 
-		if (space.canResizeTop) {
-			cssElements.push(
-				`#${space.id}-mt { bottom: calc(${css(space.bottom, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${
-					space.handleSize
-				}px; }`,
-			);
-			cssElements.push(`#${space.id}-mt:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
+	if (space.canResizeBottom) {
+		if (widthOrHeightSpecified()) {
+			addHandleCss("mb", {
+				top: `calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleSize} + ${handleOffset})`,
+				left: css(space.left),
+				right: css(space.right),
+				width: css(space.width),
+				height: handleSize,
+			});
+		} else {
+			addHandleCss("mb", {
+				bottom: `calc(${css(space.bottom, true)} - ${handleOffset})`,
+				left: css(space.left),
+				right: css(space.right),
+				width: css(space.width),
+				height: handleSize,
+			});
 		}
+		addHandleCss("mb:after", {
+			top: touchHandleSize,
+			bottom: touchHandleSize,
+			left: touchHandleSize,
+			right: touchHandleSize,
+		});
+	}
 
-		if (space.canResizeRight) {
-			cssElements.push(
-				`#${space.id}-mr { left: calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleOffset}px); width: ${
-					space.handleSize
-				}px; }`,
-			);
-			cssElements.push(`#${space.id}-mr:after { left: -${touchHandleSize}px; right: -${touchHandleSize}px; top: 0; bottom: 0; }`);
-		}
+	if (space.canResizeTopLeft) {
+		addHandleCss("mtl", {
+			left: `calc(${css(space.left, true)} - ${handleOffset})`,
+			top: css(space.top),
+			width: handleSize,
+			height: handleSize,
+		});
+		addHandleCss("mtl:after", {
+			top: touchHandleSize,
+			bottom: touchHandleSize,
+			left: touchHandleSize,
+			right: touchHandleSize,
+		});
+	}
 
-		if (space.canResizeBottom) {
-			cssElements.push(
-				`#${space.id}-mb { top: calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleOffset}px); height: ${
-					space.handleSize
-				}px; }`,
-			);
-			cssElements.push(`#${space.id}-mb:after { top: -${touchHandleSize}px; bottom: -${touchHandleSize}px; left: 0; right: 0; }`);
+	if (space.canResizeTopRight) {
+		if (widthOrHeightSpecified()) {
+			addHandleCss("mtr", {
+				left: `calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleSize} + ${handleOffset})`,
+				top: css(space.top),
+				width: handleSize,
+				height: handleSize,
+			});
+		} else {
+			addHandleCss("mtr", {
+				right: `calc(${css(space.right, true)} - ${handleOffset})`,
+				top: css(space.top),
+				width: handleSize,
+				height: handleSize,
+			});
 		}
+		addHandleCss("mtr:after", {
+			top: touchHandleSize,
+			bottom: touchHandleSize,
+			left: touchHandleSize,
+			right: touchHandleSize,
+		});
+	}
+
+	if (space.canResizeBottomLeft) {
+		if (widthOrHeightSpecified()) {
+			addHandleCss("mbl", {
+				top: `calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleSize} + ${handleOffset})`,
+				left: css(space.left),
+				width: handleSize,
+				height: handleSize,
+			});
+		} else {
+			addHandleCss("mbl", {
+				bottom: `calc(${css(space.bottom, true)} - ${handleOffset})`,
+				left: css(space.left),
+				width: handleSize,
+				height: handleSize,
+			});
+		}
+		addHandleCss("mbl:after", {
+			top: touchHandleSize,
+			bottom: touchHandleSize,
+			left: touchHandleSize,
+			right: touchHandleSize,
+		});
+	}
+
+	if (space.canResizeBottomRight) {
+		if (widthOrHeightSpecified()) {
+			addHandleCss("mbr", {
+				left: `calc(${css(space.left, true)} + ${css(space.width, true)} - ${handleSize} + ${handleOffset})`,
+				top: `calc(${css(space.top, true)} + ${css(space.height, true)} - ${handleSize} + ${handleOffset})`,
+				width: handleSize,
+				height: handleSize,
+			});
+		} else {
+			addHandleCss("mbr", {
+				right: `calc(${css(space.right, true)} - ${handleOffset})`,
+				bottom: `calc(${css(space.bottom, true)} - ${handleOffset})`,
+				width: handleSize,
+				height: handleSize,
+			});
+		}
+		addHandleCss("mbr:after", {
+			top: touchHandleSize,
+			bottom: touchHandleSize,
+			left: touchHandleSize,
+			right: touchHandleSize,
+		});
 	}
 
 	return cssElements.join(" ");
