@@ -26,6 +26,7 @@ const targets = [
 		plugins: [
 			postcss({
 				extract: false,
+				minimize: true,
 			}),
 			...commonPlugins,
 			babel({ babelHelpers: "runtime", exclude: "node_modules/**" }),
@@ -40,6 +41,7 @@ const targets = [
 		plugins: [
 			postcss({
 				extract: false,
+				minimize: true,
 			}),
 			...commonPlugins,
 		],
@@ -52,6 +54,7 @@ const targets = [
 		plugins: [
 			postcss({
 				extract: true,
+				minimize: true,
 			}),
 			...commonPlugins,
 			babel({ babelHelpers: "runtime", exclude: "node_modules/**" }),
@@ -66,6 +69,7 @@ const targets = [
 		plugins: [
 			postcss({
 				extract: true,
+				minimize: true,
 			}),
 			...commonPlugins,
 		],

@@ -1,9 +1,18 @@
 import { CenterType, ResizeHandlePlacement, AnchorType, Type } from "../core-types";
-import { useSpace, ParentContext, LayerContext, DOMRectContext, IReactSpaceInnerProps, useEffectOnce } from "../core-react";
+import {
+	useSpace,
+	ParentContext,
+	LayerContext,
+	DOMRectContext,
+	IReactSpaceInnerProps,
+	useEffectOnce,
+	SSR_SUPPORT_ENABLED,
+	useUniqueId,
+} from "../core-react";
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
-import { shortuuid } from "../core-utils";
+import { isServer, updateStyleDefinition } from "../core-utils";
 
 function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
 	switch (centerType) {
@@ -22,8 +31,14 @@ export class Space extends React.Component<IReactSpaceInnerProps> {
 }
 
 const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> = (props) => {
-	if (!props.id && !props.wrapperInstance["_react_spaces_uniqueid"]) {
-		props.wrapperInstance["_react_spaces_uniqueid"] = `s${shortuuid()}`;
+	let idToUse = props.id ?? props.wrapperInstance["_react_spaces_uniqueid"];
+	const [initialRender, setInitialRender] = React.useState(SSR_SUPPORT_ENABLED ? true : false);
+
+	const uniqueId = useUniqueId();
+
+	if (!idToUse) {
+		props.wrapperInstance["_react_spaces_uniqueid"] = uniqueId;
+		idToUse = props.wrapperInstance["_react_spaces_uniqueid"];
 	}
 
 	const {
@@ -56,11 +71,25 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 
 	const { space, domRect, elementRef, resizeHandles } = useSpace({
 		...props,
-		...{ id: props.id || props.wrapperInstance["_react_spaces_uniqueid"] },
+		...{ id: idToUse },
 	});
+
+	if (SSR_SUPPORT_ENABLED && !isServer()) {
+		const preRenderedStyle = document.getElementById(`style_${idToUse}_ssr`);
+		if (preRenderedStyle) {
+			space.ssrStyle = preRenderedStyle.innerHTML;
+		}
+		updateStyleDefinition(space);
+	}
 
 	useEffectOnce(() => {
 		space.element = elementRef.current!;
+
+		if (SSR_SUPPORT_ENABLED) {
+			if (initialRender) {
+				setInitialRender(false);
+			}
+		}
 	});
 
 	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
@@ -89,19 +118,22 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 
 	const centeredContent = applyCentering(children, props.centerContent);
 
+	const outerProps = {
+		...{
+			id: space.id,
+			ref: elementRef,
+			className: outerClasses.join(" "),
+		},
+		...events,
+	} as any;
+
 	return (
 		<>
 			{resizeHandles.mouseHandles.map((handleProps) => handleRender?.(handleProps) || <div {...handleProps} />)}
+			{SSR_SUPPORT_ENABLED && space.ssrStyle && initialRender && <style id={`style_${space.id}_ssr`}>{space.ssrStyle}</style>}
 			{React.createElement(
 				props.as || "div",
-				{
-					...{
-						id: space.id,
-						ref: elementRef,
-						className: outerClasses.join(" "),
-					},
-					...events,
-				},
+				outerProps,
 				<div className={innerClasses.join(" ")} style={innerStyle}>
 					<ParentContext.Provider value={space.id}>
 						<LayerContext.Provider value={undefined}>

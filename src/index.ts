@@ -22,4 +22,4 @@ export type {
 	ResizeTouchEvent
 }
 
-export { useCurrentSpace } from "./core-react";
+export { useCurrentSpace, enabledSsrSupport } from "./core-react";

@@ -171,6 +171,7 @@ export interface ISpaceDefinition {
 	canResizeBottomLeft: boolean;
 	canResizeBottomRight: boolean;
 	allowOverflow: boolean;
+	ssrStyle: string;
 }
 
 export interface ISpaceContext {
@@ -179,4 +180,5 @@ export interface ISpaceContext {
 	startMouseDrag: (e: ResizeMouseEvent, onDragEnd?: OnDragEnd) => void;
 	startTouchDrag: (e: ResizeTouchEvent, onDragEnd?: OnDragEnd) => void;
 	forceUpdate: () => void;
+	ssrStyle?: string;
 }
