@@ -32,6 +32,7 @@ export class Space extends React.Component<IReactSpaceInnerProps> {
 
 const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> = (props) => {
 	let idToUse = props.id ?? props.wrapperInstance["_react_spaces_uniqueid"];
+	const [initialRender, setInitialRender] = React.useState(SSR_SUPPORT_ENABLED ? true : false);
 
 	const uniqueId = useUniqueId();
 
@@ -76,10 +77,10 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 	if (SSR_SUPPORT_ENABLED && !isServer()) {
 		const preRenderedStyle = document.getElementById(`style_${idToUse}_ssr`);
 		if (preRenderedStyle) {
-			const newStyle = document.createElement("style");
-			newStyle.id = `style_${idToUse}`;
-			newStyle.innerHTML = preRenderedStyle.innerHTML;
-			document.head.appendChild(newStyle);
+			// const newStyle = document.createElement("style");
+			// newStyle.id = `style_${idToUse}`;
+			// newStyle.innerHTML = preRenderedStyle.innerHTML;
+			// document.head.appendChild(newStyle);
 			space.ssrStyle = preRenderedStyle.innerHTML;
 		}
 		updateStyleDefinition(space);
@@ -87,6 +88,12 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 
 	useEffectOnce(() => {
 		space.element = elementRef.current!;
+
+		if (SSR_SUPPORT_ENABLED) {
+			if (initialRender) {
+				setInitialRender(false);
+			}
+		}
 	});
 
 	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
@@ -127,11 +134,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 	return (
 		<>
 			{resizeHandles.mouseHandles.map((handleProps) => handleRender?.(handleProps) || <div {...handleProps} />)}
-			{SSR_SUPPORT_ENABLED && space.ssrStyle ? (
-				<style id={`style_${space.id}_ssr`}>{space.ssrStyle}</style>
-			) : (
-				<style id={`style_${space.id}_ssr`} />
-			)}
+			{SSR_SUPPORT_ENABLED && space.ssrStyle && initialRender && <style id={`style_${space.id}_ssr`}>{space.ssrStyle}</style>}
 			{React.createElement(
 				props.as || "div",
 				outerProps,

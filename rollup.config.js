@@ -5,7 +5,6 @@ import babel from "@rollup/plugin-babel";
 import sourcemaps from "rollup-plugin-sourcemaps";
 import postcss from "rollup-plugin-postcss";
 import { uglify } from "rollup-plugin-uglify";
-import css from "rollup-plugin-import-css";
 import pkg from "./package.json";
 
 const commonPlugins = [
