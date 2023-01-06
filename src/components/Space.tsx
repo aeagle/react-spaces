@@ -73,7 +73,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 			space.element.removeAttribute("data-ssr");
 			updateStyleDefinition(space);
 		}
-	}, []);
+	});
 
 	const userClasses = className ? className.split(" ").map((c) => c.trim()) : [];
 

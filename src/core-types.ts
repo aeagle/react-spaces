@@ -171,6 +171,7 @@ export interface ISpaceDefinition {
 	canResizeBottomLeft: boolean;
 	canResizeBottomRight: boolean;
 	allowOverflow: boolean;
+	ssrStyle: string;
 }
 
 export interface ISpaceContext {
