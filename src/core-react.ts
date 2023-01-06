@@ -275,3 +275,8 @@ export function useCurrentSpace() {
 		forceUpdate: onForceUpdate,
 	} as ISpaceContext;
 }
+
+export let SSR_SUPPORT_ENABLED = false;
+export function enabledSsrSupport() {
+	SSR_SUPPORT_ENABLED = true;
+}

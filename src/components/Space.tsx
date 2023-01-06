@@ -1,5 +1,5 @@
 import { CenterType, ResizeHandlePlacement, AnchorType, Type } from "../core-types";
-import { useSpace, ParentContext, LayerContext, DOMRectContext, IReactSpaceInnerProps, useEffectOnce } from "../core-react";
+import { useSpace, ParentContext, LayerContext, DOMRectContext, IReactSpaceInnerProps, useEffectOnce, SSR_SUPPORT_ENABLED } from "../core-react";
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
@@ -62,16 +62,18 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 	useEffectOnce(() => {
 		space.element = elementRef.current!;
 
-		if (space.element.getAttribute("data-ssr") === "1") {
-			const preRenderedStyle = space.element.children[0];
-			if (preRenderedStyle) {
-				const newStyle = document.createElement("style");
-				newStyle.id = `style_${space.id}`;
-				newStyle.innerHTML = preRenderedStyle.innerHTML;
-				document.head.appendChild(newStyle);
+		if (SSR_SUPPORT_ENABLED) {
+			if (space.element.getAttribute("data-ssr") === "1") {
+				const preRenderedStyle = space.element.children[0];
+				if (preRenderedStyle) {
+					const newStyle = document.createElement("style");
+					newStyle.id = `style_${space.id}`;
+					newStyle.innerHTML = preRenderedStyle.innerHTML;
+					document.head.appendChild(newStyle);
+				}
+				space.element.removeAttribute("data-ssr");
+				updateStyleDefinition(space);
 			}
-			space.element.removeAttribute("data-ssr");
-			updateStyleDefinition(space);
 		}
 	});
 
@@ -110,7 +112,9 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 		...events,
 	} as any;
 
-	outerProps["data-ssr"] = "1";
+	if (SSR_SUPPORT_ENABLED) {
+		outerProps["data-ssr"] = "1";
+	}
 
 	return (
 		<>
@@ -119,7 +123,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 				props.as || "div",
 				outerProps,
 				<>
-					{space.ssrStyle && <style className="ssr">{space.ssrStyle}</style>}
+					{SSR_SUPPORT_ENABLED && space.ssrStyle && <style className="ssr">{space.ssrStyle}</style>}
 					<div className={innerClasses.join(" ")} style={innerStyle}>
 						<ParentContext.Provider value={space.id}>
 							<LayerContext.Provider value={undefined}>
