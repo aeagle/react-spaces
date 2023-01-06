@@ -28,6 +28,7 @@ export enum Orientation {
 export type SizeUnit = number | string | undefined;
 
 export enum ResizeType {
+	All = "resize-all",
 	Left = "resize-left",
 	Right = "resize-right",
 	Top = "resize-top",
@@ -112,6 +113,10 @@ export interface IPositionalProps extends IPosition {
 	topResizable?: boolean;
 	rightResizable?: boolean;
 	bottomResizable?: boolean;
+	topLeftResizable?: boolean;
+	topRightResizable?: boolean;
+	bottomLeftResizable?: boolean;
+	bottomRightResizable?: boolean;
 }
 
 export interface ISize {
@@ -161,6 +166,10 @@ export interface ISpaceDefinition {
 	canResizeLeft: boolean;
 	canResizeRight: boolean;
 	canResizeBottom: boolean;
+	canResizeTopLeft: boolean;
+	canResizeTopRight: boolean;
+	canResizeBottomLeft: boolean;
+	canResizeBottomRight: boolean;
 	allowOverflow: boolean;
 }
 

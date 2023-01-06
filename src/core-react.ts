@@ -112,10 +112,9 @@ export interface IReactSpacesOptions {
 
 export function useForceUpdate() {
 	const [, setTick] = React.useState(0);
-	const update = React.useCallback(() => {
+	return React.useCallback(() => {
 		setTick((tick) => tick + 1);
 	}, []);
-	return update;
 }
 
 export function useSpace(props: IReactSpaceInnerProps) {
@@ -153,8 +152,8 @@ export function useSpace(props: IReactSpaceInnerProps) {
 	const resizeHandles = useSpaceResizeHandles(store, space);
 
 	useEffectOnce(() => {
-		const rect = elementRef.current!.getBoundingClientRect() as DOMRect;
-		space!.dimension = {
+		const rect = elementRef.current ? elementRef.current.getBoundingClientRect() : new DOMRect();
+		space.dimension = {
 			...rect,
 			...{
 				left: Math.floor(rect.left),
@@ -167,24 +166,24 @@ export function useSpace(props: IReactSpaceInnerProps) {
 				y: Math.floor(rect.y),
 			},
 		};
-		setDomRect(space!.dimension);
+		setDomRect(space.dimension);
 
 		if (props.trackSize) {
 			resizeSensor.current = new ResizeSensor(elementRef.current!, (size) => {
-				space!.dimension = {
+				space.dimension = {
 					...rect,
 					...{
 						width: Math.floor(size.width),
 						height: Math.floor(size.height),
 					},
 				};
-				setDomRect(space!.dimension);
+				setDomRect(space.dimension);
 			});
 		}
 
 		return () => {
 			resizeSensor.current && resizeSensor.current.detach();
-			store.removeSpace(space!);
+			store.removeSpace(space);
 		};
 	});
 
@@ -199,48 +198,45 @@ export interface IResizeHandleProps {
 	onTouchStart: (e: React.TouchEvent<HTMLElement>) => void;
 }
 
+const resizeSetup = [
+	{ id: "ml", className: "resize-left", resizeType: ResizeType.Left, condition: (space: ISpaceDefinition) => space.canResizeLeft },
+	{ id: "mr", className: "resize-right", resizeType: ResizeType.Right, condition: (space: ISpaceDefinition) => space.canResizeRight },
+	{ id: "mt", className: "resize-top", resizeType: ResizeType.Top, condition: (space: ISpaceDefinition) => space.canResizeTop },
+	{ id: "mb", className: "resize-bottom", resizeType: ResizeType.Bottom, condition: (space: ISpaceDefinition) => space.canResizeBottom },
+	{ id: "mtl", className: "resize-top-left", resizeType: ResizeType.TopLeft, condition: (space: ISpaceDefinition) => space.canResizeTopLeft },
+	{ id: "mtr", className: "resize-top-right", resizeType: ResizeType.TopRight, condition: (space: ISpaceDefinition) => space.canResizeTopRight },
+	{
+		id: "mbl",
+		className: "resize-bottom-left",
+		resizeType: ResizeType.BottomLeft,
+		condition: (space: ISpaceDefinition) => space.canResizeBottomLeft,
+	},
+	{
+		id: "mbr",
+		className: "resize-bottom-right",
+		resizeType: ResizeType.BottomRight,
+		condition: (space: ISpaceDefinition) => space.canResizeBottomRight,
+	},
+];
+
 export function useSpaceResizeHandles(store: ISpaceStore, space: ISpaceDefinition) {
 	const mouseHandles: IResizeHandleProps[] = [];
 
-	if (space.canResizeLeft) {
+	const setupResizeHandle = (id: string, className: string, resizeType: ResizeType) => {
 		mouseHandles.push({
-			id: `${space.id}-ml`,
-			key: "left",
-			className: `spaces-resize-handle resize-left`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Left, space, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Left, space, event),
+			id: `${space.id}-${id}`,
+			key: id,
+			className: `spaces-resize-handle ${className}`,
+			onMouseDown: (event) => store.startMouseResize(resizeType, space, event),
+			onTouchStart: (event) => store.startTouchResize(resizeType, space, event),
 		});
-	}
+	};
 
-	if (space.canResizeRight) {
-		mouseHandles.push({
-			id: `${space.id}-mr`,
-			key: "right",
-			className: `spaces-resize-handle resize-right`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Right, space, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Right, space, event),
-		});
-	}
-
-	if (space.canResizeTop) {
-		mouseHandles.push({
-			id: `${space.id}-mt`,
-			key: "top",
-			className: `spaces-resize-handle resize-top`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Top, space, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Top, space, event),
-		});
-	}
-
-	if (space.canResizeBottom) {
-		mouseHandles.push({
-			id: `${space.id}-mb`,
-			key: "bottom",
-			className: `spaces-resize-handle resize-bottom`,
-			onMouseDown: (event) => store.startMouseResize(ResizeType.Bottom, space, event),
-			onTouchStart: (event) => store.startTouchResize(ResizeType.Bottom, space, event),
-		});
-	}
+	resizeSetup.forEach((resizeItem) => {
+		if (resizeItem.condition(space)) {
+			setupResizeHandle(resizeItem.id, resizeItem.className, resizeItem.resizeType);
+		}
+	});
 
 	return {
 		mouseHandles,

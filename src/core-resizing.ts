@@ -1,5 +1,5 @@
 import { SyntheticEvent } from "react";
-import { ISpaceDefinition, ResizeType, ISpaceStore, OnResizeEnd, EndEvent, MoveEvent, Type } from "./core-types";
+import { ISpaceDefinition, ResizeType, ISpaceStore, OnResizeEnd, EndEvent, MoveEvent, Type, ISize } from "./core-types";
 import { coalesce, throttle } from "./core-utils";
 
 const RESIZE_THROTTLE = 0;
@@ -15,21 +15,14 @@ function isHorizontal(resizeType: ResizeType) {
 
 type ResizeAdjuster = (currentX: number, currentY: number) => void;
 
-function createAdjuster(resizeType: ResizeType, space: ISpaceDefinition, originalX: number, originalY: number): ResizeAdjuster {
-	const dimensionToAdjust = (() => {
-		if (resizeType === ResizeType.Left) {
-			return space.left;
-		} else if (resizeType === ResizeType.Right) {
-			return space.right;
-		} else if (resizeType === ResizeType.Bottom) {
-			return space.bottom;
-		} else if (resizeType === ResizeType.Top) {
-			return space.top;
-		} else {
-			throw new Error("unknown resize type");
-		}
-	})();
-
+function createSideAdjuster(
+	rect: DOMRect,
+	resizeType: ResizeType,
+	dimensionToAdjust: ISize,
+	space: ISpaceDefinition,
+	originalX: number,
+	originalY: number,
+): ResizeAdjuster {
 	const negater = resizeType === ResizeType.Right || resizeType === ResizeType.Bottom ? (val: number) => -val : (val: number) => val;
 
 	const candidateOppositeDimensionToAdjust = isHorizontal(resizeType) ? space.width : space.height;
@@ -37,7 +30,6 @@ function createAdjuster(resizeType: ResizeType, space: ISpaceDefinition, origina
 	const offset1 = dimensionToAdjust.resized;
 	const offset2 = candidateOppositeDimensionToAdjust.resized;
 
-	const rect = space.element.getBoundingClientRect();
 	const size = isHorizontal(resizeType) ? rect.width : rect.height;
 	const minimumAdjust = coalesce(space.minimumSize, 20)! - size + 0;
 	const maximumAdjust = space.maximumSize ? space.maximumSize - size + 0 : undefined;
@@ -69,6 +61,50 @@ function createAdjuster(resizeType: ResizeType, space: ISpaceDefinition, origina
 			candidateOppositeDimensionToAdjust.resized = dimensionResized + offset2;
 		}
 	};
+}
+
+function createAdjuster(resizeType: ResizeType, space: ISpaceDefinition, originalX: number, originalY: number): ResizeAdjuster {
+	const rect = space.element.getBoundingClientRect();
+	switch (resizeType) {
+		case ResizeType.Left:
+			return createSideAdjuster(rect, resizeType, space.left, space, originalX, originalY);
+		case ResizeType.Right:
+			return createSideAdjuster(rect, resizeType, space.right, space, originalX, originalY);
+		case ResizeType.Bottom:
+			return createSideAdjuster(rect, resizeType, space.bottom, space, originalX, originalY);
+		case ResizeType.Top:
+			return createSideAdjuster(rect, resizeType, space.top, space, originalX, originalY);
+		case ResizeType.TopLeft:
+			const topAdjuster = createSideAdjuster(rect, ResizeType.Top, space.top, space, originalX, originalY);
+			const leftAdjuster = createSideAdjuster(rect, ResizeType.Left, space.left, space, originalX, originalY);
+			return (x, y) => {
+				topAdjuster(x, y);
+				leftAdjuster(x, y);
+			};
+		case ResizeType.TopRight:
+			const top1Adjuster = createSideAdjuster(rect, ResizeType.Top, space.top, space, originalX, originalY);
+			const rightAdjuster = createSideAdjuster(rect, ResizeType.Right, space.right, space, originalX, originalY);
+			return (x, y) => {
+				top1Adjuster(x, y);
+				rightAdjuster(x, y);
+			};
+		case ResizeType.BottomLeft:
+			const bottomAdjuster = createSideAdjuster(rect, ResizeType.Bottom, space.bottom, space, originalX, originalY);
+			const left1Adjuster = createSideAdjuster(rect, ResizeType.Left, space.left, space, originalX, originalY);
+			return (x, y) => {
+				bottomAdjuster(x, y);
+				left1Adjuster(x, y);
+			};
+		case ResizeType.BottomRight:
+			const bottom1Adjuster = createSideAdjuster(rect, ResizeType.Bottom, space.bottom, space, originalX, originalY);
+			const right1Adjuster = createSideAdjuster(rect, ResizeType.Right, space.right, space, originalX, originalY);
+			return (x, y) => {
+				bottom1Adjuster(x, y);
+				right1Adjuster(x, y);
+			};
+		default:
+			throw `Resize type ${resizeType} not supported`;
+	}
 }
 
 export function createResize(store: ISpaceStore) {
@@ -111,7 +147,11 @@ export function createResize(store: ISpaceStore) {
 				lastY = newCoords.y;
 				e.preventDefault();
 
-				throttle((x, y) => window.requestAnimationFrame(() => resize(x, y)), RESIZE_THROTTLE)(lastX, lastY);
+				if (RESIZE_THROTTLE > 0) {
+					throttle((x, y) => window.requestAnimationFrame(() => resize(x, y)), RESIZE_THROTTLE)(lastX, lastY);
+				} else {
+					window.requestAnimationFrame(() => resize(lastX, lastY));
+				}
 			};
 
 			const removeListener = () => {

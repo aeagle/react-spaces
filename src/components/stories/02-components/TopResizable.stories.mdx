@@ -18,7 +18,7 @@ Anchored resizable space on the top edge of it's parent.
 <Canvas>
 	<Story name="Default (%)">
 		<ViewPort>
-			<TopResizable style={green} size="50%" trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+			<TopResizable style={green} size="50%" touchHandleSize={20} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Top resizable")}
 			</TopResizable>
 		</ViewPort>
@@ -30,7 +30,7 @@ Anchored resizable space on the top edge of it's parent.
 <Canvas>
 	<Story name="Default (px)">
 		<ViewPort>
-			<TopResizable style={green} size={300} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+			<TopResizable style={green} size={300} touchHandleSize={20} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Top resizable")}
 			</TopResizable>
 		</ViewPort>
@@ -42,7 +42,7 @@ Anchored resizable space on the top edge of it's parent.
 <Canvas>
 	<Story name="With resize constraints">
 		<ViewPort>
-			<TopResizable style={green} size={300} trackSize={true} minimumSize={150} maximumSize={450} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+			<TopResizable style={green} size={300} touchHandleSize={20} trackSize={true} minimumSize={150} maximumSize={450} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Top resizable")}
 			</TopResizable>
 		</ViewPort>
@@ -54,7 +54,7 @@ Anchored resizable space on the top edge of it's parent.
 <Canvas>
 	<Story name="Scrollable">
 		<ViewPort>
-			<TopResizable style={green} size={300} scrollable={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+			<TopResizable style={green} size={300} touchHandleSize={20} scrollable={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{lorem}
 			</TopResizable>
 		</ViewPort>

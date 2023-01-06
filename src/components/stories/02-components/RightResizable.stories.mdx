@@ -18,7 +18,7 @@ Anchored resizable space on the right edge of it's parent.
 <Canvas>
 	<Story name="Default (%)">
 		<ViewPort>
-			<RightResizable style={green} size="50%" trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+			<RightResizable style={green} size="50%" touchHandleSize={20} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>
@@ -30,7 +30,7 @@ Anchored resizable space on the right edge of it's parent.
 <Canvas>
 	<Story name="Default (px)">
 		<ViewPort>
-			<RightResizable style={green} size={300} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+			<RightResizable style={green} size={300} touchHandleSize={20} trackSize={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>
@@ -42,7 +42,7 @@ Anchored resizable space on the right edge of it's parent.
 <Canvas>
 	<Story name="With resize constraints">
 		<ViewPort>
-			<RightResizable style={green} size={300} trackSize={true} minimumSize={150} maximumSize={450} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+			<RightResizable style={green} size={300} touchHandleSize={20} trackSize={true} minimumSize={150} maximumSize={450} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>
@@ -54,7 +54,7 @@ Anchored resizable space on the right edge of it's parent.
 <Canvas>
 	<Story name="Scrollable">
 		<ViewPort>
-			<RightResizable style={green} size={300} scrollable={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
+			<RightResizable style={green} size={300} touchHandleSize={20} scrollable={true} onResizeStart={action('onResizeStart')} onResizeEnd={action('onResizeEnd')}>
 				{lorem}
 			</RightResizable>
 		</ViewPort>

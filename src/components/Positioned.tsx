@@ -19,19 +19,25 @@ interface IPositionedProps extends IReactSpaceCommonProps {
 export const Positioned: React.FC<IPositionedProps> = ({ left, top, right, bottom, width, height, resizable, ...props }) => {
 	const resizeTypes = resizable || [];
 
+	console.log(resizeTypes);
+
 	return (
 		<Space
 			{...props}
 			type={Type.Positioned}
 			position={{
 				left: left,
-				leftResizable: resizeTypes.includes(ResizeType.Left),
 				top: top,
-				topResizable: resizeTypes.includes(ResizeType.Top),
 				right: right,
-				rightResizable: resizeTypes.includes(ResizeType.Right),
 				bottom: bottom,
-				bottomResizable: resizeTypes.includes(ResizeType.Bottom),
+				leftResizable: resizeTypes.includes(ResizeType.Left) || resizeTypes.includes(ResizeType.All),
+				topResizable: resizeTypes.includes(ResizeType.Top) || resizeTypes.includes(ResizeType.All),
+				rightResizable: resizeTypes.includes(ResizeType.Right) || resizeTypes.includes(ResizeType.All),
+				bottomResizable: resizeTypes.includes(ResizeType.Bottom) || resizeTypes.includes(ResizeType.All),
+				topLeftResizable: resizeTypes.includes(ResizeType.TopLeft) || resizeTypes.includes(ResizeType.All),
+				topRightResizable: resizeTypes.includes(ResizeType.TopRight) || resizeTypes.includes(ResizeType.All),
+				bottomLeftResizable: resizeTypes.includes(ResizeType.BottomLeft) || resizeTypes.includes(ResizeType.All),
+				bottomRightResizable: resizeTypes.includes(ResizeType.BottomRight) || resizeTypes.includes(ResizeType.All),
 				width: width,
 				height: height,
 			}}>
