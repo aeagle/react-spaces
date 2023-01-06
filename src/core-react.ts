@@ -118,12 +118,14 @@ export function useForceUpdate() {
 }
 
 export function useUniqueId() {
-	if (React.version.startsWith("18")) {
-		return `s${React.useId().replace(/\:/g, "")}`;
-	}
+	if (SSR_SUPPORT_ENABLED) {
+		if (React.version.startsWith("18")) {
+			return `s${React.useId().replace(/\:/g, "")}`;
+		}
 
-	if ((React as any).unstable_useOpaqueIdentifier) {
-		return `s${(React as any).unstable_useOpaqueIdentifier().replace(/\:/g, "")}`;
+		if ((React as any).unstable_useOpaqueIdentifier) {
+			return `s${(React as any).unstable_useOpaqueIdentifier().replace(/\:/g, "")}`;
+		}
 	}
 
 	return `s${shortuuid()}`;

@@ -77,10 +77,6 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 	if (SSR_SUPPORT_ENABLED && !isServer()) {
 		const preRenderedStyle = document.getElementById(`style_${idToUse}_ssr`);
 		if (preRenderedStyle) {
-			// const newStyle = document.createElement("style");
-			// newStyle.id = `style_${idToUse}`;
-			// newStyle.innerHTML = preRenderedStyle.innerHTML;
-			// document.head.appendChild(newStyle);
 			space.ssrStyle = preRenderedStyle.innerHTML;
 		}
 		updateStyleDefinition(space);
