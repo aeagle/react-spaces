@@ -1,5 +1,5 @@
 import { Meta, Story, Canvas, Props } from "@storybook/addon-docs";
-import { StateDriven, AnchoredDefaultOrdering, SpaceDemoStacked1 } from "../Utils";
+import { StateDriven, AnchoredDefaultOrdering, SpaceDemoStacked1, StateDrivenSize } from "../Utils";
 
 <Meta title="Testing/State" />
 
@@ -18,5 +18,11 @@ import { StateDriven, AnchoredDefaultOrdering, SpaceDemoStacked1 } from "../Util
 <Canvas>
 	<Story name="Test stacked spaces">
 		<SpaceDemoStacked1 />
+	</Story>
+</Canvas>
+
+<Canvas>
+	<Story name="State driven size">
+		<StateDrivenSize />
 	</Story>
 </Canvas>

@@ -148,20 +148,33 @@ export function createResize(store: ISpaceStore) {
 				e.preventDefault();
 
 				if (RESIZE_THROTTLE > 0) {
-					throttle((x, y) => window.requestAnimationFrame(() => resize(x, y)), RESIZE_THROTTLE)(lastX, lastY);
+					throttle(
+						(x, y) =>
+							window.requestAnimationFrame(() => {
+								if (space.resizing) {
+									resize(x, y);
+								}
+							}),
+						RESIZE_THROTTLE,
+					)(lastX, lastY);
 				} else {
-					window.requestAnimationFrame(() => resize(lastX, lastY));
+					window.requestAnimationFrame(() => {
+						if (space.resizing) {
+							resize(lastX, lastY);
+						}
+					});
 				}
 			};
 
 			const removeListener = () => {
+				space.resizing = false;
+
 				if (moved) {
 					resize(lastX, lastY);
 				}
+
 				window.removeEventListener(moveEvent, withPreventDefault as EventListener);
 				window.removeEventListener(endEvent, removeListener);
-
-				space.resizing = false;
 				space.updateParent();
 
 				const resizeEnd = onResizeEnd || space.onResizeEnd;
