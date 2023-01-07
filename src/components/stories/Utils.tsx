@@ -323,6 +323,16 @@ export const StateDriven: React.FC = () => {
 	);
 };
 
+export const StateDrivenSize = () => {
+	const [size, setSize] = React.useState<number | string | undefined>(250);
+	return (
+		<ViewPort>
+			<LeftResizable size={size} onResizeEnd={(s) => setSize(s)}></LeftResizable>
+			<Fill></Fill>
+		</ViewPort>
+	);
+};
+
 export const AnchoredDefaultOrdering = () => {
 	return (
 		<ViewPort as="main">
