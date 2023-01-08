@@ -1,0 +1,37 @@
+import { Meta, Story, Canvas, Props } from "@storybook/addon-docs";
+import { withKnobs } from "@storybook/addon-knobs";
+import { ViewPort, LeftResizable, Attached, AttachType } from "../../../";
+import { green, description, lorem } from "../Utils";
+import { CommonHeader, PropsTable, StandardProps, AnchoredProps } from "../Utils";
+
+<CommonHeader />
+
+<Meta title="Components/Attached" component={Attached} />
+
+## Bottom
+
+Anchored space on the bottom edge of it's parent.
+
+### Specifying a % size
+
+<Canvas>
+	<Story name="Default (%)">
+		<ViewPort>
+			<LeftResizable style={green} size="25%">
+				{description("Bottom 50%")}
+				<Attached width={100} height={100} style={{ backgroundColor: 'maroon', color: 'white' }}>
+					{description("Attached")}
+				</Attached>
+			</LeftResizable>
+		</ViewPort>
+	</Story>
+</Canvas>
+
+### Properties
+
+<Story name="Properties">
+	<PropsTable>
+		<AnchoredProps />
+		<StandardProps />
+	</PropsTable>
+</Story>

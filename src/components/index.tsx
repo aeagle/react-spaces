@@ -8,6 +8,7 @@ export * from "./Fill";
 export * from "./Fixed";
 export * from "./Layer";
 export * from "./Positioned";
+export * from "./Attached";
 export * from "./SpaceInfo";
 export * from "./ViewPort";
 export * from "./SSR";

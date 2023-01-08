@@ -10,6 +10,7 @@ export enum Type {
 	Fill = "fill",
 	Positioned = "positioned",
 	Anchored = "anchored",
+	Attached = "attached",
 	Custom = "custom",
 }
 
@@ -18,6 +19,13 @@ export enum AnchorType {
 	Right = "anchor-right",
 	Top = "anchor-top",
 	Bottom = "anchor-bottom",
+}
+
+export enum AttachType {
+	Left = "left",
+	Right = "right",
+	Top = "top",
+	Bottom = "bottom",
 }
 
 export enum Orientation {
@@ -76,6 +84,7 @@ export interface ISpaceProps extends ICommonProps {
 	anchor?: AnchorType | undefined;
 	order?: number | undefined;
 	position?: IPositionalProps | undefined;
+	attachType?: AttachType | undefined;
 	handleSize?: number | undefined;
 	handlePlacement?: ResizeHandlePlacement;
 	touchHandleSize?: number | undefined;
@@ -172,6 +181,7 @@ export interface ISpaceDefinition {
 	canResizeBottomRight: boolean;
 	allowOverflow: boolean;
 	ssrStyle: string;
+	attachType: AttachType | undefined;
 }
 
 export interface ISpaceContext {

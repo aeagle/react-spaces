@@ -10,7 +10,7 @@ import type {
 	ResizeTouchEvent
 } from "./core-types";
 
-export { ResizeHandlePlacement, ResizeType, AnchorType, CenterType, Type } from "./core-types";
+export { ResizeHandlePlacement, ResizeType, AnchorType, CenterType, Type, SizeUnit } from "./core-types";
 
 export type {
 	ISpaceContext,
