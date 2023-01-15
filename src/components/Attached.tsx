@@ -7,14 +7,16 @@ import { commonProps, IReactSpaceCommonProps } from "../core-react";
 interface IAttachedProps extends IReactSpaceCommonProps {
 	width?: SizeUnit;
 	height?: SizeUnit;
+	attachTo: string;
 	attachType: AttachType;
 }
 
-export const Attached: React.FC<IAttachedProps> = ({ width, height, attachType, ...props }) => {
+export const Attached: React.FC<IAttachedProps> = ({ width, height, attachTo, attachType, ...props }) => {
 	return (
 		<Space
 			{...props}
 			type={Type.Attached}
+			attachTo={attachTo}
 			attachType={attachType}
 			position={{
 				width: width,

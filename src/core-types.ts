@@ -84,6 +84,7 @@ export interface ISpaceProps extends ICommonProps {
 	anchor?: AnchorType | undefined;
 	order?: number | undefined;
 	position?: IPositionalProps | undefined;
+	attachTo?: string;
 	attachType?: AttachType | undefined;
 	handleSize?: number | undefined;
 	handlePlacement?: ResizeHandlePlacement;
@@ -181,6 +182,7 @@ export interface ISpaceDefinition {
 	canResizeBottomRight: boolean;
 	allowOverflow: boolean;
 	ssrStyle: string;
+	attachTo: string | undefined;
 	attachType: AttachType | undefined;
 }
 

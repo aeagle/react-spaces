@@ -231,6 +231,8 @@ export function createStore(): ISpaceStore {
 				touchHandleSize,
 				handlePlacement,
 				allowOverflow,
+				attachTo,
+				attachType,
 			} = props;
 			const canResizeLeft = (position && position.leftResizable) || false;
 			const canResizeRight = (position && position.rightResizable) || false;
@@ -397,6 +399,14 @@ export function createStore(): ISpaceStore {
 			if (space.allowOverflow !== allowOverflow) {
 				space.allowOverflow = allowOverflow || spaceDefaults.allowOverflow!;
 				changed = true;
+			}
+
+			if (space.attachTo !== attachTo) {
+				space.attachTo = attachTo || spaceDefaults.attachTo;
+			}
+
+			if (space.attachType !== attachType) {
+				space.attachType = attachType || spaceDefaults.attachType;
 			}
 
 			if (changed) {

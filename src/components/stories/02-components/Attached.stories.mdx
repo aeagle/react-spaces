@@ -17,12 +17,12 @@ Anchored space on the bottom edge of it's parent.
 <Canvas>
 	<Story name="Default (%)">
 		<ViewPort>
-			<LeftResizable style={green} size="25%">
+			<LeftResizable id="left" style={green} size="25%">
 				{description("Bottom 50%")}
-				<Attached width={100} height={100} style={{ backgroundColor: 'maroon', color: 'white' }}>
-					{description("Attached")}
-				</Attached>
 			</LeftResizable>
+			<Attached attachTo="left" width={100} height={100} style={{ backgroundColor: 'maroon', color: 'white' }}>
+				{description("Attached")}
+			</Attached>
 		</ViewPort>
 	</Story>
 </Canvas>
