@@ -1,7 +1,9 @@
 import Head from "next/head";
+import { useState } from "react";
 import * as Space from "react-spaces";
 
 export default function Home() {
+	const [lsize, setLSize] = useState("10%"); // To check for the hover effect
 	return (
 		<>
 			<Space.SSR />
@@ -12,7 +14,12 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<Space.ViewPort>
-				<Space.LeftResizable size="25%" centerContent={Space.CenterType.HorizontalVertical} style={{ backgroundColor: "white" }}>
+				<Space.LeftResizable
+					size={lsize}
+					onMouseEnter={() => setLSize("25%")}
+					onMouseLeave={() => setLSize("10%")}
+					centerContent={Space.CenterType.HorizontalVertical}
+					style={{ backgroundColor: "white", transition: "all 0.3s ease-in-out" }}>
 					<span style={{ color: "black" }}>Hello world</span>
 				</Space.LeftResizable>
 				<Space.RightResizable size="25%" centerContent={Space.CenterType.HorizontalVertical} style={{ backgroundColor: "white" }}>
