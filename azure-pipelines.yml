@@ -4,64 +4,65 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 pool:
-  vmImage: "ubuntu-latest"
+    vmImage: "ubuntu-latest"
 
 steps:
-- task: gitversion/setup@0
-  inputs:
-    versionSpec: '5.x'
-    
-- task: gitversion/execute@0 
+    - task: gitversion/setup@0
+      inputs:
+          versionSpec: "5.x"
 
-- script: echo "##vso[build.updatebuildnumber]$(GitVersion.MajorMinorPatch)"
+    - task: gitversion/execute@0
 
-- task: Bash@3
-  displayName: Update version number in react-spaces package.json
-  inputs:
-    targetType: 'inline'
-    script:  sed -i "s/0.2.2/$GITVERSIONNUMBER/g" package.json
-  env:
-    GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
+    - script: echo "##vso[build.updatebuildnumber]$(GitVersion.MajorMinorPatch)"
 
-- task: Bash@3
-  displayName: Update version number in react-spaces-storybook package.json
-  inputs:
-    targetType: 'inline'
-    script:  sed -i "s/0.2.2/$GITVERSIONNUMBER/g" .storybook/package.json
-  env:
-    GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
+    - task: Bash@3
+      displayName: Update version number in react-spaces package.json
+      inputs:
+          targetType: "inline"
+          script: sed -i "s/0.2.2/$GITVERSIONNUMBER/g" package.json
+      env:
+          GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '12.x'
-    checkLatest: true
-  displayName: 'Install Node.js'
+    - task: Bash@3
+      displayName: Update version number in react-spaces-storybook package.json
+      inputs:
+          targetType: "inline"
+          script: sed -i "s/0.2.2/$GITVERSIONNUMBER/g" .storybook/package.json
+      env:
+          GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
 
-- script: |
-    npm install
-    npm run build
-    npm run build-storybook
-  displayName: 'NPM install and build'
+    - task: NodeTool@0
+      inputs:
+          versionSpec: "20.x"
+          checkLatest: true
+      displayName: "Install Node.js"
 
-- task: CopyFiles@2
-  displayName: Move storybook package json
-  inputs:
-    SourceFolder: '.storybook'
-    Contents: 'package.json'
-    TargetFolder: './storybook-static'
-    OverWrite: true
+    - script: |
+          npm install
+          npm test
+          npm run build
+          npm run build-storybook
+      displayName: "NPM install and build"
 
-- task: Npm@1
-  enabled: true
-  displayName: Publish react-spaces-storybook
-  inputs:
-    command: 'publish'
-    workingDir: 'storybook-static'
-    publishEndpoint: 'NPM'
+    - task: CopyFiles@2
+      displayName: Move storybook package json
+      inputs:
+          SourceFolder: ".storybook"
+          Contents: "package.json"
+          TargetFolder: "./storybook-static"
+          OverWrite: true
 
-- task: Npm@1
-  enabled: true
-  displayName: Publish react-spaces
-  inputs:
-    command: 'publish'
-    publishEndpoint: 'NPM'
+    - task: Npm@1
+      enabled: true
+      displayName: Publish react-spaces-storybook
+      inputs:
+          command: "publish"
+          workingDir: "storybook-static"
+          publishEndpoint: "NPM"
+
+    - task: Npm@1
+      enabled: true
+      displayName: Publish react-spaces
+      inputs:
+          command: "publish"
+          publishEndpoint: "NPM"

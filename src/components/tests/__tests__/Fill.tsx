@@ -2,7 +2,7 @@ import * as React from "react";
 import { render, cleanup } from "@testing-library/react";
 import { Fill } from "../../Fill";
 import { Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable } from "../../Anchored";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import { ViewPort } from "../../ViewPort";
 import { commonPropsTests, commonPropTypesTest, fixUp } from "../Common";
 

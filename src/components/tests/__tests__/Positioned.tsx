@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cleanup, render } from "@testing-library/react";
 import { Positioned } from "../../Positioned";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import { commonPositionedResizeTests, commonPropsTests, commonPropTypesTest, hasProps, mutateComponent } from "../Common";
 import { useCurrentSpace } from "../../../core-react";
 import { ViewPort } from "../../ViewPort";
