@@ -45,6 +45,7 @@ steps:
       displayName: "NPM install and build"
 
     - task: CopyFiles@2
+      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
       displayName: Move storybook package json
       inputs:
           SourceFolder: ".storybook"
@@ -53,7 +54,7 @@ steps:
           OverWrite: true
 
     - task: Npm@1
-      enabled: true
+      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
       displayName: Publish react-spaces-storybook
       inputs:
           command: "publish"
@@ -61,7 +62,7 @@ steps:
           publishEndpoint: "NPM"
 
     - task: Npm@1
-      enabled: true
+      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
       displayName: Publish react-spaces
       inputs:
           command: "publish"
