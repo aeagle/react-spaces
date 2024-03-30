@@ -129,7 +129,7 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 	test(`${name} with style applied`, async () => {
 		// arrange, act
 		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", style: { backgroundColor: "red" } })}</ViewPort>);
-		const sut = container.querySelector("#test .spaces-space-inner");
+		const sut = container.querySelector("#test");
 
 		// assert
 		const style = window.getComputedStyle(sut!);
@@ -139,10 +139,37 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 	test(`${name} with style change applied`, async () => {
 		// arrange
 		const { container, rerender } = render(<ViewPort>{mutateComponent(component, { id: "test", style: { backgroundColor: "red" } })}</ViewPort>);
-		const sut = container.querySelector("#test .spaces-space-inner");
+		const sut = container.querySelector("#test");
 
 		// act
 		rerender(<ViewPort>{mutateComponent(component, { id: "test", style: { backgroundColor: "green" } })}</ViewPort>);
+
+		// assert
+		const style = window.getComputedStyle(sut!);
+		expect(style.backgroundColor).toBe("green");
+	});
+
+	test(`${name} with style for inner container applied`, async () => {
+		// arrange, act
+		const { container } = render(
+			<ViewPort>{mutateComponent(component, { id: "test", innerComponentStyle: { backgroundColor: "red" } })}</ViewPort>,
+		);
+		const sut = container.querySelector("#test .spaces-space-inner");
+
+		// assert
+		const style = window.getComputedStyle(sut!);
+		expect(style.backgroundColor).toBe("red");
+	});
+
+	test(`${name} with style for inner container change applied`, async () => {
+		// arrange
+		const { container, rerender } = render(
+			<ViewPort>{mutateComponent(component, { id: "test", innerComponentStyle: { backgroundColor: "red" } })}</ViewPort>,
+		);
+		const sut = container.querySelector("#test .spaces-space-inner");
+
+		// act
+		rerender(<ViewPort>{mutateComponent(component, { id: "test", innerComponentStyle: { backgroundColor: "green" } })}</ViewPort>);
 
 		// assert
 		const style = window.getComputedStyle(sut!);
