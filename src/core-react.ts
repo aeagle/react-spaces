@@ -97,9 +97,10 @@ export interface IReactEvents {
 }
 
 export interface IReactSpaceCommonProps extends ICommonProps, IReactEvents {
-	style?: React.CSSProperties;
+	innerComponentStyle?: React.CSSProperties; // For people who like to modify the inner `as` component
 	as?: keyof React.ReactDOM | React.ComponentType<ICommonProps>;
 	children?: React.ReactNode;
+	style?: React.CSSProperties; // Normal styles for the wrapper itself as it is the main component that is resized
 }
 
 export interface IReactSpaceInnerProps extends IReactSpaceCommonProps, ISpaceProps, IReactEvents {

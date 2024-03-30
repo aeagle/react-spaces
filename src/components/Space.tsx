@@ -42,7 +42,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 	}
 
 	const {
-		style,
+		innerComponentStyle,
 		className,
 		onClick,
 		onDoubleClick,
@@ -55,6 +55,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 		onTouchEnd,
 		children,
 		handleRender,
+		style,
 	} = props;
 
 	const events = {
@@ -103,10 +104,10 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 
 	const innerClasses = [...["spaces-space-inner"], ...userClasses];
 
-	let innerStyle = style;
+	let innerStyle = innerComponentStyle;
 	if (space.handlePlacement === ResizeHandlePlacement.Inside) {
 		innerStyle = {
-			...style,
+			...innerStyle,
 			...{
 				left: space.anchor === AnchorType.Right ? space.handleSize : undefined,
 				right: space.anchor === AnchorType.Left ? space.handleSize : undefined,
@@ -125,6 +126,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 			className: outerClasses.join(" "),
 		},
 		...events,
+		style,
 	} as any;
 
 	return (
