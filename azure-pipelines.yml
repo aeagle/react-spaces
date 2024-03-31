@@ -76,3 +76,10 @@ steps:
       inputs:
           command: "publish"
           publishEndpoint: "NPM"
+
+    - task: Npm@1
+      condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+      displayName: Publish react-spaces (BETA)
+      inputs:
+          command: "publish"
+          publishEndpoint: "NPM"
