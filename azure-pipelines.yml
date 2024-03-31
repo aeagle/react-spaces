@@ -13,7 +13,7 @@ steps:
 
     - task: gitversion/execute@0
 
-    - script: echo "##vso[build.updatebuildnumber]$(GitVersion.MajorMinorPatch)"
+    - script: echo "##vso[build.updatebuildnumber]$(GitVersion.SemVer)"
 
     - task: Bash@3
       displayName: Update version number in react-spaces package.json
@@ -81,5 +81,5 @@ steps:
       condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
       displayName: Publish react-spaces (BETA)
       inputs:
-        command: 'custom'
-        customCommand: 'run publish:beta'
+          command: "custom"
+          customCommand: "run publish:beta"
