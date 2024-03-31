@@ -4,7 +4,7 @@ import { Space } from "./Space";
 import * as PropTypes from "prop-types";
 import { commonProps, IReactSpaceCommonProps } from "../core-react";
 
-interface IViewPortProps extends IReactSpaceCommonProps {
+export interface IViewPortProps extends IReactSpaceCommonProps {
 	left?: SizeUnit;
 	right?: SizeUnit;
 	top?: SizeUnit;

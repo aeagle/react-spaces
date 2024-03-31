@@ -1,0 +1,30 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+
+import { ViewPort, LeftResizable, Fill } from "../../";
+import { action } from '@storybook/addon-actions';
+import { green, red, description } from "../Utils";
+import { CommonHeader } from "../Utils";
+import * as $03ControlledSizeStories from './03-ControlledSize.stories';
+
+<CommonHeader />
+
+<Meta of={$03ControlledSizeStories} />
+
+## Resizable space with state controlled size
+
+By default the size of a resizable space is uncontrolled. Therefore the initial size passed is is
+only the initial size of a space and React Spaces deals with any resizing. To keep the size of a
+space controlled in state you need to use the onResizeEnd event to set the new size of a space
+after a resize back to a state value.
+
+<Canvas>
+  <Story of={$03ControlledSizeStories.ControlledSize} />
+</Canvas>
+
+## Cancelling resize with onResizeStart
+
+You can cancel a resize by returning `false` from a onResizeStart event handler.
+
+<Canvas>
+  <Story of={$03ControlledSizeStories.CancelledResize} />
+</Canvas>

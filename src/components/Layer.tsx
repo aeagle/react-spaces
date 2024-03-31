@@ -2,7 +2,7 @@ import * as React from "react";
 import { LayerContext } from "../core-react";
 import * as PropTypes from "prop-types";
 
-interface IProps {
+export interface IProps {
 	zIndex: number;
 	children?: React.ReactNode;
 }

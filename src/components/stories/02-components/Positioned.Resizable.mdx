@@ -1,0 +1,17 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+
+import { action } from '@storybook/addon-actions';
+import { ViewPort, Centered, Positioned } from "../../";
+import { ResizeType } from "../../../core-types";
+import { useCurrentSpace } from "../../../core-react";
+import { green, description } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
+import * as PositionedResizableStories from './Positioned.Resizable.stories';
+
+<CommonHeader />
+
+<Meta of={PositionedResizableStories} />
+
+### Properties
+
+<Story of={PositionedResizableStories.Properties} />

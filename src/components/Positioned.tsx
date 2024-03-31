@@ -1,10 +1,10 @@
-import { Type, SizeUnit, ResizeType } from "../core-types";
+import { Type, SizeUnit, ResizeType, ResizeHandlePlacement } from "../core-types";
 import * as React from "react";
 import { Space } from "./Space";
 import * as PropTypes from "prop-types";
 import { commonProps, IReactSpaceCommonProps } from "../core-react";
 
-interface IPositionedProps extends IReactSpaceCommonProps {
+export interface IPositionedProps extends IReactSpaceCommonProps {
 	left?: SizeUnit;
 	top?: SizeUnit;
 	right?: SizeUnit;
@@ -12,6 +12,9 @@ interface IPositionedProps extends IReactSpaceCommonProps {
 	width?: SizeUnit;
 	height?: SizeUnit;
 	resizable?: ResizeType[];
+	handleSize?: number | undefined;
+	handlePlacement?: ResizeHandlePlacement;
+	touchHandleSize?: number | undefined;
 	onResizeStart?: () => void | boolean;
 	onResizeEnd?: (newSize: SizeUnit) => void;
 }

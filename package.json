@@ -32,15 +32,20 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.5.5",
+		"@babel/preset-react": "^7.24.1",
+		"@babel/preset-typescript": "^7.24.1",
 		"@rollup/plugin-babel": "^5.3.0",
 		"@rollup/plugin-commonjs": "^21.0.1",
 		"@rollup/plugin-node-resolve": "^13.0.6",
-		"@storybook/addon-actions": "^6.5.5",
-		"@storybook/addon-docs": "^6.5.5",
-		"@storybook/addon-knobs": "^6.3.1",
-		"@storybook/addon-links": "^6.5.5",
-		"@storybook/addons": "^6.5.5",
-		"@storybook/react": "^6.5.5",
+		"@storybook/addon-actions": "^8.0.5",
+		"@storybook/addon-docs": "^8.0.5",
+		"@storybook/addon-knobs": "^7.0.2",
+		"@storybook/addon-links": "^8.0.5",
+		"@storybook/addon-mdx-gfm": "^8.0.5",
+		"@storybook/addon-webpack5-compiler-babel": "^3.0.3",
+		"@storybook/addons": "^7.6.17",
+		"@storybook/react": "^8.0.5",
+		"@storybook/react-webpack5": "^8.0.5",
 		"@testing-library/jest-dom": "^6.4.2",
 		"@testing-library/react": "^14.2.2",
 		"@testing-library/user-event": "^14.5.2",
@@ -71,9 +76,10 @@
 		"rollup-watch": "^4.3.1",
 		"sass": "^1.52.1",
 		"sass-loader": "^8.0.2",
+		"storybook": "^8.0.5",
 		"ts-jest": "^26.5.6",
 		"ts-loader": "^6.2.1",
-		"tslib": "^2.3.1",
+		"tslib": "^2.6.2",
 		"typescript": "^4.4.4"
 	},
 	"resolutions": {
@@ -89,8 +95,8 @@
 		"build": "npm run build:prod",
 		"build:prod": "rollup -c",
 		"publish:beta": "npm publish --tag beta",
-		"storybook": "start-storybook -p 6006",
-		"build-storybook": "build-storybook",
+		"storybook": "storybook dev -p 6006",
+		"build-storybook": "storybook build",
 		"test": "jest"
 	},
 	"eslintConfig": {
@@ -106,6 +112,12 @@
 			"last 1 chrome version",
 			"last 1 firefox version",
 			"last 1 safari version"
+		]
+	},
+	"babel": {
+		"presets": [
+			"@babel/preset-react",
+			"@babel/preset-typescript"
 		]
 	}
 }

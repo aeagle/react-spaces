@@ -1,6 +1,6 @@
 import * as React from "react";
 
-interface IProps {
+export interface IProps {
 	children?: React.ReactNode;
 }
 

@@ -1,0 +1,43 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+
+import { action } from '@storybook/addon-actions';
+import { ViewPort, LeftResizable } from "../../";
+import { green, description, lorem } from "../Utils";
+import { CommonHeader, PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../Utils";
+import * as LeftResizableStories from './LeftResizable.stories';
+
+<CommonHeader />
+
+<Meta of={LeftResizableStories} />
+
+## LeftResizable
+
+Anchored resizable space on the left edge of it's parent.
+
+### Specifying a % size
+
+<Canvas>
+  <Story of={LeftResizableStories.Default} />
+</Canvas>
+
+### Specifying a pixel size
+
+<Canvas>
+  <Story of={LeftResizableStories.DefaultPx} />
+</Canvas>
+
+### With resize constraints
+
+<Canvas>
+  <Story of={LeftResizableStories.WithResizeConstraints} />
+</Canvas>
+
+### As a scrollable space
+
+<Canvas>
+  <Story of={LeftResizableStories.Scrollable} />
+</Canvas>
+
+### Properties
+
+<Story of={LeftResizableStories.Properties} />

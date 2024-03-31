@@ -1,0 +1,65 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+
+import { action } from '@storybook/addon-actions';
+import { ViewPort, Centered, Positioned } from "../../";
+import { ResizeType } from "../../../core-types";
+import { useCurrentSpace } from "../../../core-react";
+import { green, description } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
+import * as PositionedResizableTopRightBottomLeftStories from './Positioned.Resizable.TopRightBottomLeft.stories';
+
+<CommonHeader />
+
+<Meta of={PositionedResizableTopRightBottomLeftStories} />
+
+## Positioned
+
+Absolutely positioned space within it's parent with top / left / right / bottom specified.
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.NonResizable} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.ResizeHandlesAllSides} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.ResizeHandlesLeft} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.ResizeHandlesTop} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.ResizeHandlesRight} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.ResizeHandlesBottom} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.ResizeHandlesTopLeft} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.ResizeHandlesTopRight} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.ResizeHandlesBottomLeft} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.ResizeHandlesBottomRight} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.DragHandle} />
+</Canvas>
+
+<Canvas>
+  <Story of={PositionedResizableTopRightBottomLeftStories.DragHandleAndResizable} />
+</Canvas>

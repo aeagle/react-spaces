@@ -1,0 +1,26 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+
+import { ViewPort, Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../";
+import { red, green, blue, description } from "../Utils";
+import { CommonHeader } from "../Utils";
+import * as Stories from './00-Anchored.stories';
+
+<CommonHeader />
+
+<Meta of={Stories} />
+
+## Anchored spaces
+
+Examples of anchored spaces.
+
+### Non-resizable
+
+<Canvas>
+  <Story of={Stories.NonResizable} />
+</Canvas>
+
+### Resizable
+
+<Canvas>
+  <Story of={Stories.Resizable} />
+</Canvas>

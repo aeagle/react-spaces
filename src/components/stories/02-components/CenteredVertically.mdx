@@ -1,0 +1,21 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+
+import { ViewPort, CenteredVertically } from "../../";
+import { blue } from "../Utils";
+import { CommonHeader } from "../Utils";
+import * as CenteredVerticallyStories from './CenteredVertically.stories';
+
+<CommonHeader />
+
+<Meta of={CenteredVerticallyStories} />
+
+## CenteredVertically
+
+Centers children vertically within a space.
+
+Alternatively you can specify `centerContent={CenterType.Vertical}` or `centerContent="vertical"`
+on a space.
+
+<Canvas>
+  <Story of={CenteredVerticallyStories.Default} />
+</Canvas>

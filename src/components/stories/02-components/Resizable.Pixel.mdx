@@ -1,0 +1,43 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+
+import { action } from '@storybook/addon-actions';
+import { ViewPort, BottomResizable, TopResizable, RightResizable, LeftResizable } from "../../";
+import { green, description, lorem } from "../Utils";
+import { CommonHeader, PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../Utils";
+import * as ResizablePixelStories from './Resizable.Pixel.stories';
+
+<CommonHeader />
+
+<Meta of={ResizablePixelStories} />
+
+## Resizable
+
+Anchored resizable spaces by pixel size.
+
+### Bottom resizable
+
+<Canvas>
+  <Story of={ResizablePixelStories.Bottom} />
+</Canvas>
+
+### Top resizable
+
+<Canvas>
+  <Story of={ResizablePixelStories.Top} />
+</Canvas>
+
+### Left resizable
+
+<Canvas>
+  <Story of={ResizablePixelStories.Left} />
+</Canvas>
+
+### Right resizable
+
+<Canvas>
+  <Story of={ResizablePixelStories.Right} />
+</Canvas>
+
+### Properties
+
+<Story of={ResizablePixelStories.Properties} />
