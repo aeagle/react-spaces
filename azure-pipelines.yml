@@ -39,10 +39,19 @@ steps:
 
     - script: |
           npm install
+      displayName: "NPM install"
+
+    - script: |
           npm test
+      displayName: "Run tests"
+
+    - script: |
           npm run build
+      displayName: "Build package"
+
+    - script: |
           npm run build-storybook
-      displayName: "NPM install and build"
+      displayName: "Build storybook"
 
     - task: CopyFiles@2
       condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
