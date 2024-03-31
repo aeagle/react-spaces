@@ -81,5 +81,6 @@ steps:
       condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
       displayName: Publish react-spaces (BETA)
       inputs:
-          command: "custom"
-          customCommand: "run publish:beta"
+        command: 'custom'
+        customCommand: 'run publish:beta'
+        customEndpoint: 'NPM'
