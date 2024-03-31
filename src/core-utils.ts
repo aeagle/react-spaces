@@ -1,6 +1,6 @@
 import { ISpaceDefinition, SizeUnit, ISize, ResizeHandlePlacement, Type, Orientation } from "./core-types";
 
-const asRecord = (obj: any) => (obj as unknown) as Record<string, object>;
+export const asRecord = (obj: any) => (obj as unknown) as Record<string, object>;
 
 export function omit<K extends string, T extends Record<K, unknown>>(object: T, ...keys: K[]): Omit<T, K> {
 	const keySet = Object.create(null) as Record<K, true>;

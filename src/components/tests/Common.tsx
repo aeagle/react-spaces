@@ -6,6 +6,7 @@ import { drag } from "./TestUtils";
 import { ResizeType } from "../../core-types";
 import { Positioned } from "../Positioned";
 import { IReactSpaceCommonProps } from "../../core-react";
+import { asRecord } from "../../core-utils";
 
 export const mutateComponent = (component: React.ReactNode, newProps: Object) => {
 	return React.cloneElement(component as React.DetailedReactHTMLElement<any, HTMLElement>, newProps);
@@ -92,7 +93,7 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 		expect(style.display).toBe("block");
 		expect(sut.nodeName).toBe("DIV");
 		Object.keys(expectedStyle).forEach((k) => {
-			expect(style[k], `Property ${k}`).toBe(expectedStyle[k]);
+			expect(asRecord(style)[k], `Property ${k}`).toBe(asRecord(expectedStyle)[k]);
 		});
 	});
 
