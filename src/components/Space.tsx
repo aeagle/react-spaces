@@ -30,15 +30,22 @@ export class Space extends React.Component<IReactSpaceInnerProps> {
 	}
 }
 
+const PROP_REACT_SPACES_UNIQUEID = "_react_spaces_uniqueid";
+type SPACE_INDEXABLE = Record<string, string>;
+const getSpaceUniqueId = (space: Space) => ((space as unknown) as SPACE_INDEXABLE)[PROP_REACT_SPACES_UNIQUEID];
+const setSpaceUniqueId = (space: Space, uuid: string) => {
+	((space as unknown) as SPACE_INDEXABLE)[PROP_REACT_SPACES_UNIQUEID] = uuid;
+};
+
 const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> = (props) => {
-	let idToUse = props.id ?? props.wrapperInstance["_react_spaces_uniqueid"];
+	let idToUse = props.id ?? getSpaceUniqueId(props.wrapperInstance);
 	const [initialRender, setInitialRender] = React.useState(SSR_SUPPORT_ENABLED ? true : false);
 
 	const uniqueId = useUniqueId();
 
 	if (!idToUse) {
-		props.wrapperInstance["_react_spaces_uniqueid"] = uniqueId;
-		idToUse = props.wrapperInstance["_react_spaces_uniqueid"];
+		setSpaceUniqueId(props.wrapperInstance, uniqueId);
+		idToUse = getSpaceUniqueId(props.wrapperInstance);
 	}
 
 	const {
