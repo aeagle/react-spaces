@@ -37,9 +37,20 @@ steps:
           checkLatest: true
       displayName: "Install Node.js"
 
-    - script: |
-          npm install
-      displayName: "NPM install"
+    - task: Cache@2
+      displayName: Cache node_modules
+      inputs:
+          key: 'npm | "$(Agent.OS)" | $(Build.SourcesDirectory)/package-lock.json'
+          path: $(Build.SourcesDirectory)/node_modules
+          cacheHitVar: CACHE_RESTORED
+
+    - task: Npm@1
+      displayName: "Install the dependencies"
+      inputs:
+          command: custom
+          verbose: false
+          customCommand: "ci"
+      condition: ne(variables.CACHE_RESTORED, 'true')
 
     - script: |
           npm test
@@ -81,6 +92,6 @@ steps:
       condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
       displayName: Publish react-spaces (BETA)
       inputs:
-        command: 'custom'
-        customCommand: 'run publish:beta'
-        customEndpoint: 'NPM'
+          command: "custom"
+          customCommand: "run publish:beta"
+          customEndpoint: "NPM"
