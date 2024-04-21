@@ -1,7 +1,10 @@
-import { addParameters } from "@storybook/react";
-
-addParameters({
-	docs: {
-		inlineStories: false,
+module.exports = {
+	parameters: {
+		actions: { argTypesRegex: "^on.*" },
+		docs: {
+			story: {
+				inline: true, // Render stories in an iframe
+			},
+		},
 	},
-});
+};

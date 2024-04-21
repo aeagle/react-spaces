@@ -1,11 +1,12 @@
 import * as React from "react";
 import { render } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import { ViewPort } from "../ViewPort";
 import { drag } from "./TestUtils";
 import { ResizeType } from "../../core-types";
 import { Positioned } from "../Positioned";
 import { IReactSpaceCommonProps } from "../../core-react";
+import { asRecord } from "../../core-utils";
 
 export const mutateComponent = (component: React.ReactNode, newProps: Object) => {
 	return React.cloneElement(component as React.DetailedReactHTMLElement<any, HTMLElement>, newProps);
@@ -92,7 +93,7 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 		expect(style.display).toBe("block");
 		expect(sut.nodeName).toBe("DIV");
 		Object.keys(expectedStyle).forEach((k) => {
-			expect(style[k], `Property ${k}`).toBe(expectedStyle[k]);
+			expect(asRecord(style)[k], `Property ${k}`).toBe(asRecord(expectedStyle)[k]);
 		});
 	});
 
@@ -129,7 +130,7 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 	test(`${name} with style applied`, async () => {
 		// arrange, act
 		const { container } = render(<ViewPort>{mutateComponent(component, { id: "test", style: { backgroundColor: "red" } })}</ViewPort>);
-		const sut = container.querySelector("#test .spaces-space-inner");
+		const sut = container.querySelector("#test");
 
 		// assert
 		const style = window.getComputedStyle(sut!);
@@ -139,10 +140,37 @@ export const commonPropsTests = (name: string, component: React.ReactNode, expec
 	test(`${name} with style change applied`, async () => {
 		// arrange
 		const { container, rerender } = render(<ViewPort>{mutateComponent(component, { id: "test", style: { backgroundColor: "red" } })}</ViewPort>);
-		const sut = container.querySelector("#test .spaces-space-inner");
+		const sut = container.querySelector("#test");
 
 		// act
 		rerender(<ViewPort>{mutateComponent(component, { id: "test", style: { backgroundColor: "green" } })}</ViewPort>);
+
+		// assert
+		const style = window.getComputedStyle(sut!);
+		expect(style.backgroundColor).toBe("green");
+	});
+
+	test(`${name} with style for inner container applied`, async () => {
+		// arrange, act
+		const { container } = render(
+			<ViewPort>{mutateComponent(component, { id: "test", innerComponentStyle: { backgroundColor: "red" } })}</ViewPort>,
+		);
+		const sut = container.querySelector("#test .spaces-space-inner");
+
+		// assert
+		const style = window.getComputedStyle(sut!);
+		expect(style.backgroundColor).toBe("red");
+	});
+
+	test(`${name} with style for inner container change applied`, async () => {
+		// arrange
+		const { container, rerender } = render(
+			<ViewPort>{mutateComponent(component, { id: "test", innerComponentStyle: { backgroundColor: "red" } })}</ViewPort>,
+		);
+		const sut = container.querySelector("#test .spaces-space-inner");
+
+		// act
+		rerender(<ViewPort>{mutateComponent(component, { id: "test", innerComponentStyle: { backgroundColor: "green" } })}</ViewPort>);
 
 		// assert
 		const style = window.getComputedStyle(sut!);

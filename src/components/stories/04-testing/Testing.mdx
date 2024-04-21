@@ -1,0 +1,13 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+import { StateDriven, AnchoredDefaultOrdering, SpaceDemoStacked1, StateDrivenSize } from "../Utils";
+import * as TestingStories from './Testing.stories';
+
+<Meta of={TestingStories} />
+
+<Canvas of={TestingStories.TestSpacesUsingGlobalStoreWithStateDrivenSizingAndSwitchedSpaces} />
+
+<Canvas of={TestingStories.TestAnchoredSpacesWithDefaultOrdering} />
+
+<Canvas of={TestingStories.TestStackedSpaces} />
+
+<Canvas of={TestingStories.TestStateDrivenSize} />

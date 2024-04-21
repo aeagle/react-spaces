@@ -1,0 +1,41 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+
+import { action } from '@storybook/addon-actions';
+import { ViewPort, Centered, Positioned } from "../../";
+import { ResizeType } from "../../../core-types";
+import { useCurrentSpace } from "../../../core-react";
+import { green, description } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
+import * as PositionedResizableWidthHeightStories from './Positioned.Resizable.WidthHeight.stories';
+
+<CommonHeader />
+
+<Meta of={PositionedResizableWidthHeightStories} />
+
+## Positioned
+
+Absolutely positioned space within it's parent with width and height specified.
+
+<Canvas of={PositionedResizableWidthHeightStories.NonResizable} />
+
+<Canvas of={PositionedResizableWidthHeightStories.ResizeHandlesAllSides} />
+
+<Canvas of={PositionedResizableWidthHeightStories.ResizeHandlesLeft} />
+
+<Canvas of={PositionedResizableWidthHeightStories.ResizeHandlesTop} />
+
+<Canvas of={PositionedResizableWidthHeightStories.ResizeHandlesRight} />
+
+<Canvas of={PositionedResizableWidthHeightStories.ResizeHandlesBottom} />
+
+<Canvas of={PositionedResizableWidthHeightStories.ResizeHandlesTopLeft} />
+
+<Canvas of={PositionedResizableWidthHeightStories.ResizeHandlesTopRight} />
+
+<Canvas of={PositionedResizableWidthHeightStories.ResizeHandlesBottomLeft} />
+
+<Canvas of={PositionedResizableWidthHeightStories.ResizeHandlesBottomRight} />
+
+<Canvas of={PositionedResizableWidthHeightStories.DragHandle} />
+
+<Canvas of={PositionedResizableWidthHeightStories.DragHandleAndResizable} />

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { render, cleanup } from "@testing-library/react";
 import { Fixed } from "../../Fixed";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import { commonPropsTests, commonPropTypesTest, hasProps } from "../Common";
 
 afterEach(cleanup);

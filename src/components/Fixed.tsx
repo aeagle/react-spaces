@@ -4,7 +4,7 @@ import { Space } from "./Space";
 import * as PropTypes from "prop-types";
 import { commonProps, IReactSpaceCommonProps } from "../core-react";
 
-interface IFixedProps extends IReactSpaceCommonProps {
+export interface IFixedProps extends IReactSpaceCommonProps {
 	width?: SizeUnit;
 	height: SizeUnit;
 }

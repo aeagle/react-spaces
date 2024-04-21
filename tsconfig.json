@@ -15,11 +15,10 @@
 		"noImplicitAny": true,
 		"importHelpers": true,
 		"strictNullChecks": true,
-		"suppressImplicitAnyIndexErrors": true,
 		"noUnusedLocals": true,
 		"declaration": true,
 		"typeRoots": ["node_modules/@types", "typings"],
-		"esModuleInterop": true,   
+		"esModuleInterop": true,
 		"skipLibCheck": true
 	},
 	"include": ["./src/**/*", "@types/global.d.ts"],

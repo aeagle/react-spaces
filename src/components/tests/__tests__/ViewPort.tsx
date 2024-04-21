@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cleanup } from "@testing-library/react";
 import { ViewPort } from "../../ViewPort";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import { commonPropsTests, commonPropTypesTest, hasProps } from "../Common";
 
 afterEach(cleanup);

@@ -1,5 +1,7 @@
 import { ISpaceDefinition, SizeUnit, ISize, ResizeHandlePlacement, Type, Orientation } from "./core-types";
 
+export const asRecord = (obj: any) => (obj as unknown) as Record<string, object>;
+
 export function omit<K extends string, T extends Record<K, unknown>>(object: T, ...keys: K[]): Omit<T, K> {
 	const keySet = Object.create(null) as Record<K, true>;
 	keys.forEach((key) => {
@@ -8,8 +10,8 @@ export function omit<K extends string, T extends Record<K, unknown>>(object: T, 
 
 	const result = Object.create(null) as Omit<T, K>;
 	Object.keys(object).forEach((key) => {
-		if (!keySet[key]) {
-			result[key] = object[key];
+		if (!asRecord(keySet)[key]) {
+			asRecord(result)[key] = asRecord(object)[key];
 		}
 	});
 

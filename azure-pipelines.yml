@@ -4,64 +4,94 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 pool:
-  vmImage: "ubuntu-latest"
+    vmImage: "ubuntu-latest"
 
 steps:
-- task: gitversion/setup@0
-  inputs:
-    versionSpec: '5.x'
-    
-- task: gitversion/execute@0 
+    - task: gitversion/setup@0
+      inputs:
+          versionSpec: "5.x"
 
-- script: echo "##vso[build.updatebuildnumber]$(GitVersion.MajorMinorPatch)"
+    - task: gitversion/execute@0
 
-- task: Bash@3
-  displayName: Update version number in react-spaces package.json
-  inputs:
-    targetType: 'inline'
-    script:  sed -i "s/0.2.2/$GITVERSIONNUMBER/g" package.json
-  env:
-    GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
+    - script: echo "##vso[build.updatebuildnumber]$(GitVersion.SemVer)"
 
-- task: Bash@3
-  displayName: Update version number in react-spaces-storybook package.json
-  inputs:
-    targetType: 'inline'
-    script:  sed -i "s/0.2.2/$GITVERSIONNUMBER/g" .storybook/package.json
-  env:
-    GITVERSIONNUMBER: $(GitVersion.MajorMinorPatch)
+    - task: Bash@3
+      displayName: Update version number in react-spaces package.json
+      inputs:
+          targetType: "inline"
+          script: sed -i "s/0.2.2/$GITVERSIONNUMBER/g" package.json
+      env:
+          GITVERSIONNUMBER: $(GitVersion.SemVer)
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '12.x'
-    checkLatest: true
-  displayName: 'Install Node.js'
+    - task: Bash@3
+      displayName: Update version number in react-spaces-storybook package.json
+      inputs:
+          targetType: "inline"
+          script: sed -i "s/0.2.2/$GITVERSIONNUMBER/g" .storybook/package.json
+      env:
+          GITVERSIONNUMBER: $(GitVersion.SemVer)
 
-- script: |
-    npm install
-    npm run build
-    npm run build-storybook
-  displayName: 'NPM install and build'
+    - task: NodeTool@0
+      inputs:
+          versionSpec: "20.x"
+          checkLatest: true
+      displayName: "Install Node.js"
 
-- task: CopyFiles@2
-  displayName: Move storybook package json
-  inputs:
-    SourceFolder: '.storybook'
-    Contents: 'package.json'
-    TargetFolder: './storybook-static'
-    OverWrite: true
+    - task: Cache@2
+      displayName: Cache node_modules
+      inputs:
+          key: 'npm | "$(Agent.OS)" | $(Build.SourcesDirectory)/package-lock.json'
+          path: $(Build.SourcesDirectory)/node_modules
+          cacheHitVar: CACHE_RESTORED
 
-- task: Npm@1
-  enabled: true
-  displayName: Publish react-spaces-storybook
-  inputs:
-    command: 'publish'
-    workingDir: 'storybook-static'
-    publishEndpoint: 'NPM'
+    - task: Npm@1
+      displayName: "Install the dependencies"
+      inputs:
+          command: custom
+          verbose: false
+          customCommand: "ci"
+      condition: ne(variables.CACHE_RESTORED, 'true')
 
-- task: Npm@1
-  enabled: true
-  displayName: Publish react-spaces
-  inputs:
-    command: 'publish'
-    publishEndpoint: 'NPM'
+    - script: |
+          npm test
+      displayName: "Run tests"
+
+    - script: |
+          npm run build
+      displayName: "Build package"
+
+    - script: |
+          npm run build-storybook
+      displayName: "Build storybook"
+
+    - task: CopyFiles@2
+      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      displayName: Move storybook package json
+      inputs:
+          SourceFolder: ".storybook"
+          Contents: "package.json"
+          TargetFolder: "./storybook-static"
+          OverWrite: true
+
+    - task: Npm@1
+      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      displayName: Publish react-spaces-storybook
+      inputs:
+          command: "publish"
+          workingDir: "storybook-static"
+          publishEndpoint: "NPM"
+
+    - task: Npm@1
+      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      displayName: Publish react-spaces
+      inputs:
+          command: "publish"
+          publishEndpoint: "NPM"
+
+    - task: Npm@1
+      condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+      displayName: Publish react-spaces (BETA)
+      inputs:
+          command: "custom"
+          customCommand: "run publish:beta"
+          customEndpoint: "NPM"

@@ -1,0 +1,17 @@
+import { Meta, Story, Canvas } from "@storybook/blocks";
+
+import { action } from '@storybook/addon-actions';
+import { ViewPort, Fill, BottomResizable } from "../../";
+import { green, description } from "../Utils";
+import { CommonHeader, PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../Utils";
+import * as $05CustomHandlesStories from './05-CustomHandles.stories';
+
+<CommonHeader />
+
+<Meta of={$05CustomHandlesStories} />
+
+### Custom resize handles
+
+Example of a custom resize handle that renders an up arrow for bottom or top resizable
+
+<Canvas of={$05CustomHandlesStories.SimpleExample} />

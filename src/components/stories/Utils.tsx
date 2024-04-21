@@ -91,7 +91,8 @@ export const StandardProps = () => (
 			default="false"
 			description="Makes the space scrollable. By default content that overflows the space will be hidden. This will allow the space to add a scroll bar if the content overflows."
 		/>
-		<Prop name="style" type="CSSProperties" default="" description="CSS properties" />
+		<Prop name="style" type="CSSProperties" default="" description="CSS properties applied to outer container of space" />
+		<Prop name="innerComponentStyle" type="CSSProperties" default="" description="CSS properties applied to inner container of space" />
 		<Prop
 			name="trackSize"
 			type="boolean"

@@ -1,0 +1,61 @@
+import { Meta, Story, Canvas, Props } from "@storybook/blocks";
+
+import { action } from '@storybook/addon-actions';
+import { ViewPort, Custom } from "../../";
+import { AnchorType } from "../../../core-types";
+import { green, description } from "../Utils";
+import { CommonHeader, PropsTable, PropsHeader, Prop, StandardProps } from "../Utils";
+import * as CustomStories from './Custom.stories';
+
+<CommonHeader />
+
+<Meta of={CustomStories} />
+
+## Custom
+
+A space that can be any other type of space given it's properties. You should use this space if you
+intend to change the type of the space dynamically without causing remounting of child components.
+
+### As a fill space
+
+<Canvas of={CustomStories.Fill} />
+
+### As a positioned space
+
+<Canvas of={CustomStories.Positioned} />
+
+### As a left anchored space
+
+<Canvas of={CustomStories.AnchoredLeft} />
+
+### As a top anchored space
+
+<Canvas of={CustomStories.AnchoredTop} />
+
+### As a right anchored space
+
+<Canvas of={CustomStories.AnchoredRight} />
+
+### As a bottom anchored space
+
+<Canvas of={CustomStories.AnchoredBottom} />
+
+### As a left resizable space
+
+<Canvas of={CustomStories.ResizableLeft} />
+
+### As a top resizable space
+
+<Canvas of={CustomStories.ResizableTop} />
+
+### As a right resizable space
+
+<Canvas of={CustomStories.ResizableRight} />
+
+### As a bottom resizable space
+
+<Canvas of={CustomStories.ResizableBottom} />
+
+### Properties
+
+<CustomStories.Properties />
