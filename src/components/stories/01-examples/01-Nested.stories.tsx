@@ -1,21 +1,13 @@
-import { Meta, Story, Canvas, Props } from "@storybook/addon-docs";
-
-import { ViewPort, Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../../";
+import * as React from "react";
+import { ViewPort, Left, Top, Right, Bottom, LeftResizable, TopResizable, RightResizable, BottomResizable, Fill } from "../..";
 import { red, green, blue, description } from "../Utils";
-import { CommonHeader } from "../Utils";
 
-<CommonHeader />
+export default {
+	title: "Basic examples/Nested",
+};
 
-<Meta title="Basic examples/Nested" />
-
-## Nested spaces
-
-Examples of nested spaces.
-
-### Non-resizable
-
-<Canvas>
-	<Story name="Non-resizable">
+export const NonResizable = {
+	render: () => (
 		<React.StrictMode>
 			<ViewPort>
 				<Left size="20%" style={green}>
@@ -51,13 +43,13 @@ Examples of nested spaces.
 				</Right>
 			</ViewPort>
 		</React.StrictMode>
-	</Story>
-</Canvas>
+	),
 
-### Resizable
+	name: "Non-resizable",
+};
 
-<Canvas>
-	<Story name="Resizable">
+export const Resizable = {
+	render: () => (
 		<React.StrictMode>
 			<ViewPort>
 				<LeftResizable size="20%" style={green} trackSize={true}>
@@ -93,7 +85,10 @@ Examples of nested spaces.
 				<RightResizable size="20%" style={green} trackSize={true}>
 					{description("Right")}
 				</RightResizable>
-			</ViewPort>`
+			</ViewPort>
+			`
 		</React.StrictMode>
-	</Story>
-</Canvas>
+	),
+
+	name: "Resizable",
+};
