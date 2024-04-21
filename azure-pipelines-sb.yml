@@ -7,19 +7,36 @@ pool:
     vmImage: "ubuntu-latest"
 
 steps:
-    - task: gitversion/setup@0
-      inputs:
-          versionSpec: "5.x"
-
-    - task: gitversion/execute@0
-
-    - script: echo "##vso[build.updatebuildnumber]$(GitVersion.SemVer)"
-
     - task: Bash@3
-      displayName: Update version number in react-spaces package.json
+      displayName: Generate build number tag if required
       inputs:
           targetType: "inline"
-          script: sed -i "s/0.2.2/$GITVERSIONNUMBER/g" package.json
+          script: |
+              if [ $(Build.SourceBranch) != "refs/heads/master" ]
+              then
+                # Lowercase
+                tag=$(sed 's/.*/\L&/' <<< $(Build.SourceBranchName))
+                # Replace non alpha-numeric to -
+                tag=$(sed 's/[^0-9a-z\-]/-/g' <<< $tag)
+                # Set the build number in DevOps
+                echo "##vso[build.updatebuildnumber]$(Build.BuildNumber).0-$tag"
+              else
+                echo "##vso[build.updatebuildnumber]$(Build.BuildNumber).0"
+              fi
+          failOnStderr: true
+    - task: Bash@3
+      displayName: Update version number in package.json
+      inputs:
+          targetType: "inline"
+          script: 'sed -i $"s/\"version\": \"[^\"]*\"/\"version\": \"$(Build.BuildNumber)\"/g" .storybook/package.json'
+      env:
+          GITVERSIONNUMBER: $(Build.BuildNumber)
+
+    - task: Bash@3
+      displayName: Update version number in react-spaces-storybook package.json
+      inputs:
+          targetType: "inline"
+          script: sed -i "s/0.2.2/$GITVERSIONNUMBER/g" .storybook/package.json
       env:
           GITVERSIONNUMBER: $(GitVersion.SemVer)
 
@@ -49,10 +66,6 @@ steps:
       displayName: "Run tests"
 
     - script: |
-          npm run build
-      displayName: "Build package"
-
-    - script: |
           npm run build-storybook
       displayName: "Build storybook"
 
@@ -67,15 +80,8 @@ steps:
 
     - task: Npm@1
       condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-      displayName: Publish react-spaces
+      displayName: Publish react-spaces-storybook
       inputs:
           command: "publish"
+          workingDir: "storybook-static"
           publishEndpoint: "NPM"
-
-    - task: Npm@1
-      condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
-      displayName: Publish react-spaces (BETA)
-      inputs:
-          command: "custom"
-          customCommand: "run publish:beta"
-          customEndpoint: "NPM"
