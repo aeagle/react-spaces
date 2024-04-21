@@ -19,9 +19,9 @@ steps:
                 # Replace non alpha-numeric to -
                 tag=$(sed 's/[^0-9a-z\-]/-/g' <<< $tag)
                 # Set the build number in DevOps
-                echo "##vso[build.updatebuildnumber]v-sb-$(Build.BuildNumber).0-$tag"
+                echo "##vso[build.updatebuildnumber]$(Build.BuildNumber).0-$tag"
               else
-                echo "##vso[build.updatebuildnumber]v-sb-$(Build.BuildNumber).0"
+                echo "##vso[build.updatebuildnumber]$(Build.BuildNumber).0"
               fi
           failOnStderr: true
     - task: Bash@3
