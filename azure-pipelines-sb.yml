@@ -9,7 +9,6 @@ pool:
 steps:
     - task: Bash@3
       displayName: Generate build number tag if required
-      condition: eq(variables.IsPullRequestTrigger, false)
       inputs:
           targetType: "inline"
           script: |
