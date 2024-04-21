@@ -13,7 +13,7 @@ steps:
       inputs:
           targetType: "inline"
           script: |
-              if [ $(Build.SourceBranch) != "refs/heads/main" ]
+              if [ $(Build.SourceBranch) != "refs/heads/master" ]
               then
                 # Lowercase
                 tag=$(sed 's/.*/\L&/' <<< $(Build.SourceBranchName))
