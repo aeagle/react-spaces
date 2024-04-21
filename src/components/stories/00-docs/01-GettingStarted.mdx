@@ -1,11 +1,11 @@
 import { Meta, Story, Canvas, Props } from "@storybook/blocks";
 import { CommonHeader, DemoUI } from "../Utils";
 import { CenterType, ViewPort, Fixed, Top, Right, LeftResizable, BottomResizable, Fill, Options } from "../../..";
-import * as Stories from "./01-GettingStarted.stories";
+import * as Stories from "./01-GettingStarted.components";
 
 <CommonHeader />
 
-<Meta of={Stories} />
+<Meta title="React Spaces/Getting started" />
 
 ## Getting started
 
@@ -48,9 +48,7 @@ lines and text alignment have been added specifically for this example. In pract
 have any visual element, padding or margins leaving it up to you to fill them or style them however
 you want.*
 
-<Canvas>
-	<Story of={Stories.Demo1} />
-</Canvas>
+<Stories.Demo1 />
 
 Notice how the fill space automatically adjusts it's size when the left resizable space is resized with
 the mouse.
@@ -81,9 +79,7 @@ const App = () => (
 
 Here we have added additional nested spaces inside the original `<Fill />` space to achieve this:
 
-<Canvas>
-	<Story of={Stories.Demo2} />
-</Canvas>
+<Stories.Demo2 />
 
 We can add further nested spaces to add elements like title bars into different areas.
 
@@ -122,9 +118,7 @@ const App = () => (
 
 Now we have something like below:
 
-<Canvas>
-	<Story of={Stories.Demo3} />
-</Canvas>
+<Stories.Demo3 />
 
 ### Introducing simple interactivity
 

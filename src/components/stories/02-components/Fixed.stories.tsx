@@ -28,19 +28,15 @@ export const WithoutWidth = {
 	name: "Without width",
 };
 
-export const Properties = {
-	render: () => (
-		<PropsTable>
-			<PropsHeader>Fixed properties</PropsHeader>
-			<Prop
-				name="width"
-				type="number | string"
-				description="Optional width of space. When not specified the space will fill 100% of it's container."
-			/>
-			<Prop name="height" type="number | string" description="Height of space." />
-			<StandardProps />
-		</PropsTable>
-	),
-
-	name: "Properties",
-};
+export const Properties = () => (
+	<PropsTable>
+		<PropsHeader>Fixed properties</PropsHeader>
+		<Prop
+			name="width"
+			type="number | string"
+			description="Optional width of space. When not specified the space will fill 100% of it's container."
+		/>
+		<Prop name="height" type="number | string" description="Height of space." />
+		<StandardProps />
+	</PropsTable>
+);

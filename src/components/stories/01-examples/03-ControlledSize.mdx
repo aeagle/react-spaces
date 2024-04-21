@@ -17,14 +17,10 @@ only the initial size of a space and React Spaces deals with any resizing. To ke
 space controlled in state you need to use the onResizeEnd event to set the new size of a space
 after a resize back to a state value.
 
-<Canvas>
-  <Story of={$03ControlledSizeStories.ControlledSize} />
-</Canvas>
+<Canvas of={$03ControlledSizeStories.ControlledSize} />
 
 ## Cancelling resize with onResizeStart
 
 You can cancel a resize by returning `false` from a onResizeStart event handler.
 
-<Canvas>
-  <Story of={$03ControlledSizeStories.CancelledResize} />
-</Canvas>
+<Canvas of={$03ControlledSizeStories.CancelledResize} />

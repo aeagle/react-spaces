@@ -81,14 +81,10 @@ export const Right = {
 	name: "Right",
 };
 
-export const Properties = {
-	render: () => (
-		<PropsTable>
-			<ResizableProps />
-			<AnchoredProps />
-			<StandardProps />
-		</PropsTable>
-	),
-
-	name: "Properties",
-};
+export const Properties = () => (
+	<PropsTable>
+		<ResizableProps />
+		<AnchoredProps />
+		<StandardProps />
+	</PropsTable>
+);

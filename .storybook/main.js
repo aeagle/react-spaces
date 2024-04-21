@@ -1,17 +1,23 @@
 const path = require("path");
 
 module.exports = {
-    stories: ["../src/**/*.@(mdx|stories.@(tsx))"],
+	stories: ["../src/**/*.@(mdx|stories.@(tsx))"],
 
-    addons: ["@storybook/addon-actions", "@storybook/addon-links", {
-        name: "@storybook/addon-docs",
-        options: {
-            configureJSX: true,
-            inlineStories: false,
-        },
-    }, "@storybook/addon-mdx-gfm", "@storybook/addon-webpack5-compiler-babel"],
+	addons: [
+		"@storybook/addon-actions",
+		"@storybook/addon-links",
+		{
+			name: "@storybook/addon-docs",
+			options: {
+				configureJSX: true,
+				inlineStories: false,
+			},
+		},
+		"@storybook/addon-mdx-gfm",
+		"@storybook/addon-webpack5-compiler-babel",
+	],
 
-    webpackFinal: async (config, { configType }) => {
+	webpackFinal: async (config, { configType }) => {
 		if (process.env.NODE === "production") {
 			config.output.publicPath = "/react-spaces/docs";
 		}
@@ -25,15 +31,19 @@ module.exports = {
 		return config;
 	},
 
-    framework: {
-        name: "@storybook/react-webpack5",
+	framework: {
+		name: "@storybook/react-webpack5",
 
-        options: {
-            strictMode: true
-        }
-    },
+		options: {
+			strictMode: true,
+		},
+	},
 
-    docs: {
-        autodocs: true
-    }
+	docs: {
+		autodocs: true,
+		story: {
+			inline: false,
+			height: "500px",
+		},
+	},
 };

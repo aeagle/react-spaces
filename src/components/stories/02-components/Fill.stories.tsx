@@ -124,12 +124,8 @@ export const Scrollable = {
 	name: "Scrollable",
 };
 
-export const Properties = {
-	render: () => (
-		<PropsTable>
-			<StandardProps />
-		</PropsTable>
-	),
-
-	name: "Properties",
-};
+export const Properties = () => (
+	<PropsTable>
+		<StandardProps />
+	</PropsTable>
+);

@@ -33,12 +33,8 @@ export const Default = {
 	name: "Default",
 };
 
-export const Properties = {
-	render: () => (
-		<PropsTable>
-			<Prop name="zIndex" type="number" description="zIndex to apply to all child spaces." />
-		</PropsTable>
-	),
-
-	name: "Properties",
-};
+export const Properties = () => (
+	<PropsTable>
+		<Prop name="zIndex" type="number" description="zIndex to apply to all child spaces." />
+	</PropsTable>
+);
