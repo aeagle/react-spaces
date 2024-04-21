@@ -1,5 +1,4 @@
 import * as React from "react";
-import { action } from "@storybook/addon-actions";
 import { ViewPort, RightResizable } from "../..";
 import { green, description, lorem } from "../Utils";
 import { PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../Utils";
@@ -12,13 +11,7 @@ export default {
 export const Default = {
 	render: () => (
 		<ViewPort>
-			<RightResizable
-				style={green}
-				size="50%"
-				touchHandleSize={20}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<RightResizable style={green} size="50%" touchHandleSize={20} trackSize={true}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>
@@ -30,13 +23,7 @@ export const Default = {
 export const DefaultPx = {
 	render: () => (
 		<ViewPort>
-			<RightResizable
-				style={green}
-				size={300}
-				touchHandleSize={20}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<RightResizable style={green} size={300} touchHandleSize={20} trackSize={true}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>
@@ -48,15 +35,7 @@ export const DefaultPx = {
 export const WithResizeConstraints = {
 	render: () => (
 		<ViewPort>
-			<RightResizable
-				style={green}
-				size={300}
-				touchHandleSize={20}
-				trackSize={true}
-				minimumSize={150}
-				maximumSize={450}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<RightResizable style={green} size={300} touchHandleSize={20} trackSize={true} minimumSize={150} maximumSize={450}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>
@@ -68,13 +47,7 @@ export const WithResizeConstraints = {
 export const Scrollable = {
 	render: () => (
 		<ViewPort>
-			<RightResizable
-				style={green}
-				size={300}
-				touchHandleSize={20}
-				scrollable={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<RightResizable style={green} size={300} touchHandleSize={20} scrollable={true}>
 				{lorem}
 			</RightResizable>
 		</ViewPort>

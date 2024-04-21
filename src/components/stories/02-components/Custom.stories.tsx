@@ -1,5 +1,4 @@
 import * as React from "react";
-import { action } from "@storybook/addon-actions";
 import { ViewPort, Custom } from "../..";
 import { AnchorType, Type } from "../../../core-types";
 import { green, description } from "../Utils";
@@ -88,9 +87,7 @@ export const ResizableLeft = {
 				anchor={AnchorType.Left}
 				anchorSize={200}
 				resizable={true}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+				trackSize={true}>
 				{description("Custom resizable left")}
 			</Custom>
 		</ViewPort>
@@ -107,9 +104,7 @@ export const ResizableTop = {
 				anchor={AnchorType.Top}
 				anchorSize={200}
 				resizable={true}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+				trackSize={true}>
 				{description("Custom resizable top")}
 			</Custom>
 		</ViewPort>
@@ -126,9 +121,7 @@ export const ResizableRight = {
 				anchor={AnchorType.Right}
 				anchorSize={200}
 				resizable={true}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+				trackSize={true}>
 				{description("Custom resizable right")}
 			</Custom>
 		</ViewPort>
@@ -145,9 +138,7 @@ export const ResizableBottom = {
 				anchor={AnchorType.Bottom}
 				anchorSize={200}
 				resizable={true}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+				trackSize={true}>
 				{description("Custom resizable bottom")}
 			</Custom>
 		</ViewPort>

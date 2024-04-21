@@ -1,5 +1,4 @@
 import * as React from "react";
-import { action } from "@storybook/addon-actions";
 import { ViewPort, Centered, Positioned } from "../..";
 import { ResizeType } from "../../../core-types";
 import { useCurrentSpace } from "../../../core-react";
@@ -34,9 +33,7 @@ export const ResizeHandlesAllSides = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.All]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.All]}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -58,9 +55,7 @@ export const ResizeHandlesLeft = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.Left]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.Left]}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -82,9 +77,7 @@ export const ResizeHandlesTop = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.Top]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.Top]}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -106,9 +99,7 @@ export const ResizeHandlesRight = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.Right]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.Right]}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -130,9 +121,7 @@ export const ResizeHandlesBottom = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.Bottom]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.Bottom]}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -154,9 +143,7 @@ export const ResizeHandlesTopLeft = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.TopLeft]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.TopLeft]}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -178,9 +165,7 @@ export const ResizeHandlesTopRight = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.TopRight]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.TopRight]}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -202,9 +187,7 @@ export const ResizeHandlesBottomLeft = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.BottomLeft]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.BottomLeft]}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -226,9 +209,7 @@ export const ResizeHandlesBottomRight = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.BottomRight]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.BottomRight]}>
 					{description("Positioned")}
 				</Positioned>
 			</ViewPort>
@@ -245,9 +226,7 @@ export const DragHandle = {
 
 			return (
 				<Centered>
-					<button
-						onMouseDown={(e) => space.startMouseDrag(e, action("onDragEnd"))}
-						onTouchStart={(e) => space.startTouchDrag(e, action("onDragEnd"))}>
+					<button onMouseDown={(e) => space.startMouseDrag(e)} onTouchStart={(e) => space.startTouchDrag(e)}>
 						Drag handle
 					</button>
 				</Centered>
@@ -273,9 +252,7 @@ export const DragHandleAndResizable = {
 
 			return (
 				<Centered>
-					<button
-						onMouseDown={(e) => space.startMouseDrag(e, action("onDragEnd"))}
-						onTouchStart={(e) => space.startTouchDrag(e, action("onDragEnd"))}>
+					<button onMouseDown={(e) => space.startMouseDrag(e)} onTouchStart={(e) => space.startTouchDrag(e)}>
 						Drag handle
 					</button>
 				</Centered>
@@ -292,9 +269,7 @@ export const DragHandleAndResizable = {
 					bottom={200}
 					touchHandleSize={20}
 					trackSize={true}
-					resizable={[ResizeType.All]}
-					onResizeStart={action("onResizeStart")}
-					onResizeEnd={action("onResizeEnd")}>
+					resizable={[ResizeType.All]}>
 					<DragHandle />
 				</Positioned>
 			</ViewPort>

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { action } from "@storybook/addon-actions";
 import { ViewPort, BottomResizable } from "../..";
 import { green, description } from "../Utils";
 
@@ -13,8 +12,6 @@ export const SimpleExample = {
 			<BottomResizable
 				style={green}
 				size="50%"
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}
 				trackSize
 				handleRender={(props) =>
 					["top", "bottom"].includes(props.key as string) && (

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { action } from "@storybook/addon-actions";
 import { ViewPort, BottomResizable } from "../..";
 import { green, description, lorem } from "../Utils";
 import { PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../Utils";
@@ -12,13 +11,7 @@ export default {
 export const Default = {
 	render: () => (
 		<ViewPort>
-			<BottomResizable
-				style={green}
-				size="50%"
-				touchHandleSize={20}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<BottomResizable style={green} size="50%" touchHandleSize={20} trackSize={true}>
 				{description("Bottom resizable")}
 			</BottomResizable>
 		</ViewPort>
@@ -30,13 +23,7 @@ export const Default = {
 export const DefaultPx = {
 	render: () => (
 		<ViewPort>
-			<BottomResizable
-				style={green}
-				size={300}
-				touchHandleSize={20}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<BottomResizable style={green} size={300} touchHandleSize={20} trackSize={true}>
 				{description("Bottom resizable")}
 			</BottomResizable>
 		</ViewPort>
@@ -48,15 +35,7 @@ export const DefaultPx = {
 export const WithResizeConstraints = {
 	render: () => (
 		<ViewPort>
-			<BottomResizable
-				style={green}
-				size={300}
-				touchHandleSize={20}
-				trackSize={true}
-				minimumSize={150}
-				maximumSize={450}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<BottomResizable style={green} size={300} touchHandleSize={20} trackSize={true} minimumSize={150} maximumSize={450}>
 				{description("Bottom resizable")}
 			</BottomResizable>
 		</ViewPort>
@@ -68,13 +47,7 @@ export const WithResizeConstraints = {
 export const Scrollable = {
 	render: () => (
 		<ViewPort>
-			<BottomResizable
-				style={green}
-				size={300}
-				touchHandleSize={20}
-				scrollable={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<BottomResizable style={green} size={300} touchHandleSize={20} scrollable={true}>
 				{lorem}
 			</BottomResizable>
 		</ViewPort>

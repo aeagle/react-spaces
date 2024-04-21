@@ -1,5 +1,4 @@
 import * as React from "react";
-import { action } from "@storybook/addon-actions";
 import { ViewPort, BottomResizable, TopResizable, RightResizable, LeftResizable } from "../..";
 import { green, description } from "../Utils";
 import { PropsTable, StandardProps, AnchoredProps, ResizableProps } from "../Utils";
@@ -12,13 +11,7 @@ export default {
 export const Bottom = {
 	render: () => (
 		<ViewPort>
-			<BottomResizable
-				style={green}
-				size={250}
-				touchHandleSize={20}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<BottomResizable style={green} size={250} touchHandleSize={20} trackSize={true}>
 				{description("Bottom resizable")}
 			</BottomResizable>
 		</ViewPort>
@@ -30,13 +23,7 @@ export const Bottom = {
 export const Top = {
 	render: () => (
 		<ViewPort>
-			<TopResizable
-				style={green}
-				size={250}
-				touchHandleSize={20}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<TopResizable style={green} size={250} touchHandleSize={20} trackSize={true}>
 				{description("Top resizable")}
 			</TopResizable>
 		</ViewPort>
@@ -48,13 +35,7 @@ export const Top = {
 export const Left = {
 	render: () => (
 		<ViewPort>
-			<LeftResizable
-				style={green}
-				size={250}
-				touchHandleSize={20}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<LeftResizable style={green} size={250} touchHandleSize={20} trackSize={true}>
 				{description("Left resizable")}
 			</LeftResizable>
 		</ViewPort>
@@ -66,13 +47,7 @@ export const Left = {
 export const Right = {
 	render: () => (
 		<ViewPort>
-			<RightResizable
-				style={green}
-				size={250}
-				touchHandleSize={20}
-				trackSize={true}
-				onResizeStart={action("onResizeStart")}
-				onResizeEnd={action("onResizeEnd")}>
+			<RightResizable style={green} size={250} touchHandleSize={20} trackSize={true}>
 				{description("Right resizable")}
 			</RightResizable>
 		</ViewPort>

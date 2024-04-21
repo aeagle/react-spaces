@@ -10,11 +10,12 @@ module.exports = {
 			name: "@storybook/addon-docs",
 			options: {
 				configureJSX: true,
-				inlineStories: false,
+				inlineStories: true,
 			},
 		},
 		"@storybook/addon-mdx-gfm",
 		"@storybook/addon-webpack5-compiler-babel",
+		"@chromatic-com/storybook",
 	],
 
 	webpackFinal: async (config, { configType }) => {
@@ -42,7 +43,7 @@ module.exports = {
 	docs: {
 		autodocs: true,
 		story: {
-			inline: false,
+			inline: true,
 			height: "500px",
 		},
 	},
