@@ -4,7 +4,7 @@ import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
 import { isServer, updateStyleDefinition } from "../core-utils";
-import { useUniqueId } from "src/core-react-interop";
+import { useUniqueId } from "../core-react-interop";
 
 function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
 	switch (centerType) {
