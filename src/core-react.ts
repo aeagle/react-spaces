@@ -12,10 +12,11 @@ import {
 	OnDragEnd,
 	ResizeTouchEvent,
 } from "./core-types";
-import { coalesce, shortuuid } from "./core-utils";
+import { coalesce } from "./core-utils";
 import { ResizeSensor } from "css-element-queries";
 import * as PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
+import { useUniqueId } from "./core-react-interop";
 
 // WORKAROUND for React18 strict mode
 // https://blog.ag-grid.com/avoiding-react-18-double-mount/
@@ -118,27 +119,13 @@ export function useForceUpdate() {
 	}, []);
 }
 
-export function useUniqueId() {
-	if (SSR_SUPPORT_ENABLED) {
-		if (React.version.startsWith("18") && typeof (React as any)["useId"] !== "undefined") {
-			return `s${(React as any)["useId"]().replace(/\:/g, "")}`;
-		}
-
-		if (typeof (React as any)["unstable_useOpaqueIdentifier"] !== "undefined") {
-			return `s${(React as any)["unstable_useOpaqueIdentifier"]().replace(/\:/g, "")}`;
-		}
-	}
-
-	return `s${shortuuid()}`;
-}
-
 export function useSpace(props: IReactSpaceInnerProps) {
 	const store = currentStore;
 	const update = useForceUpdate();
 	const parent = React.useContext(ParentContext);
 	const layer = React.useContext(LayerContext);
 	const { debug } = React.useContext(OptionsContext);
-	const uniqueId = useUniqueId();
+	const uniqueId = useUniqueId(SSR_SUPPORT_ENABLED);
 	const [spaceId] = React.useState(props.id || uniqueId);
 	const elementRef = React.useRef<HTMLElement>();
 	const resizeSensor = React.useRef<ResizeSensor>();

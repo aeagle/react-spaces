@@ -1,18 +1,10 @@
 import { CenterType, ResizeHandlePlacement, AnchorType, Type } from "../core-types";
-import {
-	useSpace,
-	ParentContext,
-	LayerContext,
-	DOMRectContext,
-	IReactSpaceInnerProps,
-	useEffectOnce,
-	SSR_SUPPORT_ENABLED,
-	useUniqueId,
-} from "../core-react";
+import { useSpace, ParentContext, LayerContext, DOMRectContext, IReactSpaceInnerProps, useEffectOnce, SSR_SUPPORT_ENABLED } from "../core-react";
 import * as React from "react";
 import { Centered } from "./Centered";
 import { CenteredVertically } from "./CenteredVertically";
 import { isServer, updateStyleDefinition } from "../core-utils";
+import { useUniqueId } from "src/core-react-interop";
 
 function applyCentering(children: React.ReactNode, centerType: CenterType | undefined) {
 	switch (centerType) {
@@ -41,7 +33,7 @@ const SpaceInner: React.FC<IReactSpaceInnerProps & { wrapperInstance: Space }> =
 	let idToUse = props.id ?? getSpaceUniqueId(props.wrapperInstance);
 	const [initialRender, setInitialRender] = React.useState(SSR_SUPPORT_ENABLED ? true : false);
 
-	const uniqueId = useUniqueId();
+	const uniqueId = useUniqueId(SSR_SUPPORT_ENABLED);
 
 	if (!idToUse) {
 		setSpaceUniqueId(props.wrapperInstance, uniqueId);
