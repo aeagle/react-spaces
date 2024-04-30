@@ -9,6 +9,7 @@ export function useUniqueId(ssrEnabled: boolean) {
 
 		// @ts-ignore
 		if (typeof React.unstable_useOpaqueIdentifier !== "undefined") {
+			console.log("React 17 legacy");
 			// @ts-ignore
 			return `s${React.unstable_useOpaqueIdentifier().replace(/\:/g, "")}`;
 		}
