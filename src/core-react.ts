@@ -120,11 +120,11 @@ export function useForceUpdate() {
 
 export function useUniqueId() {
 	if (SSR_SUPPORT_ENABLED) {
-		if (React.version.startsWith("18")) {
+		if (React.version.startsWith("18") && typeof (React as any)["useId"] !== "undefined") {
 			return `s${(React as any)["useId"]().replace(/\:/g, "")}`;
 		}
 
-		if ((React as any)["unstable_useOpaqueIdentifier"]) {
+		if (typeof (React as any)["unstable_useOpaqueIdentifier"] !== "undefined") {
 			return `s${(React as any)["unstable_useOpaqueIdentifier"]().replace(/\:/g, "")}`;
 		}
 	}
