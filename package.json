@@ -89,8 +89,8 @@
     "jest-chain": "1.1.6"
   },
   "peerDependencies": {
-    "react": "^16.8.0 || ^17 || ^18",
-    "react-dom": "^16.8.0 || ^17 || ^18"
+    "react": "^16.8.0 || ^17 || ^18 || ^19",
+    "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
   },
   "scripts": {
     "start": "rollup -c -w",
