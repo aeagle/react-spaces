@@ -118,19 +118,22 @@ export function useForceUpdate() {
 	}, []);
 }
 
-export function useUniqueId() {
-	if (SSR_SUPPORT_ENABLED) {
-		if (React.version.startsWith("18")) {
-			return `s${React.useId().replace(/\:/g, "")}`;
-		}
+// Resolved once at module load time — the React version never changes at runtime.
+// This avoids version string checks and conditional hook calls (which the React 19
+// compiler flags). Each implementation below follows the rules of hooks unconditionally.
+const _useId = (React as any).useId as (() => string) | undefined;
 
-		if ((React as any).unstable_useOpaqueIdentifier) {
-			return `s${(React as any).unstable_useOpaqueIdentifier().replace(/\:/g, "")}`;
-		}
-	}
+function useIdBasedUniqueId() {
+	return `s${_useId!().replace(/:/g, "")}`;
+}
 
+function useFallbackUniqueId() {
 	return `s${shortuuid()}`;
 }
+
+// React 18+/19+: use the built-in useId hook (works for both SSR and client rendering).
+// React 17: fall back to a random ID (no hooks required).
+export const useUniqueId: () => string = _useId ? useIdBasedUniqueId : useFallbackUniqueId;
 
 export function useSpace(props: IReactSpaceInnerProps) {
 	const store = currentStore;
