@@ -1,10 +1,11 @@
 module.exports = {
-	parameters: {
-		actions: { argTypesRegex: "^on.*" },
+    parameters: {
 		docs: {
 			story: {
-				inline: true, // Render stories in an iframe
+				inline: true,
 			},
 		},
 	},
+
+    tags: ["autodocs"]
 };

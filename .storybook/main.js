@@ -3,20 +3,7 @@ const path = require("path");
 module.exports = {
 	stories: ["../src/**/*.@(mdx|stories.@(tsx))"],
 
-	addons: [
-		"@storybook/addon-actions",
-		"@storybook/addon-links",
-		{
-			name: "@storybook/addon-docs",
-			options: {
-				configureJSX: true,
-				inlineStories: true,
-			},
-		},
-		"@storybook/addon-mdx-gfm",
-		"@storybook/addon-webpack5-compiler-babel",
-		"@chromatic-com/storybook",
-	],
+	addons: ["@storybook/addon-links", "@storybook/addon-docs", "@storybook/addon-webpack5-compiler-swc"],
 
 	webpackFinal: async (config, { configType }) => {
 		if (process.env.NODE === "production") {
@@ -41,10 +28,9 @@ module.exports = {
 	},
 
 	docs: {
-		autodocs: true,
-		story: {
-			inline: true,
-			height: "500px",
-		},
-	},
+        story: {
+            inline: true,
+            height: "500px"
+        }
+    },
 };
