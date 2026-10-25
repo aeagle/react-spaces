@@ -1,6 +1,7 @@
-const path = require("path");
+﻿import path from "path";
+import { fileURLToPath } from "url";
 
-module.exports = {
+export default {
 	stories: ["../src/**/*.@(mdx|stories.@(tsx))"],
 
 	addons: ["@storybook/addon-links", "@storybook/addon-docs", "@storybook/addon-webpack5-compiler-swc"],
@@ -13,7 +14,7 @@ module.exports = {
 		config.module.rules.push({
 			test: /\.scss$/,
 			use: ["style-loader", "css-loader", "sass-loader"],
-			include: path.resolve(__dirname, "../"),
+			include: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../"),
 		});
 
 		return config;
